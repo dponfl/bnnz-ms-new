@@ -13,21 +13,26 @@ module.exports = {
    * Make payment
    */
 
-  makePayment: function (params) {
+  makePayment: async function (params) {
 
     const methodName = 'makePayment';
 
     sails.log.info(moduleName + methodName + ', params:', params);
 
-    return new PromiseBB((resolve) => {
+    // return new PromiseBB((resolve) => {
+    //
+    //
+    //   resolve({
+    //     code: 200,
+    //     data: {res: 'ok'},
+    //   });
+    //
+    // });
 
-
-      resolve({
-        code: 200,
-        data: {res: 'ok'},
-      });
-
-    });
+    return {
+      code: 200,
+      data: {res: 'ok'},
+    }
 
   }, // makePayment
 
