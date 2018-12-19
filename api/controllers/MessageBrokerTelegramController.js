@@ -23,7 +23,7 @@ module.exports = {
           parse_mode: 'HTML',
         });
 
-        res.json(200, {status: 'ok'});
+        res.status(200).json({status: 'ok'});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendSimpleMessage, Error:');
@@ -34,7 +34,7 @@ module.exports = {
         console.log('options: ');
         console.dir(err.options);
 
-        res.json(200, {status: 'error'});
+        res.status(200).json({status: 'error'});
 
       }
     })();
@@ -59,7 +59,7 @@ module.exports = {
           }
         });
 
-        res.json(200, {status: 'ok'});
+        res.status(200).json({status: 'ok'});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendForceMessage, Error:');
@@ -70,7 +70,7 @@ module.exports = {
         console.log('options: ');
         console.dir(err.options);
 
-        res.json(200, {status: 'error'});
+        res.status(200).json({status: 'error'});
 
       }
     })();
@@ -94,7 +94,7 @@ module.exports = {
           }
         });
 
-        res.json(200, {status: 'ok'});
+        res.status(200).json({status: 'ok'});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendInlineButtons, Error:');
@@ -105,7 +105,7 @@ module.exports = {
         console.log('options: ');
         console.dir(err.options);
 
-        res.json(200, {status: 'error'});
+        res.status(200).json({status: 'error'});
 
       }
     })();
@@ -130,7 +130,7 @@ module.exports = {
           }
         });
 
-        res.json(200, {status: 'ok'});
+        res.status(200).json({status: 'ok'});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendKeyboard, Error:');
@@ -141,7 +141,7 @@ module.exports = {
         console.log('options: ');
         console.dir(err.options);
 
-        res.json(200, {status: 'error'});
+        res.status(200).json({status: 'error'});
 
       }
     })();

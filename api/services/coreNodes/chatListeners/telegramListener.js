@@ -145,7 +145,7 @@ function onCallbackQuery() {
 
                   if (!_.isNil(clientUpdateResult.code) && clientUpdateResult.code == 200) {
 
-                    await generalServices.sendREST('POST', route, params);
+                    await sails.helpers.general.sendRest('POST', route, params);
 
                   } else {
 
@@ -163,7 +163,7 @@ function onCallbackQuery() {
 
               } else {
 
-                await generalServices.sendREST('POST', route, params);
+                await sails.helpers.general.sendRest('POST', route, params);
               }
 
             }
@@ -288,9 +288,9 @@ function onMessage() {
 
               (async () => {
 
-                let clientExistsResult = await generalServices.clientExists({chatId: msg.chat.id});
+                let clientExistsResult = await sails.helpers.general.clientExists({chatId: msg.chat.id});
 
-                if (!_.isNil(clientExistsResult.code) && clientExistsResult.code == 200) {
+                if (!_.isNil(clientExistsResult.status) && clientExistsResult.status == 'ok') {
                   sails.log.warn('!!!!!!!!!!!!!! clientExistsResult.data: ', clientExistsResult.data);
 
                   let clientUpdateResult = await storageGatewayServices.clientUpdate({id: clientExistsResult.data.id}, {inst_profile: msg.text, profile_provided: true});
@@ -303,7 +303,7 @@ function onMessage() {
                     REST = convScript.onMessageNewInstagramAccount(msg, useLang);
                     sendREST = true;
 
-                    result = await generalServices.sendREST('POST', REST.route, REST.params);
+                    result = await sails.helpers.general.sendRest('POST', REST.route, REST.params);
 
                     console.log('REST request and result:');
                     console.log('Request:');
@@ -365,7 +365,10 @@ function onMessage() {
 
         if (sendREST) {
 
-          result = await generalServices.sendREST('POST', REST.route, REST.params);
+          let ttt = 'sendRest';
+
+          // result = await sails.helpers.general.sendRest('POST', REST.route, REST.params);
+          result = await sails.helpers.general[ttt]('POST', REST.route, REST.params);
 
           console.log('REST request and result:');
           console.log('Request:');
@@ -379,6 +382,7 @@ function onMessage() {
         console.log(moduleName + methodName + ', Error:');
         // console.log('statusCode: ' + err.statusCode);
         console.log('message: ' + err.message);
+        sails.log.warn(err.raw);
         // console.log('error: ');
         // console.dir(err.error);
         // console.log('options: ');

@@ -22,13 +22,13 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendInlineMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.json(200, {status: 'ok'});
+              res.status(200).json({status: 'ok'});
             } else {
-              res.json(200, {status: 'error'});
+              res.status(200).json({status: 'error'});
             }
           })
           .catch((err) => {
-            res.json(200, {status: 'catch error', error: err});
+            res.status(200).json({status: 'catch error', error: err});
           });
         break;
       case 'facebook':
@@ -50,12 +50,12 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendForcedMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.json(200, {status: 'ok'});
+              res.status(200).json({status: 'ok'});
             } else {
-              res.json(200, {status: 'error'});
+              res.status(200).json({status: 'error'});
             }
           }).catch((err) => {
-          res.json(200, {status: 'catch error', error: err});
+          res.status(200).json({status: 'catch error', error: err});
         });
         break;
       case 'facebook':
@@ -78,12 +78,12 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendSimpleMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.json(200, {status: 'ok'});
+              res.status(200).json({status: 'ok'});
             } else {
-              res.json(200, {status: 'error'});
+              res.status(200).json({status: 'error'});
             }
           }).catch((err) => {
-          res.json(200, {status: 'catch error', error: err});
+          res.status(200).json({status: 'catch error', error: err});
         });
         break;
       case 'facebook':
@@ -105,12 +105,12 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendKeyboardMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.json(200, {status: 'ok'});
+              res.status(200).json({status: 'ok'});
             } else {
-              res.json(200, {status: 'error'});
+              res.status(200).json({status: 'error'});
             }
           }).catch((err) => {
-          res.json(200, {status: 'catch error', error: err});
+          res.status(200).json({status: 'catch error', error: err});
         });
         break;
       case 'facebook':
@@ -125,7 +125,7 @@ module.exports = {
 async function callTelegram(route, callTelegramParams) {
 
   try {
-    return await generalServices.sendREST('POST', route, callTelegramParams);
+    return await sails.helpers.general.sendRest('POST', route, callTelegramParams);
 
   } catch (err) {
     console.log('MessageGatewayController::callTelegram, Error:');

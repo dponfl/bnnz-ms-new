@@ -37,8 +37,8 @@ module.exports.routes = {
    * CoreModuleController
    */
 
-  'POST /core/start': 'CoreModuleController.proceedStartCommand',
-  'POST /core/help': 'CoreModuleController.proceedHelpCommand',
+  'POST /core/start': 'core-module/proceed-start-command',
+  'POST /core/help': 'core-module/proceed-help-command',
 
   /**
    * MessageGatewayController

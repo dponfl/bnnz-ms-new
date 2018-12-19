@@ -77,9 +77,9 @@ module.exports = {
 
     const methodName = 'onCallbackQueryScript';
 
-    var client = await generalServices.clientExists({chatId: chatId});
+    var client = await sails.helpers.general.clientExists({chatId: chatId});
 
-    if (client && client.code == 200) {
+    if (client && client.status == 'ok') {
       var clientRec = client.data;
 
       if (!_.isNil(clientRec.service.name)) {
@@ -295,7 +295,7 @@ ${t.t(lang, 'POST_UPLOAD_MSG')}
           // console.log('res.params:');
           // console.dir(res.params);
 
-          await generalServices.sendREST('POST', res.route, res.params);
+          await sails.helpers.general.sendRest('POST', res.route, res.params);
 
         }
         catch (err) {
@@ -333,7 +333,7 @@ ${t.t(lang, 'MSG_KEYBOARD')}
         ],
       };
 
-      await generalServices.sendREST('POST', res.route, res.params);
+      await sails.helpers.general.sendRest('POST', res.route, res.params);
     })();
 
     return false;

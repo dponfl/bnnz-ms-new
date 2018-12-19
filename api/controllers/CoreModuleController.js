@@ -143,19 +143,19 @@ function checkClient(checkClientParams) {
   console.log(moduleName + methodName + ', checkClientParams:');
   console.dir(checkClientParams);
 
-  return generalServices.clientExists(checkClientParams);
+  return sails.helpers.general.clientExists(checkClientParams);
 } // checkClient
 
 function sendInlineButtons(params) {
-    return generalServices.sendREST('POST', restLinks.mgSendInlineButtons, params);
+    return sails.helpers.general.sendRest('POST', restLinks.mgSendInlineButtons, params);
 } // sentInlineButtons
 
 function sendSimpleMessage(params) {
-    return generalServices.sendREST('POST', restLinks.mgSendSimpleMessage, params);
+    return sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
 } // sentInlineButtons
 
 function sendForcedMessage(params) {
-    return generalServices.sendREST('POST', restLinks.mgSendForcedMessage, params);
+    return sails.helpers.general.sendRest('POST', restLinks.mgSendForcedMessage, params);
 } // sentInlineButtons
 
 function proceedClient(client, params) {
