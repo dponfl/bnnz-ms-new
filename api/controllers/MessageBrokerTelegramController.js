@@ -7,7 +7,8 @@
 
 let messageGatewayServices = require('../../api/services/messageGateway');
 
-let bot = messageGatewayServices.getTelegramBot();
+// let bot = messageGatewayServices.getTelegramBot();
+let bot;
 
 module.exports = {
 	sendSimpleMessage: function (req, res) {

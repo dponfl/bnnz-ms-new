@@ -13,7 +13,10 @@ const convScript = require('./telegramListenerConvScript');
 const uuid = require('uuid-apikey');
 const _ = require('lodash');
 
-const bot = messageGatewayServices.getTelegramBot();
+// const bot = messageGatewayServices.getTelegramBot();
+const bot = function () {
+
+};
 
 const moduleName = 'telegramListener:: ';
 
@@ -21,7 +24,6 @@ let useLang = 'en';
 
 onCallbackQuery();
 
-onMessage();
 
 /**
  * Functions

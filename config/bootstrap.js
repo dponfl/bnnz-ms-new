@@ -9,6 +9,9 @@
  * https://sailsjs.com/config/bootstrap
  */
 
+const TelegramBot = require('node-telegram-bot-api');
+
+
 module.exports.bootstrap = async function() {
 
   // By convention, this is a good place to set up fake data during development.
@@ -27,7 +30,18 @@ module.exports.bootstrap = async function() {
   // ]);
   // ```
 
-  require('../api/services/coreNodes/chatListeners/telegramListener');
+  // require('../api/services/coreNodes/chatListeners/telegramListener');
 
+  sails.config.custom.telegramBot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
+    polling: {
+      interval: 300,
+      autoStart: true,
+      params: {
+        timeout: 10
+      }
+    }
+  });
+
+  await sails.helpers.chatListeners.telegramListener.onMessage();
 
 };
