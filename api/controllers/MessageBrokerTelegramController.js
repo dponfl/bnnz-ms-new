@@ -8,7 +8,6 @@
 let messageGatewayServices = require('../../api/services/messageGateway');
 
 // let bot = messageGatewayServices.getTelegramBot();
-let bot;
 
 module.exports = {
 	sendSimpleMessage: function (req, res) {
@@ -20,7 +19,7 @@ module.exports = {
 
     (async () => {
       try {
-        await bot.sendMessage(params.chatId, params.html, {
+        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
         });
 
@@ -53,7 +52,7 @@ module.exports = {
 
     (async () => {
       try {
-        await bot.sendMessage(params.chatId, params.html, {
+        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
           reply_markup: {
             force_reply: true
@@ -88,7 +87,7 @@ module.exports = {
 
     (async () => {
       try {
-        await bot.sendMessage(params.chatId, params.html, {
+        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
           reply_markup: {
             inline_keyboard: params.inline_keyboard,
@@ -124,7 +123,7 @@ module.exports = {
 
     (async () => {
       try {
-        await bot.sendMessage(params.chatId, params.html, {
+        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           // parse_mode: 'HTML',
           reply_markup: {
             keyboard: params.keyboard,
