@@ -4,6 +4,9 @@ const t = require('../../../services/translate');
 const generalServices = require('../../../services/general');
 const restLinks = generalServices.RESTLinks();
 
+const moduleName = 'Helper general:chatListeners.telegranListener';
+
+
 
 module.exports = {
 
@@ -37,26 +40,24 @@ module.exports = {
 
       sails.log.debug('Message received: ', msg);
 
-      let lang = msg.from.language_code;
-
-      let html = `
-<b>${t.t(lang, 'NEW_SUBS_WELCOME_01')}, ${msg.chat.first_name}</b>
-
-<b>${t.t(lang, 'NEW_SUBS_WELCOME_02')}</b>
-
-${t.t(lang, 'NEW_SUBS_WELCOME_03')} 
-`;
-
-
-      let params = {
+      let getClientResponse = await sails.helpers.general.getClientTest.with({
         messenger: 'telegram',
-        chatId: msg.chat.id,
-        html: html,
-      };
+        chatId: '372204823',
+      });
 
-      let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
+      if (
+        !_.isNil(getClientResponse)
+        && !_.isNil(getClientResponse.status)
+        && getClientResponse.status === 'ok'
+        && !_.isNil(getClientResponse.payload)
+      ) {
 
+        await showNextBlock(getClientResponse.payload.funnel.start,
+          getClientResponse.payload.funnel.start[0].id,
+          getClientResponse.payload.messenger,
+          getClientResponse.payload.chat_id);
 
+      }
 
     });
 
@@ -66,4 +67,38 @@ ${t.t(lang, 'NEW_SUBS_WELCOME_03')}
 
 
 };
+
+async function showNextBlock(blocks, blockId, messenger, chatId) {
+
+  /**
+   * Recursive function to show all blocks of array meeting conditions
+   */
+
+  blocks.map(async (block) => {
+
+    if (
+      block.id == blockId
+      && block.enabled
+      && !block.shown
+    ) {
+
+      let params = {
+        messenger: messenger,
+        chatId: chatId,
+        html: block.message.html,
+      };
+
+      let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
+
+      if (block.next) {
+
+        await showNextBlock(blocks, block.next, messenger, chatId)
+
+      }
+
+    }
+
+  })
+
+} // showNextBlock
 

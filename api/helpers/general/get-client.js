@@ -1,3 +1,5 @@
+"use strict";
+
 const _ = require('lodash');
 
 const moduleName = 'Helper general:get-client';
@@ -63,8 +65,14 @@ module.exports = {
 
       sails.log(moduleName + ', client was NOT FOUND');
 
-      return exits.success({ status: 'not found', message: 'client not found',
-        data: {messenger: inputs.messenger, chatId: inputs.chatId} });
+      return exits.success({
+        status: 'nok',
+        message: 'client not found',
+        payload: {
+          messenger: inputs.messenger,
+          chatId: inputs.chatId
+        }
+      });
 
     } else {
 
@@ -74,7 +82,11 @@ module.exports = {
 
       sails.log(moduleName + ', client was FOUND');
 
-      return exits.success({ status: 'found', message: 'client found', data: record });
+      return exits.success({
+        status: 'ok',
+        message: 'client found',
+        payload: record
+      });
 
     }
 

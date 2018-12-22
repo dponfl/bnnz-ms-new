@@ -65,11 +65,11 @@ module.exports = {
     if (!_.some(possibleMethods, (val) => {
       return val === inputs.method;
     })) {
-      throw {err: {status: 'nok', message: 'No method or wrong method', data: {}}};
+      throw {err: {status: 'nok', message: 'No method or wrong method', payload: {}}};
     }
 
     if (!inputs.url) {
-      throw {err: {status: 'nok', message: 'No url', data: {}}};
+      throw {err: {status: 'nok', message: 'No url', payload: {}}};
     }
 
     let options = {
@@ -83,11 +83,11 @@ module.exports = {
 
     if (!result) {
 
-      throw {err: {status: 'nok', message: 'No result from rp', data: {}}};
+      throw {err: {status: 'nok', message: 'No result from rp', payload: {}}};
 
     } else {
 
-      return exits.success({status: 'ok', message: 'success', data: result});
+      return exits.success({status: 'ok', message: 'success', payload: result});
 
     }
 
