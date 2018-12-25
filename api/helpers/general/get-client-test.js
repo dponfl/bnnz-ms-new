@@ -11,20 +11,10 @@ module.exports = {
   friendlyName: 'Get client test',
 
 
-  description: 'TEST - Returns the client record',
+  description: 'TEST - Loads the text client record to the global custom.testClient',
 
 
   inputs: {
-    messenger: {
-      friendlyName: 'messenger',
-      description: 'Messenger name',
-      type: 'string',
-    },
-    chatId: {
-      friendlyName: 'Client chatId',
-      description: 'Client chatId in the messenger',
-      type: 'string',
-    },
   },
 
 
@@ -47,7 +37,7 @@ module.exports = {
 
     const t = sails.helpers.general.translate;
 
-    let clientRec = {
+    sails.config.custom.testClient = {
       guid: '7e60e429-8f5f-4115-9bf5-bf45dd968063',
       first_name: 'Dmitry',
       last_name: 'Ponomarev',
@@ -55,21 +45,26 @@ module.exports = {
       username: 'dmpon',
       messenger: 'telegram',
       lang: 'ru',
-      funnel: {
+      funnels: {
         current: null,
         start: [
           {
             /**
              * First block
              */
-            id: 'start_step_00',
+            id: 'start_step_01',
             actionType: 'text',
             enabled: true,
             shown: false,
             done: false,
-            previous: null,
-            next: 'start_step_01',
+            previousFunnel: null,
+            previousId: null,
+            nextFunnel: 'start',
+            nextId: 'start_step_02',
+            switchToFunnel: null,
             beforeHelper: null,
+            afterHelperBlock: 'start',
+            afterHelperName: 'ah',
             forcedHelper: null,
             callbackHelper: null,
             message: {
@@ -81,20 +76,48 @@ module.exports = {
             /**
              * Second block
              */
-            id: 'start_step_01',
+            id: 'start_step_02',
             actionType: 'text',
-            enabled: true,
+            enabled: false,
             shown: false,
             done: false,
-            previous: 'start_step_00',
-            // next: 'start_step_01',
-            next: null,
+            previousFunnel: 'start',
+            previousId: 'start_step_01',
+            nextFunnel: 'start',
+            nextId: 'start_step_03',
+            switchToFunnel: null,
             beforeHelper: null,
+            afterHelperBlock: null,
+            afterHelperName: null,
             forcedHelper: null,
             callbackHelper: null,
             message: {
               // html: 'Сообщение 01',
               html: await t('ru', 'NEW_SUBS_WELCOME_02'),
+            },
+          },
+          {
+            /**
+             * Block 03
+             */
+            id: 'start_step_03',
+            actionType: 'text',
+            enabled: false,
+            shown: false,
+            done: false,
+            previousFunnel: 'start',
+            previousId: 'start_step_02',
+            nextFunnel: null,
+            nextId: null,
+            switchToFunnel: null,
+            beforeHelper: null,
+            afterHelperBlock: null,
+            afterHelperName: null,
+            forcedHelper: null,
+            callbackHelper: null,
+            message: {
+              // html: 'Сообщение 01',
+              html: await t('ru', 'NEW_SUBS_WELCOME_03'),
             },
           },
         ],
@@ -111,31 +134,7 @@ module.exports = {
       },
     };
 
-    if (
-      inputs.messenger == clientRec.messenger
-      && inputs.chatId == clientRec.chat_id
-    ) {
-
-      return exits.success({
-        status: 'ok',
-        message: 'client found',
-        payload: clientRec
-      });
-
-    } else {
-
-      throw {
-        err: {
-          status: 'nok',
-          message: 'client not found',
-          payload: {
-            messenger: inputs.messenger,
-            chatId: inputs.chatId,
-          }
-        }
-      };
-
-    }
+    exits.success();
 
 
   } // fn

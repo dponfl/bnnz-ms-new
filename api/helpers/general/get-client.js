@@ -49,13 +49,17 @@ module.exports = {
     //   throw {err: {status: 'nok', message: 'No client.chatId', data: {}}};
     // }
 
-    let record = await Client.findOne({
-      chat_id: inputs.chatId,
-      messenger: inputs.messenger
-    })
-    // .populate('messages')
-      .populate('rooms')
-      .populate('service');
+    // Load test client
+
+    let record = sails.config.custom.testClient;
+
+    // let record = await Client.findOne({
+    //   chat_id: inputs.chatId,
+    //   messenger: inputs.messenger
+    // })
+    // // .populate('messages')
+    //   .populate('rooms')
+    //   .populate('service');
 
     if (!record) {
 

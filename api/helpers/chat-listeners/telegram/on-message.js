@@ -4,7 +4,7 @@ const t = require('../../../services/translate');
 const generalServices = require('../../../services/general');
 const restLinks = generalServices.RESTLinks();
 
-const moduleName = 'Helper general:chatListeners.telegranListener';
+const moduleName = 'Helper general:chatListeners.telegramListener';
 
 
 
@@ -40,7 +40,7 @@ module.exports = {
 
       sails.log.debug('Message received: ', msg);
 
-      let getClientResponse = await sails.helpers.general.getClientTest.with({
+      let getClientResponse = await sails.helpers.general.getClient.with({
         messenger: 'telegram',
         chatId: '372204823',
       });
@@ -52,10 +52,13 @@ module.exports = {
         && !_.isNil(getClientResponse.payload)
       ) {
 
-        await proceedNextBlock(getClientResponse.payload.funnel.start,
-          getClientResponse.payload.funnel.start[0].id,
-          getClientResponse.payload.messenger,
-          getClientResponse.payload.chat_id);
+        sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
+
+        await proceedNextBlock(getClientResponse.payload,
+          'start',
+          'start_step_01');
+
+        sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
 
       }
 
@@ -68,37 +71,53 @@ module.exports = {
 
 };
 
-async function proceedNextBlock(blocks, blockId, messenger, chatId) {
+async function proceedNextBlock(client, funnelKey, blockId) {
 
   /**
-   * Recursive function to show all blocks of array meeting conditions
+   * Recursive function to show all linked blocks that meets conditions
    */
 
-  blocks.map(async (block) => {
+  let block = _.find(client.funnels[funnelKey], {id: blockId});
 
-    if (
-      block.id == blockId
-      && block.enabled
-      && !block.shown
-    ) {
+  sails.log.debug('Found block: ', block);
 
-      let params = {
-        messenger: messenger,
-        chatId: chatId,
-        html: block.message.html,
-      };
+  if (
+    block.enabled
+    && !block.shown
+  ) {
 
-      let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
+    let params = {
+      messenger: client.messenger,
+      chatId: client.chat_id,
+      html: block.message.html,
+    };
 
-      if (block.next) {
+    block.actionType = Math.random();
 
-        await proceedNextBlock(blocks, block.next, messenger, chatId)
+    let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
 
-      }
+  }
 
-    }
+  if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
 
-  })
+    await sails.helpers.funnel.afterHelperGeneric(client.funnels, block);
+
+  } else {
+
+    await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client.funnels, block);
+
+  }
+
+
+  if (
+    block.nextFunnel
+    && block.nextId
+  ) {
+
+    await proceedNextBlock(client, block.nextFunnel, block.nextId);
+
+  }
+
 
 } // proceedNextBlock
 
