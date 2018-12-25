@@ -42,6 +42,9 @@ module.exports.bootstrap = async function() {
     }
   });
 
-  await sails.helpers.chatListeners.telegramListener.onMessage();
+  await sails.helpers.general.loadTranslationTokens();
+
+  await sails.helpers.chatListeners.telegram.onMessage();
+  // await sails.helpers['chatListeners']['telegram']['onMessage']();
 
 };

@@ -24,4 +24,6 @@ module.exports.custom = {
 
   telegramBot: null,
 
+  tokens: {},
+
 };

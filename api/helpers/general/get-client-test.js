@@ -45,6 +45,8 @@ module.exports = {
 
     sails.log.debug(moduleName + ', started...');
 
+    const t = sails.helpers.general.translate;
+
     let clientRec = {
       guid: '7e60e429-8f5f-4115-9bf5-bf45dd968063',
       first_name: 'Dmitry',
@@ -71,7 +73,8 @@ module.exports = {
             forcedHelper: null,
             callbackHelper: null,
             message: {
-              html: 'Сообщение 00',
+              // html: 'Сообщение 00',
+              html: await t('ru', 'NEW_SUBS_WELCOME_01'),
             },
           },
           {
@@ -90,7 +93,8 @@ module.exports = {
             forcedHelper: null,
             callbackHelper: null,
             message: {
-              html: 'Сообщение 01',
+              // html: 'Сообщение 01',
+              html: await t('ru', 'NEW_SUBS_WELCOME_02'),
             },
           },
         ],

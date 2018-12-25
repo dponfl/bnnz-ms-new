@@ -52,7 +52,7 @@ module.exports = {
         && !_.isNil(getClientResponse.payload)
       ) {
 
-        await showNextBlock(getClientResponse.payload.funnel.start,
+        await proceedNextBlock(getClientResponse.payload.funnel.start,
           getClientResponse.payload.funnel.start[0].id,
           getClientResponse.payload.messenger,
           getClientResponse.payload.chat_id);
@@ -68,7 +68,7 @@ module.exports = {
 
 };
 
-async function showNextBlock(blocks, blockId, messenger, chatId) {
+async function proceedNextBlock(blocks, blockId, messenger, chatId) {
 
   /**
    * Recursive function to show all blocks of array meeting conditions
@@ -92,7 +92,7 @@ async function showNextBlock(blocks, blockId, messenger, chatId) {
 
       if (block.next) {
 
-        await showNextBlock(blocks, block.next, messenger, chatId)
+        await proceedNextBlock(blocks, block.next, messenger, chatId)
 
       }
 
@@ -100,5 +100,5 @@ async function showNextBlock(blocks, blockId, messenger, chatId) {
 
   })
 
-} // showNextBlock
+} // proceedNextBlock
 
