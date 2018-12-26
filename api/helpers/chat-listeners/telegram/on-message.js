@@ -134,7 +134,7 @@ async function proceedNextBlock(client, funnelKey, blockId) {
   } catch (e) {
 
     sails.log.error(e);
-    
+
   }
 
 

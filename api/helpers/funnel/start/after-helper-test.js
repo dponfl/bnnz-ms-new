@@ -38,16 +38,23 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    if (
-      inputs.block.nextFunnel
-      && inputs.block.nextId
-    ) {
+    try {
 
-      let nextBlock = _.find(inputs.client.funnels[inputs.block.nextFunnel], {id: inputs.block.nextId});
-      inputs.block.enabled = 'ABC';
-      nextBlock.enabled = 'DEF';
+      if (
+        inputs.block.nextFunnel
+        && inputs.block.nextId
+      ) {
 
+        let nextBlock = _.find(inputs.client.funnels[inputs.block.nextFunnel], {id: inputs.block.nextId});
+        inputs.block.enabled = 'ABC';
+        nextBlock.enabled = 'DEF';
+
+      }
+
+    } catch (e) {
+      sails.log.error(e);
     }
+
 
     return exits.success();
   }
