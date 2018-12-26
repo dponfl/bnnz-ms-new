@@ -100,11 +100,11 @@ async function proceedNextBlock(client, funnelKey, blockId) {
 
   if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
 
-    await sails.helpers.funnel.afterHelperGeneric(client.funnels, block);
+    await sails.helpers.funnel.afterHelperGeneric(client, block);
 
   } else {
 
-    await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client.funnels, block);
+    await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
 
   }
 

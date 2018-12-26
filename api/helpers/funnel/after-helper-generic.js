@@ -43,7 +43,7 @@ module.exports = {
       && inputs.block.nextId
     ) {
 
-      let nextBlock = _.find(inputs.client[inputs.block.nextFunnel], {id: inputs.block.nextId});
+      let nextBlock = _.find(inputs.client.funnels[inputs.block.nextFunnel], {id: inputs.block.nextId});
       nextBlock.enabled = true;
 
     }
