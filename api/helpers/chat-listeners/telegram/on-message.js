@@ -28,6 +28,10 @@ module.exports = {
       description: 'All done.',
     },
 
+    err: {
+      description: 'Error',
+    }
+
   },
 
 
@@ -73,50 +77,67 @@ module.exports = {
 
 async function proceedNextBlock(client, funnelKey, blockId) {
 
-  /**
-   * Recursive function to show all linked blocks that meets conditions
-   */
+  try {
+    /**
+     * Recursive function to show all linked blocks that meets conditions
+     */
 
-  let block = _.find(client.funnels[funnelKey], {id: blockId});
+    let block = _.find(client.funnels[funnelKey], {id: blockId});
 
-  sails.log.debug('Found block: ', block);
+    sails.log.debug('Found block: ', block);
 
-  if (
-    block.enabled
-    && !block.shown
-  ) {
+    if (
+      block.enabled
+      && !block.shown
+    ) {
 
-    let params = {
-      messenger: client.messenger,
-      chatId: client.chat_id,
-      html: block.message.html,
-    };
+      let params = {
+        messenger: client.messenger,
+        chatId: client.chat_id,
+        html: block.message.html,
+      };
 
-    block.actionType = Math.random();
+      block.actionType = Math.random();
 
-    let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
+      let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
 
+    }
+
+    if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
+
+      await sails.helpers.funnel.afterHelperGeneric(client, block);
+
+    } else {
+
+      if (!_.isNil(sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName])) {
+
+        await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
+
+      } else {
+
+        throw {err: {status: 'nok', message: 'The helper with afterHelperBlock=' +
+              block.afterHelperBlock + ' and afterHelperName=' + block.afterHelperName +
+              ' was not found'}};
+
+      }
+
+    }
+
+    if (
+      block.nextFunnel
+      && block.nextId
+    ) {
+
+      await proceedNextBlock(client, block.nextFunnel, block.nextId);
+
+    }
+  } catch (e) {
+
+    sails.log.error(e);
+    
   }
 
-  if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
 
-    await sails.helpers.funnel.afterHelperGeneric(client, block);
-
-  } else {
-
-    await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
-
-  }
-
-
-  if (
-    block.nextFunnel
-    && block.nextId
-  ) {
-
-    await proceedNextBlock(client, block.nextFunnel, block.nextId);
-
-  }
 
 
 } // proceedNextBlock

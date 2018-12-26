@@ -44,8 +44,8 @@ module.exports = {
     ) {
 
       let nextBlock = _.find(inputs.client.funnels[inputs.block.nextFunnel], {id: inputs.block.nextId});
-      inputs.block.enabled = 'DEF';
-      nextBlock.enabled = 'ABC';
+      inputs.block.enabled = 'ABC';
+      nextBlock.enabled = 'DEF';
 
     }
 

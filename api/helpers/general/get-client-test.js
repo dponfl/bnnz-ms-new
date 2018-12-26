@@ -64,7 +64,7 @@ module.exports = {
             switchToFunnel: null,
             beforeHelper: null,
             afterHelperBlock: 'start',
-            afterHelperName: 'ah',
+            afterHelperName: 'afterHelperTest1',
             forcedHelper: null,
             callbackHelper: null,
             message: {
