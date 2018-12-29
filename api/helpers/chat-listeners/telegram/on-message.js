@@ -56,13 +56,41 @@ module.exports = {
         && !_.isNil(getClientResponse.payload)
       ) {
 
-        sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
+        let checkFunnelsRes = await sails.helpers.general.checkFunnels(getClientResponse.payload);
 
-        await proceedNextBlock(getClientResponse.payload,
-          'start',
-          'start_step_01');
+        if (
+          !_.isNil(checkFunnelsRes)
+          && !_.isNil(checkFunnelsRes.status)
+          && checkFunnelsRes.status === 'ok'
+        ) {
 
-        sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
+          sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
+
+          if (getClientResponse.payload.funnels.current) {
+
+            let initialBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
+              {previous: null});
+
+            sails.log.debug('initialBlock: ', initialBlock);
+
+            await proceedNextBlock(getClientResponse.payload,
+              getClientResponse.payload.funnels.current,
+              'start_step_01');
+
+            sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
+
+          } else {
+
+            sails.log.error('Funnels current is not defined: ', getClientResponse.payload);
+
+          }
+
+
+        } else {
+
+          sails.log.error('Funnels check was not successful');
+
+        }
 
       }
 
@@ -123,12 +151,19 @@ async function proceedNextBlock(client, funnelKey, blockId) {
 
     }
 
+    let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
+    let nextFunnel = splitRes[0];
+    let nextId = splitRes[1];
+
+    sails.log.debug('nextFunnel: ', nextFunnel);
+    sails.log.debug('nextId: ', nextId);
+
     if (
-      block.nextFunnel
-      && block.nextId
+      nextFunnel
+      && nextId
     ) {
 
-      await proceedNextBlock(client, block.nextFunnel, block.nextId);
+      await proceedNextBlock(client, nextFunnel, nextId);
 
     }
   } catch (e) {

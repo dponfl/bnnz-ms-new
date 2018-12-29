@@ -28,4 +28,6 @@ module.exports.custom = {
 
   testClient: {},
 
+  JUNCTION: '::',
+
 };

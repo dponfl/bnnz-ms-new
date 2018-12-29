@@ -42,8 +42,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.warn('ttt: ', sails.config.custom.ttt);
-
     const tokens = sails.config.custom.tokens;
 
     if (!_.isNil(tokens[inputs.lang][inputs.token])) {
