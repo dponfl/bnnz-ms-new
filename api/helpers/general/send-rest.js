@@ -58,18 +58,18 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log(moduleName + ', inputs: ', inputs);
+    // sails.log(moduleName + ', inputs: ', inputs);
 
     const possibleMethods = ['POST', 'GET'];
 
     if (!_.some(possibleMethods, (val) => {
       return val === inputs.method;
     })) {
-      throw {err: {status: 'nok', message: 'No method or wrong method', payload: {}}};
+      return exits.success({status: 'nok', message: 'No method or wrong method', payload: {}});
     }
 
     if (!inputs.url) {
-      throw {err: {status: 'nok', message: 'No url', payload: {}}};
+      return exits.success({status: 'nok', message: 'No url', payload: {}});
     }
 
     let options = {
@@ -83,7 +83,7 @@ module.exports = {
 
     if (!result) {
 
-      throw {err: {status: 'nok', message: 'No result from rp', payload: {}}};
+      return exits.success({status: 'nok', message: 'No result from rp', payload: {}});
 
     } else {
 

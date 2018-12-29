@@ -65,116 +65,89 @@ module.exports = {
           && checkFunnelsRes.status === 'ok'
         ) {
 
-          sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
+          // sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
 
           if (getClientResponse.payload.funnels.current) {
 
             let initialBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
               {previous: null});
 
-            sails.log.debug('initialBlock: ', initialBlock);
+            // sails.log.debug('initialBlock: ', initialBlock);
 
-            await sails.helpers.funnel.proceedNextBlock(getClientResponse.payload,
-              getClientResponse.payload.funnels.current,
-              'start_step_01');
+            if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
-            sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
+              await sails.helpers.funnel.proceedNextBlock(getClientResponse.payload,
+                getClientResponse.payload.funnels.current,
+                initialBlock.id, msg);
+
+              sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
+
+
+            } else {
+
+              sails.log.error('Initial block was not found of its ID is not defined: \nclient: ',
+                getClientResponse.payload);
+
+              return exits.success({
+                status: 'nok',
+                message: 'Funnels check was not successful',
+                payload: {client: getClientResponse.payload}
+              });
+
+            }
+
 
           } else {
 
-            sails.log.error('Funnels current is not defined: ', getClientResponse.payload);
+            sails.log.error('Funnels key=current is not defined:\nclient: ',
+              getClientResponse.payload);
+
+            return exits.success({
+              status: 'nok',
+              message: 'Funnels check was not successful',
+              payload: {client: getClientResponse.payload}
+            });
 
           }
 
 
         } else {
 
-          sails.log.error('Funnels check was not successful');
+          sails.log.error('Funnels check was not successful: \nclient: ',
+            getClientResponse.payload);
+
+          return exits.success({
+            status: 'nok',
+            message: 'Funnels check was not successful',
+            payload: {client: getClientResponse.payload}
+          });
 
         }
+
+      } else {
+
+        sails.log.error('Client was not found: \nclient: ',
+          getClientResponse);
+
+        return exits.success({
+          status: 'nok',
+          message: 'Client was not found',
+          payload: {client: getClientResponse}
+        });
 
       }
 
     });
 
-    return exits.success();
+    return exits.success({
+      status: 'ok',
+      message: 'success',
+      payload: {}
+    });
 
   } //fn
 
 
 };
 
-// async function proceedNextBlock(client, funnelKey, blockId) {
-//
-//   try {
-//     /**
-//      * Recursive function to show all linked blocks that meets conditions
-//      */
-//
-//     let block = _.find(client.funnels[funnelKey], {id: blockId});
-//
-//     sails.log.debug('Found block: ', block);
-//
-//     if (
-//       block.enabled
-//       && !block.shown
-//     ) {
-//
-//       let params = {
-//         messenger: client.messenger,
-//         chatId: client.chat_id,
-//         html: block.message.html,
-//       };
-//
-//       block.actionType = Math.random();
-//
-//       let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
-//
-//     }
-//
-//     if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
-//
-//       await sails.helpers.funnel.afterHelperGeneric(client, block);
-//
-//     } else {
-//
-//       if (!_.isNil(sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName])) {
-//
-//         await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
-//
-//       } else {
-//
-//         throw {err: {status: 'nok', message: 'The helper with afterHelperBlock=' +
-//               block.afterHelperBlock + ' and afterHelperName=' + block.afterHelperName +
-//               ' was not found'}};
-//
-//       }
-//
-//     }
-//
-//     let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
-//     let nextFunnel = splitRes[0];
-//     let nextId = splitRes[1];
-//
-//     sails.log.debug('nextFunnel: ', nextFunnel);
-//     sails.log.debug('nextId: ', nextId);
-//
-//     if (
-//       nextFunnel
-//       && nextId
-//     ) {
-//
-//       await proceedNextBlock(client, nextFunnel, nextId);
-//
-//     }
-//   } catch (e) {
-//
-//     sails.log.error(e);
-//
-//   }
-//
-//
-//
-//
-// } // proceedNextBlock
 

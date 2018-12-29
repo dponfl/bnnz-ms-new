@@ -19,7 +19,13 @@ module.exports = {
       description: 'Current funnel block',
       type: 'ref',
       required: true,
-    }
+    },
+    msg: {
+      friendlyName: 'message',
+      description: 'Message received',
+      type: 'ref',
+      required: true,
+    },
   },
 
 
@@ -38,6 +44,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    inputs.block.done = true;
+
     let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
     let nextFunnel = splitRes[0];
     let nextId = splitRes[1];
@@ -51,6 +59,8 @@ module.exports = {
       nextBlock.enabled = true;
 
     }
+
+    // TODO: Update client's record in DB before exit
 
     return exits.success();
   }

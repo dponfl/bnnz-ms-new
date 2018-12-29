@@ -5,10 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-let messageGatewayServices = require('../../api/services/messageGateway');
-
-// let bot = messageGatewayServices.getTelegramBot();
-
 module.exports = {
 	sendSimpleMessage: function (req, res) {
 
@@ -19,11 +15,11 @@ module.exports = {
 
     (async () => {
       try {
-        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
+        let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
         });
 
-        res.status(200).json({status: 'ok'});
+        res.status(200).json({status: 'ok', payload: sendMessageRes});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendSimpleMessage, Error:');
@@ -52,14 +48,14 @@ module.exports = {
 
     (async () => {
       try {
-        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
+        let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
           reply_markup: {
             force_reply: true
           }
         });
 
-        res.status(200).json({status: 'ok'});
+        res.status(200).json({status: 'ok', payload: sendMessageRes});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendForceMessage, Error:');
@@ -87,14 +83,14 @@ module.exports = {
 
     (async () => {
       try {
-        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
+        let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           parse_mode: 'HTML',
           reply_markup: {
             inline_keyboard: params.inline_keyboard,
           }
         });
 
-        res.status(200).json({status: 'ok'});
+        res.status(200).json({status: 'ok', payload: sendMessageRes});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendInlineButtons, Error:');
@@ -123,14 +119,14 @@ module.exports = {
 
     (async () => {
       try {
-        await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
+        let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(params.chatId, params.html, {
           // parse_mode: 'HTML',
           reply_markup: {
             keyboard: params.keyboard,
           }
         });
 
-        res.status(200).json({status: 'ok'});
+        res.status(200).json({status: 'ok',payload: sendMessageRes});
 
       } catch (err) {
         console.log('MessageBrokerTelegramController::sendKeyboard, Error:');

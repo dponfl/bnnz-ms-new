@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'After helper generic',
+  friendlyName: 'Step 04 helper',
 
 
-  description: 'Generic afterHelper',
+  description: 'Step 04 helper',
 
 
   inputs: {
@@ -35,6 +35,7 @@ module.exports = {
       description: 'All done.',
     },
 
+
     err: {
       description: 'Error',
     }
@@ -43,23 +44,22 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-
     try {
 
-      let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
-      let nextFunnel = splitRes[0];
-      let nextId = splitRes[1];
-
-      if (
-        nextFunnel
-        && nextId
-      ) {
-
-        let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
-        inputs.block.enabled = 'ABC';
-        nextBlock.enabled = 'DEF';
-
-      }
+      // let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
+      // let nextFunnel = splitRes[0];
+      // let nextId = splitRes[1];
+      //
+      // if (
+      //   nextFunnel
+      //   && nextId
+      // ) {
+      //
+      //   let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
+      //   inputs.block.enabled = 'ABC';
+      //   nextBlock.enabled = 'DEF';
+      //
+      // }
 
     } catch (e) {
       sails.log.error(e);

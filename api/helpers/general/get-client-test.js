@@ -61,12 +61,10 @@ module.exports = {
             next: 'start::start_step_02',
             switchToFunnel: null,
             beforeHelper: null,
-            afterHelperBlock: 'start',
-            afterHelperName: 'afterHelperTest',
+            afterHelper: 'start::afterHelperTest',
             forcedHelper: null,
-            callbackHelper: null,
+            inlineKeyboardHelper: null,
             message: {
-              // html: 'Сообщение 00',
               html: await t('ru', 'NEW_SUBS_WELCOME_01'),
             },
           },
@@ -83,12 +81,10 @@ module.exports = {
             next: 'start::start_step_03',
             switchToFunnel: null,
             beforeHelper: null,
-            afterHelperBlock: null,
-            afterHelperName: null,
+            afterHelper: null,
             forcedHelper: null,
-            callbackHelper: null,
+            inlineKeyboardHelper: null,
             message: {
-              // html: 'Сообщение 01',
               html: await t('ru', 'NEW_SUBS_WELCOME_02'),
             },
           },
@@ -102,16 +98,113 @@ module.exports = {
             shown: false,
             done: false,
             previous: 'start::start_step_02',
+            next: 'start::start_step_04',
+            switchToFunnel: null,
+            beforeHelper: null,
+            afterHelper: null,
+            forcedHelper: null,
+            inlineKeyboardHelper: null,
+            message: {
+              html: await t('ru', 'NEW_SUBS_WELCOME_03'),
+            },
+          },
+          {
+            /**
+             * Block 04
+             */
+            id: 'start_step_04',
+            actionType: 'forced',
+            enabled: false,
+            shown: false,
+            done: false,
+            previous: 'start::start_step_03',
             next: null,
             switchToFunnel: null,
             beforeHelper: null,
-            afterHelperBlock: null,
-            afterHelperName: null,
+            afterHelper: 'start::step04',
+            // afterHelper: null,
             forcedHelper: null,
-            callbackHelper: null,
+            inlineKeyboardHelper: null,
             message: {
-              // html: 'Сообщение 01',
-              html: await t('ru', 'NEW_SUBS_WELCOME_03'),
+              html: await t('ru', 'NEW_SUBS_INST_01'),
+            },
+          },
+          {
+            /**
+             * Block 05_1
+             */
+            id: 'start_step_05_1',
+            actionType: 'inline_keyboard',
+            enabled: false,
+            shown: false,
+            done: false,
+            previous: 'start::start_step_04',
+            next: null,
+            switchToFunnel: null,
+            beforeHelper: null,
+            afterHelper: null,
+            forcedHelper: null,
+            inlineKeyboardHelper: null,
+            message: {
+              html: await t('ru', 'MSG_HELP'),
+              inline_keyboard: [
+                [
+                  {
+                    text: await t('ru', 'ACT_NEW_POST'),
+                    callback_data: 'upload_post'
+                  },
+                ],
+                [
+                  {
+                    text: await t('ru', 'ACT_FAQ'),
+                    url: 'www.google.com',
+                  },
+                  {
+                    text: await t('ru', 'ACT_WEB'),
+                    url: 'www.facebook.com',
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            /**
+             * Block 05_2
+             */
+            id: 'start_step_05_2',
+            actionType: 'inline_keyboard',
+            enabled: false,
+            shown: false,
+            done: false,
+            previous: 'start::start_step_04',
+            next: null,
+            switchToFunnel: null,
+            beforeHelper: null,
+            afterHelper: null,
+            forcedHelper: null,
+            inlineKeyboardHelper: null,
+            message: {
+              html: await t('ru', 'NEW_SUBS_INST_05'),
+              inline_keyboard: [
+                [
+                  {
+                    text: await t('ru', 'PLAN_PLATINUM'),
+                    callback_data: 'instagram_plan_platinum'
+                  },
+                ],
+                [
+                  {
+                    text: await t('ru', 'PLAN_GOLD'),
+                    callback_data: 'instagram_plan_gold'
+                  },
+                ],
+                [
+                  {
+                    text: await t('ru', 'PLAN_BRONZE'),
+                    callback_data: 'instagram_plan_bronze'
+                  },
+                ],
+              ],
             },
           },
         ],
@@ -128,7 +221,7 @@ module.exports = {
       },
     };
 
-    exits.success();
+    return exits.success();
 
 
   } // fn

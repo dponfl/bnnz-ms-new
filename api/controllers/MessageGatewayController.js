@@ -22,7 +22,7 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendInlineMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.status(200).json({status: 'ok'});
+              res.status(200).json({status: 'ok', payload: result});
             } else {
               res.status(200).json({status: 'error'});
             }
@@ -50,7 +50,7 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendForcedMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.status(200).json({status: 'ok'});
+              res.status(200).json({status: 'ok', payload: result});
             } else {
               res.status(200).json({status: 'error'});
             }
@@ -78,7 +78,7 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendSimpleMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.status(200).json({status: 'ok'});
+              res.status(200).json({status: 'ok', payload: result});
             } else {
               res.status(200).json({status: 'error'});
             }
@@ -105,7 +105,7 @@ module.exports = {
           .then((result) => {
             sails.log.info('!!!!!!!! MessageGatewayController::sendKeyboardMessage, result:', result);
             if (!_.isNil(result.status) && result.status == 'ok') {
-              res.status(200).json({status: 'ok'});
+              res.status(200).json({status: 'ok', payload: result});
             } else {
               res.status(200).json({status: 'error'});
             }
