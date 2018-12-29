@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require('lodash');
 const t = require('../../../services/translate');
 const generalServices = require('../../../services/general');
 const restLinks = generalServices.RESTLinks();
@@ -73,7 +74,7 @@ module.exports = {
 
             sails.log.debug('initialBlock: ', initialBlock);
 
-            await proceedNextBlock(getClientResponse.payload,
+            await sails.helpers.funnel.proceedNextBlock(getClientResponse.payload,
               getClientResponse.payload.funnels.current,
               'start_step_01');
 
@@ -103,77 +104,77 @@ module.exports = {
 
 };
 
-async function proceedNextBlock(client, funnelKey, blockId) {
-
-  try {
-    /**
-     * Recursive function to show all linked blocks that meets conditions
-     */
-
-    let block = _.find(client.funnels[funnelKey], {id: blockId});
-
-    sails.log.debug('Found block: ', block);
-
-    if (
-      block.enabled
-      && !block.shown
-    ) {
-
-      let params = {
-        messenger: client.messenger,
-        chatId: client.chat_id,
-        html: block.message.html,
-      };
-
-      block.actionType = Math.random();
-
-      let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
-
-    }
-
-    if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
-
-      await sails.helpers.funnel.afterHelperGeneric(client, block);
-
-    } else {
-
-      if (!_.isNil(sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName])) {
-
-        await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
-
-      } else {
-
-        throw {err: {status: 'nok', message: 'The helper with afterHelperBlock=' +
-              block.afterHelperBlock + ' and afterHelperName=' + block.afterHelperName +
-              ' was not found'}};
-
-      }
-
-    }
-
-    let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
-    let nextFunnel = splitRes[0];
-    let nextId = splitRes[1];
-
-    sails.log.debug('nextFunnel: ', nextFunnel);
-    sails.log.debug('nextId: ', nextId);
-
-    if (
-      nextFunnel
-      && nextId
-    ) {
-
-      await proceedNextBlock(client, nextFunnel, nextId);
-
-    }
-  } catch (e) {
-
-    sails.log.error(e);
-
-  }
-
-
-
-
-} // proceedNextBlock
+// async function proceedNextBlock(client, funnelKey, blockId) {
+//
+//   try {
+//     /**
+//      * Recursive function to show all linked blocks that meets conditions
+//      */
+//
+//     let block = _.find(client.funnels[funnelKey], {id: blockId});
+//
+//     sails.log.debug('Found block: ', block);
+//
+//     if (
+//       block.enabled
+//       && !block.shown
+//     ) {
+//
+//       let params = {
+//         messenger: client.messenger,
+//         chatId: client.chat_id,
+//         html: block.message.html,
+//       };
+//
+//       block.actionType = Math.random();
+//
+//       let res = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, params);
+//
+//     }
+//
+//     if (_.isNil(block.afterHelperBlock) || _.isNil(block.afterHelperName)) {
+//
+//       await sails.helpers.funnel.afterHelperGeneric(client, block);
+//
+//     } else {
+//
+//       if (!_.isNil(sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName])) {
+//
+//         await sails.helpers.funnel[block.afterHelperBlock][block.afterHelperName](client, block);
+//
+//       } else {
+//
+//         throw {err: {status: 'nok', message: 'The helper with afterHelperBlock=' +
+//               block.afterHelperBlock + ' and afterHelperName=' + block.afterHelperName +
+//               ' was not found'}};
+//
+//       }
+//
+//     }
+//
+//     let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
+//     let nextFunnel = splitRes[0];
+//     let nextId = splitRes[1];
+//
+//     sails.log.debug('nextFunnel: ', nextFunnel);
+//     sails.log.debug('nextId: ', nextId);
+//
+//     if (
+//       nextFunnel
+//       && nextId
+//     ) {
+//
+//       await proceedNextBlock(client, nextFunnel, nextId);
+//
+//     }
+//   } catch (e) {
+//
+//     sails.log.error(e);
+//
+//   }
+//
+//
+//
+//
+// } // proceedNextBlock
 
