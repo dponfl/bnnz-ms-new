@@ -33,6 +33,10 @@ module.exports = {
   fn: async function (inputs, exits) {
     sails.log('Check funnels performed...');
 
+    // todo: Need to check:
+    // 1. actionType is correct
+    // 2. all specified helpers exist
+
     if (true) {
 
       // Check funnels is OK

@@ -45,12 +45,18 @@ module.exports = {
 
       sails.log.debug('Message received: ', msg);
 
-      let lang = 'en';
+      /**
+       * Get the client record from DB
+       */
 
       let getClientResponse = await sails.helpers.general.getClient.with({
         messenger: 'telegram',
         chatId: '372204823',
       });
+
+      /**
+       * Check if the client found
+       */
 
       if (
         !_.isNil(getClientResponse)
@@ -58,6 +64,10 @@ module.exports = {
         && getClientResponse.status === 'ok'
         && !_.isNil(getClientResponse.payload)
       ) {
+
+        /**
+         * Check that funnels do not have big errors
+         */
 
         let checkFunnelsRes = await sails.helpers.general.checkFunnels(getClientResponse.payload);
 
@@ -69,12 +79,60 @@ module.exports = {
 
           // sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
 
+          /**
+           * Check if the message received is a reply to a forced message
+           */
+
+          if (!_.isNil(msg.reply_to_message)
+            && !_.isNil(msg.reply_to_message.message_id)) {
+
+            let forcedReplyBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
+              {message_id: msg.reply_to_message.message_id});
+
+            if (!_.isNil(forcedReplyBlock)) {
+
+              let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
+              let forcedHelperBlock = splitForcedHelperRes[0];
+              let forcedHelperName = splitForcedHelperRes[1];
+
+              if (!_.isNil(sails.helpers.funnel[forcedHelperBlock][forcedHelperName])) {
+
+                await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](getClientResponse.payload, forcedReplyBlock, msg);
+
+              } else {
+
+                return exits.success({
+                  status: 'nok',
+                  message: 'The helper with afterHelperBlock=' +
+                    afterHelperBlock + ' and afterHelperName=' + afterHelperName +
+                    ' was not found',
+                  payload: {
+                    client: inputs.client,
+                    block: block,
+                  }
+                });
+
+              }
+
+
+            }
+
+          }
+
+          /**
+           * Check if the current funnel is specified
+           */
+
           if (getClientResponse.payload.funnels.current) {
 
             let initialBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
               {previous: null});
 
             // sails.log.debug('initialBlock: ', initialBlock);
+
+            /**
+             * Check that the initial block was found
+             */
 
             if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
@@ -92,7 +150,7 @@ module.exports = {
 
               return exits.success({
                 status: 'nok',
-                message: 'Funnels check was not successful',
+                message: 'Initial block was not found of its ID is not defined',
                 payload: {client: getClientResponse.payload}
               });
 
@@ -106,7 +164,7 @@ module.exports = {
 
             return exits.success({
               status: 'nok',
-              message: 'Funnels check was not successful',
+              message: 'Funnels key=current is not defined',
               payload: {client: getClientResponse.payload}
             });
 

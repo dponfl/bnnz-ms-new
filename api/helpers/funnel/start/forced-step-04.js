@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Step 04 helper',
+  friendlyName: 'Forced step 04',
 
 
-  description: 'Step 04 helper',
+  description: 'Helper for the forced message reply at Step 04',
 
 
   inputs: {
@@ -35,33 +35,26 @@ module.exports = {
       description: 'All done.',
     },
 
-
-    err: {
-      description: 'Error',
-    }
-
   },
 
 
-  fn: async function (inputs, exits) {
+  fn: async function (inputs,exits) {
     try {
 
-      sails.log.debug('/*************** Step 04 helper ***************/');
+      sails.log.debug('/*************** Step 04 forced message helper ***************/');
 
-      // let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
-      // let nextFunnel = splitRes[0];
-      // let nextId = splitRes[1];
-      //
-      // if (
-      //   nextFunnel
-      //   && nextId
-      // ) {
-      //
-      //   let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
-      //   inputs.block.enabled = 'ABC';
-      //   nextBlock.enabled = 'DEF';
-      //
-      // }
+      if (/111/i.test(inputs.msg.text)) {
+
+        inputs.block.next = 'start::start_step_05_1';
+        await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+
+      } else if (/222/i.test(inputs.msg.text)) {
+
+        inputs.block.next = 'start::start_step_05_2';
+        await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+
+      }
+
 
     } catch (e) {
       sails.log.error(e);

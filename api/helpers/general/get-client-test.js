@@ -153,7 +153,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: 'start::step04',
             // afterHelper: null,
-            forcedHelper: null,
+            forcedHelper: 'start::forcedStep04',
             inlineKeyboardHelper: null,
             message: {
               html: [

@@ -72,7 +72,7 @@ module.exports = {
 
     if (
       block.enabled
-      && !block.shown
+      // && !block.shown
       && !block.done
       && block.actionType
     ) {
@@ -128,7 +128,12 @@ module.exports = {
               }
             })
 
+          } else {
+
+            block.shown = true;
+
           }
+
           break;
 
         case 'forced':
@@ -182,7 +187,12 @@ module.exports = {
               }
             })
 
+          } else {
+
+            block.shown = true;
+
           }
+
           break;
 
         case 'inline_keyboard':
@@ -206,6 +216,9 @@ module.exports = {
                   : '')
                 : '');
           }
+
+          // todo: need to find all text keys in block.message.inline_keyboard
+          // and replace token by the value depends on language
 
 
           let paramsInline = {
@@ -236,7 +249,12 @@ module.exports = {
               }
             })
 
+          } else {
+
+            block.shown = true;
+
           }
+
           break;
       }
 
@@ -296,7 +314,7 @@ module.exports = {
 
 
     return exits.success({status: 'ok',
-      message: 'success',
+      message: 'Success',
       payload: {
         client: inputs.client,
         block: block
