@@ -30,4 +30,11 @@ module.exports.custom = {
 
   JUNCTION: '::',
 
+  SCR: `
+`,
+
+  DCR: `
+  
+`,
+
 };

@@ -61,6 +61,8 @@ module.exports = {
      * Recursive function to show all linked blocks that meets conditions
      */
 
+    const t = sails.helpers.general.translate;
+
     let messageSuccessful = false;
     let messageResult = '';
 
@@ -83,10 +85,26 @@ module.exports = {
            * Send simple text message
            */
 
+          let htmlSimple = '';
+
+          for (let i = 0; i < block.message.html.length; i++) {
+            htmlSimple = htmlSimple +
+              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+              await t(inputs.client.lang, block.message.html[i].text) +
+              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+              (block.message.html.length > 1
+                ? (block.message.html[i].cr
+                  ? sails.config.custom[block.message.html[i].cr]
+                  : '')
+                : '');
+          }
+
           let paramsSimple = {
             messenger: inputs.client.messenger,
             chatId: inputs.client.chat_id,
-            html: block.message.html,
+            html: htmlSimple,
           };
 
           let simpleRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, paramsSimple);
@@ -119,10 +137,28 @@ module.exports = {
            * Send forced reply message
            */
 
+          let htmlForced = '';
+
+          for (let i = 0; i < block.message.html.length; i++) {
+            htmlForced = htmlForced +
+              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+              await t(inputs.client.lang, block.message.html[i].text) +
+              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+              (block.message.html.length > 1
+                ? (block.message.html[i].cr
+                  ? sails.config.custom[block.message.html[i].cr]
+                  : '')
+                : '');
+          }
+
+
+
           let paramsForced = {
             messenger: inputs.client.messenger,
             chatId: inputs.client.chat_id,
-            html: block.message.html,
+            html: htmlForced,
           };
 
           let forcedRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendForcedMessage, paramsForced);
@@ -155,10 +191,27 @@ module.exports = {
            * Send inline keyboard message
            */
 
+          let htmlInline = '';
+
+          for (let i = 0; i < block.message.html.length; i++) {
+            htmlInline = htmlInline +
+              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+              await t(inputs.client.lang, block.message.html[i].text) +
+              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+              (block.message.html.length > 1
+                ? (block.message.html[i].cr
+                  ? sails.config.custom[block.message.html[i].cr]
+                  : '')
+                : '');
+          }
+
+
           let paramsInline = {
             messenger: inputs.client.messenger,
             chatId: inputs.client.chat_id,
-            html: block.message.html,
+            html: htmlInline,
             inline_keyboard: block.message.inline_keyboard,
           };
 

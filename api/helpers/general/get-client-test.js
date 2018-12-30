@@ -15,6 +15,7 @@ module.exports = {
 
 
   inputs: {
+
   },
 
 
@@ -65,7 +66,24 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'NEW_SUBS_WELCOME_01'),
+              html: [
+                {
+                  text: 'NEW_SUBS_WELCOME_01',
+                  style: 'b',
+                  cr: 'DCR',
+                },
+                {
+                  text: 'NEW_SUBS_WELCOME_01',
+                  style: '',
+                  cr: 'SCR',
+                },
+                {
+                  text: 'NEW_SUBS_WELCOME_01',
+                  style: 'i',
+                  cr: '',
+                },
+
+              ],
             },
           },
           {
@@ -85,7 +103,13 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'NEW_SUBS_WELCOME_02'),
+              html: [
+                {
+                  text: 'NEW_SUBS_WELCOME_02',
+                  style: 'b',
+                  cr: '',
+                },
+              ],
             },
           },
           {
@@ -105,7 +129,13 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'NEW_SUBS_WELCOME_03'),
+              html: [
+                {
+                  text: 'NEW_SUBS_WELCOME_03',
+                  style: 'i',
+                  cr: '',
+                },
+              ],
             },
           },
           {
@@ -126,7 +156,23 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'NEW_SUBS_INST_01'),
+              html: [
+                {
+                  text: 'NEW_SUBS_INST_01',
+                  style: 'b',
+                  cr: 'SCR',
+                },
+                {
+                  text: 'NEW_SUBS_INST_01',
+                  style: 'i',
+                  cr: 'DCR',
+                },
+                {
+                  text: 'NEW_SUBS_INST_01',
+                  style: '',
+                  cr: '',
+                },
+              ],
             },
           },
           {
@@ -146,21 +192,27 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'MSG_HELP'),
+              html: [
+                {
+                  text: 'MSG_HELP',
+                  style: '',
+                  cr: '',
+                },
+              ],
               inline_keyboard: [
                 [
                   {
-                    text: await t('ru', 'ACT_NEW_POST'),
+                    text: ['ACT_NEW_POST'],
                     callback_data: 'upload_post'
                   },
                 ],
                 [
                   {
-                    text: await t('ru', 'ACT_FAQ'),
+                    text: ['ACT_FAQ'],
                     url: 'www.google.com',
                   },
                   {
-                    text: await t('ru', 'ACT_WEB'),
+                    text: ['ACT_WEB'],
                     url: 'www.facebook.com',
                   },
                 ],
@@ -184,23 +236,29 @@ module.exports = {
             forcedHelper: null,
             inlineKeyboardHelper: null,
             message: {
-              html: await t('ru', 'NEW_SUBS_INST_05'),
+              html: [
+                {
+                  text: 'NEW_SUBS_INST_05',
+                  style: '',
+                  cr: '',
+                },
+              ],
               inline_keyboard: [
                 [
                   {
-                    text: await t('ru', 'PLAN_PLATINUM'),
+                    text: ['PLAN_PLATINUM'],
                     callback_data: 'instagram_plan_platinum'
                   },
                 ],
                 [
                   {
-                    text: await t('ru', 'PLAN_GOLD'),
+                    text: ['PLAN_GOLD'],
                     callback_data: 'instagram_plan_gold'
                   },
                 ],
                 [
                   {
-                    text: await t('ru', 'PLAN_BRONZE'),
+                    text: ['PLAN_BRONZE'],
                     callback_data: 'instagram_plan_bronze'
                   },
                 ],

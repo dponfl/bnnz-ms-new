@@ -45,6 +45,8 @@ module.exports = {
 
       sails.log.debug('Message received: ', msg);
 
+      let lang = 'en';
+
       let getClientResponse = await sails.helpers.general.getClient.with({
         messenger: 'telegram',
         chatId: '372204823',
