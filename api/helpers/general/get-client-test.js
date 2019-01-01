@@ -151,8 +151,8 @@ module.exports = {
             next: null,
             switchToFunnel: null,
             beforeHelper: null,
-            // afterHelper: 'start::step04',
-            afterHelper: null,
+            afterHelper: 'start::step04',
+            // afterHelper: null,
             forcedHelper: 'start::forcedStep04',
             inlineKeyboardHelper: null,
             message: {

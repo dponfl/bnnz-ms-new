@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require('lodash');
-const __ = require('deepdash')(require('lodash'));
 
 const generalServices = require('../../services/general');
 const restLinks = generalServices.RESTLinks();
