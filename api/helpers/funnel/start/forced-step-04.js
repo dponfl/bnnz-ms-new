@@ -43,6 +43,8 @@ module.exports = {
 
       sails.log.debug('/*************** Step 04 forced message helper ***************/');
 
+      inputs.block.done = true;
+
       if (/111/i.test(inputs.msg.text)) {
 
         inputs.block.next = 'start::start_step_05_1';

@@ -44,19 +44,46 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    inputs.block.done = true;
+    // inputs.block.done = true;
 
-    let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
-    let nextFunnel = splitRes[0];
-    let nextId = splitRes[1];
+    if (inputs.block.next) {
 
-    if (
-      nextFunnel
-      && nextId
-    ) {
+      let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
+      let nextFunnel = splitRes[0];
+      let nextId = splitRes[1];
 
-      let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
-      nextBlock.enabled = true;
+      if (
+        nextFunnel
+        && nextId
+      ) {
+
+        let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
+        if (nextBlock) {
+          nextBlock.enabled = true;
+        }
+
+      }
+
+    }
+
+    if (inputs.block.previous) {
+
+      let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
+      let previousFunnel = splitRes[0];
+      let previousId = splitRes[1];
+
+      if (
+        previousFunnel
+        && previousId
+      ) {
+
+        let previousBlock = _.find(inputs.client.funnels[previousFunnel], {id: previousId});
+        if (previousBlock) {
+          previousBlock.done = true;
+        }
+
+      }
+
 
     }
 

@@ -15,6 +15,8 @@ module.exports = {
 
     console.log('MessageGatewayController::sendInlineButtons, params:');
     console.dir(params);
+    sails.log.info('inline_keyboard:', params.inline_keyboard);
+
 
     switch (params.messenger) {
       case 'telegram' :

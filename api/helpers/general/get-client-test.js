@@ -151,8 +151,8 @@ module.exports = {
             next: null,
             switchToFunnel: null,
             beforeHelper: null,
-            afterHelper: 'start::step04',
-            // afterHelper: null,
+            // afterHelper: 'start::step04',
+            afterHelper: null,
             forcedHelper: 'start::forcedStep04',
             inlineKeyboardHelper: null,
             message: {
@@ -202,17 +202,17 @@ module.exports = {
               inline_keyboard: [
                 [
                   {
-                    text: ['ACT_NEW_POST'],
+                    text: 'ACT_NEW_POST',
                     callback_data: 'upload_post'
                   },
                 ],
                 [
                   {
-                    text: ['ACT_FAQ'],
+                    text: 'ACT_FAQ',
                     url: 'www.google.com',
                   },
                   {
-                    text: ['ACT_WEB'],
+                    text: 'ACT_WEB',
                     url: 'www.facebook.com',
                   },
                 ],
@@ -246,19 +246,19 @@ module.exports = {
               inline_keyboard: [
                 [
                   {
-                    text: ['PLAN_PLATINUM'],
+                    text: 'PLAN_PLATINUM',
                     callback_data: 'instagram_plan_platinum'
                   },
                 ],
                 [
                   {
-                    text: ['PLAN_GOLD'],
+                    text: 'PLAN_GOLD',
                     callback_data: 'instagram_plan_gold'
                   },
                 ],
                 [
                   {
-                    text: ['PLAN_BRONZE'],
+                    text: 'PLAN_BRONZE',
                     callback_data: 'instagram_plan_bronze'
                   },
                 ],

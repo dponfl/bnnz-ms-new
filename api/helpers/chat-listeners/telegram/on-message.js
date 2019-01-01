@@ -140,7 +140,7 @@ module.exports = {
                 getClientResponse.payload.funnels.current,
                 initialBlock.id, msg);
 
-              sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
+              // sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
 
 
             } else {

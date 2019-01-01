@@ -63,6 +63,9 @@ module.exports = {
       //
       // }
 
+      await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+
+
     } catch (e) {
       sails.log.error(e);
 

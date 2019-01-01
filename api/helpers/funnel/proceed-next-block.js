@@ -1,8 +1,13 @@
 "use strict";
 
 const _ = require('lodash');
+const __ = require('deepdash')(require('lodash'));
+
 const generalServices = require('../../services/general');
 const restLinks = generalServices.RESTLinks();
+
+const t = require('../../services/translate').t;
+
 
 
 module.exports = {
@@ -61,7 +66,13 @@ module.exports = {
      * Recursive function to show all linked blocks that meets conditions
      */
 
-    const t = sails.helpers.general.translate;
+    sails.log.warn('Proceed next block, block id: ',
+      inputs.blockId,
+      ' current funnel: ',
+      inputs.client.funnels[inputs.funnelName]);
+
+
+    // const t = sails.helpers.general.translate;
 
     let messageSuccessful = false;
     let messageResult = '';
@@ -91,7 +102,7 @@ module.exports = {
             htmlSimple = htmlSimple +
               (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
               (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              await t(inputs.client.lang, block.message.html[i].text) +
+              t(inputs.client.lang, block.message.html[i].text) +
               (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
               (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
               (block.message.html.length > 1
@@ -148,7 +159,7 @@ module.exports = {
             htmlForced = htmlForced +
               (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
               (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              await t(inputs.client.lang, block.message.html[i].text) +
+              t(inputs.client.lang, block.message.html[i].text) +
               (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
               (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
               (block.message.html.length > 1
@@ -207,7 +218,7 @@ module.exports = {
             htmlInline = htmlInline +
               (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
               (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              await t(inputs.client.lang, block.message.html[i].text) +
+              t(inputs.client.lang, block.message.html[i].text) +
               (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
               (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
               (block.message.html.length > 1
@@ -217,15 +228,19 @@ module.exports = {
                 : '');
           }
 
-          // todo: need to find all text keys in block.message.inline_keyboard
-          // and replace token by the value depends on language
 
+          let objBefore = block.message.inline_keyboard;
+
+          let objAfter = mapDeep(inputs.client.lang, objBefore);
+
+          // sails.log.debug('objAfter: ');
+          // console.dir(objAfter);
 
           let paramsInline = {
             messenger: inputs.client.messenger,
             chatId: inputs.client.chat_id,
             html: htmlInline,
-            inline_keyboard: block.message.inline_keyboard,
+            inline_keyboard: objAfter,
           };
 
           let inlineRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendInlineButtons, paramsInline);
@@ -263,7 +278,12 @@ module.exports = {
 
     if (_.isNil(block.afterHelper)) {
 
-      await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
+      if (block.actionType == 'text') {
+
+        await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
+
+      }
+
 
     } else {
 
@@ -322,5 +342,26 @@ module.exports = {
 
   }
 
+};
+
+function mapDeep(lang, obj) {
+  if (_.isArray(obj)) {
+    let arr = obj.map(innerObj => mapDeep(lang, innerObj));
+
+    // sails.log.info('mapDeep, arr: ', arr);
+
+    return arr;
+  } else if (_.isObject(obj)) {
+    let ob = _.forEach(obj, (val, key, o) => {
+      if (key == 'text') {
+        o[key] = t(lang, val);
+      }
+      // return o;
+    });
+
+    // sails.log.info('mapDeep, ob: ', ob);
+
+    return ob;
+  }
 };
 
