@@ -64,7 +64,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: 'start::afterHelperTest',
             forcedHelper: null,
-            inlineKeyboardHelper: null,
+            callbackHelper: null,
             message: {
               html: [
                 {
@@ -101,7 +101,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: null,
             forcedHelper: null,
-            inlineKeyboardHelper: null,
+            callbackHelper: null,
             message: {
               html: [
                 {
@@ -127,7 +127,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: null,
             forcedHelper: null,
-            inlineKeyboardHelper: null,
+            callbackHelper: null,
             message: {
               html: [
                 {
@@ -154,7 +154,7 @@ module.exports = {
             afterHelper: 'start::step04',
             // afterHelper: null,
             forcedHelper: 'start::forcedStep04',
-            inlineKeyboardHelper: null,
+            callbackHelper: null,
             message: {
               html: [
                 {
@@ -190,7 +190,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: null,
             forcedHelper: null,
-            inlineKeyboardHelper: null,
+            callbackHelper: 'start::callbackTest',
             message: {
               html: [
                 {
@@ -234,7 +234,7 @@ module.exports = {
             beforeHelper: null,
             afterHelper: null,
             forcedHelper: null,
-            inlineKeyboardHelper: null,
+            callbackHelper: null,
             message: {
               html: [
                 {

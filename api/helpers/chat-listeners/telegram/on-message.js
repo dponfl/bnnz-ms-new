@@ -103,12 +103,12 @@ module.exports = {
 
                 return exits.success({
                   status: 'nok',
-                  message: 'The helper with afterHelperBlock=' +
-                    afterHelperBlock + ' and afterHelperName=' + afterHelperName +
+                  message: 'The helper with forcedHelperBlock=' +
+                    forcedHelperBlock + ' and forcedHelperName=' + forcedHelperName +
                     ' was not found',
                   payload: {
-                    client: inputs.client,
-                    block: block,
+                    client: getClientResponse.payload,
+                    block: forcedReplyBlock,
                   }
                 });
 
