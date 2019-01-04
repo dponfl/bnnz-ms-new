@@ -2,11 +2,6 @@
 
 const _ = require('lodash');
 const t = require('../../../services/translate');
-const generalServices = require('../../../services/general');
-const restLinks = generalServices.RESTLinks();
-
-const moduleName = 'Helper general:chatListeners.telegramListener';
-
 
 
 module.exports = {
@@ -77,89 +72,21 @@ module.exports = {
           && checkFunnelsRes.status === 'ok'
         ) {
 
-          // sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
-
           /**
-           * Check if the message received is a reply to a forced message
+           * Call the respective Supervisor helper
            */
 
-          if (!_.isNil(msg.reply_to_message)
-            && !_.isNil(msg.reply_to_message.message_id)) {
+          if (
+            !_.isNil(getClientResponse.payload.funnels.current
+            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorText'])
+          )) {
 
-            let forcedReplyBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
-              {message_id: msg.reply_to_message.message_id});
-
-            if (!_.isNil(forcedReplyBlock)) {
-
-              let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
-              let forcedHelperBlock = splitForcedHelperRes[0];
-              let forcedHelperName = splitForcedHelperRes[1];
-
-              if (!_.isNil(sails.helpers.funnel[forcedHelperBlock][forcedHelperName])) {
-
-                await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](getClientResponse.payload, forcedReplyBlock, msg);
-
-              } else {
-
-                return exits.success({
-                  status: 'nok',
-                  message: 'The helper with forcedHelperBlock=' +
-                    forcedHelperBlock + ' and forcedHelperName=' + forcedHelperName +
-                    ' was not found',
-                  payload: {
-                    client: getClientResponse.payload,
-                    block: forcedReplyBlock,
-                  }
-                });
-
-              }
-
-
-            }
-
-          }
-
-          /**
-           * Check if the current funnel is specified
-           */
-
-          if (getClientResponse.payload.funnels.current) {
-
-            let initialBlock = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
-              {previous: null});
-
-            // sails.log.debug('initialBlock: ', initialBlock);
-
-            /**
-             * Check that the initial block was found
-             */
-
-            if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
-
-              await sails.helpers.funnel.proceedNextBlock(getClientResponse.payload,
-                getClientResponse.payload.funnels.current,
-                initialBlock.id, msg);
-
-              // sails.log.warn('Client after: ', getClientResponse.payload.funnels.start);
-
-
-            } else {
-
-              sails.log.error('Initial block was not found of its ID is not defined: \nclient: ',
-                getClientResponse.payload);
-
-              return exits.success({
-                status: 'nok',
-                message: 'Initial block was not found of its ID is not defined',
-                payload: {client: getClientResponse.payload}
-              });
-
-            }
-
+            await sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorText'](getClientResponse.payload, msg);
 
           } else {
 
-            sails.log.error('Funnels key=current is not defined:\nclient: ',
+            sails.log.error('Funnels key=current is not defined ' +
+              'or the respective supervisor does not exist:\nclient: ',
               getClientResponse.payload);
 
             return exits.success({
@@ -169,6 +96,8 @@ module.exports = {
             });
 
           }
+
+          // sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
 
 
         } else {
@@ -198,6 +127,10 @@ module.exports = {
       }
 
     });
+
+    /**
+     * The below return needed for normal functioning of config/bootstrap.js
+     */
 
     return exits.success({
       status: 'ok',
