@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require('lodash');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'Helper general:get-client';
 
@@ -20,10 +21,10 @@ module.exports = {
       type: 'string',
       required: true,
     },
-    chatId: {
-      friendlyName: 'Client chatId',
-      description: 'Client chatId in the messenger',
-      type: 'string',
+    msg: {
+      friendlyName: 'Message',
+      description: 'Message object',
+      type: 'ref',
       required: true,
     },
   },
@@ -51,7 +52,8 @@ module.exports = {
 
     // Load test client
 
-    let record = sails.config.custom.testClient;
+    // let record = sails.config.custom.testClient;
+    let record = false;
 
     // let record = await Client.findOne({
     //   chat_id: inputs.chatId,
@@ -64,19 +66,71 @@ module.exports = {
     if (!record) {
 
       /**
-       * record for the specified criteria was not found
+       * record for the specified criteria was not found => create new client
        */
 
-      sails.log(moduleName + ', client was NOT FOUND');
+      let result = _.trim(inputs.msg.text).match(/\/start\s*ref(.+)/i);
+      let params;
 
-      return exits.success({
-        status: 'nok',
-        message: 'client not found',
-        payload: {
-          messenger: inputs.messenger,
-          chatId: inputs.chatId
-        }
-      });
+      let funnels = await Funnels.findOne({active: true});
+
+      sails.log('funnels: ', funnels);
+
+      if (result) {
+
+        params = {
+          messenger: 'telegram',
+          guid: uuid.create().uuid,
+          chat_id: inputs.msg.chat.id,
+          first_name: inputs.msg.chat.first_name || '',
+          last_name: inputs.msg.chat.last_name || '',
+          username: inputs.msg.chat.username,
+          date: inputs.msg.date,
+          text: result[0],
+          ref_key: result[1],
+          is_ref: true,
+          lang: getUserLang(inputs.msg),
+          funnels: funnels.funnel_data || null,
+        };
+
+      } else {
+
+        // w/o referral code
+
+        params = {
+          messenger: 'telegram',
+          guid: uuid.create().uuid,
+          chat_id: inputs.msg.chat.id,
+          first_name: inputs.msg.chat.first_name || '',
+          last_name: inputs.msg.chat.last_name || '',
+          username: inputs.msg.chat.username,
+          date: inputs.msg.date,
+          text: '/start',
+          ref_key: '',
+          is_ref: false,
+          lang: getUserLang(inputs.msg),
+          funnels: funnels.funnel_data || null,
+        };
+
+      }
+
+      try {
+
+        let clientRaw = await sails.helpers.storage.clientCreate(params);
+
+        return exits.success({
+          status: 'ok',
+          message: 'Client was created',
+          payload: clientRaw.payload
+        });
+
+      } catch (e) {
+
+        sails.log.error('Client create error');
+
+      }
+
+
 
     } else {
 
@@ -98,4 +152,26 @@ module.exports = {
 
 
 };
+
+/**
+ * Functions
+ */
+
+function getUserLang(data) {
+
+  let useLang = 'en';
+
+  if (!_.isNil(data.from.language_code)) {
+
+    let res = data.from.language_code.match(/ru|en/i);
+
+    if (res && res[0]) {
+      useLang = res[0];
+    }
+
+    return useLang;
+
+  }
+
+} // getUserLang
 

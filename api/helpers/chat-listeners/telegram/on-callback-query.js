@@ -46,7 +46,7 @@ module.exports = {
 
       let getClientResponse = await sails.helpers.general.getClient.with({
         messenger: 'telegram',
-        chatId: '372204823',
+        msg: query,
       });
 
       if (

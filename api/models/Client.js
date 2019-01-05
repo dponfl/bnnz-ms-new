@@ -84,6 +84,9 @@ module.exports = {
     inst_profile: {
       type: 'string',
     },
+    funnels: {
+      type: 'json',
+    },
     start_msg_01_shown: {
       type: 'boolean',
     },
