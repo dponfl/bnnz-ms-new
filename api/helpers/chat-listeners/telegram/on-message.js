@@ -89,11 +89,21 @@ module.exports = {
               'or the respective supervisor does not exist:\nclient: ',
               getClientResponse.payload);
 
-            return exits.success({
-              status: 'nok',
-              message: 'Funnels key=current is not defined',
-              payload: {client: getClientResponse.payload}
-            });
+            try {
+
+              await sails.helpers.general.logError.with({
+                client_guid: getClientResponse.payload.guid,
+                error_message: 'Funnels key=current is not defined ' +
+                  'or the respective supervisor does not exist',
+                level: 'critical',
+                payload: getClientResponse.payload
+              });
+
+            } catch (e) {
+
+              sails.log.error('Error log create error: ', e);
+
+            }
 
           }
 
@@ -105,11 +115,20 @@ module.exports = {
           sails.log.error('Funnels check was not successful: \nclient: ',
             getClientResponse.payload);
 
-          return exits.success({
-            status: 'nok',
-            message: 'Funnels check was not successful',
-            payload: {client: getClientResponse.payload}
-          });
+          try {
+
+            await sails.helpers.general.logError.with({
+              client_guid: getClientResponse.payload.guid,
+              error_message: 'Funnels check was not successful',
+              level: 'critical',
+              payload: getClientResponse.payload
+            });
+
+          } catch (e) {
+
+            sails.log.error('Error log create error: ', e);
+
+          }
 
         }
 
@@ -118,11 +137,20 @@ module.exports = {
         sails.log.error('Client was not found: \nclient: ',
           getClientResponse);
 
-        return exits.success({
-          status: 'nok',
-          message: 'Client was not found',
-          payload: {client: getClientResponse}
-        });
+        try {
+
+          await sails.helpers.general.logError.with({
+            client_guid: getClientResponse.payload.guid,
+            error_message: 'Client was not found',
+            level: 'critical',
+            payload: getClientResponse
+          });
+
+        } catch (e) {
+
+          sails.log.error('Error log create error: ', e);
+
+        }
 
       }
 
