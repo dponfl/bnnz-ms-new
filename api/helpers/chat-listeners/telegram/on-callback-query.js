@@ -57,47 +57,35 @@ module.exports = {
       ) {
 
         /**
-         * Get message_id from the callback query
+         * Call the respective Supervisor helper
          */
 
-        if (!_.isNil(query.message.message_id)) {
+        if (
+          !_.isNil(getClientResponse.payload.funnels.current
+            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorCallback'])
+          )) {
 
-          /**
-           * Find block and get callback helper
-           */
+          await sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorCallback'](getClientResponse.payload, query);
 
-          let block = _.find(getClientResponse.payload.funnels[getClientResponse.payload.funnels.current],
-            {message_id: query.message.message_id});
+        } else {
 
-          if (!_.isNil(block)) {
+          sails.log.error('Funnels key=current is not defined ' +
+            'or the respective supervisor does not exist:\nclient: ',
+            getClientResponse.payload);
 
-            let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 2);
-            let callbackHelperBlock = splitCallbackHelperRes[0];
-            let callbackHelperName = splitCallbackHelperRes[1];
+          try {
 
-            if (!_.isNil(sails.helpers.funnel[callbackHelperBlock][callbackHelperName])) {
+            await sails.helpers.general.logError.with({
+              client_guid: getClientResponse.payload.guid,
+              error_message: 'Funnels key=current is not defined ' +
+                'or the respective supervisor does not exist',
+              level: 'critical',
+              payload: getClientResponse.payload
+            });
 
-              await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](getClientResponse.payload, block, query);
+          } catch (e) {
 
-            } else {
-
-              sails.log.error('The helper with callbackHelperBlock=' +
-                callbackHelperBlock + ' and callbackHelperName=' + callbackHelperName +
-                ' was not found');
-
-              return exits.success({
-                status: 'nok',
-                message: 'The helper with callbackHelperBlock=' +
-                  callbackHelperBlock + ' and callbackHelperName=' + callbackHelperName +
-                  ' was not found',
-                payload: {
-                  client: getClientResponse.payload,
-                  block: block,
-                }
-              });
-
-            }
-
+            sails.log.error('Error log create error: ', e);
 
           }
 
@@ -108,15 +96,28 @@ module.exports = {
         sails.log.error('Client was not found: \nclient: ',
           getClientResponse);
 
-        return exits.success({
-          status: 'nok',
-          message: 'Client was not found',
-          payload: {client: getClientResponse}
-        });
+        try {
+
+          await sails.helpers.general.logError.with({
+            client_guid: getClientResponse.payload.guid,
+            error_message: 'Client was not found',
+            level: 'critical',
+            payload: getClientResponse
+          });
+
+        } catch (e) {
+
+          sails.log.error('Error log create error: ', e);
+
+        };
 
       }
 
     });
+
+    /**
+     * The below return needed for normal functioning of config/bootstrap.js
+     */
 
     return exits.success({
       status: 'ok',
