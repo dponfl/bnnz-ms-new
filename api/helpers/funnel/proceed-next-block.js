@@ -129,6 +129,22 @@ module.exports = {
             sails.log.error('Simple message was not successful: \nblock: ', block,
               '\nclient: ', inputs.client.guid);
 
+            try {
+
+              await sails.helpers.general.logError.with({
+                client_guid: inputs.client.guid,
+                error_message: 'Simple message was not successful',
+                payload: {
+                  block: block,
+                }
+              });
+
+            } catch (e) {
+
+              sails.log.error('Error log create error: ', e);
+
+            }
+
             return exits.success({
               status: 'nok',
               message: 'Simple message was not successful',
@@ -141,6 +157,26 @@ module.exports = {
           } else {
 
             block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            try {
+
+              await sails.helpers.storage.messageSave.with({
+                message: htmlSimple,
+                message_format: 'simple',
+                messenger: inputs.client.messenger,
+                message_originator: 'bot',
+                client_id: inputs.client.id
+              })
+
+            } catch (e) {
+
+              sails.log.error('Message save error: ', e);
+
+            }
 
           }
 
@@ -200,6 +236,26 @@ module.exports = {
           } else {
 
             block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            try {
+
+              await sails.helpers.storage.messageSave.with({
+                message: htmlForced,
+                message_format: 'forced',
+                messenger: inputs.client.messenger,
+                message_originator: 'bot',
+                client_id: inputs.client.id
+              })
+
+            } catch (e) {
+
+              sails.log.error('Message save error: ', e);
+
+            }
 
           }
 
@@ -267,6 +323,27 @@ module.exports = {
 
             block.shown = true;
 
+            /**
+             * Save the sent message
+             */
+
+            try {
+
+              await sails.helpers.storage.messageSave.with({
+                message: htmlInline,
+                message_format: 'callback',
+                messenger: inputs.client.messenger,
+                message_originator: 'bot',
+                client_id: inputs.client.id,
+                message_buttons: objAfter
+              })
+
+            } catch (e) {
+
+              sails.log.error('Message save error: ', e);
+
+            }
+
           }
 
           break;
@@ -310,23 +387,6 @@ module.exports = {
       }
 
     }
-
-    /**
-     * Update content of funnels field of client record
-     */
-
-    // try {
-    //
-    //   await sails.helpers.storage.clientUpdate.with({
-    //     criteria: {guid: inputs.client.guid},
-    //     data: {funnels: inputs.client.funnels}
-    //   })
-    //
-    // } catch (e) {
-    //
-    //   sails.log.error('Client record update error: ', e);
-    //
-    // }
 
     if (block.next) {
 

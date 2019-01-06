@@ -69,7 +69,7 @@ module.exports = {
     },
     messages: {
       collection: 'message',
-      via: 'owner',
+      via: 'client_id',
     },
     rooms: {
       collection: 'room',

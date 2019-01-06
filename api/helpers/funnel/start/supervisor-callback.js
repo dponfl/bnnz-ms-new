@@ -39,6 +39,26 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     /**
+     * Save the received callback query message
+     */
+
+    try {
+
+      await sails.helpers.storage.messageSave.with({
+        message: inputs.query.data,
+        message_format: 'callback',
+        messenger: inputs.client.messenger,
+        message_originator: 'client',
+        client_id: inputs.client.id
+      })
+
+    } catch (e) {
+
+      sails.log.error('Message save error: ', e);
+
+    }
+
+    /**
      * Get message_id from the callback query
      */
 

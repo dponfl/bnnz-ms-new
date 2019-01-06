@@ -23,19 +23,10 @@ module.exports = {
     messenger: {
       type: 'string',
     },
-    status: {
-      type: 'string',
-    },
-    status_text: {
-      type: 'string',
-    },
-    type: {
-      type: 'string',
-    },
     message_originator: {
       type: 'string',
     },
-    owner: {
+    client_id: {
       model: 'client',
     }
 

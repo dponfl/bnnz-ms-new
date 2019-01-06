@@ -105,6 +105,8 @@ module.exports = {
       let result = _.trim(inputs.msg.text).match(/\/start\s*ref(.+)/i);
       let params;
 
+      // TODO: Get funnels depends on the client role
+
       let funnels = await Funnels.findOne({active: true});
 
       sails.log('funnels: ', funnels);

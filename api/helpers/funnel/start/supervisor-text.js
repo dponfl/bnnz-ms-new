@@ -46,6 +46,26 @@ module.exports = {
     if (!_.isNil(inputs.msg.reply_to_message)
       && !_.isNil(inputs.msg.reply_to_message.message_id)) {
 
+      /**
+       * Save the received forced message
+       */
+
+      try {
+
+        await sails.helpers.storage.messageSave.with({
+          message: inputs.msg.text,
+          message_format: 'forced',
+          messenger: inputs.client.messenger,
+          message_originator: 'client',
+          client_id: inputs.client.id
+        })
+
+      } catch (e) {
+
+        sails.log.error('Message save error: ', e);
+
+      }
+
       let forcedReplyBlock = _.find(inputs.client.funnels[inputs.client.funnels.current],
         {message_id: inputs.msg.reply_to_message.message_id});
 
@@ -98,6 +118,27 @@ module.exports = {
     /**
      * Proceed the generic text message
      */
+
+    /**
+     * Save the received simple message
+     */
+
+    try {
+
+      await sails.helpers.storage.messageSave.with({
+        message: inputs.msg.text,
+        message_format: 'simple',
+        messenger: inputs.client.messenger,
+        message_originator: 'client',
+        client_id: inputs.client.id
+      })
+
+    } catch (e) {
+
+      sails.log.error('Message save error: ', e);
+
+    }
+
 
     let initialBlock = _.find(inputs.client.funnels[inputs.client.funnels.current],
       {previous: null});
