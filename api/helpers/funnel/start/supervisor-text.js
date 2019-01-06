@@ -59,6 +59,23 @@ module.exports = {
 
           await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](inputs.client, forcedReplyBlock, inputs.msg);
 
+          /**
+           * Update content of funnels field of client record
+           */
+
+          try {
+
+            await sails.helpers.storage.clientUpdate.with({
+              criteria: {guid: inputs.client.guid},
+              data: {funnels: inputs.client.funnels}
+            })
+
+          } catch (e) {
+
+            sails.log.error('Client record update error: ', e);
+
+          }
+
         } else {
 
           return exits.success({
@@ -96,6 +113,23 @@ module.exports = {
       await sails.helpers.funnel.proceedNextBlock(inputs.client,
         inputs.client.funnels.current,
         initialBlock.id, inputs.msg);
+
+      /**
+       * Update content of funnels field of client record
+       */
+
+      try {
+
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: inputs.client.guid},
+          data: {funnels: inputs.client.funnels}
+        })
+
+      } catch (e) {
+
+        sails.log.error('Client record update error: ', e);
+
+      }
 
     } else {
 

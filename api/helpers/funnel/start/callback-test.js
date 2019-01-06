@@ -52,6 +52,8 @@ module.exports = {
       sails.log.debug('Block: ', inputs.block);
       sails.log.debug('Query: ', inputs.query);
 
+      inputs.block.done = true;
+
     } catch (e) {
       sails.log.error(e);
 

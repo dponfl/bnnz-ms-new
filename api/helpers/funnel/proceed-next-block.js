@@ -311,6 +311,23 @@ module.exports = {
 
     }
 
+    /**
+     * Update content of funnels field of client record
+     */
+
+    // try {
+    //
+    //   await sails.helpers.storage.clientUpdate.with({
+    //     criteria: {guid: inputs.client.guid},
+    //     data: {funnels: inputs.client.funnels}
+    //   })
+    //
+    // } catch (e) {
+    //
+    //   sails.log.error('Client record update error: ', e);
+    //
+    // }
+
     if (block.next) {
 
       let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);

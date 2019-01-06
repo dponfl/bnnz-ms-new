@@ -47,6 +47,7 @@ module.exports = {
       let getClientResponse = await sails.helpers.general.getClient.with({
         messenger: 'telegram',
         msg: msg,
+        createClient: true
       });
 
       /**

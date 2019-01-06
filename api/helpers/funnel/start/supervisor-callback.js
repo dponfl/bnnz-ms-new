@@ -61,6 +61,23 @@ module.exports = {
 
           await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](inputs.client, block, inputs.query);
 
+          /**
+           * Update content of funnels field of client record
+           */
+
+          try {
+
+            await sails.helpers.storage.clientUpdate.with({
+              criteria: {guid: inputs.client.guid},
+              data: {funnels: inputs.client.funnels}
+            })
+
+          } catch (e) {
+
+            sails.log.error('Client record update error: ', e);
+
+          }
+
         } else {
 
           sails.log.error('The helper with callbackHelperBlock=' +

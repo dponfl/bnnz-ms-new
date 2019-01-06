@@ -27,6 +27,11 @@ module.exports = {
       type: 'ref',
       required: true,
     },
+    createClient: {
+      friendlyName: 'create a new client flag',
+      description: 'shows if we need to create a new client if he does not exist',
+      type: 'boolean',
+    }
   },
 
 
@@ -46,24 +51,52 @@ module.exports = {
   fn: async function (inputs, exits) {
     sails.log(moduleName + ', inputs: ', inputs);
 
-    // if (_.isNil(inputs.client.chatId)) {
-    //   throw {err: {status: 'nok', message: 'No client.chatId', data: {}}};
-    // }
+    let createNewClientRecFlag = inputs.createClient || false;
 
-    // Load test client
+    /**
+     * Get chat_id depends on message type (text message or callback query
+     */
 
-    // let record = sails.config.custom.testClient;
-    let record = false;
+    let chatId =  null;
 
-    // let record = await Client.findOne({
-    //   chat_id: inputs.chatId,
-    //   messenger: inputs.messenger
-    // })
-    // // .populate('messages')
-    //   .populate('rooms')
-    //   .populate('service');
+    if (
+      !_.isNil(inputs.msg.chat)
+      && !_.isNil(inputs.msg.chat.id)
+    ) {
 
-    if (!record) {
+      chatId = inputs.msg.chat.id;
+
+    } else if (
+      !_.isNil(inputs.msg.message)
+      && !_.isNil(inputs.msg.message.chat)
+      && !_.isNil(inputs.msg.message.chat.id)
+    ) {
+
+      chatId = inputs.msg.message.chat.id;
+
+    }
+
+    if (_.isNil(chatId)) {
+
+      sails.log.error('getClient, no chat id in message, input.msg: ', inputs.msg);
+
+      return exits.success({
+        status: 'nok',
+        message: 'getClient, no chat id in message',
+        payload: inputs.msg
+      });
+
+    }
+
+    let record = await Client.findOne({
+      chat_id: chatId,
+      messenger: inputs.messenger
+    })
+    // .populate('messages')
+      .populate('rooms')
+      .populate('service');
+
+    if (!record && createNewClientRecFlag) {
 
       /**
        * record for the specified criteria was not found => create new client
@@ -81,7 +114,7 @@ module.exports = {
         params = {
           messenger: 'telegram',
           guid: uuid.create().uuid,
-          chat_id: inputs.msg.chat.id,
+          chat_id: chatId,
           first_name: inputs.msg.chat.first_name || '',
           last_name: inputs.msg.chat.last_name || '',
           username: inputs.msg.chat.username,
@@ -100,7 +133,7 @@ module.exports = {
         params = {
           messenger: 'telegram',
           guid: uuid.create().uuid,
-          chat_id: inputs.msg.chat.id,
+          chat_id: chatId,
           first_name: inputs.msg.chat.first_name || '',
           last_name: inputs.msg.chat.last_name || '',
           username: inputs.msg.chat.username,
@@ -126,7 +159,7 @@ module.exports = {
 
       } catch (e) {
 
-        sails.log.error('Client create error');
+        sails.log.error('Client create error: ', e);
 
       }
 
