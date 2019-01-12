@@ -78,15 +78,39 @@ module.exports = {
            */
 
           if (
-            !_.isNil(getClientResponse.payload.funnels.current
-            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorText'])
+            !_.isNil(getClientResponse.payload.current_funnel
+            // && !_.isNil(sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'])
           )) {
 
-            await sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorText'](getClientResponse.payload, msg);
+            try {
+
+              await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'](getClientResponse.payload, msg);
+
+            } catch (e) {
+
+              sails.log.error('Respective supervisor does not exist:\nError: ', e);
+
+              try {
+
+                await sails.helpers.general.logError.with({
+                  client_guid: getClientResponse.payload.guid,
+                  error_message: 'Respective supervisor does not exist',
+                  level: 'critical',
+                  payload: e
+                });
+
+              } catch (e) {
+
+                sails.log.error('Error log create error: ', e);
+
+              }
+
+            }
+
 
           } else {
 
-            sails.log.error('Funnels key=current is not defined ' +
+            sails.log.error('Client field current_funnel is not defined ' +
               'or the respective supervisor does not exist:\nclient: ',
               getClientResponse.payload);
 
@@ -94,7 +118,7 @@ module.exports = {
 
               await sails.helpers.general.logError.with({
                 client_guid: getClientResponse.payload.guid,
-                error_message: 'Funnels key=current is not defined ' +
+                error_message: 'Client field current_funnel is not defined ' +
                   'or the respective supervisor does not exist',
                 level: 'critical',
                 payload: getClientResponse.payload
@@ -108,7 +132,7 @@ module.exports = {
 
           }
 
-          // sails.log.warn('Client before: ', getClientResponse.payload.funnels.start);
+          // sails.log.warn('Client before: ', getClientResponse.payload.funnels.optin);
 
 
         } else {

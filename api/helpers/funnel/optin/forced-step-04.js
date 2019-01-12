@@ -47,12 +47,12 @@ module.exports = {
 
       if (/111/i.test(inputs.msg.text)) {
 
-        inputs.block.next = 'start::start_step_05_1';
+        inputs.block.next = 'optin::start_step_05_1';
         await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
 
       } else if (/222/i.test(inputs.msg.text)) {
 
-        inputs.block.next = 'start::start_step_05_2';
+        inputs.block.next = 'optin::start_step_05_2';
         await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
 
       }

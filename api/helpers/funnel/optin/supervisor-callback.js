@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Supervisor callback query helper for start query',
+  friendlyName: 'Supervisor callback query helper for optin query',
 
 
-  description: 'Supervisor callback query helper for start query',
+  description: 'Supervisor callback query helper for optin query',
 
 
   inputs: {
@@ -68,7 +68,7 @@ module.exports = {
        * Find block and get callback helper
        */
 
-      let block = _.find(inputs.client.funnels[inputs.client.funnels.current],
+      let block = _.find(inputs.client.funnels[inputs.client.current_funnel],
         {message_id: inputs.query.message.message_id});
 
       if (!_.isNil(block)) {

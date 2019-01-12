@@ -61,15 +61,15 @@ module.exports = {
          */
 
         if (
-          !_.isNil(getClientResponse.payload.funnels.current
-            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorCallback'])
+          !_.isNil(getClientResponse.payload.current_funnel
+            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'])
           )) {
 
-          await sails.helpers.funnel[getClientResponse.payload.funnels.current]['supervisorCallback'](getClientResponse.payload, query);
+          await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
 
         } else {
 
-          sails.log.error('Funnels key=current is not defined ' +
+          sails.log.error('Client field current_funnel is not defined ' +
             'or the respective supervisor does not exist:\nclient: ',
             getClientResponse.payload);
 
@@ -77,7 +77,7 @@ module.exports = {
 
             await sails.helpers.general.logError.with({
               client_guid: getClientResponse.payload.guid,
-              error_message: 'Funnels key=current is not defined ' +
+              error_message: 'Client field current_funnel is not defined ' +
                 'or the respective supervisor does not exist',
               level: 'critical',
               payload: getClientResponse.payload

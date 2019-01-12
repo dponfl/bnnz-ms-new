@@ -84,6 +84,9 @@ module.exports = {
     inst_profile: {
       type: 'string',
     },
+    current_funnel: {
+      type: 'string',
+    },
     funnels: {
       type: 'json',
     },

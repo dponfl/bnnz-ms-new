@@ -125,6 +125,7 @@ module.exports = {
           ref_key: result[1],
           is_ref: true,
           lang: getUserLang(inputs.msg),
+          current_funnel: 'optin',
           funnels: funnels.funnel_data || null,
         };
 
@@ -144,6 +145,7 @@ module.exports = {
           ref_key: '',
           is_ref: false,
           lang: getUserLang(inputs.msg),
+          current_funnel: 'optin',
           funnels: funnels.funnel_data || null,
         };
 

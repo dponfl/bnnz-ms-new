@@ -1,11 +1,11 @@
 module.exports = {
 
 
-  friendlyName: 'supervisorText start funnel helper',
+  friendlyName: 'supervisorText optin funnel helper',
 
 
   description: 'Supervisor helper to manage all communication ' +
-    'for start funnel',
+    'for optin funnel',
 
 
   inputs: {
@@ -37,7 +37,7 @@ module.exports = {
   },
 
 
-  fn: async function (inputs) {
+  fn: async function (inputs, exits) {
 
     /**
      * Check if the message received is a reply to a forced message
@@ -66,7 +66,7 @@ module.exports = {
 
       }
 
-      let forcedReplyBlock = _.find(inputs.client.funnels[inputs.client.funnels.current],
+      let forcedReplyBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
         {message_id: inputs.msg.reply_to_message.message_id});
 
       if (!_.isNil(forcedReplyBlock)) {
@@ -140,7 +140,7 @@ module.exports = {
     }
 
 
-    let initialBlock = _.find(inputs.client.funnels[inputs.client.funnels.current],
+    let initialBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
       {previous: null});
 
     // sails.log.debug('initialBlock: ', initialBlock);
@@ -152,7 +152,7 @@ module.exports = {
     if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
       await sails.helpers.funnel.proceedNextBlock(inputs.client,
-        inputs.client.funnels.current,
+        inputs.client.current_funnel,
         initialBlock.id, inputs.msg);
 
       /**
