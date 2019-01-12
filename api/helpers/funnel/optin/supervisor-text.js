@@ -75,9 +75,33 @@ module.exports = {
         let forcedHelperBlock = splitForcedHelperRes[0];
         let forcedHelperName = splitForcedHelperRes[1];
 
-        if (!_.isNil(sails.helpers.funnel[forcedHelperBlock][forcedHelperName])) {
+        if (forcedHelperBlock && forcedHelperName) {
 
-          await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](inputs.client, forcedReplyBlock, inputs.msg);
+          try {
+
+            await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](inputs.client, forcedReplyBlock, inputs.msg);
+
+          } catch (e) {
+
+            sails.log.error('Respective forced helper does not exist:\nError: ', e);
+
+            try {
+
+              await sails.helpers.general.logError.with({
+                client_guid: inputs.client.guid,
+                error_message: 'Respective forced helper does not exist',
+                level: 'critical',
+                payload: e
+              });
+
+            } catch (e) {
+
+              sails.log.error('Error log create error: ', e);
+
+            }
+
+          }
+
 
           /**
            * Update content of funnels field of client record
@@ -101,7 +125,7 @@ module.exports = {
           return exits.success({
             status: 'nok',
             message: 'The helper with forcedHelperBlock=' +
-              forcedHelperBlock + ' and forcedHelperName=' + forcedHelperName +
+              forcedHelperBlock + ' or forcedHelperName=' + forcedHelperName +
               ' was not found',
             payload: {
               client: inputs.client,

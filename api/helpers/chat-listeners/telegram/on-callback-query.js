@@ -62,10 +62,33 @@ module.exports = {
 
         if (
           !_.isNil(getClientResponse.payload.current_funnel
-            && !_.isNil(sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'])
           )) {
 
-          await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+          try {
+
+            await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+
+          } catch (e) {
+
+            sails.log.error('Respective supervisor does not exist:\nError: ', e);
+
+            try {
+
+              await sails.helpers.general.logError.with({
+                client_guid: getClientResponse.payload.guid,
+                error_message: 'Respective supervisor does not exist',
+                level: 'critical',
+                payload: e
+              });
+
+            } catch (e) {
+
+              sails.log.error('Error log create error: ', e);
+
+            }
+
+          }
+
 
         } else {
 

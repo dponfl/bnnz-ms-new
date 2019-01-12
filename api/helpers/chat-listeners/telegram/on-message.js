@@ -79,7 +79,6 @@ module.exports = {
 
           if (
             !_.isNil(getClientResponse.payload.current_funnel
-            // && !_.isNil(sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'])
           )) {
 
             try {

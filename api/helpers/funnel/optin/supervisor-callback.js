@@ -77,9 +77,33 @@ module.exports = {
         let callbackHelperBlock = splitCallbackHelperRes[0];
         let callbackHelperName = splitCallbackHelperRes[1];
 
-        if (!_.isNil(sails.helpers.funnel[callbackHelperBlock][callbackHelperName])) {
+        if (callbackHelperBlock && callbackHelperName) {
 
-          await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](inputs.client, block, inputs.query);
+          try {
+
+            await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](inputs.client, block, inputs.query);
+
+          } catch (e) {
+
+            sails.log.error('Respective callback helper does not exist:\nError: ', e);
+
+            try {
+
+              await sails.helpers.general.logError.with({
+                client_guid: inputs.client.guid,
+                error_message: 'Respective callback helper does not exist',
+                level: 'critical',
+                payload: e
+              });
+
+            } catch (e) {
+
+              sails.log.error('Error log create error: ', e);
+
+            }
+
+          }
+
 
           /**
            * Update content of funnels field of client record
@@ -101,8 +125,25 @@ module.exports = {
         } else {
 
           sails.log.error('The helper with callbackHelperBlock=' +
-            callbackHelperBlock + ' and callbackHelperName=' + callbackHelperName +
-            ' was not found');
+            callbackHelperBlock + ' or callbackHelperName=' + callbackHelperName +
+            ' not defined');
+
+          try {
+
+            await sails.helpers.general.logError.with({
+              client_guid: inputs.client.guid,
+              error_message: 'Respective callbacks not defined',
+              level: 'critical',
+              payload: 'The helper with callbackHelperBlock=' +
+                callbackHelperBlock + ' or callbackHelperName=' + callbackHelperName +
+                ' not defined'
+            });
+
+          } catch (e) {
+
+            sails.log.error('Error log create error: ', e);
+
+          }
 
           return exits.success({
             status: 'nok',

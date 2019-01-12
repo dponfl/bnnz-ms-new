@@ -65,10 +65,10 @@ module.exports = {
      * Recursive function to show all linked blocks that meets conditions
      */
 
-    sails.log.warn('Proceed next block, block id: ',
-      inputs.blockId,
-      ' current funnel: ',
-      inputs.client.funnels[inputs.funnelName]);
+    // sails.log.warn('Proceed next block, block id: ',
+    //   inputs.blockId,
+    //   ' current funnel: ',
+    //   inputs.client.funnels[inputs.funnelName]);
 
 
     // const t = sails.helpers.general.translate;
@@ -367,9 +367,33 @@ module.exports = {
       let afterHelperBlock = splitAfterHelperRes[0];
       let afterHelperName = splitAfterHelperRes[1];
 
-      if (!_.isNil(sails.helpers.funnel[afterHelperBlock][afterHelperName])) {
+      if (afterHelperBlock && afterHelperName) {
 
-        await sails.helpers.funnel[afterHelperBlock][afterHelperName](inputs.client, block, inputs.msg);
+        try {
+
+          await sails.helpers.funnel[afterHelperBlock][afterHelperName](inputs.client, block, inputs.msg);
+
+        } catch (e) {
+
+          sails.log.error('Respective afterHelper does not exist:\nError: ', e);
+
+          try {
+
+            await sails.helpers.general.logError.with({
+              client_guid: inputs.client.guid,
+              error_message: 'Respective afterHelper helper does not exist',
+              level: 'critical',
+              payload: e
+            });
+
+          } catch (e) {
+
+            sails.log.error('Error log create error: ', e);
+
+          }
+
+        }
+
 
       } else {
 
