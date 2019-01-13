@@ -43,6 +43,13 @@ module.exports = {
       required: true,
     },
 
+    client_guid: {
+      friendlyName: 'client_guid',
+      description: 'Link to the Client record',
+      type: 'string',
+      required: true,
+    },
+
     message_buttons: {
       friendlyName: 'message_buttons',
       description: 'JSON for buttons of the message',

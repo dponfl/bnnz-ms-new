@@ -37,4 +37,12 @@ module.exports.custom = {
   
 `,
 
+  /**
+   * Reply tokens
+   */
+
+  CLIENT_NOT_FOUND: 'Client was not found',
+  CLIENT_FOUND: 'Client was found',
+  NO_CHAT_ID: 'No chat id in the message',
+
 };

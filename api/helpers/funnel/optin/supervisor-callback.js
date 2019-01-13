@@ -49,7 +49,8 @@ module.exports = {
         message_format: 'callback',
         messenger: inputs.client.messenger,
         message_originator: 'client',
-        client_id: inputs.client.id
+        client_id: inputs.client.id,
+        client_guid: inputs.client.guid
       })
 
     } catch (e) {

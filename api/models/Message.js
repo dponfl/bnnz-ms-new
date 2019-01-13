@@ -28,7 +28,10 @@ module.exports = {
     },
     client_id: {
       model: 'client',
-    }
+    },
+    client_guid: {
+      type: 'string',
+    },
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗

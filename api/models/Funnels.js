@@ -10,7 +10,7 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
-    role: {
+    name: {
       type: 'string',
       required: true,
     },

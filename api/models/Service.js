@@ -16,6 +16,12 @@ module.exports = {
     name: {
       type: 'string',
     },
+    funnel_name: {
+      type: 'string',
+    },
+    funnel_start: {
+      type: 'string',
+    },
     rooms: {
       type: 'number',
       columnType: 'integer',

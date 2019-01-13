@@ -57,6 +57,14 @@ module.exports = {
 
       }
 
+    } else {
+
+      return exits.success({
+        status: 'ok',
+        message: 'Success',
+        payload: {lang: 'en'}
+      });
+
     }
 
 

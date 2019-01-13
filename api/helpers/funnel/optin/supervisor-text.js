@@ -57,7 +57,8 @@ module.exports = {
           message_format: 'forced',
           messenger: inputs.client.messenger,
           message_originator: 'client',
-          client_id: inputs.client.id
+          client_id: inputs.client.id,
+          client_guid: inputs.client.guid
         })
 
       } catch (e) {
@@ -154,7 +155,8 @@ module.exports = {
         message_format: 'simple',
         messenger: inputs.client.messenger,
         message_originator: 'client',
-        client_id: inputs.client.id
+        client_id: inputs.client.id,
+        client_guid: inputs.client.guid
       })
 
     } catch (e) {
