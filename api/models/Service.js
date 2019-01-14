@@ -17,9 +17,11 @@ module.exports = {
       type: 'string',
     },
     funnel_name: {
+      description: 'Field "name" of Funnels table',
       type: 'string',
     },
     funnel_start: {
+      description: 'Funnel name to use',
       type: 'string',
     },
     rooms: {

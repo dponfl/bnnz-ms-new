@@ -44,5 +44,9 @@ module.exports.custom = {
   CLIENT_NOT_FOUND: 'Client was not found',
   CLIENT_FOUND: 'Client was found',
   NO_CHAT_ID: 'No chat id in the message',
+  SL_NOT_API_KEY: 'Service level id is NOT API Key',
+  SL_NOT_FOUND: 'Service level id was not found, deleted or in use already',
+  SL_FOUND: 'Service level id was found',
+  SL_UPDATE_ERROR: 'Service level record update error',
 
 };

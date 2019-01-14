@@ -118,25 +118,41 @@ module.exports = {
             first_name: msg.chat.first_name || '',
             last_name: msg.chat.last_name || '',
             username: msg.chat.username,
-            // lang: getUserLang(inputs.msg),
             lang: useLang,
-            ref_key: '',
-            is_ref: false,
+            ref_key: useRefKey,
+            is_ref: useIsRef,
           };
 
-          /**
-           * Get info about referral code
-           */
-
-          params.ref_key = useRefKey; // depend on getRef result
-          params.is_ref = useIsRef; // depend on getRef result
 
           /**
            * Get info about service level
            */
 
-          params.service = 31; // depend on getService result
-          params.current_funnel = 'optin'; // depend on getService result (funnel_start)
+          if (useSlKey) {
+
+            let getSLRes = await sails.helpers.storage.getSl.with({sl: useSlKey});
+
+            if (getSLRes.status == 'ok') {
+
+              /**
+               * Get all info about service
+               */
+
+
+
+              params.service = ''; // depends on getService result
+
+              /**
+               * Use info about funnel (from Service table) and load it from Funnels table
+               */
+
+              params.current_funnel = 'optin'; // depend on getService result (funnel_start)
+
+            }
+
+
+
+          }
 
 
 
