@@ -1,12 +1,12 @@
 /**
- * Ref.js
+ * ServiceRef.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'ref',
+  tableName: 'service_ref',
   migrate: 'safe',
   attributes: {
 
@@ -43,4 +43,3 @@ module.exports = {
   },
 
 };
-

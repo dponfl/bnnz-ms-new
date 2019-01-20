@@ -44,9 +44,25 @@ module.exports.custom = {
   CLIENT_NOT_FOUND: 'Client was not found',
   CLIENT_FOUND: 'Client was found',
   NO_CHAT_ID: 'No chat id in the message',
-  SL_NOT_API_KEY: 'Service level id is NOT API Key',
-  SL_NOT_FOUND: 'Service level id was not found, deleted or in use already',
-  SL_FOUND: 'Service level id was found',
-  SL_UPDATE_ERROR: 'Service level record update error',
+  CLIENT_GENERAL_ERROR: 'Client general error',
+
+  /**
+   * Service Ref
+   */
+
+  SERVICEREF_GENERAL_ERROR: 'Service ref general error',
+  SERVICEREF_NOT_API_KEY: 'Service ref id is NOT API Key',
+  SERVICEREF_NOT_FOUND: 'Service ref id was not found, deleted or in use already',
+  SERVICEREF_FOUND: 'Service ref id was found',
+  SERVICEREF_UPDATE_ERROR: 'Service ref record update error',
+
+  /**
+   * Service
+   */
+
+  SERVICE_GENERAL_ERROR: 'Service general error',
+  SERVICE_NOT_FOUND: 'Service was not found or deleted',
+  SERVICE_FOUND: 'Service was found',
+
 
 };

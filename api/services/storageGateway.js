@@ -238,7 +238,7 @@ module.exports = {
       return false;
     }
 
-    var record = await Ref.findOne({
+    var record = await ServiceRef.findOne({
       key: ref,
       used: false,
       deleted: false,

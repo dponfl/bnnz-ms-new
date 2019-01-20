@@ -12,6 +12,7 @@ module.exports = {
 
     guid: {
       type: 'string',
+      unique: true,
     },
     name: {
       type: 'string',

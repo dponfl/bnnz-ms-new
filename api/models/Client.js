@@ -14,6 +14,10 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    key: {
+      type: 'string',
+      unique: true,
+    },
     first_name: {
       type: 'string',
     },

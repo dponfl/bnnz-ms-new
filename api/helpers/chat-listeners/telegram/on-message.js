@@ -45,143 +45,240 @@ module.exports = {
        * Get the client record from DB
        */
 
-      let getClientResponse = await sails.helpers.general.getClient.with({
-        messenger: 'telegram',
-        msg: msg
-      });
+      let getClientResponse = null;
 
-      /**
-       * Check if the client found
-       */
+      try {
 
-      if (
-        !_.isNil(getClientResponse)
-        && !_.isNil(getClientResponse.status)
-      ) {
+        getClientResponse = await sails.helpers.storage.getClient.with({
+          messenger: 'telegram',
+          msg: msg
+        })
+          .tolerate('noClientFound', async (payload) => {
 
-        if (
-          getClientResponse.status === 'nok'
-          && getClientResponse.message === sails.config.custom.CLIENT_NOT_FOUND
-        ) {
+            sails.log.warn('noClientFound, payload:', payload);
 
-          /**
-           * Create new client record
-           */
+            /**
+             * Client record was not found => create new client record
+             */
 
-          let parseRefResult = null;
-          let parseSlResult = null;
+            let parseRefResult = null;
+            let parseSlResult = null;
 
-          let useRefKey = '';
-          let useIsRef = false;
+            let useRefKey = '';
+            let useIsRef = false;
 
-          let useSlKey = '';
+            let useServiceRefKey = '';
 
 
-          if (_.trim(msg.text).match(/\/start/i)) {
+            if (_.trim(msg.text).match(/\/start/i)) {
 
-            parseRefResult = _.trim(msg.text).match(/ref(\S+)/i);
-            parseSlResult = _.trim(msg.text).match(/sl(\S+)/i);
+              parseRefResult = _.trim(msg.text).match(/ref(\S+)/i);
+              parseSlResult = _.trim(msg.text).match(/sr(\S+)/i);
 
-          }
+            }
 
-          if (parseRefResult) {
+            if (parseRefResult) {
 
-            useIsRef = true;
-            useRefKey = parseRefResult[1];
+              useIsRef = true;
+              useRefKey = parseRefResult[1];
 
-          }
+            }
 
-          if (parseSlResult) {
+            if (parseSlResult) {
 
-            useSlKey = parseSlResult[1];
+              useServiceRefKey = parseSlResult[1];
 
-          }
+            }
 
-          let getLangRes = await sails.helpers.chatListeners.telegram.getUserLang(msg);
-          let useLang = 'en';
+            let getLangRes = await sails.helpers.chatListeners.telegram.getUserLang(msg);
+            let useLang = 'en';
 
-          if (!_.isNil(getLangRes)
-            && !_.isNil(getLangRes.status)
-            && getLangRes.status == 'ok'
-            && !_.isNil(getLangRes.payload)
-            && !_.isNil(getLangRes.payload.lang)
-          ) {
+            if (!_.isNil(getLangRes)
+              && !_.isNil(getLangRes.status)
+              && getLangRes.status === 'ok'
+              && !_.isNil(getLangRes.payload)
+              && !_.isNil(getLangRes.payload.lang)
+            ) {
 
-            useLang = getLangRes.payload.lang;
+              useLang = getLangRes.payload.lang;
 
-          }
+            }
 
-          let params = {
-            messenger: 'telegram',
-            guid: uuid.create().uuid,
-            chat_id: msg.chat.id,
-            first_name: msg.chat.first_name || '',
-            last_name: msg.chat.last_name || '',
-            username: msg.chat.username,
-            lang: useLang,
-            ref_key: useRefKey,
-            is_ref: useIsRef,
-          };
-
-
-          /**
-           * Get info about service level
-           */
-
-          if (useSlKey) {
-
-            let getSLRes = await sails.helpers.storage.getSl.with({sl: useSlKey});
-
-            if (getSLRes.status == 'ok') {
-
-              /**
-               * Get all info about service
-               */
+            let params = {
+              messenger: 'telegram',
+              guid: uuid.create().uuid,
+              chat_id: msg.chat.id,
+              first_name: msg.chat.first_name || '',
+              last_name: msg.chat.last_name || '',
+              username: msg.chat.username,
+              lang: useLang,
+              ref_key: useRefKey,
+              is_ref: useIsRef,
+            };
 
 
+            /**
+             * Get info about service level
+             */
 
-              params.service = ''; // depends on getService result
+            let getServiceRefRes = null;
+            let serviceName = 'generic';
+            let serviceId = null;
+
+            if (useServiceRefKey) {
+
+              try {
+
+                getServiceRefRes = await sails.helpers.storage.getServiceRef.with({serviceKey: useServiceRefKey});
+
+                sails.log.info('getServiceRefRes: ', getServiceRefRes);
+
+
+                if (!_.isNil(getServiceRefRes)
+                  && !_.isNil(getServiceRefRes.status)
+                  && getServiceRefRes.status === 'ok'
+                ) {
+
+                  serviceName = getServiceRefRes.service;
+
+                } else {
+
+
+                  sails.log.error('getServiceRef did not throw error and did not return ok');
+
+                  try {
+
+                    await sails.helpers.general.logError.with({
+                      client_guid: getClientResponse.payload.guid,
+                      error_message: 'getServiceRef did not throw error and did not return ok',
+                      level: 'critical',
+                      payload: {}
+                    });
+
+                  } catch (err) {
+
+                    sails.log.error('Error log create error: ', err);
+
+                  }
+
+                }
+
+              } catch (e) {
+
+                sails.log.error('getServiceRef throw error: ', e);
+
+                try {
+
+                  await sails.helpers.general.logError.with({
+                    client_guid: getClientResponse.payload.guid,
+                    error_message: 'getServiceRef throw error',
+                    level: 'critical',
+                    payload: e
+                  });
+
+                } catch (err) {
+
+                  sails.log.error('Error log create error: ', err);
+
+                }
+
+              }
+
+            }
+
+            /**
+             * Get all info about the respective service
+             */
+
+            let getServiceRes = null;
+
+            try {
+
+              getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
+
+              params.service = getServiceRes.payload.id;
 
               /**
                * Use info about funnel (from Service table) and load it from Funnels table
                */
 
-              params.current_funnel = 'optin'; // depend on getService result (funnel_start)
+              params.current_funnel = getServiceRes.payload.funnel_start;
+
+              // TODO: Get funnels depends on funnel_name for the respective service level
+
+              let funnels = await Funnels.findOne({
+                name: getServiceRes.payload.funnel_name,
+                active: true
+              });
+
+              params.funnels = funnels.funnel_data || null;
+
+
+            } catch (e) {
+
+              sails.log.error('on-message, error: ', e);
+
+              try {
+
+                await sails.helpers.general.logError.with({
+                  client_guid: getClientResponse.payload.guid || 'none',
+                  error_message: 'Error',
+                  level: 'critical',
+                  payload: e
+                });
+
+              } catch (err) {
+
+                sails.log.error('Error log create error: ', err);
+
+              }
 
             }
 
 
+            sails.log.warn('params: ', params);
 
-          }
+            try {
 
+              return await sails.helpers.storage.clientCreate(params);
 
+            } catch (e) {
 
+              sails.log.error('Client create error: ', e);
 
-          // TODO: Get funnels depends on funnel_name for the respective service level
+              try {
 
-          let funnels = await Funnels.findOne({active: true});
+                await sails.helpers.general.logError.with({
+                  client_guid: getClientResponse.payload.guid,
+                  error_message: 'Client create error',
+                  level: 'critical',
+                  payload: e
+                });
 
-          params.funnels = funnels.funnel_data || null;
+              } catch (e) {
 
-          // sails.log('funnels: ', funnels);
+                sails.log.error('Error log create error: ', e);
 
-          sails.log.warn('params: ', params);
+              }
 
-          try {
+            }
 
-            getClientResponse = await sails.helpers.storage.clientCreate(params);
+          })
+          .intercept('err', async (payload) => {
 
-          } catch (e) {
+            /**
+             * Some error on getClient, log error and exit
+             */
 
-            sails.log.error('Client create error: ', e);
+            sails.log.error('getClient gives error: ', payload);
 
             try {
 
               await sails.helpers.general.logError.with({
-                client_guid: getClientResponse.payload.guid,
-                error_message: 'Client create error',
+                client_guid: 'none',
+                error_message: 'getClient gives error',
                 level: 'critical',
-                payload: e
+                payload: payload
               });
 
             } catch (e) {
@@ -190,35 +287,50 @@ module.exports = {
 
             }
 
-          }
+            return null;
 
-        } else if (
-          getClientResponse.status === 'nok'
-          && getClientResponse.message !== sails.config.custom.CLIENT_NOT_FOUND
-        ) {
+          });
 
-          /**
-           * Some error on getClient, log error and exit
-           */
+      } catch (e) {
 
-          sails.log.error('getClient gives error: ', getClientResponse);
+        /**
+         * Make error log and return
+         */
 
-          try {
+        sails.log.error('on-message, getClient error');
 
-            await sails.helpers.general.logError.with({
-              client_guid: getClientResponse.payload.guid,
-              error_message: 'getClient gives error',
-              level: 'critical',
-              payload: getClientResponse
-            });
+        try {
 
-          } catch (e) {
+          await sails.helpers.general.logError.with({
+            client_guid: 'none',
+            error_message: 'on-message, getClient error',
+            level: 'critical',
+            payload: e
+          });
 
-            sails.log.error('Error log create error: ', e);
+        } catch (err) {
 
-          }
+          sails.log.error('Error log create error: ', err);
 
         }
+
+        return;
+
+      }
+
+      /**
+       * Check if we have necessary client data
+       */
+
+      if (
+        !_.isNil(getClientResponse)
+        && !_.isNil(getClientResponse.status)
+      ) {
+
+
+        /**
+         * Proceed based on client record info
+         */
 
         /**
          * Check that funnels do not have big errors
@@ -304,7 +416,10 @@ module.exports = {
               client_guid: getClientResponse.payload.guid,
               error_message: 'Funnels check was not successful',
               level: 'critical',
-              payload: getClientResponse.payload
+              payload: {
+                getClientResponse: getClientResponse.payload,
+                checkFunnelsResponse: checkFunnelsRes.payload,
+              }
             });
 
           } catch (e) {

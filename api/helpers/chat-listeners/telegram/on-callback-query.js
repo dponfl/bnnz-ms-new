@@ -44,7 +44,7 @@ module.exports = {
        * Get the client record from DB
        */
 
-      let getClientResponse = await sails.helpers.general.getClient.with({
+      let getClientResponse = await sails.helpers.storage.getClient.with({
         messenger: 'telegram',
         msg: query,
       });
