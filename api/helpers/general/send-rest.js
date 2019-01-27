@@ -65,11 +65,37 @@ module.exports = {
     if (!_.some(possibleMethods, (val) => {
       return val === inputs.method;
     })) {
-      return exits.success({status: 'nok', message: 'No method or wrong method', payload: {}});
+
+      // return exits.success({status: 'nok', message: 'No method or wrong method', payload: {}});
+
+      throw {err: {
+          module: 'api/helpers/general/send-rest',
+          message: sails.config.custom.SENDREST_NO_METHOD,
+          payload: {
+            method: inputs.method,
+            url: inputs.url,
+            params: inputs.params,
+          }
+        }
+      };
+
     }
 
     if (!inputs.url) {
-      return exits.success({status: 'nok', message: 'No url', payload: {}});
+
+      // return exits.success({status: 'nok', message: 'No url', payload: {}});
+
+      throw {err: {
+          module: 'api/helpers/general/send-rest',
+          message: sails.config.custom.SENDREST_NO_URL,
+          payload: {
+            method: inputs.method,
+            url: inputs.url,
+            params: inputs.params,
+          }
+        }
+      };
+
     }
 
     let options = {
@@ -83,7 +109,18 @@ module.exports = {
 
     if (!result) {
 
-      return exits.success({status: 'nok', message: 'No result from rp', payload: {}});
+      // return exits.success({status: 'nok', message: 'No result from rp', payload: {}});
+
+      throw {err: {
+          module: 'api/helpers/general/send-rest',
+          message: sails.config.custom.SENDREST_NO_RESULT,
+          payload: {
+            method: inputs.method,
+            url: inputs.url,
+            params: inputs.params,
+          }
+        }
+      };
 
     } else {
 

@@ -23,10 +23,6 @@ module.exports = {
       description: 'All done.',
     },
 
-    err: {
-      description: 'Error',
-    }
-
   },
 
 
@@ -46,10 +42,11 @@ module.exports = {
          */
 
         throw {err: {
-            helper: 'getService',
+            module: 'api/helpers/storage/get-service',
             message: sails.config.custom.SERVICE_NOT_FOUND,
             payload: inputs.serviceName
-          }};
+          }
+        };
 
       } else {
 
@@ -81,10 +78,14 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          helper: 'getService',
+          module: 'api/helpers/storage/get-service',
           message: sails.config.custom.SERVICE_GENERAL_ERROR,
-          payload: inputs.serviceKey
-        }};
+          payload: {
+            serviceKey: inputs.serviceKey,
+            error: e,
+          }
+        }
+      };
 
     }
 

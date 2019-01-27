@@ -77,7 +77,8 @@ module.exports = {
           status: 'nok',
           message: 'Record create error',
           payload: e
-        }}
+        }
+      }
 
     }
 

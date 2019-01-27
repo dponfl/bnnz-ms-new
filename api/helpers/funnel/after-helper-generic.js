@@ -44,52 +44,78 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // inputs.block.done = true;
+    /**
+     * Perform general activities after the block was performed, like:
+     * 1) if next block is specified -> we need to enable it
+     * 2) if previous block is specified -> we need to mark it as done
+     */
 
-    if (inputs.block.next) {
+    try {
 
-      let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
-      let nextFunnel = splitRes[0];
-      let nextId = splitRes[1];
+      // inputs.block.done = true;
 
-      if (
-        nextFunnel
-        && nextId
-      ) {
+      if (inputs.block.next) {
 
-        let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
-        if (nextBlock) {
-          nextBlock.enabled = true;
+        let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
+        let nextFunnel = splitRes[0];
+        let nextId = splitRes[1];
+
+        if (
+          nextFunnel
+          && nextId
+        ) {
+
+          let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
+          if (nextBlock) {
+            nextBlock.enabled = true;
+          }
+
         }
 
       }
 
-    }
+      if (inputs.block.previous) {
 
-    if (inputs.block.previous) {
+        let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
+        let previousFunnel = splitRes[0];
+        let previousId = splitRes[1];
 
-      let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
-      let previousFunnel = splitRes[0];
-      let previousId = splitRes[1];
+        if (
+          previousFunnel
+          && previousId
+        ) {
 
-      if (
-        previousFunnel
-        && previousId
-      ) {
+          let previousBlock = _.find(inputs.client.funnels[previousFunnel], {id: previousId});
+          if (previousBlock) {
+            previousBlock.done = true;
+          }
 
-        let previousBlock = _.find(inputs.client.funnels[previousFunnel], {id: previousId});
-        if (previousBlock) {
-          previousBlock.done = true;
         }
+
 
       }
 
+      // TODO: Update client's record in DB before exit
+
+      return exits.success();
+
+    } catch (e) {
+
+      throw {err: {
+          module: 'api/helpers/funnel/after-helper-generic',
+          message: sails.config.custom.AFTERHELPERGENERIC_ERROR,
+          payload: {
+            client: inputs.client,
+            block: inputs.block,
+            msg: inputs.msg,
+            error: e,
+          }
+        }
+      };
 
     }
 
-    // TODO: Update client's record in DB before exit
 
-    return exits.success();
   }
 
 

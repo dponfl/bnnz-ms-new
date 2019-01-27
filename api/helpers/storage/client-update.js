@@ -58,9 +58,15 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          message: 'Client record update error',
-          payload: e,
-        }}
+          module: 'api/helpers/storage/client-update',
+          message: sails.config.custom.CLIENTUPDATE_ERROR,
+          payload: {
+            criteria: inputs.criteria,
+            client: inputs.client,
+            error: e,
+          }
+        }
+      };
 
     }
 

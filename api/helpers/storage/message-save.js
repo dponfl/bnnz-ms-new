@@ -75,7 +75,15 @@ module.exports = {
 
     try {
 
-      await Message.create(inputs);
+      await Message.create({
+        client_id: inputs.client_id,
+        client_guid: inputs.client_guid,
+        message: inputs.message,
+        message_format: inputs.message_format,
+        message_buttons: inputs.message_buttons || {},
+        messenger: inputs.messenger,
+        message_originator: inputs.message_originator,
+      });
 
       return exits.success({
         status: 'ok',
@@ -86,9 +94,20 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          message: 'Message record create error',
-          payload: e,
-        }}
+          module: 'api/helpers/storage/message-save',
+          message: sails.config.custom.MESSAGESAVE_ERROR,
+          payload: {
+            client_id: inputs.client_id,
+            client_guid: inputs.client_guid,
+            message: inputs.message,
+            message_format: inputs.message_format,
+            message_buttons: inputs.message_buttons || {},
+            messenger: inputs.messenger,
+            message_originator: inputs.message_originator,
+            error: e,
+          }
+        }
+      };
 
     }
 

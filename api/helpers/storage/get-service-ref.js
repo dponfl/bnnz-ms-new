@@ -25,10 +25,6 @@ module.exports = {
       description: 'All done.',
     },
 
-    err: {
-      description: 'Error',
-    }
-
   },
 
 
@@ -37,9 +33,11 @@ module.exports = {
     if (!uuid.isAPIKey(inputs.serviceKey)) {
 
       throw {err: {
+          module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_NOT_API_KEY,
           payload: inputs.serviceKey
-        }};
+        }
+      };
 
     }
 
@@ -56,9 +54,14 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
+          module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_GENERAL_ERROR,
-          payload: e
-        }};
+          payload: {
+            serviceKey: inputs.serviceKey,
+            error: e,
+          }
+        }
+      };
 
     }
 
@@ -71,9 +74,11 @@ module.exports = {
        */
 
       throw {err: {
+          module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_NOT_FOUND,
           payload: inputs.serviceKey
-        }};
+        }
+      };
 
     } else {
 
@@ -98,9 +103,15 @@ module.exports = {
       } catch (e) {
 
         throw {err: {
+            module: 'api/helpers/storage/get-service-ref',
             message: sails.config.custom.SERVICEREF_UPDATE_ERROR,
-            payload: inputs.serviceKey
-          }};
+            payload: {
+              serviceKey: inputs.serviceKey,
+              error: e,
+            }
+
+          }
+        };
 
       }
 

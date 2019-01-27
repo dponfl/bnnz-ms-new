@@ -47,7 +47,7 @@ module.exports.custom = {
   CLIENT_GENERAL_ERROR: 'Client general error',
 
   /**
-   * Service Ref
+   * getServiceRef
    */
 
   SERVICEREF_GENERAL_ERROR: 'Service ref general error',
@@ -57,12 +57,96 @@ module.exports.custom = {
   SERVICEREF_UPDATE_ERROR: 'Service ref record update error',
 
   /**
-   * Service
+   * getService
    */
 
   SERVICE_GENERAL_ERROR: 'Service general error',
   SERVICE_NOT_FOUND: 'Service was not found or deleted',
   SERVICE_FOUND: 'Service was found',
+
+  /**
+   * checkFunnels
+   */
+
+  CHECKFUNNELS_GENERAL_ERROR: 'Check funnels was not successful',
+  CHECKFUNNELS_SUCCESS: 'Check funnels was successful',
+
+  /**
+   * sendRest
+   */
+
+  SENDREST_NO_METHOD: 'No method or wrong method',
+  SENDREST_NO_URL: 'No url',
+  SENDREST_NO_RESULT: 'No result from rp',
+
+  /**
+   * clientCreate
+   */
+
+  CLIENTCREATE_ERROR: 'Client record create error',
+
+  /**
+   * clientUpdate
+   */
+
+  CLIENTUPDATE_ERROR: 'Client record update error',
+
+  /**
+   * messageSave
+   */
+
+  MESSAGESAVE_ERROR: 'Message record create error',
+
+  /**
+   * message gateways
+   */
+
+  SIMPLE_MESSAGE_SEND_ERROR: 'Simple message send error',
+  FORCED_MESSAGE_SEND_ERROR: 'Forced message send error',
+  INLINE_KEYBOARD_MESSAGE_SEND_ERROR: 'Inline keyboard message send error',
+
+  /**
+   * proceedNextBlock
+   */
+
+  PROCEED_NEXT_BLOCK_ERROR: 'proceedNextBlock error',
+  PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: 'Cannot parse afterHelper error',
+
+  /**
+   * afterHelperGeneric
+   */
+
+  AFTERHELPERGENERIC_ERROR: 'afterHelperGeneric error',
+
+  /**
+   * supervisorTextHelper
+   */
+
+  SUPERVISORTEXTHELPER_ERROR: 'supervisorTextHelper error',
+  SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR: 'Cannot parse forcedHelper error',
+  SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
+  SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR: 'Forced reply block was not find by message_id',
+
+  /**
+   * supervisorCallbackHelper
+   */
+
+  SUPERVISOR_CALLBACK_HELPER_ERROR: 'supervisorCallbackHelper error',
+  SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR: 'Cannot parse callbackHelper error',
+  SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
+  SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR: 'Block was not find by message_id',
+
+  /**
+   * onMessage
+   */
+
+  ON_MESSAGE_ERROR: 'onMessage error',
+
+  /**
+   * onCallbackQuery
+   */
+
+  ON_CALLBACK_QUERY_ERROR: 'onCallbackQuery error',
 
 
 };

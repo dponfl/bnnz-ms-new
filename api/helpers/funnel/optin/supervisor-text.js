@@ -1,11 +1,11 @@
 module.exports = {
 
 
-  friendlyName: 'supervisorText optin funnel helper',
+  friendlyName: 'supervisorText <optin> funnel helper',
 
 
   description: 'Supervisor helper to manage all communication ' +
-    'for optin funnel',
+    'for <optin> funnel',
 
 
   inputs: {
@@ -39,18 +39,18 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    /**
-     * Check if the message received is a reply to a forced message
-     */
-
-    if (!_.isNil(inputs.msg.reply_to_message)
-      && !_.isNil(inputs.msg.reply_to_message.message_id)) {
+    try {
 
       /**
-       * Save the received forced message
+       * Check if the message received is a reply to a forced message
        */
 
-      try {
+      if (!_.isNil(inputs.msg.reply_to_message)
+        && !_.isNil(inputs.msg.reply_to_message.message_id)) {
+
+        /**
+         * Save the received forced message
+         */
 
         await sails.helpers.storage.messageSave.with({
           message: inputs.msg.text,
@@ -59,96 +59,79 @@ module.exports = {
           message_originator: 'client',
           client_id: inputs.client.id,
           client_guid: inputs.client.guid
-        })
+        });
 
-      } catch (e) {
+        let forcedReplyBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
+          {message_id: inputs.msg.reply_to_message.message_id});
 
-        sails.log.error('Message save error: ', e);
+        if (!_.isNil(forcedReplyBlock)) {
 
-      }
+          let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
+          let forcedHelperBlock = splitForcedHelperRes[0];
+          let forcedHelperName = splitForcedHelperRes[1];
 
-      let forcedReplyBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
-        {message_id: inputs.msg.reply_to_message.message_id});
+          if (forcedHelperBlock && forcedHelperName) {
 
-      if (!_.isNil(forcedReplyBlock)) {
-
-        let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
-        let forcedHelperBlock = splitForcedHelperRes[0];
-        let forcedHelperName = splitForcedHelperRes[1];
-
-        if (forcedHelperBlock && forcedHelperName) {
-
-          try {
+            /**
+             * We managed to parse the specified forcedHelper and can perform it
+             */
 
             await sails.helpers.funnel[forcedHelperBlock][forcedHelperName](inputs.client, forcedReplyBlock, inputs.msg);
 
-          } catch (e) {
-
-            sails.log.error('Respective forced helper does not exist:\nError: ', e);
-
-            try {
-
-              await sails.helpers.general.logError.with({
-                client_guid: inputs.client.guid,
-                error_message: 'Respective forced helper does not exist',
-                level: 'critical',
-                payload: e
-              });
-
-            } catch (e) {
-
-              sails.log.error('Error log create error: ', e);
-
-            }
-
-          }
-
-
-          /**
-           * Update content of funnels field of client record
-           */
-
-          try {
+            /**
+             * Update content of funnels field of client record
+             */
 
             await sails.helpers.storage.clientUpdate.with({
               criteria: {guid: inputs.client.guid},
               data: {funnels: inputs.client.funnels}
-            })
+            });
 
-          } catch (e) {
+          } else {
 
-            sails.log.error('Client record update error: ', e);
+            /**
+             * Throw error: we could not parse the specified forcedHelper
+             */
+
+            throw {err: {
+                module: 'api/helpers/funnel/optin/supervisor-text',
+                message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
+                payload: {
+                  block: forcedReplyBlock,
+                  helperName: forcedReplyBlock.forcedHelper,
+                  forcedHelperBlock: forcedHelperBlock,
+                  forcedHelperName: forcedHelperName,
+                  msg: inputs.msg,
+                }
+              }
+            };
 
           }
 
         } else {
 
-          return exits.success({
-            status: 'nok',
-            message: 'The helper with forcedHelperBlock=' +
-              forcedHelperBlock + ' or forcedHelperName=' + forcedHelperName +
-              ' was not found',
-            payload: {
-              client: inputs.client,
-              block: forcedReplyBlock,
+          throw {err: {
+              module: 'api/helpers/funnel/optin/supervisor-text',
+              message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
+              payload: {
+                client: inputs.client,
+                message_id: inputs.msg.reply_to_message.message_id,
+                msg: inputs.msg,
+              }
             }
-          });
+          };
 
         }
 
       }
 
-    }
+      /**
+       * Proceed the generic text message
+       */
 
-    /**
-     * Proceed the generic text message
-     */
-
-    /**
-     * Save the received simple message
-     */
-
-    try {
+      /**
+       * Save the received simple message
+       */
 
       await sails.helpers.storage.messageSave.with({
         message: inputs.msg.text,
@@ -157,60 +140,67 @@ module.exports = {
         message_originator: 'client',
         client_id: inputs.client.id,
         client_guid: inputs.client.guid
-      })
-
-    } catch (e) {
-
-      sails.log.error('Message save error: ', e);
-
-    }
-
-
-    let initialBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
-      {previous: null});
-
-    // sails.log.debug('initialBlock: ', initialBlock);
-
-    /**
-     * Check that the initial block was found
-     */
-
-    if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
-
-      await sails.helpers.funnel.proceedNextBlock(inputs.client,
-        inputs.client.current_funnel,
-        initialBlock.id, inputs.msg);
+      });
 
       /**
-       * Update content of funnels field of client record
+       * Try to find the initial block of the current funnel
        */
 
-      try {
+      let initialBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
+        {previous: null});
+
+      // sails.log.debug('initialBlock: ', initialBlock);
+
+      /**
+       * Check that the initial block was found
+       */
+
+      if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+        await sails.helpers.funnel.proceedNextBlock(inputs.client,
+          inputs.client.current_funnel,
+          initialBlock.id, inputs.msg);
+
+        /**
+         * Update content of funnels field of client record
+         */
 
         await sails.helpers.storage.clientUpdate.with({
           criteria: {guid: inputs.client.guid},
           data: {funnels: inputs.client.funnels}
-        })
+        });
 
-      } catch (e) {
+      } else {
 
-        sails.log.error('Client record update error: ', e);
+        /**
+         * Throw error -> initial block was not found
+         */
+
+        throw {err: {
+            module: 'api/helpers/funnel/optin/supervisor-text',
+            message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
+            payload: {
+              client: inputs.client,
+            }
+          }
+        };
 
       }
 
-    } else {
+    } catch (e) {
 
-      sails.log.error('Initial block was not found of its ID is not defined: \nclient: ',
-        inputs.client);
-
-      return exits.success({
-        status: 'nok',
-        message: 'Initial block was not found of its ID is not defined',
-        payload: {client: inputs.client}
-      });
+      throw {err: {
+          module: 'api/helpers/funnel/optin/supervisor-text',
+          message: sails.config.custom.SUPERVISORTEXTHELPER_ERROR,
+          payload: {
+            client: inputs.client,
+            msg: inputs.msg,
+            error: e,
+          }
+        }
+      };
 
     }
-
 
 
   }

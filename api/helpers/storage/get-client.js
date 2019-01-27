@@ -35,18 +35,11 @@ module.exports = {
       description: 'All done.',
     },
 
-    noClientFound: {
-      description: 'Client record was not found',
-    },
-
-    err: {
-      description: 'Error',
-    }
-
   },
 
 
   fn: async function (inputs, exits) {
+
     sails.log(moduleName + ', inputs: ', inputs);
 
 
@@ -77,15 +70,15 @@ module.exports = {
 
       sails.log.error('getClient, no chat id in the message, input.msg: ', inputs.msg);
 
-      return exits.err({
-        message: 'getClient, ' + sails.config.custom.NO_CHAT_ID,
-        payload: inputs.msg
-      });
-
-      // throw {err: {
-      //     message: 'getClient, ' + sails.config.custom.NO_CHAT_ID,
-      //     payload: inputs.msg
-      //   }};
+      throw {err: {
+          module: 'api/helpers/storage/get-client',
+          message: sails.config.custom.NO_CHAT_ID,
+          payload: {
+            messenger: inputs.messenger,
+            msg: inputs.msg,
+          },
+        }
+      };
 
     }
 
@@ -109,16 +102,14 @@ module.exports = {
 
         sails.log(moduleName + ', client was NOT FOUND');
 
-        // return exits.success({
-        //   status: 'nok',
-        //   message: sails.config.custom.CLIENT_NOT_FOUND,
-        //   payload: null
-        // });
-
-        return exits.noClientFound({
+        return exits.success({
+          status: 'not_found',
           message: sails.config.custom.CLIENT_NOT_FOUND,
-          payload: null
-        })
+          payload: {
+            messenger: inputs.messenger,
+            msg: inputs.msg,
+          },
+        });
 
       } else {
 
@@ -129,7 +120,7 @@ module.exports = {
         sails.log(moduleName + ', client was FOUND');
 
         return exits.success({
-          status: 'ok',
+          status: 'found',
           message: sails.config.custom.CLIENT_FOUND,
           payload: record
         });
@@ -140,15 +131,16 @@ module.exports = {
 
       sails.log.error('getClient, Client.findOne error, input.msg: ', inputs.msg);
 
-      // throw {err: {
-      //     message: 'getClient, ' + sails.config.custom.CLIENT_GENERAL_ERROR,
-      //     payload: inputs.msg
-      //   }};
-
-      return exits.err({
-        message: 'getClient, ' + sails.config.custom.CLIENT_GENERAL_ERROR,
-        payload: inputs.msg
-      });
+      throw {err: {
+          module: 'api/helpers/storage/get-client',
+          message: sails.config.custom.CLIENT_GENERAL_ERROR,
+          payload: {
+            messenger: inputs.messenger,
+            msg: inputs.msg,
+            error: e,
+          },
+        }
+      };
 
     }
 

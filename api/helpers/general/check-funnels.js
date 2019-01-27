@@ -23,10 +23,6 @@ module.exports = {
       description: 'All done.',
     },
 
-    err: {
-      description: 'Error',
-    }
-
   },
 
 
@@ -50,7 +46,7 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: 'Check funnels was successful',
+        message: sails.config.custom.CHECKFUNNELS_SUCCESS,
         payload: {}
       });
 
@@ -58,11 +54,18 @@ module.exports = {
 
       // Check funnels was NOT OK
 
-      return exits.success({
-        status: 'nok',
-        message: 'Check funnels was not successful',
-        payload: {checkError: checkError}
-      });
+      // return exits.success({
+      //   status: 'nok',
+      //   message: 'Check funnels was not successful',
+      //   payload: {checkError: checkError}
+      // });
+
+      throw {err: {
+          module: 'api/helpers/general/check-funnels',
+          message: sails.config.custom.CHECKFUNNELS_GENERAL_ERROR,
+          payload: {checkError: checkError}
+        }
+      };
 
     }
 

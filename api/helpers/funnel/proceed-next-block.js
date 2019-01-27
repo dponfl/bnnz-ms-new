@@ -65,376 +65,272 @@ module.exports = {
      * Recursive function to show all linked blocks that meets conditions
      */
 
-    // sails.log.warn('Proceed next block, block id: ',
-    //   inputs.blockId,
-    //   ' current funnel: ',
-    //   inputs.client.funnels[inputs.funnelName]);
+    let block = null;
 
+    try {
 
-    // const t = sails.helpers.general.translate;
+      block = _.find(inputs.client.funnels[inputs.funnelName], {id: inputs.blockId});
 
-    let messageSuccessful = false;
-    let messageResult = '';
+      if (
+        block.enabled
+        // && !block.shown
+        && !block.done
+        && block.actionType
+      ) {
 
-    let block = _.find(inputs.client.funnels[inputs.funnelName], {id: inputs.blockId});
+        switch (block.actionType) {
 
-    // sails.log.debug('Found block: ', block);
-
-    if (
-      block.enabled
-      // && !block.shown
-      && !block.done
-      && block.actionType
-    ) {
-
-      switch (block.actionType) {
-
-        case 'text':
-
-          /**
-           * Send simple text message
-           */
-
-          let htmlSimple = '';
-
-          for (let i = 0; i < block.message.html.length; i++) {
-            htmlSimple = htmlSimple +
-              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              t(inputs.client.lang, block.message.html[i].text) +
-              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-              (block.message.html.length > 1
-                ? (block.message.html[i].cr
-                  ? sails.config.custom[block.message.html[i].cr]
-                  : '')
-                : '');
-          }
-
-          let paramsSimple = {
-            messenger: inputs.client.messenger,
-            chatId: inputs.client.chat_id,
-            html: htmlSimple,
-          };
-
-          let simpleRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendSimpleMessage, paramsSimple);
-
-          sails.log.debug('simpleRes: ', simpleRes);
-          sails.log.debug('simpleRes payload: ', simpleRes.payload.payload.payload);
-
-          block.message_id = simpleRes.payload.payload.payload.payload.message_id;
-
-          if (_.isNil(simpleRes.status) || simpleRes.status != 'ok') {
-
-            sails.log.error('Simple message was not successful: \nblock: ', block,
-              '\nclient: ', inputs.client.guid);
-
-            try {
-
-              await sails.helpers.general.logError.with({
-                client_guid: inputs.client.guid,
-                error_message: 'Simple message was not successful',
-                payload: {
-                  block: block,
-                }
-              });
-
-            } catch (e) {
-
-              sails.log.error('Error log create error: ', e);
-
-            }
-
-            return exits.success({
-              status: 'nok',
-              message: 'Simple message was not successful',
-              payload: {
-                client: inputs.client,
-                block: block,
-              }
-            })
-
-          } else {
-
-            block.shown = true;
+          case 'text':
 
             /**
-             * Save the sent message
+             * Send simple text message
              */
 
-            try {
+            let htmlSimple = '';
 
-              await sails.helpers.storage.messageSave.with({
-                message: htmlSimple,
-                message_format: 'simple',
-                messenger: inputs.client.messenger,
-                message_originator: 'bot',
-                client_id: inputs.client.id,
-                client_guid: inputs.client.guid
-              })
-
-            } catch (e) {
-
-              sails.log.error('Message save error: ', e);
-
+            for (let i = 0; i < block.message.html.length; i++) {
+              htmlSimple = htmlSimple +
+                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+                t(inputs.client.lang, block.message.html[i].text) +
+                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+                (block.message.html.length > 1
+                  ? (block.message.html[i].cr
+                    ? sails.config.custom[block.message.html[i].cr]
+                    : '')
+                  : '');
             }
 
-          }
-
-          break;
-
-        case 'forced':
-
-          /**
-           * Send forced reply message
-           */
-
-          let htmlForced = '';
-
-          for (let i = 0; i < block.message.html.length; i++) {
-            htmlForced = htmlForced +
-              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              t(inputs.client.lang, block.message.html[i].text) +
-              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-              (block.message.html.length > 1
-                ? (block.message.html[i].cr
-                  ? sails.config.custom[block.message.html[i].cr]
-                  : '')
-                : '');
-          }
-
-
-
-          let paramsForced = {
-            messenger: inputs.client.messenger,
-            chatId: inputs.client.chat_id,
-            html: htmlForced,
-          };
-
-          let forcedRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendForcedMessage, paramsForced);
-
-          sails.log.debug('forcedRes: ', forcedRes);
-          sails.log.debug('forcedRes payload: ', forcedRes.payload.payload.payload);
-
-          block.message_id = forcedRes.payload.payload.payload.payload.message_id;
-
-          if (_.isNil(forcedRes.status) || forcedRes.status != 'ok') {
-
-            sails.log.error('Forced reply message was not successful: \nblock: ', block,
-              '\nclient: ', inputs.client.guid);
-
-            return exits.success({
-              status: 'nok',
-              message: 'Forced reply message was not successful',
-              payload: {
-                client: inputs.client,
-                block: block,
-              }
-            })
-
-          } else {
-
-            block.shown = true;
-
-            /**
-             * Save the sent message
-             */
-
-            try {
-
-              await sails.helpers.storage.messageSave.with({
-                message: htmlForced,
-                message_format: 'forced',
-                messenger: inputs.client.messenger,
-                message_originator: 'bot',
-                client_id: inputs.client.id,
-                client_guid: inputs.client.guid
-              })
-
-            } catch (e) {
-
-              sails.log.error('Message save error: ', e);
-
-            }
-
-          }
-
-          break;
-
-        case 'inline_keyboard':
-
-          /**
-           * Send inline keyboard message
-           */
-
-          let htmlInline = '';
-
-          for (let i = 0; i < block.message.html.length; i++) {
-            htmlInline = htmlInline +
-              (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-              (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-              t(inputs.client.lang, block.message.html[i].text) +
-              (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-              (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-              (block.message.html.length > 1
-                ? (block.message.html[i].cr
-                  ? sails.config.custom[block.message.html[i].cr]
-                  : '')
-                : '');
-          }
-
-
-          let objBefore = block.message.inline_keyboard;
-
-          let objAfter = mapDeep(inputs.client.lang, objBefore);
-
-          // sails.log.debug('objAfter: ');
-          // console.dir(objAfter);
-
-          let paramsInline = {
-            messenger: inputs.client.messenger,
-            chatId: inputs.client.chat_id,
-            html: htmlInline,
-            inline_keyboard: objAfter,
-          };
-
-          let inlineRes = await sails.helpers.general.sendRest('POST', restLinks.mgSendInlineButtons, paramsInline);
-
-          sails.log.debug('inlineRes: ', inlineRes);
-          sails.log.debug('inlineRes payload: ', inlineRes.payload.payload.payload);
-
-          block.message_id = inlineRes.payload.payload.payload.payload.message_id;
-
-          if (_.isNil(inlineRes.status) || inlineRes.status != 'ok') {
-
-            sails.log.error('Inline keyboard message was not successful: \nblock: ', block,
-              '\nclient: ', inputs.client.guid);
-
-            return exits.success({
-              status: 'nok',
-              message: 'Inline keyboard message was not successful',
-              payload: {
-                client: inputs.client,
-                block: block,
-              }
-            })
-
-          } else {
-
-            block.shown = true;
-
-            /**
-             * Save the sent message
-             */
-
-            try {
-
-              await sails.helpers.storage.messageSave.with({
-                message: htmlInline,
-                message_format: 'callback',
-                messenger: inputs.client.messenger,
-                message_originator: 'bot',
-                client_id: inputs.client.id,
-                client_guid: inputs.client.guid,
-                message_buttons: objAfter
-              })
-
-            } catch (e) {
-
-              sails.log.error('Message save error: ', e);
-
-            }
-
-          }
-
-          break;
-      }
-
-
-    }
-
-    if (_.isNil(block.afterHelper)) {
-
-      if (block.actionType == 'text') {
-
-        await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
-
-      }
-
-
-    } else {
-
-      let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
-      let afterHelperBlock = splitAfterHelperRes[0];
-      let afterHelperName = splitAfterHelperRes[1];
-
-      if (afterHelperBlock && afterHelperName) {
-
-        try {
-
-          await sails.helpers.funnel[afterHelperBlock][afterHelperName](inputs.client, block, inputs.msg);
-
-        } catch (e) {
-
-          sails.log.error('Respective afterHelper does not exist:\nError: ', e);
-
-          try {
-
-            await sails.helpers.general.logError.with({
-              client_guid: inputs.client.guid,
-              error_message: 'Respective afterHelper helper does not exist',
-              level: 'critical',
-              payload: e
+            let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
+              chatId: inputs.client.chat_id,
+              html: htmlSimple,
             });
 
-          } catch (e) {
+            sails.log.debug('simpleRes: ', simpleRes);
+            sails.log.debug('simpleRes payload: ', simpleRes.payload);
 
-            sails.log.error('Error log create error: ', e);
+            block.message_id = simpleRes.payload.message_id;
 
-          }
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSave.with({
+              message: htmlSimple,
+              message_format: 'simple',
+              messenger: inputs.client.messenger,
+              message_originator: 'bot',
+              client_id: inputs.client.id,
+              client_guid: inputs.client.guid
+            });
+
+            break;
+
+          case 'forced':
+
+            /**
+             * Send forced reply message
+             */
+
+            let htmlForced = '';
+
+            for (let i = 0; i < block.message.html.length; i++) {
+              htmlForced = htmlForced +
+                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+                t(inputs.client.lang, block.message.html[i].text) +
+                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+                (block.message.html.length > 1
+                  ? (block.message.html[i].cr
+                    ? sails.config.custom[block.message.html[i].cr]
+                    : '')
+                  : '');
+            }
+
+            let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
+              chatId: inputs.client.chat_id,
+              html: htmlForced,
+            });
+
+            sails.log.debug('forcedRes: ', forcedRes);
+            sails.log.debug('forcedRes payload: ', forcedRes.payload);
+
+            block.message_id = forcedRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSave.with({
+              message: htmlForced,
+              message_format: 'forced',
+              messenger: inputs.client.messenger,
+              message_originator: 'bot',
+              client_id: inputs.client.id,
+              client_guid: inputs.client.guid
+            });
+
+            break;
+
+          case 'inline_keyboard':
+
+            /**
+             * Send inline keyboard message
+             */
+
+            let htmlInline = '';
+
+            for (let i = 0; i < block.message.html.length; i++) {
+              htmlInline = htmlInline +
+                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+                t(inputs.client.lang, block.message.html[i].text) +
+                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+                (block.message.html.length > 1
+                  ? (block.message.html[i].cr
+                    ? sails.config.custom[block.message.html[i].cr]
+                    : '')
+                  : '');
+            }
+
+            let objBefore = block.message.inline_keyboard;
+
+            let objAfter = mapDeep(inputs.client.lang, objBefore);
+
+            // sails.log.debug('objAfter: ');
+            // console.dir(objAfter);
+
+            let inlineRes = await sails.helpers.mgw[inputs.client.messenger]['inlineKeyboardMessage'].with({
+              chatId: inputs.client.chat_id,
+              html: htmlInline,
+              inlineKeyboard: objAfter,
+            });
+
+            sails.log.debug('inlineRes: ', inlineRes);
+            sails.log.debug('inlineRes payload: ', inlineRes.payload);
+
+            block.message_id = inlineRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSave.with({
+              message: htmlInline,
+              message_format: 'callback',
+              messenger: inputs.client.messenger,
+              message_originator: 'bot',
+              client_id: inputs.client.id,
+              client_guid: inputs.client.guid,
+              message_buttons: objAfter
+            });
+
+            break;
+
 
         }
 
+      }
+
+      /**
+       * After sending message we need to perform afterHelper
+       */
+
+      if (_.isNil(block.afterHelper)) {
+
+        /**
+         * Only for simple text messages we perform afterHelperGeneric
+         * because for both forced and inline_keyboard messages
+         * we perform next actions based on the information provided by client
+         */
+
+        if (block.actionType === 'text') {
+
+          await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
+
+        }
 
       } else {
 
-        return exits.success({
-          status: 'nok',
-          message: 'The helper with afterHelperBlock=' +
-              afterHelperBlock + ' and afterHelperName=' + afterHelperName +
-              ' was not found',
+        let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
+        let afterHelperBlock = splitAfterHelperRes[0];
+        let afterHelperName = splitAfterHelperRes[1];
+
+        if (afterHelperBlock && afterHelperName) {
+
+          /**
+           * We managed to parse the specified afterHelper and can perform it
+           */
+
+          await sails.helpers.funnel[afterHelperBlock][afterHelperName](inputs.client, block, inputs.msg);
+
+
+        } else {
+
+          /**
+           * Throw error: we could not parse the specified afterHelper
+           */
+
+          throw {err: {
+              module: 'api/helpers/funnel/proceed-next-block',
+              message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
+              payload: {
+                helperName: block.afterHelper,
+                afterHelperBlock: afterHelperBlock,
+                afterHelperName: afterHelperName,
+              }
+            }
+          };
+
+        }
+
+      }
+
+      /**
+       * If we have a next block specified we have to parse and proceed it
+       */
+
+      if (block.next) {
+
+        let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
+        let nextFunnel = splitRes[0];
+        let nextId = splitRes[1];
+
+        sails.log.debug('nextFunnel: ', nextFunnel);
+        sails.log.debug('nextId: ', nextId);
+
+        if (
+          nextFunnel
+          && nextId
+        ) {
+
+          await sails.helpers.funnel.proceedNextBlock(inputs.client, nextFunnel, nextId, inputs.msg);
+
+        }
+
+      }
+
+    } catch (e) {
+
+      throw {err: {
+          module: 'api/helpers/funnel/proceed-next-block',
+          message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,
           payload: {
-            client: inputs.client,
-            block: block,
+            error: e,
           }
-        });
-
-      }
-
-    }
-
-    if (block.next) {
-
-      let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
-      let nextFunnel = splitRes[0];
-      let nextId = splitRes[1];
-
-      sails.log.debug('nextFunnel: ', nextFunnel);
-      sails.log.debug('nextId: ', nextId);
-
-      if (
-        nextFunnel
-        && nextId
-      ) {
-
-        await sails.helpers.funnel.proceedNextBlock(inputs.client, nextFunnel, nextId, inputs.msg);
-
-      }
+        }
+      };
 
     }
-
 
     return exits.success({status: 'ok',
       message: 'Success',

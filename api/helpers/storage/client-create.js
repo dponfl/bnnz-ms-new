@@ -47,10 +47,14 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          message: 'Client record create error',
-          payload: e,
-        }}
-
+          module: 'api/helpers/storage/client-create',
+          message: sails.config.custom.CLIENTCREATE_ERROR,
+          payload: {
+            client: inputs.client,
+            error: e,
+          }
+        }
+      };
     }
 
   }
