@@ -38,7 +38,32 @@ module.exports.custom = {
 `,
 
   /**
-   * Reply tokens
+   * ============================
+   * Tokens
+   * ============================
+   */
+
+  /**
+   * ----------------------------
+   * onMessage
+   * ----------------------------
+   */
+
+  ON_MESSAGE_ERROR: 'onMessage error',
+
+  /**
+   * ----------------------------
+   * onCallbackQuery
+   * ----------------------------
+   */
+
+  ON_CALLBACK_QUERY_ERROR: 'onCallbackQuery error',
+
+
+  /**
+   * ----------------------------
+   * getClient
+   * ----------------------------
    */
 
   CLIENT_NOT_FOUND: 'Client was not found',
@@ -47,7 +72,26 @@ module.exports.custom = {
   CLIENT_GENERAL_ERROR: 'Client general error',
 
   /**
+   * ----------------------------
+   * clientCreate
+   * ----------------------------
+   */
+
+  CLIENTCREATE_ERROR: 'Client record create error',
+
+  /**
+   * ----------------------------
+   * clientUpdate
+   * ----------------------------
+   */
+
+  CLIENTUPDATE_ERROR: 'Client record update error',
+
+
+  /**
+   * ----------------------------
    * getServiceRef
+   * ----------------------------
    */
 
   SERVICEREF_GENERAL_ERROR: 'Service ref general error',
@@ -57,7 +101,9 @@ module.exports.custom = {
   SERVICEREF_UPDATE_ERROR: 'Service ref record update error',
 
   /**
+   * ----------------------------
    * getService
+   * ----------------------------
    */
 
   SERVICE_GENERAL_ERROR: 'Service general error',
@@ -65,14 +111,18 @@ module.exports.custom = {
   SERVICE_FOUND: 'Service was found',
 
   /**
+   * ----------------------------
    * checkFunnels
+   * ----------------------------
    */
 
   CHECKFUNNELS_GENERAL_ERROR: 'Check funnels was not successful',
   CHECKFUNNELS_SUCCESS: 'Check funnels was successful',
 
   /**
+   * ----------------------------
    * sendRest
+   * ----------------------------
    */
 
   SENDREST_NO_METHOD: 'No method or wrong method',
@@ -80,25 +130,17 @@ module.exports.custom = {
   SENDREST_NO_RESULT: 'No result from rp',
 
   /**
-   * clientCreate
-   */
-
-  CLIENTCREATE_ERROR: 'Client record create error',
-
-  /**
-   * clientUpdate
-   */
-
-  CLIENTUPDATE_ERROR: 'Client record update error',
-
-  /**
+   * ----------------------------
    * messageSave
+   * ----------------------------
    */
 
   MESSAGESAVE_ERROR: 'Message record create error',
 
   /**
+   * ----------------------------
    * message gateways
+   * ----------------------------
    */
 
   SIMPLE_MESSAGE_SEND_ERROR: 'Simple message send error',
@@ -106,20 +148,26 @@ module.exports.custom = {
   INLINE_KEYBOARD_MESSAGE_SEND_ERROR: 'Inline keyboard message send error',
 
   /**
+   * ----------------------------
    * proceedNextBlock
+   * ----------------------------
    */
 
   PROCEED_NEXT_BLOCK_ERROR: 'proceedNextBlock error',
   PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: 'Cannot parse afterHelper error',
 
   /**
+   * ----------------------------
    * afterHelperGeneric
+   * ----------------------------
    */
 
   AFTERHELPERGENERIC_ERROR: 'afterHelperGeneric error',
 
   /**
+   * ----------------------------
    * supervisorTextHelper
+   * ----------------------------
    */
 
   SUPERVISORTEXTHELPER_ERROR: 'supervisorTextHelper error',
@@ -128,25 +176,15 @@ module.exports.custom = {
   SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR: 'Forced reply block was not find by message_id',
 
   /**
+   * ----------------------------
    * supervisorCallbackHelper
+   * ----------------------------
    */
 
   SUPERVISOR_CALLBACK_HELPER_ERROR: 'supervisorCallbackHelper error',
   SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR: 'Cannot parse callbackHelper error',
   SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
   SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR: 'Block was not find by message_id',
-
-  /**
-   * onMessage
-   */
-
-  ON_MESSAGE_ERROR: 'onMessage error',
-
-  /**
-   * onCallbackQuery
-   */
-
-  ON_CALLBACK_QUERY_ERROR: 'onCallbackQuery error',
 
 
 };

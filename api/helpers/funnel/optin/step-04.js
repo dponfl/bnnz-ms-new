@@ -67,13 +67,19 @@ module.exports = {
 
 
     } catch (e) {
-      sails.log.error(e);
 
-      return exits.success({
-        status: 'nok',
-        message: 'Error',
-        payload: e
-      });
+      throw {err: {
+          module: 'api/helpers/funnel/optin/step-04',
+          message: 'api/helpers/funnel/optin/step-04 error',
+          payload: {
+            client: inputs.client,
+            block: inputs.block,
+            msg: inputs.msg,
+            error: e,
+          }
+        }
+      };
+
     }
 
 

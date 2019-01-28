@@ -55,13 +55,19 @@ module.exports = {
       inputs.block.done = true;
 
     } catch (e) {
-      sails.log.error(e);
 
-      return exits.success({
-        status: 'nok',
-        message: 'Error',
-        payload: e
-      });
+      throw {err: {
+          module: 'api/helpers/funnel/optin/callback-test',
+          message: 'api/helpers/funnel/optin/callback-test error',
+          payload: {
+            client: inputs.client,
+            block: inputs.block,
+            query: inputs.query,
+            error: e,
+          }
+        }
+      };
+
     }
 
 
