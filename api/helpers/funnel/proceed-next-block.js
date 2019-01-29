@@ -2,9 +2,6 @@
 
 const _ = require('lodash');
 
-const generalServices = require('../../services/general');
-const restLinks = generalServices.RESTLinks();
-
 const t = require('../../services/translate').t;
 
 
