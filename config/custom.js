@@ -146,6 +146,7 @@ module.exports.custom = {
   SIMPLE_MESSAGE_SEND_ERROR: 'Simple message send error',
   FORCED_MESSAGE_SEND_ERROR: 'Forced message send error',
   INLINE_KEYBOARD_MESSAGE_SEND_ERROR: 'Inline keyboard message send error',
+  KEYBOARD_MESSAGE_SEND_ERROR: 'Keyboard message send error',
 
   /**
    * ----------------------------
