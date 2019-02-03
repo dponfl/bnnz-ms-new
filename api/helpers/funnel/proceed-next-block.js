@@ -126,6 +126,59 @@ module.exports = {
 
             break;
 
+          case 'img':
+
+            /**
+             * Send img message
+             */
+
+            let htmlImg = '';
+
+            for (let i = 0; i < block.message.html.length; i++) {
+              htmlImg = htmlImg +
+                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
+                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
+                t(inputs.client.lang, block.message.html[i].text) +
+                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
+                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
+                (block.message.html.length > 1
+                  ? (block.message.html[i].cr
+                    ? sails.config.custom[block.message.html[i].cr]
+                    : '')
+                  : '');
+            }
+
+            let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
+              chatId: inputs.client.chat_id,
+              imgPath: sails.config.custom.cloudinaryImgUrl + block.message.img,
+              html: htmlImg,
+            });
+
+            sails.log.debug('imgRes: ', imgRes);
+            sails.log.debug('imgRes payload: ', imgRes.payload);
+
+            block.message_id = imgRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSave.with({
+              message: JSON.stringify({
+                img: sails.config.custom.cloudinaryImgUrl + block.message.img,
+                html: htmlImg,
+              }),
+              message_format: 'img',
+              messenger: inputs.client.messenger,
+              message_originator: 'bot',
+              client_id: inputs.client.id,
+              client_guid: inputs.client.guid
+            });
+
+            break;
+
           case 'forced':
 
             /**

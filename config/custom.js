@@ -24,6 +24,8 @@ module.exports.custom = {
 
   telegramBot: null,
 
+  cloudinaryImgUrl: 'https://res.cloudinary.com/hngdrrh5s/image/upload/v1549212141/',
+
   tokens: {},
 
   testClient: {},
@@ -147,6 +149,7 @@ module.exports.custom = {
   FORCED_MESSAGE_SEND_ERROR: 'Forced message send error',
   INLINE_KEYBOARD_MESSAGE_SEND_ERROR: 'Inline keyboard message send error',
   KEYBOARD_MESSAGE_SEND_ERROR: 'Keyboard message send error',
+  IMG_MESSAGE_SEND_ERROR: 'Img message send error',
 
   /**
    * ----------------------------
@@ -186,6 +189,8 @@ module.exports.custom = {
   SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR: 'Cannot parse callbackHelper error',
   SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
   SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR: 'Block was not find by message_id',
+  SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
+
 
 
 };

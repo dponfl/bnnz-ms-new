@@ -81,6 +81,46 @@ module.exports = {
             await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](inputs.client, block, inputs.query);
 
             /**
+             * We need to start processing funnel again because if callback enabled some new
+             * block it should be shown
+             */
+
+            /**
+             * Try to find the initial block of the current funnel
+             */
+
+            let initialBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
+              {previous: null});
+
+            /**
+             * Check that the initial block was found
+             */
+
+            if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+              await sails.helpers.funnel.proceedNextBlock(inputs.client,
+                inputs.client.current_funnel,
+                initialBlock.id, inputs.query);
+
+            } else {
+
+              /**
+               * Throw error -> initial block was not found
+               */
+
+              throw {err: {
+                  module: 'api/helpers/funnel/optin/supervisor-callback',
+                  message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
+                  payload: {
+                    client: inputs.client,
+                  }
+                }
+              };
+
+            }
+
+
+            /**
              * Update content of funnels field of client record
              */
 

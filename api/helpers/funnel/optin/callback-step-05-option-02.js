@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Callback test helper',
+  friendlyName: 'Callback Step 05 Option 02 helper',
 
 
-  description: 'Callback test helper',
+  description: 'Callback Step 05 Option 02 helper',
 
 
   inputs: {
@@ -53,6 +53,10 @@ module.exports = {
       sails.log.debug('Query: ', inputs.query);
 
       inputs.block.done = true;
+
+      inputs.block.next = 'optin::start_step_06_2';
+      await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.query);
+
 
     } catch (e) {
 
