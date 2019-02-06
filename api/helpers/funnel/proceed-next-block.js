@@ -298,12 +298,12 @@ module.exports = {
       if (_.isNil(block.afterHelper)) {
 
         /**
-         * Only for simple text messages we perform afterHelperGeneric
+         * Only for simple text or img messages we perform afterHelperGeneric
          * because for both forced and inline_keyboard messages
          * we perform next actions based on the information provided by client
          */
 
-        if (block.actionType === 'text') {
+        if (_.includes(['text', 'img'], block.actionType)) {
 
           await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
 

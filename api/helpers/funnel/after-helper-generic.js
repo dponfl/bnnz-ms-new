@@ -95,7 +95,20 @@ module.exports = {
 
       }
 
-      // TODO: Update client's record in DB before exit
+      if (inputs.block.switchToFunnel) {
+
+        /**
+         * We need to switch client to the specified funnel
+         */
+
+        inputs.client.current_funnel = inputs.block.switchToFunnel;
+
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: inputs.client.guid},
+          data: {current_funnel: inputs.block.switchToFunnel}
+        });
+
+      }
 
       return exits.success();
 
