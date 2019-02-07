@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Supervisor callback query helper for optin query',
+  friendlyName: 'Supervisor callback query helper',
 
 
-  description: 'Supervisor callback query helper for optin query',
+  description: 'Supervisor callback query helper',
 
 
   inputs: {
@@ -109,7 +109,7 @@ module.exports = {
                */
 
               throw {err: {
-                  module: 'api/helpers/funnel/optin/supervisor-callback',
+                  module: 'api/helpers/funnel/supervisor-callback',
                   message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
                   payload: {
                     client: inputs.client,
@@ -136,7 +136,7 @@ module.exports = {
              */
 
             throw {err: {
-                module: 'api/helpers/funnel/optin/supervisor-callback',
+                module: 'api/helpers/funnel/supervisor-callback',
                 message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
                 payload: {
                   block: block,
@@ -153,7 +153,7 @@ module.exports = {
         } else {
 
           throw {err: {
-              module: 'api/helpers/funnel/optin/supervisor-callback',
+              module: 'api/helpers/funnel/supervisor-callback',
               message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR,
               payload: {
                 client: inputs.client,
@@ -170,7 +170,7 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/supervisor-callback',
+          module: 'api/helpers/funnel/supervisor-callback',
           message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR,
           payload: {
             client: inputs.client,

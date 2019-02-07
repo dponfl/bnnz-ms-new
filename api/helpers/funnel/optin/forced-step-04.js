@@ -43,14 +43,17 @@ module.exports = {
 
       sails.log.debug('/*************** Step 04 forced message helper ***************/');
 
-      inputs.block.done = true;
 
       if (/111/i.test(inputs.msg.text)) {
+
+        inputs.block.done = true;
 
         inputs.block.next = 'optin::start_step_05_1';
         await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
 
       } else if (/222/i.test(inputs.msg.text)) {
+
+        inputs.block.done = true;
 
         inputs.block.next = 'optin::start_step_05_2';
         await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);

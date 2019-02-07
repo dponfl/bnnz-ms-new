@@ -1,11 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'supervisorText <optin> funnel helper',
+  friendlyName: 'supervisorText funnel helper',
 
 
-  description: 'Supervisor helper to manage all communication ' +
-    'for <optin> funnel',
+  description: 'Supervisor helper to manage all communication ',
 
 
   inputs: {
@@ -94,7 +93,7 @@ module.exports = {
              */
 
             throw {err: {
-                module: 'api/helpers/funnel/optin/supervisor-text',
+                module: 'api/helpers/funnel/supervisor-text',
                 message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
                 payload: {
                   block: forcedReplyBlock,
@@ -111,7 +110,7 @@ module.exports = {
         } else {
 
           throw {err: {
-              module: 'api/helpers/funnel/optin/supervisor-text',
+              module: 'api/helpers/funnel/supervisor-text',
               message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
               payload: {
                 client: inputs.client,
@@ -177,7 +176,7 @@ module.exports = {
          */
 
         throw {err: {
-            module: 'api/helpers/funnel/optin/supervisor-text',
+            module: 'api/helpers/funnel/supervisor-text',
             message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
             payload: {
               client: inputs.client,
@@ -190,7 +189,7 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/supervisor-text',
+          module: 'api/helpers/funnel/supervisor-text',
           message: sails.config.custom.SUPERVISORTEXTHELPER_ERROR,
           payload: {
             client: inputs.client,

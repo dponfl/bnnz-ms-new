@@ -53,7 +53,9 @@ module.exports = {
          * Call the respective Supervisor helper
          */
 
-        await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+        // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+
+        await sails.helpers.funnel.supervisorCallback(getClientResponse.payload, query);
 
       } catch (e) {
 

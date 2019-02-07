@@ -180,7 +180,9 @@ module.exports = {
          * Call the respective supervisorText helper
          */
 
-        await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'](getClientResponse.payload, msg);
+        // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'](getClientResponse.payload, msg);
+
+        await sails.helpers.funnel.supervisorText(getClientResponse.payload, msg);
 
 
       } catch (e) {
