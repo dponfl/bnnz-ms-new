@@ -83,21 +83,7 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimple = '';
-
-            for (let i = 0; i < block.message.html.length; i++) {
-              htmlSimple = htmlSimple +
-                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-                t(inputs.client.lang, block.message.html[i].text) +
-                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-                (block.message.html.length > 1
-                  ? (block.message.html[i].cr
-                    ? sails.config.custom[block.message.html[i].cr]
-                    : '')
-                  : '');
-            }
+            let htmlSimple = parseMessageStyle(block.message, inputs.client.lang);
 
             let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
               chatId: inputs.client.chat_id,
@@ -132,21 +118,7 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImg = '';
-
-            for (let i = 0; i < block.message.html.length; i++) {
-              htmlImg = htmlImg +
-                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-                t(inputs.client.lang, block.message.html[i].text) +
-                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-                (block.message.html.length > 1
-                  ? (block.message.html[i].cr
-                    ? sails.config.custom[block.message.html[i].cr]
-                    : '')
-                  : '');
-            }
+            let htmlImg = parseMessageStyle(block.message, inputs.client.lang);
 
             let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
               chatId: inputs.client.chat_id,
@@ -185,21 +157,7 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForced = '';
-
-            for (let i = 0; i < block.message.html.length; i++) {
-              htmlForced = htmlForced +
-                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-                t(inputs.client.lang, block.message.html[i].text) +
-                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-                (block.message.html.length > 1
-                  ? (block.message.html[i].cr
-                    ? sails.config.custom[block.message.html[i].cr]
-                    : '')
-                  : '');
-            }
+            let htmlForced = parseMessageStyle(block.message, inputs.client.lang);
 
             let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
               chatId: inputs.client.chat_id,
@@ -234,21 +192,7 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInline = '';
-
-            for (let i = 0; i < block.message.html.length; i++) {
-              htmlInline = htmlInline +
-                (/b/i.test(block.message.html[i].style) ? '<b>' : '') +
-                (/i/i.test(block.message.html[i].style) ? '<i>' : '') +
-                t(inputs.client.lang, block.message.html[i].text) +
-                (/i/i.test(block.message.html[i].style) ? '</i>' : '') +
-                (/b/i.test(block.message.html[i].style) ? '</b>' : '') +
-                (block.message.html.length > 1
-                  ? (block.message.html[i].cr
-                    ? sails.config.custom[block.message.html[i].cr]
-                    : '')
-                  : '');
-            }
+            let htmlInline = parseMessageStyle(block.message, inputs.client.lang);
 
             let objBefore = block.message.inline_keyboard;
 
@@ -412,5 +356,27 @@ function mapDeep(lang, obj) {
 
     return ob;
   }
-};
+}
+
+function parseMessageStyle(msg, lang) {
+  let resultHtml = '';
+
+  for (let i = 0; i < msg.html.length; i++) {
+    resultHtml = resultHtml +
+      (/b/i.test(msg.html[i].style) ? '<b>' : '') +
+      (/i/i.test(msg.html[i].style) ? '<i>' : '') +
+      (/url/i.test(msg.html[i].style) ? `<a href="${msg.html[i].url}">` : '') +
+      t(lang, msg.html[i].text) +
+      (/i/i.test(msg.html[i].style) ? '</i>' : '') +
+      (/b/i.test(msg.html[i].style) ? '</b>' : '') +
+      (/url/i.test(msg.html[i].style) ? '</a>' : '') +
+      (msg.html.length > 1
+        ? (msg.html[i].cr
+          ? sails.config.custom[msg.html[i].cr]
+          : '')
+        : '');
+  }
+
+  return resultHtml;
+}
 

@@ -13,6 +13,8 @@ module.exports = {
 const token = {
   en: {
 
+    DIMA: "Dima Ponomarev",
+
     // New registration, client was not signed up
 
     NEW_SUBS_WELCOME_01: 'Hi',
@@ -108,6 +110,8 @@ const token = {
 
   },
   ru: {
+
+    DIMA: "Дима Пономарев",
 
     // New registration, client was not signed up
 
