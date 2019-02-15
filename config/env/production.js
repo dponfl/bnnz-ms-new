@@ -259,6 +259,10 @@ module.exports = {
     //   'https://staging.example.com',
     // ],
 
+    onlyAllowOrigins: [
+      process.env.HOST || '',
+    ],
+
 
     /***************************************************************************
     *                                                                          *

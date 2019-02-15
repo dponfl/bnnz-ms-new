@@ -24,7 +24,7 @@ module.exports.custom = {
 
   telegramBot: null,
 
-  cloudinaryImgUrl: 'https://res.cloudinary.com/hngdrrh5s/image/upload/v1549212141/',
+  cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
 
   tokens: {},
 
