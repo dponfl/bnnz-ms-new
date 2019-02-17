@@ -49,14 +49,28 @@ module.exports = {
         inputs.block.done = true;
 
         inputs.block.next = 'optin::start_step_05_1';
-        await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+        await sails.helpers.funnel.afterHelperGeneric.with({
+          client: inputs.client,
+          block: inputs.block,
+          msg: inputs.msg,
+          next: true,
+          previous: true,
+          switchFunnel: true,
+        });
 
       } else if (/222/i.test(inputs.msg.text)) {
 
         inputs.block.done = true;
 
         inputs.block.next = 'optin::start_step_05_2';
-        await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+        await sails.helpers.funnel.afterHelperGeneric.with({
+          client: inputs.client,
+          block: inputs.block,
+          msg: inputs.msg,
+          next: true,
+          previous: true,
+          switchFunnel: true,
+        });
 
       }
 

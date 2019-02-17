@@ -249,7 +249,14 @@ module.exports = {
 
         if (_.includes(['text', 'img'], block.actionType)) {
 
-          await sails.helpers.funnel.afterHelperGeneric(inputs.client, block, inputs.msg);
+          await sails.helpers.funnel.afterHelperGeneric.with({
+            client: inputs.client,
+            block: block,
+            msg: inputs.msg,
+            next: true,
+            previous: true,
+            switchFunnel: true,
+          });
 
         }
 

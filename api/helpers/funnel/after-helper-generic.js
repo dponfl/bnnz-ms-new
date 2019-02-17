@@ -26,6 +26,24 @@ module.exports = {
       type: 'ref',
       required: true,
     },
+    next: {
+      friendlyName: 'activateNext',
+      description: 'flag if we allow to activate the next funnel block',
+      type: 'boolean',
+      required: true,
+    },
+    previous: {
+      friendlyName: 'markPrevious',
+      description: 'flag if we allow to mark the previous funnel block as done',
+      type: 'boolean',
+      required: true,
+    },
+    switchFunnel: {
+      friendlyName: 'switchToFunnel',
+      description: 'flag if we allow to switch to the different funnel specified by switchToFunnel',
+      type: 'boolean',
+      required: true,
+    }
   },
 
 
@@ -48,13 +66,14 @@ module.exports = {
      * Perform general activities after the block was performed, like:
      * 1) if next block is specified -> we need to enable it
      * 2) if previous block is specified -> we need to mark it as done
+     * 3) if switchToFunnel not null -> we need switch to the specific funnel
      */
 
     try {
 
       // inputs.block.done = true;
 
-      if (inputs.block.next) {
+      if (inputs.next && inputs.block.next) {
 
         let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
         let nextFunnel = splitRes[0];
@@ -74,7 +93,7 @@ module.exports = {
 
       }
 
-      if (inputs.block.previous) {
+      if (inputs.previous && inputs.block.previous) {
 
         let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
         let previousFunnel = splitRes[0];
@@ -95,7 +114,7 @@ module.exports = {
 
       }
 
-      if (inputs.block.switchToFunnel) {
+      if (inputs.switchFunnel && inputs.block.switchToFunnel) {
 
         /**
          * We need to switch client to the specified funnel

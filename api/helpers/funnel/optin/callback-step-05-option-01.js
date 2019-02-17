@@ -55,7 +55,14 @@ module.exports = {
       inputs.block.done = true;
 
       inputs.block.next = 'optin::start_step_06_1';
-      await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.query);
+      await sails.helpers.funnel.afterHelperGeneric.with({
+        client: inputs.client,
+        block: inputs.block,
+        msg: inputs.query,
+        next: true,
+        previous: true,
+        switchFunnel: true,
+      });
 
 
     } catch (e) {

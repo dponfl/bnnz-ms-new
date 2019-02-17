@@ -63,7 +63,14 @@ module.exports = {
       //
       // }
 
-      await sails.helpers.funnel.afterHelperGeneric(inputs.client, inputs.block, inputs.msg);
+      await sails.helpers.funnel.afterHelperGeneric.with({
+        client: inputs.client,
+        block: inputs.block,
+        msg: inputs.msg,
+        next: true,
+        previous: true,
+        switchFunnel: true,
+      });
 
 
     } catch (e) {
