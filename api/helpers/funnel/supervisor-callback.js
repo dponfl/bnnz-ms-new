@@ -129,6 +129,13 @@ module.exports = {
               data: {funnels: inputs.client.funnels}
             });
 
+            // await sails.helpers.storage.performedFunnelsSave.with({
+            //   client_guid: inputs.client.guid,
+            //   current_funnel: inputs.client.current_funnel,
+            //   funnel_data: inputs.client.funnels,
+            // });
+
+
           } else {
 
             /**

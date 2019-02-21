@@ -191,6 +191,15 @@ module.exports.custom = {
   SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR: 'Block was not find by message_id',
   SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
 
+  /**
+   * ----------------------------
+   * performedFunnelsSave
+   * ----------------------------
+   */
+
+  PERFORMEDFUNNELSSAVE_ERROR: 'Performed_funnels record create error',
+
+
 
 
 };
