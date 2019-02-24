@@ -115,6 +115,9 @@ module.exports = {
     payment_made: {
       type: 'boolean',
     },
+    subscription_confirmed_by_client: {
+      type: 'boolean',
+    },
     subscription_made: {
       type: 'boolean',
     },
