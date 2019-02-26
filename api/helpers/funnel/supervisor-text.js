@@ -153,7 +153,7 @@ module.exports = {
        */
 
       let initialBlock = _.find(inputs.client.funnels[inputs.client.current_funnel],
-        {previous: null});
+        {initial: true});
 
       // sails.log.debug('initialBlock: ', initialBlock);
 
