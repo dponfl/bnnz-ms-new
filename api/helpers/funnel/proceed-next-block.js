@@ -66,6 +66,11 @@ module.exports = {
 
     try {
 
+      let clientName = {
+        firstName: inputs.msg.chat.first_name || null,
+        lastName: inputs.msg.chat.last_name || null,
+      };
+
       block = _.find(inputs.client.funnels[inputs.funnelName], {id: inputs.blockId});
 
       if (
@@ -83,7 +88,7 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimple = parseMessageStyle(block.message, inputs.client.lang);
+            let htmlSimple = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
             let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
               chatId: inputs.client.chat_id,
@@ -118,7 +123,7 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImg = parseMessageStyle(block.message, inputs.client.lang);
+            let htmlImg = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
             let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
               chatId: inputs.client.chat_id,
@@ -157,7 +162,7 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForced = parseMessageStyle(block.message, inputs.client.lang);
+            let htmlForced = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
             let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
               chatId: inputs.client.chat_id,
@@ -192,7 +197,7 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInline = parseMessageStyle(block.message, inputs.client.lang);
+            let htmlInline = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
             let objBefore = block.message.inline_keyboard;
 
@@ -365,8 +370,10 @@ function mapDeep(lang, obj) {
   }
 }
 
-function parseMessageStyle(msg, lang) {
+function parseMessageStyle(clientName, msg, lang) {
   let resultHtml = '';
+  let firstName = clientName.firstName || '';
+  let lastName = clientName.lastName || '';
 
   for (let i = 0; i < msg.html.length; i++) {
     resultHtml = resultHtml +
@@ -383,6 +390,14 @@ function parseMessageStyle(msg, lang) {
           : '')
         : '');
   }
+
+  sails.log.warn('resultHtml, before:', resultHtml);
+
+  resultHtml = _.replace(resultHtml, '$firstName$', firstName);
+  resultHtml = _.replace(resultHtml, '$lastName$', lastName);
+
+  sails.log.warn('resultHtml, after:', resultHtml);
+
 
   return resultHtml;
 }
