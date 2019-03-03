@@ -70,7 +70,7 @@ module.exports = {
             client_guid: inputs.client_guid,
             current_funnel: inputs.current_funnel,
             funnel_data: inputs.funnel_data,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

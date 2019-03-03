@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Callback Step 05 Option 01 helper',
+  friendlyName: 'optin::callbackGeneralInfo',
 
 
-  description: 'Callback Step 05 Option 01 helper',
+  description: 'optin::callbackGeneralInfo',
 
 
   inputs: {
@@ -46,15 +46,37 @@ module.exports = {
   fn: async function (inputs, exits) {
     try {
 
-      sails.log.debug('/*************** Callback test helper ***************/');
+      sails.log.debug('/*************** optin::callbackGeneralInfo ***************/');
 
-      sails.log.debug('Client: ', inputs.client);
+      // sails.log.debug('Client: ', inputs.client);
       sails.log.debug('Block: ', inputs.block);
       sails.log.debug('Query: ', inputs.query);
 
+      // throw {err: {
+      //     module: 'api/helpers/funnel/optin/callback-general-info',
+      //     message: 'api/helpers/funnel/optin/callback-general-info error',
+      //     payload: {
+      //       client: inputs.client,
+      //       block: inputs.block,
+      //       query: inputs.query,
+      //       error: 'Test error message from optin::callbackGeneralInfo',
+      //     }
+      //   }
+      // };
+
+      throw new Error('Test error message from optin::callbackGeneralInfo');
+
+      switch (inputs.query.data) {
+        case 'general_info_yes':
+          inputs.block.next = 'optin::proceed';
+          break;
+        case 'general_info_no':
+          inputs.block.next = 'optin::not_proceed';
+          break;
+      }
+
       inputs.block.done = true;
 
-      inputs.block.next = 'optin::start_step_06_1';
       await sails.helpers.funnel.afterHelperGeneric.with({
         client: inputs.client,
         block: inputs.block,
@@ -68,13 +90,13 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/callback-test',
-          message: 'api/helpers/funnel/optin/callback-test error',
+          module: 'api/helpers/funnel/optin/callback-general-info',
+          message: 'api/helpers/funnel/optin/callback-general-info error',
           payload: {
             client: inputs.client,
             block: inputs.block,
             query: inputs.query,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

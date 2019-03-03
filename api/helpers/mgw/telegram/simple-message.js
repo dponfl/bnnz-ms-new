@@ -63,7 +63,7 @@ module.exports = {
           payload: {
             chatId: inputs.chatId,
             html: inputs.html,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

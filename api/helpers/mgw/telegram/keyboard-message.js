@@ -73,7 +73,7 @@ module.exports = {
             chatId: inputs.chatId,
             html: inputs.html,
             keyboard: inputs.keyboard,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

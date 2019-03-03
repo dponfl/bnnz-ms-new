@@ -182,7 +182,7 @@ module.exports = {
           payload: {
             client: inputs.client,
             query: inputs.query,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

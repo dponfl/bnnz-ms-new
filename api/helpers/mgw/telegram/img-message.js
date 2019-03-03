@@ -76,7 +76,7 @@ module.exports = {
             chatId: inputs.chatId,
             imgPath: inputs.imgPath,
             html: inputs.html,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

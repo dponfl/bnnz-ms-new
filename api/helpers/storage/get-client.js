@@ -137,7 +137,7 @@ module.exports = {
           payload: {
             messenger: inputs.messenger,
             msg: inputs.msg,
-            error: e,
+            error: e.message || 'no error message',
           },
         }
       };

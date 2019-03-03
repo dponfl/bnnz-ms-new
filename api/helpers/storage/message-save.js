@@ -104,7 +104,7 @@ module.exports = {
             message_buttons: inputs.message_buttons || {},
             messenger: inputs.messenger,
             message_originator: inputs.message_originator,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

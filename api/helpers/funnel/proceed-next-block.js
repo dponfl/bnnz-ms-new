@@ -331,7 +331,7 @@ module.exports = {
           module: 'api/helpers/funnel/proceed-next-block',
           message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,
           payload: {
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

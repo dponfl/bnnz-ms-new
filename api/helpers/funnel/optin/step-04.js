@@ -82,7 +82,7 @@ module.exports = {
             client: inputs.client,
             block: inputs.block,
             msg: inputs.msg,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

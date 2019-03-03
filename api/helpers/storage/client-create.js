@@ -51,7 +51,7 @@ module.exports = {
           message: sails.config.custom.CLIENTCREATE_ERROR,
           payload: {
             client: inputs.client,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

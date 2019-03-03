@@ -63,7 +63,7 @@ module.exports = {
           payload: {
             criteria: inputs.criteria,
             client: inputs.client,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

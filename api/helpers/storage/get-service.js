@@ -82,7 +82,7 @@ module.exports = {
           message: sails.config.custom.SERVICE_GENERAL_ERROR,
           payload: {
             serviceKey: inputs.serviceKey,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };

@@ -76,7 +76,7 @@ module.exports = {
       throw {err: {
           status: 'nok',
           message: 'Record create error',
-          payload: e
+          payload: e.message || 'no error message'
         }
       }
 

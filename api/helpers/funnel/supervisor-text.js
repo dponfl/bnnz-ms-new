@@ -208,7 +208,7 @@ module.exports = {
           payload: {
             client: inputs.client,
             msg: inputs.msg,
-            error: e,
+            error: e.message || 'no error message',
           }
         }
       };
