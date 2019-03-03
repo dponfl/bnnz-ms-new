@@ -1,7 +1,7 @@
 {
   "optin": [
     {
-      "id": "start",
+      "id": "text",
       "description": "",
       "actionType": "text",
       "initial": true,
@@ -26,7 +26,7 @@
       }
     },
     {
-      "id": "general_info",
+      "id": "inline_keyboard",
       "description": "",
       "actionType": "inline_keyboard",
       "initial": false,
@@ -49,6 +49,65 @@
           },
           {
             "text": "MSG_OPTIN_GENERAL_INFO_01",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "forced",
+      "description": "",
+      "actionType": "forced",
+      "enabled": false,
+      "shown": false,
+      "done": false,
+      "previous": "optin::start_step_03",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::step04",
+      "forcedHelper": "optin::forcedStep04",
+      "callbackHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "NEW_SUBS_INST_01",
+            "style": "b",
+            "cr": "SCR"
+          },
+          {
+            "text": "NEW_SUBS_INST_01",
+            "style": "i",
+            "cr": "DCR"
+          },
+          {
+            "text": "NEW_SUBS_INST_01",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "img",
+      "description": "",
+      "actionType": "img",
+      "enabled": false,
+      "shown": false,
+      "done": false,
+      "previous": "optin::start_step_05_1",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "message": {
+        "img": "sample.jpg",
+        "html": [
+          {
+            "text": "NEW_SUBS_WELCOME_02",
             "style": "b",
             "cr": ""
           }

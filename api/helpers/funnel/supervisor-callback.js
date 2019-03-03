@@ -98,9 +98,12 @@ module.exports = {
 
             if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
-              await sails.helpers.funnel.proceedNextBlock(inputs.client,
+              await sails.helpers.funnel.proceedNextBlock(
+                inputs.client,
                 inputs.client.current_funnel,
-                initialBlock.id, inputs.query);
+                initialBlock.id,
+                inputs.query.message
+              );
 
             } else {
 

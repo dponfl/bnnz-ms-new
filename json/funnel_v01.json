@@ -68,6 +68,36 @@
           ]
         ]
       }
+    },
+    {
+      "id": "not_proceed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::general_info",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::notProceed",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_NO_RESPONSE_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_OPTIN_NO_RESPONSE_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }

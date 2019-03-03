@@ -52,19 +52,6 @@ module.exports = {
       sails.log.debug('Block: ', inputs.block);
       sails.log.debug('Query: ', inputs.query);
 
-      // throw {err: {
-      //     module: 'api/helpers/funnel/optin/callback-general-info',
-      //     message: 'api/helpers/funnel/optin/callback-general-info error',
-      //     payload: {
-      //       client: inputs.client,
-      //       block: inputs.block,
-      //       query: inputs.query,
-      //       error: 'Test error message from optin::callbackGeneralInfo',
-      //     }
-      //   }
-      // };
-
-      throw new Error('Test error message from optin::callbackGeneralInfo');
 
       switch (inputs.query.data) {
         case 'general_info_yes':
@@ -73,6 +60,8 @@ module.exports = {
         case 'general_info_no':
           inputs.block.next = 'optin::not_proceed';
           break;
+        default:
+          throw new Error(`Wrong callback data: ${inputs.query.data}`);
       }
 
       inputs.block.done = true;
