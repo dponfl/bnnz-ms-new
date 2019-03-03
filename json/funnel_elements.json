@@ -52,20 +52,6 @@
             "style": "b",
             "cr": ""
           }
-        ],
-        "inline_keyboard": [
-          [
-            {
-              "text": "MSG_OPTIN_GENERAL_INFO_BTN_YES",
-              "callback_data": "general_info_yes"
-            }
-          ],
-          [
-            {
-              "text": "MSG_OPTIN_GENERAL_INFO_BTN_NO",
-              "callback_data": "general_info_no"
-            }
-          ]
         ]
       }
     }

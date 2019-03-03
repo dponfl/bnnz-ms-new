@@ -13,5 +13,9 @@ module.exports = {
 const token = {
   ru: {
     MSG_OPTIN_HELLO: 'Приветствую, $firstName$',
+    MSG_OPTIN_GENERAL_INFO: 'Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?',
+    MSG_OPTIN_GENERAL_INFO_01: 'Тебе это интересно?',
+    MSG_OPTIN_GENERAL_INFO_BTN_YES: '>>> ДА <<<',
+    MSG_OPTIN_GENERAL_INFO_BTN_NO: 'нет',
   },
 };
