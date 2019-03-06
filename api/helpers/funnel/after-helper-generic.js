@@ -129,9 +129,17 @@ module.exports = {
 
       }
 
+      await sails.helpers.storage.clientUpdate.with({
+        criteria: {guid: inputs.client.guid},
+        data: {funnels: inputs.client.funnels}
+      });
+
+
       return exits.success();
 
     } catch (e) {
+
+      sails.log.error('api/helpers/funnel/after-helper-generic, error: ', e);
 
       throw {err: {
           module: 'api/helpers/funnel/after-helper-generic',

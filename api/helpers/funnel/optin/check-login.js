@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Forced step 04',
+  friendlyName: 'optin::checkLogin',
 
 
-  description: 'Helper for the forced message reply at Step 04',
+  description: 'optin::checkLogin',
 
 
   inputs: {
@@ -41,14 +41,14 @@ module.exports = {
   fn: async function (inputs,exits) {
     try {
 
-      sails.log.debug('/*************** Step 04 forced message helper ***************/');
+      sails.log.debug('/*************** optin::checkLogin ***************/');
 
 
-      if (/111/i.test(inputs.msg.text)) {
+      if (_.trim(inputs.msg.text) === '111') {
 
         inputs.block.done = true;
 
-        inputs.block.next = 'optin::start_step_05_1';
+        inputs.block.next = 'optin::wrong_profile';
         await sails.helpers.funnel.afterHelperGeneric.with({
           client: inputs.client,
           block: inputs.block,
@@ -58,11 +58,11 @@ module.exports = {
           switchFunnel: true,
         });
 
-      } else if (/222/i.test(inputs.msg.text)) {
+      } else {
 
         inputs.block.done = true;
 
-        inputs.block.next = 'optin::start_step_05_2';
+        inputs.block.next = 'optin::confirm_profile';
         await sails.helpers.funnel.afterHelperGeneric.with({
           client: inputs.client,
           block: inputs.block,
@@ -78,8 +78,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/forced-step-04',
-          message: 'api/helpers/funnel/optin/forced-step-04 error',
+          module: 'api/helpers/funnel/optin/check-login',
+          message: 'api/helpers/funnel/optin/check-login error',
           payload: {
             client: inputs.client,
             block: inputs.block,

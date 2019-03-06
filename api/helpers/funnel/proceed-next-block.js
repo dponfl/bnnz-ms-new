@@ -327,6 +327,8 @@ module.exports = {
 
     } catch (e) {
 
+      sails.log.error('api/helpers/funnel/proceed-next-block, error: ', e);
+
       throw {err: {
           module: 'api/helpers/funnel/proceed-next-block',
           message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,

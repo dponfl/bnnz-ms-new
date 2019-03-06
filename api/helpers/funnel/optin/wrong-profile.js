@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Step 04 helper',
+  friendlyName: 'optin::wrongProfile',
 
 
-  description: 'Step 04 helper',
+  description: 'optin::wrongProfile',
 
 
   inputs: {
@@ -44,31 +44,43 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+
+    let getLoginBlock;
+
     try {
 
-      sails.log.debug('/*************** Step 04 helper ***************/');
+      sails.log.debug('/*************** optin::wrongProfile ***************/');
 
-      // let splitRes = _.split(inputs.block.next, sails.config.custom.JUNCTION, 2);
-      // let nextFunnel = splitRes[0];
-      // let nextId = splitRes[1];
-      //
-      // if (
-      //   nextFunnel
-      //   && nextId
-      // ) {
-      //
-      //   let nextBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
-      //   inputs.block.enabled = 'ABC';
-      //   nextBlock.enabled = 'DEF';
-      //
-      // }
+      let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
+      let nextFunnel = splitRes[0];
+      let nextId = splitRes[1];
+
+
+      getLoginBlock = _.find(inputs.client.funnels[nextFunnel], {id: nextId});
+
+      if (getLoginBlock) {
+        getLoginBlock.shown = false;
+        getLoginBlock.done = false;
+        getLoginBlock.next = null;
+
+        /**
+         * Update content of funnels field of client record
+         */
+
+        // await sails.helpers.storage.clientUpdate.with({
+        //   criteria: {guid: inputs.client.guid},
+        //   data: {funnels: inputs.client.funnels}
+        // });
+
+      }
 
       await sails.helpers.funnel.afterHelperGeneric.with({
         client: inputs.client,
         block: inputs.block,
         msg: inputs.msg,
         next: true,
-        previous: true,
+        previous: false,  // if we do not set it to false then previous block is set done=true
+                          // and we will not be able to move to it again (but we want to move there
         switchFunnel: true,
       });
 
@@ -76,8 +88,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/step-04',
-          message: 'api/helpers/funnel/optin/step-04 error',
+          module: 'api/helpers/funnel/optin/wrong-profile',
+          message: 'api/helpers/funnel/optin/wrong-profile error',
           payload: {
             client: inputs.client,
             block: inputs.block,

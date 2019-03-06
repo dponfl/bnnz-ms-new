@@ -98,6 +98,111 @@
           }
         ]
       }
+    },
+    {
+      "id": "proceed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::general_info",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_YES_RESPONSE_01",
+            "style": "b",
+            "cr": "DCR"
+          }
+        ]
+      }
+    },
+    {
+      "id": "get_login",
+      "description": "",
+      "actionType": "forced",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::proceed",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "optin::checkLogin",
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_GET_LOGIN_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_OPTIN_GET_LOGIN_02",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::get_login",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::wrongProfile",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_WRONG_INST_LOGIN",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "confirm_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_111",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
