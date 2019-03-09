@@ -182,10 +182,79 @@
     {
       "id": "confirm_profile",
       "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::get_login",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "optin::beforeConfirmProfile",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"optin::callbackConfirmProfile",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PROFILE_CONFIRM_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PROFILE_CONFIRM_02",
+            "style": "b",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_PROFILE_CONFIRM_BTN_YES",
+              "callback_data": "profile_confirm_yes"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PROFILE_CONFIRM_BTN_NO",
+              "callback_data": "profile_confirm_no"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "try_again",
+      "description": "",
       "actionType": "text",
       "initial": false,
       "enabled": false,
-      "previous": null,
+      "previous": "optin::confirm_profile",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::wrongProfileResponse",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_WRONG_PROFILE_RESPONSE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "we_have_several_service_levels",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::confirm_profile",
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
@@ -197,7 +266,7 @@
       "message": {
         "html": [
           {
-            "text": "MSG_111",
+            "text":"MSG_OPTIN_PROFILE_CONFIRMED_PROCEED",
             "style": "",
             "cr": ""
           }

@@ -52,6 +52,24 @@
             "style": "b",
             "cr": ""
           }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "ACT_NEW_POST",
+              "callback_data": "upload_post"
+            }
+          ],
+          [
+            {
+              "text": "ACT_FAQ",
+              "url": "www.google.com"
+            },
+            {
+              "text": "ACT_WEB",
+              "url": "www.facebook.com"
+            }
+          ]
         ]
       }
     },

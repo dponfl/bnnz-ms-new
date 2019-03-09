@@ -44,7 +44,11 @@ module.exports = {
       sails.log.debug('/*************** optin::checkLogin ***************/');
 
 
-      if (_.trim(inputs.msg.text) === '111') {
+      if (_.trim(inputs.msg.text) === '') {
+
+        /**
+         * No Instagram profile entered
+         */
 
         inputs.block.done = true;
 
@@ -59,6 +63,17 @@ module.exports = {
         });
 
       } else {
+
+        /**
+         * Got Instagram profile
+         */
+
+        inputs.client.inst_profile = _.trim(inputs.msg.text);
+
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: inputs.client.guid},
+          data: {inst_profile: inputs.client.inst_profile}
+        });
 
         inputs.block.done = true;
 

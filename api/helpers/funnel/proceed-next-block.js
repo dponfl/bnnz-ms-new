@@ -88,7 +88,11 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimple = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlSimpleRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+
+            let htmlSimple = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlSimpleRaw);
+
+            sails.log.debug('htmlSimple: ', htmlSimple);
 
             let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
               chatId: inputs.client.chat_id,
@@ -123,7 +127,9 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImg = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlImgRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+
+            let htmlImg = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlImgRaw);
 
             let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
               chatId: inputs.client.chat_id,
@@ -162,7 +168,9 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForced = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlForcedRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+
+            let htmlForced = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlForcedRaw);
 
             let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
               chatId: inputs.client.chat_id,
@@ -197,7 +205,9 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInline = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlInlineRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+
+            let htmlInline = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlInlineRaw);
 
             let objBefore = block.message.inline_keyboard;
 
@@ -402,5 +412,53 @@ function parseMessageStyle(clientName, msg, lang) {
 
 
   return resultHtml;
+}
+
+async function activateBeforeHelper(client, block, msg, htmlMsg) {
+
+  let res = htmlMsg;
+
+  // sails.log.warn('client:', client);
+  // sails.log.warn('block:', block);
+  // sails.log.warn('msg:', msg);
+  // sails.log.warn('htmlMsg:', htmlMsg);
+
+  if (!_.isNil(block.beforeHelper)) {
+
+    let splitBeforeHelperRes = _.split(block.beforeHelper, sails.config.custom.JUNCTION, 2);
+    let beforeHelperBlock = splitBeforeHelperRes[0];
+    let beforeHelperName = splitBeforeHelperRes[1];
+
+    if (beforeHelperBlock && beforeHelperName) {
+
+      /**
+       * We managed to parse the specified beforeHelper and can perform it
+       */
+
+      res = await sails.helpers.funnel[beforeHelperBlock][beforeHelperName](client, block, msg, htmlMsg);
+
+    } else {
+
+      /**
+       * Throw error: we could not parse the specified beforeHelper
+       */
+
+      throw {err: {
+          module: 'api/helpers/funnel/proceed-next-block',
+          message: sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR,
+          payload: {
+            helperName: block.beforeHelper,
+            afterHelperBlock: beforeHelperBlock,
+            afterHelperName: beforeHelperName,
+          }
+        }
+      };
+
+    }
+
+  }
+
+  return res;
+
 }
 

@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 module.exports = {
   t: function (l, useToken) {
-    let useLang = (_.has(token, l) ? l : 'en')
+    let useLang = (_.has(token, l) ? l : 'en');
     return (!_.isNil(token[useLang][useToken]) ? token[useLang][useToken] : useToken);
   }, // t
 
@@ -23,6 +23,11 @@ const token = {
     MSG_OPTIN_GET_LOGIN_01: 'Какой твой профиль в Инстаграме?',
     MSG_OPTIN_GET_LOGIN_02: 'Напиши в поле ниже:',
     MSG_OPTIN_WRONG_INST_LOGIN: 'Это не профиль в Инстаграме. Давай попробуем снова.',
-    MSG_111: "Отличный профиль",
+    MSG_OPTIN_PROFILE_CONFIRM_01: 'Я правильно понимаю, что это твой профиль в Инстаграме: $instagramProfile$',
+    MSG_OPTIN_PROFILE_CONFIRM_02: 'Ответь с помощью кнопок ниже',
+    MSG_OPTIN_PROFILE_CONFIRM_BTN_YES: 'ДА',
+    MSG_OPTIN_PROFILE_CONFIRM_BTN_NO: 'НЕТ',
+    MSG_OPTIN_PROFILE_CONFIRMED_PROCEED: 'Отлично. У меня для тебя есть несколько планов обслуживания.',
+    MSG_OPTIN_WRONG_PROFILE_RESPONSE: 'Хорошо, давай попробуем снова :)',
   },
 };
