@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::wrongProfileResponse',
+  friendlyName: 'optin::changeService',
 
 
-  description: 'optin::wrongProfileResponse',
+  description: 'optin::changeService',
 
 
   inputs: {
@@ -48,13 +48,13 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::wrongProfileResponse ***************/');
+      sails.log.debug('/*************** optin::changeService ***************/');
 
       /**
-       * Update optin::get_login block
+       * Update optin::select_service_level block
        */
 
-      updateBlock = 'optin::get_login';
+      updateBlock = 'optin::select_service_level';
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -66,14 +66,15 @@ module.exports = {
       if (getBlock) {
         getBlock.shown = false;
         getBlock.done = false;
+        getBlock.enabled = false;
         getBlock.next = null;
       }
 
       /**
-       * Update optin::confirm_profile block
+       * Update optin::selected_platinum block
        */
 
-      updateBlock = 'optin::confirm_profile';
+      updateBlock = 'optin::selected_platinum';
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -83,17 +84,17 @@ module.exports = {
       getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.enabled = false;
         getBlock.shown = false;
         getBlock.done = false;
+        getBlock.enabled = false;
         getBlock.next = null;
       }
 
       /**
-       * Update optin::wrong_profile block
+       * Update optin::selected_gold block
        */
 
-      updateBlock = 'optin::wrong_profile';
+      updateBlock = 'optin::selected_gold';
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -103,9 +104,30 @@ module.exports = {
       getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.enabled = false;
         getBlock.shown = false;
         getBlock.done = false;
+        getBlock.enabled = false;
+        getBlock.next = null;
+      }
+
+      /**
+       * Update optin::selected_bronze block
+       */
+
+      updateBlock = 'optin::selected_bronze';
+
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
+
+
+      getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.shown = false;
+        getBlock.done = false;
+        getBlock.enabled = false;
+        getBlock.next = null;
       }
 
       await sails.helpers.funnel.afterHelperGeneric.with({
@@ -122,8 +144,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/wrong-profile-response',
-          message: 'api/helpers/funnel/optin/wrong-profile-response error',
+          module: 'api/helpers/funnel/optin/change-service',
+          message: 'api/helpers/funnel/optin/change-service error',
           payload: {
             client: inputs.client,
             block: inputs.block,
