@@ -38,7 +38,7 @@ module.exports = {
       friendlyName: 'message',
       description: 'Message received',
       type: 'ref',
-      required: true,
+      // required: true,
     },
   },
 
@@ -67,8 +67,8 @@ module.exports = {
     try {
 
       let clientName = {
-        firstName: inputs.msg.chat.first_name || null,
-        lastName: inputs.msg.chat.last_name || null,
+        firstName: inputs.client.first_name || null,
+        lastName: inputs.client.last_name || null,
       };
 
       block = _.find(inputs.client.funnels[inputs.funnelName], {id: inputs.blockId});
@@ -90,7 +90,7 @@ module.exports = {
 
             let htmlSimpleRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
-            let htmlSimple = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlSimpleRaw);
+            let htmlSimple = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
 
             sails.log.debug('htmlSimple: ', htmlSimple);
 
@@ -129,7 +129,7 @@ module.exports = {
 
             let htmlImgRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
-            let htmlImg = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlImgRaw);
+            let htmlImg = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlImgRaw);
 
             let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
               chatId: inputs.client.chat_id,
@@ -170,7 +170,7 @@ module.exports = {
 
             let htmlForcedRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
-            let htmlForced = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlForcedRaw);
+            let htmlForced = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlForcedRaw);
 
             let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
               chatId: inputs.client.chat_id,
@@ -207,7 +207,7 @@ module.exports = {
 
             let htmlInlineRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
 
-            let htmlInline = await activateBeforeHelper(inputs.client, block, inputs.msg, htmlInlineRaw);
+            let htmlInline = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlInlineRaw);
 
             let objBefore = block.message.inline_keyboard;
 
@@ -267,7 +267,7 @@ module.exports = {
           await sails.helpers.funnel.afterHelperGeneric.with({
             client: inputs.client,
             block: block,
-            msg: inputs.msg,
+            msg: inputs.msg || 'no message',
             next: true,
             previous: true,
             switchFunnel: true,
@@ -287,7 +287,18 @@ module.exports = {
            * We managed to parse the specified afterHelper and can perform it
            */
 
-          await sails.helpers.funnel[afterHelperBlock][afterHelperName](inputs.client, block, inputs.msg);
+          let afterHelperParams = {
+            client: inputs.client,
+            block: block,
+          };
+
+          if (inputs.msg) {
+
+            afterHelperParams.msg = inputs.msg;
+
+          }
+
+          await sails.helpers.funnel[afterHelperBlock][afterHelperName].with(afterHelperParams);
 
 
         } else {
@@ -329,7 +340,19 @@ module.exports = {
           && nextId
         ) {
 
-          await sails.helpers.funnel.proceedNextBlock(inputs.client, nextFunnel, nextId, inputs.msg);
+          let proceedNextBlockParams = {
+            client: inputs.client,
+            funnelName: nextFunnel,
+            blockId: nextId,
+          };
+
+          if (inputs.msg) {
+
+            proceedNextBlockParams.msg = inputs.msg;
+
+          }
+
+          await sails.helpers.funnel.proceedNextBlock.with(proceedNextBlockParams);
 
         }
 
@@ -435,7 +458,19 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
        * We managed to parse the specified beforeHelper and can perform it
        */
 
-      res = await sails.helpers.funnel[beforeHelperBlock][beforeHelperName](client, block, msg, htmlMsg);
+      let beforeHelperParams = {
+        client: client,
+        block: block,
+        htmlMsg: htmlMsg
+      };
+
+      if (msg) {
+
+        beforeHelperParams.msg = msg;
+
+      }
+
+      res = await sails.helpers.funnel[beforeHelperBlock][beforeHelperName].with(beforeHelperParams);
 
     } else {
 

@@ -24,7 +24,7 @@ module.exports = {
       friendlyName: 'message',
       description: 'Message received',
       type: 'ref',
-      required: true,
+      // required: true,
     },
     next: {
       friendlyName: 'activateNext',
@@ -147,7 +147,7 @@ module.exports = {
           payload: {
             client: inputs.client,
             block: inputs.block,
-            msg: inputs.msg,
+            msg: inputs.msg || 'no message',
             error: e.message || 'no error message',
           }
         }

@@ -24,7 +24,7 @@ module.exports = {
       friendlyName: 'message',
       description: 'Message received',
       type: 'ref',
-      required: true,
+      // required: true,
     },
   },
 

@@ -24,7 +24,7 @@ module.exports = {
       friendlyName: 'message',
       description: 'Message received',
       type: 'ref',
-      required: true,
+      // required: true,
     },
     htmlMsg: {
       friendlyName: 'html message',
@@ -69,7 +69,7 @@ module.exports = {
           payload: {
             client: inputs.client,
             block: inputs.block,
-            msg: inputs.msg,
+            msg: inputs.msg || 'no message',
             html: inputs.htmlMsg,
             error: e.message || 'no error message',
           }
