@@ -35,7 +35,9 @@ module.exports = {
       throw {err: {
           module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_NOT_API_KEY,
-          payload: inputs.serviceKey
+          payload: {
+            params: inputs,
+          }
         }
       };
 
@@ -57,8 +59,13 @@ module.exports = {
           module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_GENERAL_ERROR,
           payload: {
-            serviceKey: inputs.serviceKey,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };
@@ -76,7 +83,9 @@ module.exports = {
       throw {err: {
           module: 'api/helpers/storage/get-service-ref',
           message: sails.config.custom.SERVICEREF_NOT_FOUND,
-          payload: inputs.serviceKey
+          payload: {
+            params: inputs,
+          }
         }
       };
 
@@ -106,8 +115,13 @@ module.exports = {
             module: 'api/helpers/storage/get-service-ref',
             message: sails.config.custom.SERVICEREF_UPDATE_ERROR,
             payload: {
-              serviceKey: inputs.serviceKey,
-              error: e.message || 'no error message',
+              params: inputs,
+              error: {
+                name: e.name || 'no error name',
+                message: e.message || 'no error message',
+                stack: e.stack || 'no error stack',
+                code: e.code || 'no error code',
+              }
             }
 
           }

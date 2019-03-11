@@ -135,9 +135,13 @@ module.exports = {
           module: 'api/helpers/storage/get-client',
           message: sails.config.custom.CLIENT_GENERAL_ERROR,
           payload: {
-            messenger: inputs.messenger,
-            msg: inputs.msg,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           },
         }
       };

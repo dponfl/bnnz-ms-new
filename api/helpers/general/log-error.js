@@ -76,7 +76,15 @@ module.exports = {
       throw {err: {
           status: 'nok',
           message: 'Record create error',
-          payload: e.message || 'no error message'
+          payload: {
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
+          }
         }
       }
 

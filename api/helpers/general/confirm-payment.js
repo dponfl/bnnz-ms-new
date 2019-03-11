@@ -8,10 +8,16 @@ module.exports = {
 
 
   inputs: {
-    client: {
-      friendlyName: 'client',
-      description: 'Client record',
-      type: 'ref',
+    cid: {
+      friendlyName: 'client guid',
+      description: 'client guid',
+      type: 'string',
+      required: true,
+    },
+    sl: {
+      friendlyName: 'service level',
+      description: 'service level',
+      type: 'string',
       required: true,
     },
   },
@@ -27,47 +33,113 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    sails.log('Check funnels performed...');
+    sails.log.debug('confirmPayment helper...');
 
-    let checkError = [];
+    let client;
 
-    // todo: Need to check:
-    // 1. actionType is correct
-    // 2. all specified helpers exist
-    // Check helper can be performed by the helper call
-    // with first parameter (which to be checkStatus = true)
-    // As the result helpers should return status = ok
-    // If the result is not ok we need to push to checkError a string
-    // with wrong helper name, like 'wrongHelper"
+    try {
 
-    if (true) {
+      client = await Client.findOne({
+        guid: inputs.cid,
+      })
+      // .populate('messages')
+        .populate('rooms')
+        .populate('service');
 
-      // Check funnels is OK
+      if (!client) {
 
-      return exits.success({
-        status: 'ok',
-        message: sails.config.custom.CHECKFUNNELS_SUCCESS,
-        payload: {}
-      });
+        /**
+         * Reply that the client was not found
+         */
 
-    } else {
+        sails.log('client was NOT FOUND');
 
-      // Check funnels was NOT OK
+        return exits.success({
+          status: 'not_found',
+          message: sails.config.custom.CONFIRM_PAYMENT_CLIENT_NOT_FOUND,
+          payload: {
+            cid: inputs.cid,
+          },
+        });
 
-      // return exits.success({
-      //   status: 'nok',
-      //   message: 'Check funnels was not successful',
-      //   payload: {checkError: checkError}
-      // });
+      } else {
+
+        /**
+         * found record for the specified criteria
+         */
+
+        sails.log('client was FOUND');
+
+        /**
+         * Check received service level corresponds to the one selected by the client
+         */
+
+        if (inputs.sl !== client.payment_plan) {
+
+          return exits.success({
+            status: 'wrong_sl',
+            message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
+            payload: {
+              cid: inputs.cid,
+              sl: inputs.sl,
+            },
+          });
+
+        }
+
+        /**
+         * Try to find the initial block of the current funnel
+         */
+
+        let initialBlock = _.find(client.funnels[client.current_funnel],
+          {initial: true});
+
+        // sails.log.debug('initialBlock: ', initialBlock);
+
+        /**
+         * Check that the initial block was found
+         */
+
+        if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+          await sails.helpers.funnel.proceedNextBlock.with({
+            client: client,
+            funnelName: client.current_funnel,
+            blockId: initialBlock.id,
+          });
+
+        }
+
+        return exits.success({
+          status: 'success',
+          message: sails.config.custom.CONFIRM_PAYMENT_SUCCESS,
+          // payload: client
+        });
+
+      }
+
+    } catch (e) {
+
+      sails.log.error('api/helpers/general/confirm-payment error, input: ', inputs);
+      sails.log.error('api/helpers/general/confirm-payment error, error: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/check-funnels',
-          message: sails.config.custom.CHECKFUNNELS_GENERAL_ERROR,
-          payload: {checkError: checkError}
+          module: 'api/helpers/general/confirm-payment',
+          message: sails.config.custom.CONFIRM_PAYMENT_GENERAL_ERROR,
+          payload: {
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
+          },
         }
       };
 
     }
+
 
   }
 

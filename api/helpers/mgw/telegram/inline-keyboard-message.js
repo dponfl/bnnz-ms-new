@@ -71,10 +71,13 @@ module.exports = {
           module: 'api/helpers/mgw/telegram/inline-buttons-message',
           message: sails.config.custom.INLINE_KEYBOARD_MESSAGE_SEND_ERROR,
           payload: {
-            chatId: inputs.chatId,
-            html: inputs.html,
-            inlineKeyboard: inputs.inlineKeyboard,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

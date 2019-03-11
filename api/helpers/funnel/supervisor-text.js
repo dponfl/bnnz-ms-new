@@ -103,11 +103,11 @@ module.exports = {
                 module: 'api/helpers/funnel/supervisor-text',
                 message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
                 payload: {
+                  params: inputs,
                   block: forcedReplyBlock,
                   helperName: forcedReplyBlock.forcedHelper,
                   forcedHelperBlock: forcedHelperBlock,
                   forcedHelperName: forcedHelperName,
-                  msg: inputs.msg,
                 }
               }
             };
@@ -120,10 +120,7 @@ module.exports = {
               module: 'api/helpers/funnel/supervisor-text',
               message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
               payload: {
-                client: inputs.client,
-                message_id: inputs.msg.reply_to_message.message_id,
-                msg: inputs.msg,
-              }
+                params: inputs,              }
             }
           };
 
@@ -193,8 +190,7 @@ module.exports = {
             module: 'api/helpers/funnel/supervisor-text',
             message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
             payload: {
-              client: inputs.client,
-            }
+              params: inputs,            }
           }
         };
 
@@ -206,9 +202,13 @@ module.exports = {
           module: 'api/helpers/funnel/supervisor-text',
           message: sails.config.custom.SUPERVISORTEXTHELPER_ERROR,
           payload: {
-            client: inputs.client,
-            msg: inputs.msg,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

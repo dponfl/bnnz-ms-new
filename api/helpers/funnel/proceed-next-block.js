@@ -311,6 +311,7 @@ module.exports = {
               module: 'api/helpers/funnel/proceed-next-block',
               message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
               payload: {
+                params: inputs,
                 helperName: block.afterHelper,
                 afterHelperBlock: afterHelperBlock,
                 afterHelperName: afterHelperName,
@@ -366,7 +367,13 @@ module.exports = {
           module: 'api/helpers/funnel/proceed-next-block',
           message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,
           payload: {
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };
@@ -482,6 +489,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
           module: 'api/helpers/funnel/proceed-next-block',
           message: sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR,
           payload: {
+            params: inputs,
             helperName: block.beforeHelper,
             afterHelperBlock: beforeHelperBlock,
             afterHelperName: beforeHelperName,

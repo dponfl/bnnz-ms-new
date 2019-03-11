@@ -200,6 +200,32 @@ module.exports.custom = {
 
   PERFORMEDFUNNELSSAVE_ERROR: 'Performed_funnels record create error',
 
+  /**
+   * confirmPayment
+   */
+
+  CONFIRM_PAYMENT_CLIENT_NOT_FOUND: 'confirmPayment, client was not found',
+  CONFIRM_PAYMENT_WRONG_SL: 'confirmPayment, client record payment plan does not correspond with helper parameter',
+  CONFIRM_PAYMENT_SUCCESS: 'confirmPayment, success',
+  CONFIRM_PAYMENT_GENERAL_ERROR: 'confirmPayment, general error',
+
+
+  /**
+   * ----------------------------
+   * API controllers
+   * ----------------------------
+   */
+
+
+  /**
+   * ----------------------------
+   * payment controller
+   * ----------------------------
+   */
+
+
+  PAYMENT_CONTROLLER_ERROR: 'Payment controller error',
+
 
 
 

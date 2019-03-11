@@ -44,7 +44,9 @@ module.exports = {
         throw {err: {
             module: 'api/helpers/storage/get-service',
             message: sails.config.custom.SERVICE_NOT_FOUND,
-            payload: inputs.serviceName
+            payload: {
+              params: inputs,
+            }
           }
         };
 
@@ -81,8 +83,13 @@ module.exports = {
           module: 'api/helpers/storage/get-service',
           message: sails.config.custom.SERVICE_GENERAL_ERROR,
           payload: {
-            serviceKey: inputs.serviceKey,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

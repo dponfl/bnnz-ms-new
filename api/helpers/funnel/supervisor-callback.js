@@ -115,7 +115,7 @@ module.exports = {
                   module: 'api/helpers/funnel/supervisor-callback',
                   message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
                   payload: {
-                    client: inputs.client,
+                    params: inputs,
                   }
                 }
               };
@@ -149,11 +149,11 @@ module.exports = {
                 module: 'api/helpers/funnel/supervisor-callback',
                 message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
                 payload: {
+                  params: inputs,
                   block: block,
                   helperName: block.callbackHelper,
                   callbackHelperBlock: callbackHelperBlock,
                   callbackHelperName: callbackHelperName,
-                  query: inputs.query,
                 }
               }
             };
@@ -166,9 +166,7 @@ module.exports = {
               module: 'api/helpers/funnel/supervisor-callback',
               message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR,
               payload: {
-                client: inputs.client,
-                message_id: inputs.query.message.message_id,
-                query: inputs.query,
+                params: inputs,
               }
             }
           };
@@ -183,9 +181,13 @@ module.exports = {
           module: 'api/helpers/funnel/supervisor-callback',
           message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR,
           payload: {
-            client: inputs.client,
-            query: inputs.query,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

@@ -67,10 +67,13 @@ module.exports = {
           module: 'api/helpers/storage/performed-funnels-save',
           message: sails.config.custom.PERFORMEDFUNNELSSAVE_ERROR,
           payload: {
-            client_guid: inputs.client_guid,
-            current_funnel: inputs.current_funnel,
-            funnel_data: inputs.funnel_data,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

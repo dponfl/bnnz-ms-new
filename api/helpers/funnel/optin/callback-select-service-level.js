@@ -56,12 +56,15 @@ module.exports = {
       switch (inputs.query.data) {
         case 'sl_platinum':
           inputs.block.next = 'optin::selected_platinum';
+          inputs.client.payment_plan = 'platinum';
           break;
         case 'sl_gold':
           inputs.block.next = 'optin::selected_gold';
+          inputs.client.payment_plan = 'gold';
           break;
         case 'sl_bronze':
           inputs.block.next = 'optin::selected_bronze';
+          inputs.client.payment_plan = 'bronze';
           break;
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
@@ -85,10 +88,13 @@ module.exports = {
           module: 'api/helpers/funnel/optin/callback-select-service-level',
           message: 'api/helpers/funnel/optin/callback-select-service-level error',
           payload: {
-            client: inputs.client,
-            block: inputs.block,
-            query: inputs.query,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

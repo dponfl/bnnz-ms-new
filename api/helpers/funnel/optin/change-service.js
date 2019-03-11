@@ -51,6 +51,12 @@ module.exports = {
       sails.log.debug('/*************** optin::changeService ***************/');
 
       /**
+       * Turn client.payment_plan to null
+       */
+
+      inputs.client.payment_plan = null;
+
+      /**
        * Update optin::select_service_level block
        */
 
@@ -147,10 +153,13 @@ module.exports = {
           module: 'api/helpers/funnel/optin/change-service',
           message: 'api/helpers/funnel/optin/change-service error',
           payload: {
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.msg,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

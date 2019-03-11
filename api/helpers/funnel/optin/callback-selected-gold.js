@@ -104,10 +104,13 @@ module.exports = {
           module: 'api/helpers/funnel/optin/callback-selected-gold',
           message: 'api/helpers/funnel/optin/callback-selected-gold error',
           payload: {
-            client: inputs.client,
-            block: inputs.block,
-            query: inputs.query,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

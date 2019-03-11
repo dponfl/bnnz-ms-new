@@ -97,14 +97,13 @@ module.exports = {
           module: 'api/helpers/storage/message-save',
           message: sails.config.custom.MESSAGESAVE_ERROR,
           payload: {
-            client_id: inputs.client_id,
-            client_guid: inputs.client_guid,
-            message: inputs.message,
-            message_format: inputs.message_format,
-            message_buttons: inputs.message_buttons || {},
-            messenger: inputs.messenger,
-            message_originator: inputs.message_originator,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

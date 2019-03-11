@@ -67,11 +67,13 @@ module.exports = {
           module: 'api/helpers/funnel/optin/before-confirm-profile',
           message: 'api/helpers/funnel/optin/before-confirm-profile error',
           payload: {
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.msg || 'no message',
-            html: inputs.htmlMsg,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

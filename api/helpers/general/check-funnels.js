@@ -63,7 +63,10 @@ module.exports = {
       throw {err: {
           module: 'api/helpers/general/check-funnels',
           message: sails.config.custom.CHECKFUNNELS_GENERAL_ERROR,
-          payload: {checkError: checkError}
+          payload: {
+            params: inputs,
+            checkError: checkError,
+          }
         }
       };
 

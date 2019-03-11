@@ -73,10 +73,13 @@ module.exports = {
           module: 'api/helpers/mgw/telegram/img-message',
           message: sails.config.custom.IMG_MESSAGE_SEND_ERROR,
           payload: {
-            chatId: inputs.chatId,
-            imgPath: inputs.imgPath,
-            html: inputs.html,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

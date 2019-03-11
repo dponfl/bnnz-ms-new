@@ -122,16 +122,17 @@ module.exports = {
 
         inputs.client.current_funnel = inputs.block.switchToFunnel;
 
-        await sails.helpers.storage.clientUpdate.with({
-          criteria: {guid: inputs.client.guid},
-          data: {current_funnel: inputs.block.switchToFunnel}
-        });
+        // await sails.helpers.storage.clientUpdate.with({
+        //   criteria: {guid: inputs.client.guid},
+        //   data: {current_funnel: inputs.block.switchToFunnel}
+        // });
 
       }
 
       await sails.helpers.storage.clientUpdate.with({
         criteria: {guid: inputs.client.guid},
-        data: {funnels: inputs.client.funnels}
+        // data: {funnels: inputs.client.funnels}
+        data: inputs.client
       });
 
 
@@ -145,10 +146,13 @@ module.exports = {
           module: 'api/helpers/funnel/after-helper-generic',
           message: sails.config.custom.AFTERHELPERGENERIC_ERROR,
           payload: {
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.msg || 'no message',
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };

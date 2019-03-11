@@ -72,9 +72,7 @@ module.exports = {
           module: 'api/helpers/general/send-rest',
           message: sails.config.custom.SENDREST_NO_METHOD,
           payload: {
-            method: inputs.method,
-            url: inputs.url,
-            params: inputs.params,
+            params: inputs,
           }
         }
       };
@@ -89,9 +87,7 @@ module.exports = {
           module: 'api/helpers/general/send-rest',
           message: sails.config.custom.SENDREST_NO_URL,
           payload: {
-            method: inputs.method,
-            url: inputs.url,
-            params: inputs.params,
+            params: inputs,
           }
         }
       };
@@ -115,9 +111,7 @@ module.exports = {
           module: 'api/helpers/general/send-rest',
           message: sails.config.custom.SENDREST_NO_RESULT,
           payload: {
-            method: inputs.method,
-            url: inputs.url,
-            params: inputs.params,
+            params: inputs,
           }
         }
       };

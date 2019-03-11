@@ -50,8 +50,13 @@ module.exports = {
           module: 'api/helpers/storage/client-create',
           message: sails.config.custom.CLIENTCREATE_ERROR,
           payload: {
-            client: inputs.client,
-            error: e.message || 'no error message',
+            params: inputs,
+            error: {
+              name: e.name || 'no error name',
+              message: e.message || 'no error message',
+              stack: e.stack || 'no error stack',
+              code: e.code || 'no error code',
+            }
           }
         }
       };
