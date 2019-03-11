@@ -36,6 +36,11 @@ module.exports = {
     sails.log.debug('confirmPayment helper...');
 
     let client;
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
 
     try {
 
@@ -81,10 +86,79 @@ module.exports = {
             message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
             payload: {
               cid: inputs.cid,
-              sl: inputs.sl,
+              client_sl: client.payment_plan,
+              inputs_sl: inputs.sl,
             },
           });
 
+        }
+
+        switch (client.payment_plan) {
+          case 'platinum':
+
+            /**
+             * Update optin::platinum_paid block
+             */
+
+            updateBlock = 'optin::platinum_paid';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.enabled = true;
+            }
+
+            break;
+
+          case 'gold':
+
+            /**
+             * Update optin::gold_paid block
+             */
+
+            updateBlock = 'optin::gold_paid';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.enabled = true;
+            }
+
+            break;
+
+          case 'bronze':
+
+            /**
+             * Update optin::bronze_paid block
+             */
+
+            updateBlock = 'optin::bronze_paid';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.enabled = true;
+            }
+
+            break;
+
+          default:
+            throw new Error(`Wrong payment plan: ${client.payment_plan}`);
         }
 
         /**
@@ -113,7 +187,9 @@ module.exports = {
         return exits.success({
           status: 'success',
           message: sails.config.custom.CONFIRM_PAYMENT_SUCCESS,
-          // payload: client
+          payload: {
+            client_guid: client.guid,
+          }
         });
 
       }

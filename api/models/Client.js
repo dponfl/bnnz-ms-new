@@ -111,6 +111,7 @@ module.exports = {
     },
     payment_plan: {
       type: 'string',
+      allowNull: true,
     },
     payment_made: {
       type: 'boolean',

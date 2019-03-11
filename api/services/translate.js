@@ -43,5 +43,9 @@ const token = {
     MSG_OPTIN_PAYMENT_BTN_PAY: '>>> ОПЛАТИТЬ <<<',
     MSG_OPTIN_PAYMENT_BTN_SHOW_SERVICE_AGREEMENT: 'Условия предоставления услуг',
     MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE: 'Выбрать другой тариф',
+    MSG_OPTIN_PAYMENT_PLATINUM_RECEIVED: 'Оплата плана "Платиновый" получена.',
+    MSG_OPTIN_PAYMENT_SIGN_PROFILES: 'Остался последний шаг - подпишись на эти профили в Инстаграме и после этого нажми кнопку ниже:',
+    MSG_OPTIN_MANDATORY_PROFILES: '$mandatoryProfiles$',
+    MSG_OPTIN_BTN_SUBS_CONFIRM: '>>> ПОДТВЕРЖДАЮ ПОДПИСКУ <<<',
   },
 };

@@ -26,7 +26,9 @@ module.exports = {
 
 
   exits: {
-
+    success: {
+      description: 'All done.',
+    },
   },
 
 
@@ -37,10 +39,12 @@ module.exports = {
 
     try {
 
-      await sails.helpers.general.confirmPayment.with({
-        clientId: inputs.cid,
+      let result = await sails.helpers.general.confirmPayment.with({
+        cid: inputs.cid,
         sl: inputs.sl,
       });
+
+      return exits.success(result);
 
     } catch (e) {
 

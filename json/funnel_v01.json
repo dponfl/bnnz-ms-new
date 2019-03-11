@@ -334,7 +334,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": null,
+      "afterHelper": "optin::selectedPlatinum",
       "forcedHelper": null,
       "callbackHelper":"optin::callbackSelectedPlatinum",
       "shown": false,
@@ -509,6 +509,49 @@
             {
               "text":"MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE",
               "callback_data": "change_service"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "platinum_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::subscription",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_PLATINUM_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
             }
           ]
         ]
