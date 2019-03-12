@@ -1,0 +1,15 @@
+{
+  "ru": {
+    "price": {
+      "platinum": {
+        "text": "Платиновый",
+        "value": 5000,
+        "value_text": "5,000",
+        "currency": "RUB",
+        "currency_text": "руб",
+        "period": "1 month",
+        "period_text": "мес"
+      }
+    }
+  }
+}
