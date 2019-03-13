@@ -26,13 +26,17 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.debug('******************** ' + moduleName + ' ********************');
+    sails.log.warn('******************** ' + moduleName + ' ********************');
 
     try {
 
-      sails.config.custom.chatConfig = await Config.findOne({
+      let confRec = await Config.findOne({
         active: true
       });
+
+      sails.config.custom.chatConfig = confRec.config_data;
+
+      // sails.log.warn('sails.config.custom.chatConfig: ', sails.config.custom.chatConfig);
 
       if (!sails.config.custom.chatConfig) {
 

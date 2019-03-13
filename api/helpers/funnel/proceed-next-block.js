@@ -3,6 +3,7 @@
 const _ = require('lodash');
 
 const t = require('../../services/translate').t;
+const confObj = require('../../services/translate').getConfigObj;
 
 
 
@@ -211,7 +212,7 @@ module.exports = {
 
             let objBefore = block.message.inline_keyboard;
 
-            let objAfter = mapDeep(inputs.client.lang, objBefore);
+            let objAfter = mapDeep(clientName, inputs.client.lang, objBefore);
 
             // sails.log.debug('objAfter: ');
             // console.dir(objAfter);
@@ -391,9 +392,9 @@ module.exports = {
 
 };
 
-function mapDeep(lang, obj) {
+function mapDeep(clientName, lang, obj) {
   if (_.isArray(obj)) {
-    let arr = obj.map(innerObj => mapDeep(lang, innerObj));
+    let arr = obj.map(innerObj => mapDeep(clientName, lang, innerObj));
 
     // sails.log.info('mapDeep, arr: ', arr);
 
@@ -401,7 +402,8 @@ function mapDeep(lang, obj) {
   } else if (_.isObject(obj)) {
     let ob = _.forEach(obj, (val, key, o) => {
       if (key == 'text') {
-        o[key] = t(lang, val);
+        // o[key] = t(lang, val);
+        o[key] = parseSpecialTokens(clientName, t(lang, val), lang) ;
       }
       // return o;
     });
@@ -412,10 +414,45 @@ function mapDeep(lang, obj) {
   }
 }
 
-function parseMessageStyle(clientName, msg, lang) {
-  let resultHtml = '';
+function parseSpecialTokens(clientName, msg, lang) {
+
+  let resultStr = msg;
+
   let firstName = clientName.firstName || '';
   let lastName = clientName.lastName || '';
+
+  let configPricePlatinum = confObj(lang).price.platinum;
+  let configPriceGold = confObj(lang).price.gold;
+  let configPriceBronze = confObj(lang).price.bronze;
+
+  let mandatoryProfileList = '';
+
+  for (let i = 0; i < confObj(lang).profiles.length; i++) {
+
+    mandatoryProfileList = mandatoryProfileList + `<a href="${confObj(lang).profiles[i].url}">${confObj(lang).profiles[i].text}</a>` + sails.config.custom.SCR;
+
+  }
+
+  resultStr = _.replace(resultStr, '$FirstName$', firstName);
+  resultStr = _.replace(resultStr, '$LastName$', lastName);
+
+  resultStr = _.replace(resultStr, '$PricePlatinum$', `${configPricePlatinum.text}: ${configPricePlatinum.value_text} ${configPricePlatinum.currency_text}/${configPricePlatinum.period_text}`);
+  resultStr = _.replace(resultStr, '$PriceGold$', `${configPriceGold.text}: ${configPriceGold.value_text} ${configPriceGold.currency_text}/${configPriceGold.period_text}`);
+  resultStr = _.replace(resultStr, '$PriceBronze$', `${configPriceBronze.text}: ${configPriceBronze.value_text} ${configPriceBronze.currency_text}/${configPriceBronze.period_text}`);
+
+  resultStr = _.replace(resultStr, '$NamePlatinum$', `${configPricePlatinum.text}`);
+  resultStr = _.replace(resultStr, '$NameGold$', `${configPriceGold.text}`);
+  resultStr = _.replace(resultStr, '$NameBronze$', `${configPriceBronze.text}`);
+
+  resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
+
+
+  return resultStr;
+
+}
+
+function parseMessageStyle(clientName, msg, lang) {
+  let resultHtml = '';
 
   for (let i = 0; i < msg.html.length; i++) {
     resultHtml = resultHtml +
@@ -435,8 +472,7 @@ function parseMessageStyle(clientName, msg, lang) {
 
   sails.log.warn('resultHtml, before:', resultHtml);
 
-  resultHtml = _.replace(resultHtml, '$firstName$', firstName);
-  resultHtml = _.replace(resultHtml, '$lastName$', lastName);
+  resultHtml = parseSpecialTokens(clientName, resultHtml, lang);
 
   sails.log.warn('resultHtml, after:', resultHtml);
 

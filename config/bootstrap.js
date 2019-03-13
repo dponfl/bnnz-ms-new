@@ -42,9 +42,11 @@ module.exports.bootstrap = async function() {
     }
   });
 
-  await sails.helpers.general.loadTranslationTokens();
+  // await sails.helpers.general.loadTranslationTokens();
 
   // await sails.helpers.general.getClientTest();
+
+  await sails.helpers.general.getChatConfig();
 
   await sails.helpers.chatListeners.telegram.onMessage();
 
