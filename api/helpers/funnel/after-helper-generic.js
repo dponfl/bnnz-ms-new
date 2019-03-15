@@ -144,7 +144,6 @@ module.exports = {
         }
       });
 
-
       return exits.success();
 
     } catch (e) {

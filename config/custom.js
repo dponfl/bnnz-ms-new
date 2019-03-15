@@ -236,5 +236,17 @@ module.exports.custom = {
 
 
 
+  /**
+   * ----------------------------
+   * sendMailgum helper
+   * ----------------------------
+   */
+
+
+  SEND_MAILGUN_GENERAL_ERROR: 'Send email general error',
+  SEND_MAILGUN_SEND_MESSAGE_ERROR: 'Send email message error',
+
+
+
 
 };

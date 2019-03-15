@@ -1,7 +1,7 @@
 {
   "name": "bonanza-ms-new",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Bonanza Inst messenger communications application",
   "keywords": [],
   "dependencies": {
@@ -12,6 +12,7 @@
     "bluebird": "^3.5.3",
     "grunt": "1.0.1",
     "lodash": "^4.17.11",
+    "mailgun-js": "^0.22.0",
     "node-telegram-bot-api": "^0.30.0",
     "request-promise": "^4.2.2",
     "sails": "^1.1.0",

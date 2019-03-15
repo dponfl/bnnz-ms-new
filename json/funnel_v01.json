@@ -526,7 +526,7 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::subscription",
+      "callbackHelper": "optin::callbackSubscription",
       "shown": false,
       "done": false,
       "message": {
@@ -554,6 +554,31 @@
               "callback_data": "subscription_confirm"
             }
           ]
+        ]
+      }
+    },
+    {
+      "id": "wait_subscription_check",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_SUBSCRIPTION",
+            "style": "",
+            "cr": ""
+          }
         ]
       }
     }

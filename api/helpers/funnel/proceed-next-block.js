@@ -249,6 +249,22 @@ module.exports = {
 
         }
 
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: inputs.client.guid},
+          data: {
+            current_funnel: inputs.client.current_funnel,
+            funnels: inputs.client.funnels,
+            profile_provided: inputs.client.profile_provided,
+            profile_confirmed: inputs.client.profile_confirmed,
+            payment_plan: inputs.client.payment_plan,
+            payment_made: inputs.client.payment_made,
+            subscription_confirmed_by_client: inputs.client.subscription_confirmed_by_client,
+            subscription_made: inputs.client.subscription_made,
+            service_subscription_finalized: inputs.client.service_subscription_finalized,
+          }
+        });
+
+
       }
 
       /**
