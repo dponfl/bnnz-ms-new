@@ -83,6 +83,7 @@ module.exports = {
         getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
         if (getBlock) {
+          getBlock.done = true;
           getBlock.next = 'optin::subscription_check_done';
         }
 

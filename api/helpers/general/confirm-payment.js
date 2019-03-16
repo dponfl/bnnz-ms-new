@@ -110,6 +110,7 @@ module.exports = {
             getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
             if (getBlock) {
+              getBlock.done = true;
               getBlock.next = 'optin::platinum_paid';
             }
 
@@ -149,6 +150,7 @@ module.exports = {
             getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
             if (getBlock) {
+              getBlock.done = true;
               getBlock.next = 'optin::gold_paid';
             }
 
@@ -188,6 +190,7 @@ module.exports = {
             getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
             if (getBlock) {
+              getBlock.done = true;
               getBlock.next = 'optin::bronze_paid';
             }
 

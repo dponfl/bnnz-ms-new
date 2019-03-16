@@ -72,6 +72,8 @@
       "MSG_OPTIN_PAYMENT_BTN_SHOW_SERVICE_AGREEMENT": "Условия предоставления услуг",
       "MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE": "Выбрать другой тариф",
       "MSG_OPTIN_PAYMENT_PLATINUM_RECEIVED": "Оплата плана \"$NamePlatinum$\" получена.",
+      "MSG_OPTIN_PAYMENT_GOLD_RECEIVED": "Оплата плана \"$NameGold$\" получена.",
+      "MSG_OPTIN_PAYMENT_BRONZE_RECEIVED": "Оплата плана \"$NameBronze$\" получена.",
       "MSG_OPTIN_PAYMENT_SIGN_PROFILES": "Остался последний шаг - подпишись на эти профили в Инстаграме и после этого нажми кнопку ниже:",
       "MSG_OPTIN_MANDATORY_PROFILES": "$MandatoryProfiles$",
       "MSG_OPTIN_BTN_SUBS_CONFIRM": ">>> ПОДТВЕРЖДАЮ ПОДПИСКУ <<<",
