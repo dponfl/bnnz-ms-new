@@ -219,6 +219,15 @@ module.exports.custom = {
 
 
   /**
+   * confirmSubsciption
+   */
+
+  CONFIRM_SUBSCRIPTION_CLIENT_NOT_FOUND: 'confirmSubsciption, client was not found',
+  CONFIRM_SUBSCRIPTION_SUCCESS: 'confirmSubsciption, success',
+  CONFIRM_SUBSCRIPTION_GENERAL_ERROR: 'confirmSubsciption, general error',
+
+
+  /**
    * ----------------------------
    * API controllers
    * ----------------------------
@@ -233,6 +242,16 @@ module.exports.custom = {
 
 
   PAYMENT_CONTROLLER_ERROR: 'Payment controller error',
+
+
+  /**
+   * ----------------------------
+   * subscription controller
+   * ----------------------------
+   */
+
+
+  SUBSCRIPTION_CONTROLLER_ERROR: 'Subscription controller error',
 
 
 

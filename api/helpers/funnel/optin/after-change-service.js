@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::changeService',
+  friendlyName: 'optin::afterChangeService',
 
 
-  description: 'optin::changeService',
+  description: 'optin::afterChangeService',
 
 
   inputs: {
@@ -48,7 +48,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::changeService ***************/');
+      sails.log.debug('/*************** optin::afterChangeService ***************/');
 
       /**
        * Turn client.payment_plan to null
@@ -150,8 +150,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/change-service',
-          message: 'api/helpers/funnel/optin/change-service error',
+          module: 'api/helpers/funnel/optin/after-change-service',
+          message: 'api/helpers/funnel/optin/after-change-service error',
           payload: {
             params: inputs,
             error: {

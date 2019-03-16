@@ -449,6 +449,9 @@ function parseSpecialTokens(clientName, msg, lang) {
 
   }
 
+  mandatoryProfileList = mandatoryProfileList + sails.config.custom.DCR;
+
+
   resultStr = _.replace(resultStr, '$FirstName$', firstName);
   resultStr = _.replace(resultStr, '$LastName$', lastName);
 

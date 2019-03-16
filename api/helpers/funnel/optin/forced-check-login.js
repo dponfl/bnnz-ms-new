@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::checkLogin',
+  friendlyName: 'optin::forcedCheckLogin',
 
 
-  description: 'optin::checkLogin',
+  description: 'optin::forcedCheckLogin',
 
 
   inputs: {
@@ -41,7 +41,7 @@ module.exports = {
   fn: async function (inputs,exits) {
     try {
 
-      sails.log.debug('/*************** optin::checkLogin ***************/');
+      sails.log.debug('/*************** optin::forcedCheckLogin ***************/');
 
 
       if (_.trim(inputs.msg.text) === '') {
@@ -93,8 +93,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/check-login',
-          message: 'api/helpers/funnel/optin/check-login error',
+          module: 'api/helpers/funnel/optin/forced-check-login',
+          message: 'api/helpers/funnel/optin/forced-check-login error',
           payload: {
             params: inputs,
             error: {

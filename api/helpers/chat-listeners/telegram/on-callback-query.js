@@ -32,6 +32,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    sails.log.warn('******************** telegramListener.onCallbackQuery ********************');
+
     sails.config.custom.telegramBot.on('callback_query', async (query) => {
 
       try {

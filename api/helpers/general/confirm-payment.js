@@ -33,7 +33,7 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    sails.log.debug('confirmPayment helper...');
+    sails.log.debug('************** confirmPayment helper **************');
 
     let client;
     let updateBlock;
@@ -97,6 +97,24 @@ module.exports = {
           case 'platinum':
 
             /**
+             * Update optin::selected_platinum block
+             */
+
+            updateBlock = 'optin::selected_platinum';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.next = 'optin::platinum_paid';
+            }
+
+
+            /**
              * Update optin::platinum_paid block
              */
 
@@ -118,6 +136,24 @@ module.exports = {
           case 'gold':
 
             /**
+             * Update optin::selected_gold block
+             */
+
+            updateBlock = 'optin::selected_gold';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.next = 'optin::gold_paid';
+            }
+
+
+            /**
              * Update optin::gold_paid block
              */
 
@@ -137,6 +173,24 @@ module.exports = {
             break;
 
           case 'bronze':
+
+            /**
+             * Update optin::selected_bronze block
+             */
+
+            updateBlock = 'optin::selected_bronze';
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+
+            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.next = 'optin::bronze_paid';
+            }
+
 
             /**
              * Update optin::bronze_paid block

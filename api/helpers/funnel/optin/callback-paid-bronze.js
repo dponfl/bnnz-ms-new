@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::callbackSubscription',
+  friendlyName: 'optin::callbackPaidBronze',
 
 
-  description: 'optin::callbackSubscription',
+  description: 'optin::callbackPaidBronze',
 
 
   inputs: {
@@ -49,7 +49,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::callbackSubscription ***************/');
+      sails.log.debug('/*************** optin::callbackPaidBronze ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
       sails.log.debug('Block: ', inputs.block);
@@ -66,13 +66,15 @@ module.exports = {
         'firstName',
         'lastName',
         'instagramProfile',
+        'paymentPlan',
       ];
 
       const lables = {
-        'clientId': 'ID: ',
+        'clientId': 'ID клиента: ',
         'firstName': 'Имя: ',
         'lastName': 'Фамилия: ',
         'instagramProfile': 'Инстаграм: ',
+        'paymentPlan': 'Категория: ',
       };
 
       const subject = 'Подтверждение подписки на профили';
@@ -88,6 +90,7 @@ module.exports = {
         'firstName': inputs.client.first_name,
         'lastName': inputs.client.last_name,
         'instagramProfile': inputs.client.inst_profile,
+        'paymentPlan': _.toUpper(inputs.client.payment_plan),
       };
 
       let i = 0;
@@ -146,7 +149,7 @@ module.exports = {
           getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
 
           if (getBlock) {
-            getBlock.previous = 'optin::platinum_paid';
+            getBlock.previous = 'optin::bronze_paid';
           }
 
           inputs.block.done = true;
@@ -169,8 +172,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/callback-subscription',
-          message: 'api/helpers/funnel/optin/callback-subscription error',
+          module: 'api/helpers/funnel/optin/callback-paid-bronze',
+          message: 'api/helpers/funnel/optin/callback-paid-bronze error',
           payload: {
             params: inputs,
             error: {

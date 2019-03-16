@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::wrongProfile',
+  friendlyName: 'optin::afterWrongProfile',
 
 
-  description: 'optin::wrongProfile',
+  description: 'optin::afterWrongProfile',
 
 
   inputs: {
@@ -49,7 +49,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::wrongProfile ***************/');
+      sails.log.debug('/*************** optin::afterWrongProfile ***************/');
 
       let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
       let nextFunnel = splitRes[0];
@@ -88,8 +88,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/wrong-profile',
-          message: 'api/helpers/funnel/optin/wrong-profile error',
+          module: 'api/helpers/funnel/optin/after-wrong-profile',
+          message: 'api/helpers/funnel/optin/after-wrong-profile error',
           payload: {
             params: inputs,
             error: {

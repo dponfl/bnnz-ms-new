@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::wrongProfileResponse',
+  friendlyName: 'optin::afterWrongProfileResponse',
 
 
-  description: 'optin::wrongProfileResponse',
+  description: 'optin::afterWrongProfileResponse',
 
 
   inputs: {
@@ -48,7 +48,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::wrongProfileResponse ***************/');
+      sails.log.debug('/*************** optin::afterWrongProfileResponse ***************/');
 
       /**
        * Update optin::get_login block
@@ -122,8 +122,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/wrong-profile-response',
-          message: 'api/helpers/funnel/optin/wrong-profile-response error',
+          module: 'api/helpers/funnel/optin/after-wrong-profile-response',
+          message: 'api/helpers/funnel/optin/after-wrong-profile-response error',
           payload: {
             params: inputs,
             error: {

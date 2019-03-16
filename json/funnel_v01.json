@@ -79,7 +79,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::notProceed",
+      "afterHelper": "optin::afterNotProceed",
       "forcedHelper": null,
       "callbackHelper": null,
       "shown": false,
@@ -135,7 +135,7 @@
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
-      "forcedHelper": "optin::checkLogin",
+      "forcedHelper": "optin::forcedCheckLogin",
       "callbackHelper": null,
       "shown": false,
       "done": false,
@@ -164,7 +164,7 @@
       "next": "optin::get_login",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::wrongProfile",
+      "afterHelper": "optin::afterWrongProfile",
       "forcedHelper": null,
       "callbackHelper": null,
       "shown": false,
@@ -233,7 +233,7 @@
       "next": "optin::get_login",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::wrongProfileResponse",
+      "afterHelper": "optin::afterWrongProfileResponse",
       "forcedHelper": null,
       "callbackHelper": null,
       "shown": false,
@@ -334,7 +334,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::selectedPlatinum",
+      "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"optin::callbackSelectedPlatinum",
       "shown": false,
@@ -376,31 +376,6 @@
               "callback_data": "change_service"
             }
           ]
-        ]
-      }
-    },
-    {
-      "id": "want_change_service_level",
-      "description": "",
-      "actionType": "text",
-      "initial": false,
-      "enabled": false,
-      "previous": null,
-      "next": "optin::select_service_level",
-      "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": "optin::changeService",
-      "forcedHelper": null,
-      "callbackHelper": null,
-      "shown": false,
-      "done": false,
-      "message": {
-        "html": [
-          {
-            "text":"MSG_OPTIN_CHANGE_SERVICE_LEVEL",
-            "style": "",
-            "cr": ""
-          }
         ]
       }
     },
@@ -515,6 +490,31 @@
       }
     },
     {
+      "id": "want_change_service_level",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": "optin::select_service_level",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterChangeService",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_CHANGE_SERVICE_LEVEL",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "platinum_paid",
       "description": "",
       "actionType": "inline_keyboard",
@@ -526,13 +526,99 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackSubscription",
+      "callbackHelper": "optin::callbackPaidPlatinum",
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
             "text":"MSG_OPTIN_PAYMENT_PLATINUM_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "gold_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackPaidGold",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_GOLD_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bronze_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackPaidBronze",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_BRONZE_RECEIVED",
             "style": "",
             "cr": "DCR"
           },
@@ -576,6 +662,58 @@
         "html": [
           {
             "text": "MSG_OPTIN_SUBSCRIPTION",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "subscription_check_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::wait_subscription_check",
+      "next": "general::initial_message",
+      "switchToFunnel": "general",
+      "beforeHelper": null,
+      "afterHelper": "optin::afterSubscriptionMade",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_SUBSCRIPTION_CONFIRMED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "general": [
+    {
+      "id": "initial_message",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "previous": "optin::subscription_check_done",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_START",
             "style": "",
             "cr": ""
           }

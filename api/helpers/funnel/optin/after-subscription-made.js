@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::selectedPlatinum',
+  friendlyName: 'optin::afterSubscriptionMade',
 
 
-  description: 'optin::selectedPlatinum',
+  description: 'optin::afterSubscriptionMade',
 
 
   inputs: {
@@ -35,32 +35,53 @@ module.exports = {
       description: 'All done.',
     },
 
+    err: {
+      description: 'Error',
+    }
+
   },
 
 
-  fn: async function (inputs,exits) {
+  fn: async function (inputs, exits) {
+
+    let clientParams = {};
+    let getServiceRes;
+    let funnels;
+
+
     try {
 
-      sails.log.debug('/*************** optin::selectedPlatinum ***************/');
+      sails.log.debug('/*************** optin::afterSubscriptionMade ***************/');
 
       inputs.block.done = true;
+      inputs.block.shown = true;
+      inputs.client.subscription_made = true;
 
-      inputs.block.next = 'optin::platinum_paid';
+
+      /**
+       * Save the current funnel at performed_funnels table
+       */
+
+      await sails.helpers.storage.performedFunnelsSave.with({
+        client_guid: inputs.client.guid,
+        current_funnel: inputs.client.current_funnel,
+        funnel_data: inputs.client.funnels,
+      });
+
       await sails.helpers.funnel.afterHelperGeneric.with({
         client: inputs.client,
         block: inputs.block,
         msg: inputs.msg,
-        next: false,
+        next: true,
         previous: true,
         switchFunnel: true,
       });
 
-
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/selected-platinum',
-          message: 'api/helpers/funnel/optin/selected-platinum error',
+          module: 'api/helpers/funnel/optin/after-subscription-made',
+          message: 'api/helpers/funnel/optin/after-subscription-made error',
           payload: {
             params: inputs,
             error: {

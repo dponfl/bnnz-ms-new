@@ -34,8 +34,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('telegramListener.onMessage started...');
-
+    sails.log.warn('******************** telegramListener.onMessage ********************');
 
     sails.config.custom.telegramBot.on('message', async (msg) => {
 

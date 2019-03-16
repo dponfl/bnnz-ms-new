@@ -74,6 +74,64 @@ module.exports = {
 
         if (!_.isNil(block)) {
 
+          /**
+           * First we need to perform afterHelper (if we have one)
+           */
+
+          // if (!_.isNil(block.afterHelper)) {
+          //
+          //   let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
+          //   let afterHelperBlock = splitAfterHelperRes[0];
+          //   let afterHelperName = splitAfterHelperRes[1];
+          //
+          //   if (afterHelperBlock && afterHelperName) {
+          //
+          //     /**
+          //      * We managed to parse the specified afterHelper and can perform it
+          //      */
+          //
+          //     let afterHelperParams = {
+          //       client: inputs.client,
+          //       block: block,
+          //     };
+          //
+          //     if (inputs.query) {
+          //
+          //       afterHelperParams.msg = inputs.query;
+          //
+          //     }
+          //
+          //     await sails.helpers.funnel[afterHelperBlock][afterHelperName].with(afterHelperParams);
+          //
+          //
+          //   } else {
+          //
+          //     /**
+          //      * Throw error: we could not parse the specified afterHelper
+          //      */
+          //
+          //     sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: ');
+          //
+          //     throw {err: {
+          //         module: 'api/helpers/funnel/supervisor-callback',
+          //         message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
+          //         payload: {
+          //           params: inputs,
+          //           helperName: block.afterHelper,
+          //           afterHelperBlock: afterHelperBlock,
+          //           afterHelperName: afterHelperName,
+          //         }
+          //       }
+          //     };
+          //
+          //   }
+          //
+          // }
+
+          /**
+           * We need to perform callbackHelper
+           */
+
           let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 2);
           let callbackHelperBlock = splitCallbackHelperRes[0];
           let callbackHelperName = splitCallbackHelperRes[1];
@@ -85,56 +143,6 @@ module.exports = {
              */
 
             await sails.helpers.funnel[callbackHelperBlock][callbackHelperName](inputs.client, block, inputs.query);
-
-            if (!_.isNil(block.afterHelper)) {
-
-              let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
-              let afterHelperBlock = splitAfterHelperRes[0];
-              let afterHelperName = splitAfterHelperRes[1];
-
-              if (afterHelperBlock && afterHelperName) {
-
-                /**
-                 * We managed to parse the specified afterHelper and can perform it
-                 */
-
-                let afterHelperParams = {
-                  client: inputs.client,
-                  block: block,
-                };
-
-                if (inputs.query) {
-
-                  afterHelperParams.msg = inputs.query;
-
-                }
-
-                await sails.helpers.funnel[afterHelperBlock][afterHelperName].with(afterHelperParams);
-
-
-              } else {
-
-                /**
-                 * Throw error: we could not parse the specified afterHelper
-                 */
-
-                sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: ');
-
-                throw {err: {
-                    module: 'api/helpers/funnel/supervisor-callback',
-                    message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
-                    payload: {
-                      params: inputs,
-                      helperName: block.afterHelper,
-                      afterHelperBlock: afterHelperBlock,
-                      afterHelperName: afterHelperName,
-                    }
-                  }
-                };
-
-              }
-
-            }
 
             /**
              * We need to start processing funnel again because if callback enabled some new

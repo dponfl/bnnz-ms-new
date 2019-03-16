@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::notProceed',
+  friendlyName: 'optin::afterNotProceed',
 
 
-  description: 'optin::notProceed',
+  description: 'optin::afterNotProceed',
 
 
   inputs: {
@@ -51,7 +51,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::notProceed ***************/');
+      sails.log.debug('/*************** optin::afterNotProceed ***************/');
 
       inputs.block.done = true;
 
@@ -98,8 +98,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/not-proceed',
-          message: 'api/helpers/funnel/optin/not-proceed error',
+          module: 'api/helpers/funnel/optin/after-not-proceed',
+          message: 'api/helpers/funnel/optin/after-not-proceed error',
           payload: {
             params: inputs,
             error: {
