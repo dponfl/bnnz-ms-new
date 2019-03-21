@@ -56,6 +56,18 @@ module.exports = {
       inputs.block.done = true;
       inputs.block.shown = true;
       inputs.client.subscription_made = true;
+      if (inputs.client.profile_confirmed
+        && inputs.client.payment_made
+        && inputs.client.subscription_made
+      ) {
+
+        /**
+         * The client finalized subscription process
+         */
+
+        inputs.client.service_subscription_finalized = true;
+
+      }
 
 
       /**
