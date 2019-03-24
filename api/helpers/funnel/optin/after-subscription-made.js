@@ -55,7 +55,7 @@ module.exports = {
 
       inputs.block.done = true;
       inputs.block.shown = true;
-      inputs.client.subscription_made = true;
+
       if (inputs.client.profile_confirmed
         && inputs.client.payment_made
         && inputs.client.subscription_made
@@ -66,6 +66,16 @@ module.exports = {
          */
 
         inputs.client.service_subscription_finalized = true;
+
+      } else {
+
+        /**
+         * Throw error because by this moment all
+         * profile_confirmed, payment_made and subscription_made
+         * must be true
+         */
+
+        throw new Error(`Wrong flags (profile_confirmed, payment_made or subscription_made): ${inputs.client}`);
 
       }
 
@@ -90,6 +100,8 @@ module.exports = {
       });
 
     } catch (e) {
+
+      sails.log.error('api/helpers/funnel/optin/after-subscription-made, error: ', e);
 
       throw {err: {
           module: 'api/helpers/funnel/optin/after-subscription-made',

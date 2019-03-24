@@ -218,6 +218,8 @@ module.exports = {
             throw new Error(`Wrong payment plan: ${client.payment_plan}`);
         }
 
+        client.payment_made = true;
+
         /**
          * Try to find the initial block of the current funnel
          */

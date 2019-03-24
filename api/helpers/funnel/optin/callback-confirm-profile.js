@@ -55,6 +55,7 @@ module.exports = {
 
       switch (inputs.query.data) {
         case 'profile_confirm_yes':
+          inputs.client.profile_confirmed = true;
           inputs.block.next = 'optin::we_have_several_service_levels';
           break;
         case 'profile_confirm_no':

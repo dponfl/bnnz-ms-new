@@ -56,6 +56,15 @@ module.exports.custom = {
 
   /**
    * ----------------------------
+   * General helper errors
+   * ----------------------------
+   */
+
+  GENERAL_HELPER_ERROR: 'General helper error',
+
+
+  /**
+   * ----------------------------
    * onMessage
    * ----------------------------
    */
@@ -264,6 +273,18 @@ module.exports.custom = {
 
   SEND_MAILGUN_GENERAL_ERROR: 'Send email general error',
   SEND_MAILGUN_SEND_MESSAGE_ERROR: 'Send email message error',
+
+
+  /**
+   * ----------------------------
+   * checkMaxPosts helper
+   * ----------------------------
+   */
+
+
+  CHECKMAXPOSTS_GENERAL_ERROR: 'Send email general error',
+  CHECKMAXPOSTS_OK: 'Max daily limit was not reached',
+  CHECKMAXPOSTS_NOK: 'Max daily limit was reached',
 
 
 

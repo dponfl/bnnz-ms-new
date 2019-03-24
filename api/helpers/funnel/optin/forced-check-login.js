@@ -69,6 +69,7 @@ module.exports = {
          */
 
         inputs.client.inst_profile = _.trim(inputs.msg.text);
+        inputs.client.profile_provided = true;
 
         await sails.helpers.storage.clientUpdate.with({
           criteria: {guid: inputs.client.guid},

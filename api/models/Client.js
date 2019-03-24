@@ -94,11 +94,13 @@ module.exports = {
     funnels: {
       type: 'json',
     },
-    start_msg_01_shown: {
-      type: 'boolean',
+    posts_made_day: {
+      type: 'number',
+      columnType: 'integer',
     },
-    start_msg_02_shown: {
-      type: 'boolean',
+    posts_made_total: {
+      type: 'number',
+      columnType: 'integer',
     },
     profile_provided: {
       type: 'boolean',

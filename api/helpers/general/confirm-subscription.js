@@ -69,6 +69,8 @@ module.exports = {
 
         sails.log('client was FOUND');
 
+        client.subscription_made = true;
+
         /**
          * Update optin::wait_subscription_check block
          */
@@ -104,6 +106,16 @@ module.exports = {
         if (getBlock) {
           getBlock.enabled = true;
         }
+
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: client.guid},
+          data: {
+            current_funnel: client.current_funnel,
+            funnels: client.funnels,
+            subscription_made: client.subscription_made,
+          }
+        });
+
 
         /**
          * Try to find the initial block of the current funnel

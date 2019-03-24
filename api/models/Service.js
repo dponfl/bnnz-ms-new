@@ -29,22 +29,13 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
-    messages: {
+    messages_per_day: {
       type: 'number',
       columnType: 'integer',
     },
     messages_to_stars: {
       type: 'number',
       columnType: 'integer',
-    },
-    check_profile: {
-      type: 'boolean',
-    },
-    check_payment: {
-      type: 'boolean',
-    },
-    check_subscription: {
-      type: 'boolean',
     },
     deleted: {
       type: 'boolean',
