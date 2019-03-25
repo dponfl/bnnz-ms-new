@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Image message Telegram',
+  friendlyName: 'Video message Telegram',
 
 
-  description: 'Send image message on Telegram messenger',
+  description: 'Send video message on Telegram messenger',
 
 
   inputs: {
@@ -16,9 +16,9 @@ module.exports = {
       required: true,
     },
 
-    imgPath: {
-      friendlyName: 'image url',
-      description: 'image url',
+    videoPath: {
+      friendlyName: 'video url',
+      description: 'video url',
       type: 'string',
       required: true,
     },
@@ -43,7 +43,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('Telegram img message: ', inputs);
+    sails.log.info('Telegram video message: ', inputs);
 
     try {
 
@@ -55,22 +55,22 @@ module.exports = {
         messageObj.caption = inputs.html;
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(
+      let sendMessageRes = await sails.config.custom.telegramBot.sendVideo(
         inputs.chatId,
-        inputs.imgPath,
+        inputs.videoPath,
         messageObj
       );
 
       return exits.success({
         status: 'ok',
-        message: 'Telegram img message was sent',
+        message: 'Telegram video message was sent',
         payload: sendMessageRes,
       })
 
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/mgw/telegram/img-message',
+          module: 'api/helpers/mgw/telegram/video-message',
           message: sails.config.custom.IMG_MESSAGE_SEND_ERROR,
           payload: {
             params: inputs,
