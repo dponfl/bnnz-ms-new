@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'help::callbackStart',
+  friendlyName: 'help::callbackNextAction',
 
 
-  description: 'help::callbackStart',
+  description: 'help::callbackNextAction',
 
 
   inputs: {
@@ -44,9 +44,18 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
+    let initialBlockPreviousData;
+
     try {
 
-      sails.log.debug('/*************** help::callbackStart ***************/');
+      sails.log.debug('/*************** help::callbackNextAction ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
       sails.log.debug('Block: ', inputs.block);
@@ -54,15 +63,14 @@ module.exports = {
 
 
       switch (inputs.query.data) {
-        case 'help_send_post':
-
-          inputs.block.next = 'help::send_post';
+        case 'help_start':
 
           /**
-           * Update help::send_post block
+           * Get and save info about the previous block of help::start block
+           * to update help::start block after help funnel updated to initial stage
            */
 
-          updateBlock = 'help::send_post';
+          updateBlock = 'help::start';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -73,7 +81,7 @@ module.exports = {
 
           if (getBlock) {
 
-            getBlock.previous = 'help::start';
+            initialBlockPreviousData = getBlock.previous;
 
           } else {
 
@@ -83,25 +91,80 @@ module.exports = {
 
           inputs.block.done = true;
 
+          const initialHelpFunnelRes = await sails.helpers.general.loadInitialFunnels.with({
+            client: inputs.client,
+            clientCategory: inputs.client.service.name,
+            funnelName: 'help',
+          });
+
+          if (initialHelpFunnelRes.status !== 'ok') {
+
+            throw new Error(`Wrong loadInitialFunnels result: ${initialHelpFunnelRes}`);
+
+          }
+
+          inputs.client.funnels = initialHelpFunnelRes.payload.client.funnels;
+
+          /**
+           * Save info about previous block
+           */
+
+          updateBlock = 'help::start';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+
+            getBlock.previous = initialBlockPreviousData;
+
+          } else {
+
+            throw new Error(`Wrong block decoding for data: ${updateBlock}`);
+
+          }
+
+          getBlock.previous = initialBlockPreviousData;
+
+
+          inputs.block.next = 'help::start';
+
           await sails.helpers.funnel.afterHelperGeneric.with({
             client: inputs.client,
             block: inputs.block,
             msg: inputs.query,
             next: true,
-            previous: true,
+            previous: false,
             switchFunnel: true,
           });
 
           break;
         case 'help_return':
 
-          inputs.block.next = inputs.block.previous;
-
           /**
-           * Update block specified at 'previous' key
+           * Get value of 'previous' of help::start block
            */
 
-          updateBlock = inputs.block.previous;
+          updateBlock = 'help::start';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
+
+
+          inputs.block.next = getBlock.previous;
+
+          /**
+           * Update block specified at 'next' key
+           */
+
+          updateBlock = inputs.block.next;
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -163,8 +226,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/help/callback-start',
-          message: 'api/helpers/funnel/help/callback-start error',
+          module: 'api/helpers/funnel/help/callback-next-action',
+          message: 'api/helpers/funnel/help/callback-next-action error',
           payload: {
             params: inputs,
             error: {

@@ -75,7 +75,7 @@ module.exports = {
 
     try {
 
-      await Message.create({
+      await Messages.create({
         client_id: inputs.client_id,
         client_guid: inputs.client_guid,
         message: inputs.message,

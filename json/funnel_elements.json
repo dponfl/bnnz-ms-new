@@ -79,8 +79,6 @@
       "actionType": "forced",
       "initial": false,
       "enabled": false,
-      "shown": false,
-      "done": false,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -88,6 +86,8 @@
       "afterHelper": null,
       "forcedHelper": "xxx::xxx",
       "callbackHelper": null,
+      "shown": false,
+      "done": false,
       "message": {
         "html": [
           {
@@ -114,8 +114,6 @@
       "actionType": "img",
       "initial": false,
       "enabled": false,
-      "shown": false,
-      "done": false,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -123,8 +121,36 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "shown": false,
+      "done": false,
       "message": {
         "img": "sample.jpg",
+        "html": [
+          {
+            "text": "NEW_SUBS_WELCOME_02",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "video",
+      "description": "",
+      "actionType": "video",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "video": "sample.mp4",
         "html": [
           {
             "text": "NEW_SUBS_WELCOME_02",

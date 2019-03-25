@@ -163,6 +163,47 @@ module.exports = {
 
             break;
 
+          case 'video':
+
+            /**
+             * Send video message
+             */
+
+            let htmlVideoRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+
+            let htmlVideo = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlVideoRaw);
+
+            let videoRes = await sails.helpers.mgw[inputs.client.messenger]['videoMessage'].with({
+              chatId: inputs.client.chat_id,
+              videoPath: sails.config.custom.cloudinaryVideoUrl + block.message.video,
+              html: htmlVideo,
+            });
+
+            sails.log.debug('videoRes: ', videoRes);
+            sails.log.debug('videoRes payload: ', videoRes.payload);
+
+            block.message_id = videoRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSave.with({
+              message: JSON.stringify({
+                video: sails.config.custom.cloudinaryVideoUrl + block.message.img,
+                html: htmlVideo,
+              }),
+              message_format: 'video',
+              messenger: inputs.client.messenger,
+              message_originator: 'bot',
+              client_id: inputs.client.id,
+              client_guid: inputs.client.guid
+            });
+
+            break;
+
           case 'forced':
 
             /**

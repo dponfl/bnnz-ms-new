@@ -72,7 +72,7 @@ module.exports = {
       type: 'boolean',
     },
     messages: {
-      collection: 'message',
+      collection: 'messages',
       via: 'client_id',
     },
     rooms: {

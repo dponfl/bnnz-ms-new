@@ -25,6 +25,7 @@ module.exports.custom = {
   telegramBot: null,
 
   cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
+  cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
 
   tokens: {},
 
