@@ -739,9 +739,53 @@
     {
       "id": "start",
       "description": "",
-      "actionType": "text",
+      "actionType": "inline_keyboard",
       "initial": true,
-      "enabled": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackStart",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_START_GENERAL",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_HELP_START_RETURN",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_HELP_BTN_START_SEND_POST",
+              "callback_data": "help_send_post"
+            }
+          ],
+          [
+            {
+              "text": "MSG_HELP_BTN_RETURN",
+              "callback_data": "help_return"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "send_post",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -754,7 +798,7 @@
       "message": {
         "html": [
           {
-            "text": "MSG_HELP_START",
+            "text": "MSG_HELP_SEND_POST_VIDEO",
             "style": "",
             "cr": ""
           }
