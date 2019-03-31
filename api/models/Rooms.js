@@ -1,12 +1,12 @@
 /**
- * Room.js
+ * Rooms.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'room',
+  tableName: 'rooms',
   migrate: 'alter',
   attributes: {
 
@@ -17,8 +17,9 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
-    client: {
-      model: 'client',
+    clients_number: {
+      type: 'number',
+      columnType: 'integer',
     },
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

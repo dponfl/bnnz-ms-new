@@ -46,7 +46,7 @@ module.exports.custom = {
    * ============================
    */
 
-  chatConfig: null,
+  config: null,
 
 
   /**

@@ -34,11 +34,11 @@ module.exports = {
         active: true
       });
 
-      sails.config.custom.chatConfig = confRec.config_data;
+      sails.config.custom.config = confRec.config_data;
 
-      // sails.log.warn('sails.config.custom.chatConfig: ', sails.config.custom.chatConfig);
+      // sails.log.warn('sails.config.custom.config: ', sails.config.custom.config);
 
-      if (!sails.config.custom.chatConfig) {
+      if (!sails.config.custom.config) {
 
         throw new Error('Critical error: No chat config');
 

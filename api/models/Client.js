@@ -77,7 +77,7 @@ module.exports = {
     },
     rooms: {
       collection: 'room',
-      via: 'user',
+      via: 'client',
     },
     service: {
       model: 'service',
