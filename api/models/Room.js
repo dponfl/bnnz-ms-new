@@ -10,15 +10,21 @@ module.exports = {
   migrate: 'alter',
   attributes: {
 
-    guid: {
-      type: 'string',
-    },
     room: {
       type: 'number',
       columnType: 'integer',
     },
+    active: {
+      type: 'boolean',
+      required: true,
+    },
+    clients_number: {
+      type: 'number',
+      columnType: 'integer',
+    },
     client: {
-      model: 'client',
+      collection: 'client',
+      via: 'room',
     },
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

@@ -66,6 +66,7 @@ module.exports = {
          */
 
         inputs.client.service_subscription_finalized = true;
+        inputs.client.subscription_active = true;
 
       } else {
 

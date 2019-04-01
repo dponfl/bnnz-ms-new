@@ -33,7 +33,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'GET /payment': { action: 'payment' },
-  'GET /subscription': { action: 'subscription' },
+  'POST /payment': { action: 'payment' },
+  'POST /subscription': { action: 'subscription' },
+  'POST /test': { action: 'test' },
 
 };

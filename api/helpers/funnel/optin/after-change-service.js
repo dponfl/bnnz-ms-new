@@ -55,6 +55,7 @@ module.exports = {
        */
 
       inputs.client.payment_plan = null;
+      inputs.client.payment_plan_selected = false;
 
       /**
        * Update optin::select_service_level block

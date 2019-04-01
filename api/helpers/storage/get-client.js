@@ -91,7 +91,7 @@ module.exports = {
         messenger: inputs.messenger
       })
       // .populate('messages')
-        .populate('rooms')
+        .populate('room')
         .populate('service');
 
       if (!record) {

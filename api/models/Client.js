@@ -75,7 +75,7 @@ module.exports = {
       collection: 'messages',
       via: 'client_id',
     },
-    rooms: {
+    room: {
       collection: 'room',
       via: 'client',
     },

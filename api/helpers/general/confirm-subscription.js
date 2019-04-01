@@ -42,7 +42,7 @@ module.exports = {
         guid: inputs.cid,
       })
       // .populate('messages')
-        .populate('rooms')
+        .populate('room')
         .populate('service');
 
       if (!client) {

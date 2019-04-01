@@ -36,7 +36,9 @@ module.exports = {
 
     try {
 
-      let client = await Client.create(inputs.client).fetch();
+      const client = await Client.create(inputs.client).fetch();
+      const room = await sails.helpers.general.getRoom();
+      await Client.addToCollection(client.id, 'room', )
 
       return exits.success({
         status: 'ok',

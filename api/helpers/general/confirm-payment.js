@@ -48,8 +48,8 @@ module.exports = {
         guid: inputs.cid,
       })
       // .populate('messages')
-        .populate('rooms')
-        .populate('service');
+      .populate('room')
+      .populate('service');
 
       if (!client) {
 
@@ -78,6 +78,20 @@ module.exports = {
         /**
          * Check received service level corresponds to the one selected by the client
          */
+
+        if (inputs.sl !== client.payment_plan) {
+
+          return exits.success({
+            status: 'wrong_sl',
+            message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
+            payload: {
+              cid: inputs.cid,
+              client_sl: client.payment_plan,
+              inputs_sl: inputs.sl,
+            },
+          });
+
+        }
 
         if (inputs.sl !== client.payment_plan) {
 
@@ -219,6 +233,7 @@ module.exports = {
         }
 
         client.payment_made = true;
+        client.tos_accepted = true;
 
         /**
          * Try to find the initial block of the current funnel

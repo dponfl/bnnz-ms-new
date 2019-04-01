@@ -106,6 +106,7 @@ module.exports = {
           let params = {
             messenger: 'telegram',
             guid: uuid.create().uuid,
+            key: uuid.create().apiKey,
             chat_id: msg.chat.id,
             first_name: msg.chat.first_name || '',
             last_name: msg.chat.last_name || '',
