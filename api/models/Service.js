@@ -28,19 +28,22 @@ module.exports = {
     rooms: {
       type: 'number',
       columnType: 'integer',
+      allowNull: true,
     },
-    messages_per_day: {
+    posts_per_day: {
       type: 'number',
       columnType: 'integer',
+      allowNull: true,
     },
-    messages_to_stars: {
+    incoming_posts_per_day: {
       type: 'number',
       columnType: 'integer',
+      allowNull: true,
     },
     deleted: {
       type: 'boolean',
     },
-    user: {
+    client: {
       collection: 'client',
       via: 'service',
     }

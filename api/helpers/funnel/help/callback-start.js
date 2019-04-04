@@ -142,7 +142,7 @@ module.exports = {
 
           await sails.helpers.general.loadInitialFunnels.with({
             client: inputs.client,
-            clientCategory: inputs.client.service.name,
+            clientCategory: inputs.client.service.funnel_name,
             funnelName: 'help',
           });
 

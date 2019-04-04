@@ -7,7 +7,7 @@
 
 module.exports = {
   tableName: 'room',
-  migrate: 'alter',
+  migrate: 'safe',
   attributes: {
 
     room: {

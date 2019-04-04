@@ -27,9 +27,8 @@ module.exports = {
     sails.log.debug('general:getRoom helper...');
     // sails.log.debug('input params: ', inputs);
 
-    let resultRoomNumber = null;
-    let resultRoomId = null;
     let totalRooms = 0;
+    let roomRec;
 
     try {
 
@@ -41,27 +40,30 @@ module.exports = {
          * There are no rooms in Room table yet and we need create it
          */
 
-        await Room.create({
+        roomRec = await Room.create({
           room: 1,
           clients_number: 0,
           active: true,
-        });
+        }).fetch();
 
         totalRooms = 1;
 
+      } else {
+
+        const roomNumber = _.random(1, totalRooms);
+
+        /**
+         * Get room record for the specified roomNumber
+         */
+
+        roomRec = await Room.findOne({room: roomNumber});
+
+        if (!roomRec) {
+          throw new Error('No room found for the specified room number, room: ' + roomNumber);
+        }
+
       }
 
-      const roomNumber = _.random(1, totalRooms);
-
-      /**
-       * Get room record for the specified roomNumber
-       */
-
-      const roomRec = await Room.findOne({room: roomNumber});
-
-      if (!roomRec) {
-        throw new Error('No room found for the specified room number, room: ' + roomNumber);
-      }
 
       /**
        * Check if the selected room have vacant space
@@ -78,20 +80,14 @@ module.exports = {
           room: totalRooms + 1,
           clients_number: 0,
           active: true,
-        });
+        }).fetch();
 
         await sails.helpers.general.distributeClients.with({
           oldRoom: roomRec.room,
           newRoom: totalRooms + 1
         });
 
-        resultRoomNumber = totalRooms + 1;
-        resultRoomId = newRoom.id;
-
-      } else {
-
-        resultRoomNumber = roomRec.room;
-        resultRoomId = roomRec.id;
+        roomRec = newRoom;
 
       }
 
@@ -99,11 +95,9 @@ module.exports = {
         status: 'ok',
         message: 'Room found',
         payload: {
-          room_id: resultRoomId,
-          room: resultRoomNumber,
+          record: roomRec,
         }
       });
-
 
     } catch (e) {
       sails.log.error('api/helpers/general/get-room, error: ', e);
