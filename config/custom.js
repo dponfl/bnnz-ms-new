@@ -224,6 +224,7 @@ module.exports.custom = {
 
   CONFIRM_PAYMENT_CLIENT_NOT_FOUND: 'confirmPayment, client was not found',
   CONFIRM_PAYMENT_WRONG_SL: 'confirmPayment, client record payment plan does not correspond with helper parameter',
+  CONFIRM_PAYMENT_PAYMENT_WAS_MADE: 'confirmPayment, client record has flag that this client already made payment',
   CONFIRM_PAYMENT_SUCCESS: 'confirmPayment, success',
   CONFIRM_PAYMENT_GENERAL_ERROR: 'confirmPayment, general error',
 
@@ -233,6 +234,7 @@ module.exports.custom = {
    */
 
   CONFIRM_SUBSCRIPTION_CLIENT_NOT_FOUND: 'confirmSubsciption, client was not found',
+  CONFIRM_SUBSCRIPTION_SUBSCRIPTION_WAS_MADE: 'confirmSubsciption, client record has flag that the client already made subscription',
   CONFIRM_SUBSCRIPTION_SUCCESS: 'confirmSubsciption, success',
   CONFIRM_SUBSCRIPTION_GENERAL_ERROR: 'confirmSubsciption, general error',
 

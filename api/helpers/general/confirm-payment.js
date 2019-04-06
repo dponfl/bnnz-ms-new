@@ -93,11 +93,11 @@ module.exports = {
 
         }
 
-        if (inputs.sl !== client.payment_plan) {
+        if (client.payment_made) {
 
           return exits.success({
-            status: 'wrong_sl',
-            message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
+            status: 'payment_was_done',
+            message: sails.config.custom.CONFIRM_PAYMENT_PAYMENT_WAS_MADE,
             payload: {
               cid: inputs.cid,
               client_sl: client.payment_plan,
@@ -146,6 +146,12 @@ module.exports = {
               getBlock.enabled = true;
             }
 
+            /**
+             * Generate rooms and link client to them
+             */
+
+            await linkRoomsToClient(client);
+
             break;
 
           case 'gold':
@@ -186,6 +192,12 @@ module.exports = {
               getBlock.enabled = true;
             }
 
+            /**
+             * Generate rooms and link client to them
+             */
+
+            await linkRoomsToClient(client);
+
             break;
 
           case 'bronze':
@@ -225,6 +237,12 @@ module.exports = {
             if (getBlock) {
               getBlock.enabled = true;
             }
+
+            /**
+             * Generate rooms and link client to them
+             */
+
+            await linkRoomsToClient(client);
 
             break;
 
@@ -287,11 +305,26 @@ module.exports = {
           },
         }
       };
-
     }
-
-
   }
-
 };
+
+async function linkRoomsToClient(clientRec) {
+
+  _.forEach(clientRec.room, async function (elem) {
+      let room = await Room.findOne({id: elem.id});
+
+      if (room) {
+        await Client.removeFromCollection(clientRec.id, 'room', room.id);
+        await Room.updateOne({id: room.id})
+          .set({clients_number: room.clients_number - 1})
+      }
+  });
+
+  const rooms = await sails.helpers.general.getRoom(clientRec.service.rooms);
+
+  await Client.addToCollection(clientRec.id, 'room', rooms.payload.roomIDsRes);
+
+
+}
 

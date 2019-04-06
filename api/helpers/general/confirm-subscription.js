@@ -69,6 +69,16 @@ module.exports = {
 
         sails.log('client was FOUND');
 
+        if (client.subscription_made) {
+          return exits.success({
+            status: 'subscription_was_done',
+            message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUBSCRIPTION_WAS_MADE,
+            payload: {
+              cid: inputs.cid,
+            },
+          });
+        }
+
         client.subscription_made = true;
 
         /**

@@ -37,13 +37,17 @@ module.exports = {
     try {
 
       let client = await Client.create(inputs.client).fetch();
-      const room = await sails.helpers.general.getRoom();
-      await Client.addToCollection(client.id, 'room', room.payload.record.id);
+
+      /**
+       * At client create we place the client at room #0
+       * and then reallocate it to the different rooms according to the client's service level
+       */
+
       client = await Client.findOne({guid: client.guid})
         .populate('room')
         .populate('service');
-      await Room.updateOne({room: room.payload.record.room}, )
-        .set({clients_number: room.payload.record.clients_number + 1})
+
+      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data object: ', client);
 
       return exits.success({
         status: 'ok',

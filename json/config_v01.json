@@ -1,6 +1,6 @@
 {
   "rooms": {
-    "clients_per_room": 10
+    "clients_per_room": 2
   },
   "lang": {
     "ru": {
