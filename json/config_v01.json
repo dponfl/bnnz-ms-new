@@ -1,7 +1,21 @@
 {
   "rooms": {
-    "clients_per_room": 2
+    "clients_per_room": 5
   },
+  "schedule": [
+    {
+      "rule": "*/1 */1 * * * *",
+      "action": "helperOne"
+    },
+    {
+      "rule": "*/3 */1 * * * *",
+      "action": "helperThree"
+    },
+    {
+      "rule": "*/5 */1 * * * *",
+      "action": "helperFive"
+    }
+  ],
   "lang": {
     "ru": {
       "price": {

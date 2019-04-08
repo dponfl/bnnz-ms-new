@@ -106,6 +106,10 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
+    posts_received_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
     profile_provided: {
       type: 'boolean',
     },
