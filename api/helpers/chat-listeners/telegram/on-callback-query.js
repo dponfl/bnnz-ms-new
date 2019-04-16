@@ -46,10 +46,13 @@ module.exports = {
          * Get the client record from DB
          */
 
-        let getClientResponse = await sails.helpers.storage.getClient.with({
+        let getClientResponse = await sails.helpers.storage.clientGet.with({
           messenger: 'telegram',
           msg: query,
         });
+
+        sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-callback-query, clientGet result:', getClientResponse);
+
 
         /**
          * Call the respective Supervisor helper

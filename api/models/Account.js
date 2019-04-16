@@ -1,73 +1,89 @@
 /**
- * Client.js
+ * Account.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'client',
+  tableName: 'account',
   migrate: 'safe',
   attributes: {
-
     guid: {
       type: 'string',
       unique: true,
     },
-    key: {
-      type: 'string',
-      unique: true,
-    },
-    first_name: {
-      type: 'string',
-    },
-    last_name: {
-      type: 'string',
-    },
-    chat_id: {
-      type: 'string',
-      unique: true,
-    },
-    username: {
-      type: 'string',
-    },
-    ref_key: {
-      type: 'string',
-    },
-    is_ref: {
+    subscription_active: {
       type: 'boolean',
     },
-    tos_accepted: {
-      type: 'boolean',
-    },
-    messenger: {
+    subscription_from: {
       type: 'string',
+      columnType: 'datetime',
+      allowNull: true,
     },
-    password: {
+    subscription_until: {
       type: 'string',
+      columnType: 'datetime',
+      allowNull: true,
     },
     deleted: {
       type: 'boolean',
     },
-    banned: {
-      type: 'boolean',
-    },
-    admin: {
-      type: 'boolean',
-    },
-    messages: {
-      collection: 'messages',
-      via: 'client_id',
-    },
-    lang: {
+    inst_profile: {
       type: 'string',
     },
-    current_funnel: {
+    posts_made_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    posts_received_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    posts_made_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    posts_received_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    profile_provided: {
+      type: 'boolean',
+    },
+    profile_confirmed: {
+      type: 'boolean',
+    },
+    payment_plan_selected: {
+      type: 'boolean',
+    },
+    payment_plan: {
       type: 'string',
+      allowNull: true,
     },
-    funnels: {
-      type: 'json',
+    payment_made: {
+      type: 'boolean',
     },
+    subscription_confirmed_by_client: {
+      type: 'boolean',
+    },
+    subscription_made: {
+      type: 'boolean',
+    },
+    service_subscription_finalized: {
+      type: 'boolean',
+    },
+    client: {
+      model: 'client',
+    },
+    room: {
+      collection: 'room',
+      via: 'account',
+    },
+    service: {
+      model: 'service',
+    },
+
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

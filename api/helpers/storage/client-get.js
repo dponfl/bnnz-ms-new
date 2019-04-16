@@ -42,6 +42,9 @@ module.exports = {
 
     sails.log(moduleName + ', inputs: ', inputs);
 
+    let clientRecord;
+    let accountRecord;
+
 
     /**
      * Get chat_id depends on message type (text message or callback query
@@ -68,7 +71,7 @@ module.exports = {
 
     if (_.isNil(chatId)) {
 
-      sails.log.error('getClient, no chat id in the message, input.msg: ', inputs.msg);
+      sails.log.error('clientGet, no chat id in the message, input.msg: ', inputs.msg);
 
       throw {err: {
           module: 'api/helpers/storage/get-client',
@@ -82,22 +85,17 @@ module.exports = {
 
     }
 
-    let record;
-
     try {
 
-      record = await Client.findOne({
+      clientRecord = await Client.findOne({
         chat_id: chatId,
         messenger: inputs.messenger
-      })
-      // .populate('messages')
-        .populate('room')
-        .populate('service');
+      });
 
-      if (!record) {
+      if (!clientRecord) {
 
         /**
-         * Reply that the client was not found
+         * Record for the client was not found
          */
 
         sails.log(moduleName + ', client was NOT FOUND');
@@ -114,22 +112,56 @@ module.exports = {
       } else {
 
         /**
-         * found record for the specified criteria
+         * found clientRecord for the specified criteria
          */
 
-        sails.log(moduleName + ', client was FOUND');
+        sails.log(moduleName + ', client was FOUND: ', clientRecord);
 
-        return exits.success({
-          status: 'found',
-          message: sails.config.custom.CLIENT_FOUND,
-          payload: record
+        const accountRecordRaw = await sails.helpers.storage.accountGet.with({
+          clientId: clientRecord.id,
         });
+
+        accountRecord = accountRecordRaw.payload;
+
+        if (accountRecord.length === 0) {
+
+          /**
+           * Record(s) for the client's account(s) not found
+           */
+
+          sails.log(moduleName + ', account(s) NOT FOUND');
+
+          return exits.success({
+            status: 'not_found',
+            message: sails.config.custom.ACCOUNT_NOT_FOUND,
+            payload: {
+              messenger: inputs.messenger,
+              msg: inputs.msg,
+            },
+          });
+
+        } else {
+
+          /**
+           * found accountRecord for the specified criteria
+           */
+
+          sails.log(moduleName + ', accout(s) FOUND: ', accountRecord);
+
+          return exits.success({
+            status: 'found',
+            message: sails.config.custom.CLIENT_FOUND,
+            payload: _.assignIn(clientRecord, {accounts: accountRecord}),
+          });
+
+        }
+
 
       }
 
     } catch (e) {
 
-      sails.log.error('getClient, Client.findOne error, input.msg: ', inputs.msg);
+      sails.log.error('clientGet, Client.findOne error, input.msg: ', inputs.msg);
 
       throw {err: {
           module: 'api/helpers/storage/get-client',

@@ -22,8 +22,8 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
-    client: {
-      collection: 'client',
+    account: {
+      collection: 'account',
       via: 'room',
     },
 

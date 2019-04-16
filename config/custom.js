@@ -83,12 +83,14 @@ module.exports.custom = {
 
   /**
    * ----------------------------
-   * getClient
+   * clientGet
    * ----------------------------
    */
 
   CLIENT_NOT_FOUND: 'Client was not found',
   CLIENT_FOUND: 'Client was found',
+  ACCOUNT_NOT_FOUND: 'Account was not found',
+  ACCOUNT_FOUND: 'Account was found',
   NO_CHAT_ID: 'No chat id in the message',
   CLIENT_GENERAL_ERROR: 'Client general error',
 
@@ -99,6 +101,22 @@ module.exports.custom = {
    */
 
   CLIENTCREATE_ERROR: 'Client record create error',
+
+  /**
+   * ----------------------------
+   * accountCreate
+   * ----------------------------
+   */
+
+  ACCOUNTCREATE_ERROR: 'Account record create error',
+
+  /**
+   * ----------------------------
+   * accountGet
+   * ----------------------------
+   */
+
+  ACCOUNTGET_ERROR: 'Account record get error',
 
   /**
    * ----------------------------

@@ -43,8 +43,8 @@ module.exports = {
     deleted: {
       type: 'boolean',
     },
-    client: {
-      collection: 'client',
+    account: {
+      collection: 'account',
       via: 'service',
     }
 

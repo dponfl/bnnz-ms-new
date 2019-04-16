@@ -48,10 +48,12 @@ module.exports = {
 
       try {
 
-        getClientResponse = await sails.helpers.storage.getClient.with({
+        getClientResponse = await sails.helpers.storage.clientGet.with({
           messenger: 'telegram',
           msg: msg
         });
+
+        sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-message, clientGet result:', getClientResponse);
 
         if (getClientResponse.status === 'not_found') {
 
@@ -116,6 +118,8 @@ module.exports = {
             is_ref: useIsRef,
           };
 
+          let service = {};
+
           /**
            * Get info about service level
            */
@@ -145,7 +149,7 @@ module.exports = {
 
           getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
 
-          params.service = getServiceRes.payload.id;
+          service = getServiceRes.payload.id;
 
           /**
            * Use info about funnel (from Service table) and load it from Funnels table
