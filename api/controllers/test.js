@@ -50,7 +50,7 @@ module.exports = {
             select: ['id'],
           });
           sails.log.debug('clientId: ', clientId);
-          await Client.addToCollection(clientId, 'rooms', )
+          // await Client.addToCollection(clientId, 'rooms', )
           break;
         default: sails.log.error('api/controllers/test error, wrong action, inputs: ', inputs);
       }

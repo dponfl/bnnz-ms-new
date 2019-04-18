@@ -44,11 +44,17 @@ module.exports = {
 
     try {
 
-      await Client.update(inputs.criteria).set(inputs.data);
+      const accounts = _.pick(inputs.data, 'accounts');
+
+      _.forEach(accounts, async (acc) => {
+        await Account.update(acc.id).set(acc);
+      });
+
+      await Client.update(inputs.criteria).set(_.omit(inputs.data, 'accounts'));
 
       return exits.success({
         status: 'ok',
-        message: 'Client record updated',
+        message: 'Client updated',
         payload: {
           criteria: inputs.criteria,
           client: inputs.data

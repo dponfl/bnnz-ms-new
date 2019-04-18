@@ -38,20 +38,21 @@ module.exports = {
 
       let client = await Client.create(inputs.client).fetch();
 
-      /**
-       * At client create we place the client at room #0
-       * and then reallocate it to the different rooms according to the client's service level
-       */
+      const account = await sails.helpers.storage.accountCreate.with({
+        account: {
+          client: client.id,
+        }
+      });
 
-      client = await Client.findOne({guid: client.guid})
-        .populate('room')
-        .populate('service');
+      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> account data object: ', account);
+
+      client = _.assignIn(client, {accounts: account});
 
       sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data object: ', client);
 
       return exits.success({
         status: 'ok',
-        message: 'Client record created',
+        message: 'Client created',
         payload: client,
       })
 

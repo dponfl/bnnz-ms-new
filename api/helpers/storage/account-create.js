@@ -38,16 +38,11 @@ module.exports = {
 
       let account = await Account.create(inputs.account).fetch();
 
-      /**
-       * At account create we place the client at room #0
-       * and then reallocate it to the different rooms according to the client's service level
-       */
-
       account = await Account.findOne({guid: account.guid})
         .populate('room')
         .populate('service');
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data object: ', account);
+      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> account data object: ', account);
 
       return exits.success({
         status: 'ok',
