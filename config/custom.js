@@ -129,6 +129,15 @@ module.exports.custom = {
 
   /**
    * ----------------------------
+   * accountUpdate
+   * ----------------------------
+   */
+
+  ACCOUNTUPDATE_ERROR: 'Account record update error',
+
+
+  /**
+   * ----------------------------
    * getServiceRef
    * ----------------------------
    */
