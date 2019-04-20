@@ -68,6 +68,9 @@ module.exports = {
     funnels: {
       type: 'json',
     },
+    account_use: {
+      type: 'string',
+    },
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
