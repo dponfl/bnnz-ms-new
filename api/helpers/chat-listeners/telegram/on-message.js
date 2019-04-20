@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require('lodash');
-const t = require('../../../services/translate');
 const uuid = require('uuid-apikey');
 
 
@@ -45,6 +44,19 @@ module.exports = {
        */
 
       let getClientResponse = null;
+      let getServiceRes = null;
+      let funnels = null;
+      let parseRefResult = null;
+      let parseSlResult = null;
+      let useRefKey = '';
+      let useIsRef = false;
+      let useServiceRefKey = '';
+      let getLangRes;
+      let useLang;
+      let params = {};
+      let getServiceRefRes = null;
+      let serviceName = 'generic';
+
 
       try {
 
@@ -60,18 +72,6 @@ module.exports = {
           /**
            * Client record was not found => create new client record
            */
-
-          let parseRefResult = null;
-          let parseSlResult = null;
-
-          let useRefKey = '';
-          let useIsRef = false;
-
-          let useServiceRefKey = '';
-
-          let getServiceRes = null;
-
-          let funnels = null;
 
           if (_.trim(msg.text).match(/\/start/i)) {
 
@@ -102,10 +102,10 @@ module.exports = {
            * Try to get user preferred language from received message
            */
 
-          let getLangRes = await sails.helpers.chatListeners.telegram.getUserLang(msg);
-          let useLang = getLangRes.payload.lang;
+          getLangRes = await sails.helpers.chatListeners.telegram.getUserLang(msg);
+          useLang = getLangRes.payload.lang;
 
-          let params = {
+          params = {
             messenger: 'telegram',
             guid: uuid.create().uuid,
             key: uuid.create().apiKey,
@@ -118,15 +118,11 @@ module.exports = {
             is_ref: useIsRef,
           };
 
-          let service = {};
 
           /**
            * Get info about service level
            */
 
-          let getServiceRefRes = null;
-          let serviceName = 'generic';
-          let serviceId = null;
 
           if (useServiceRefKey) {
 
@@ -148,8 +144,6 @@ module.exports = {
            */
 
           getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
-
-          service = getServiceRes.payload.id;
 
           /**
            * Use info about funnel (from Service table) and load it from Funnels table
