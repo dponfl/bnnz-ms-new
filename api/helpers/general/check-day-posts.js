@@ -32,14 +32,23 @@ module.exports = {
 
     try {
 
+      const account = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+
+      if (typeof account === 'undefined') {
+
+        sails.log.error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
+        throw new Error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
+
+      }
+
       return exits.success({
         status: 'ok',
         message: '',
         payload: {
-          dayPostsReached: inputs.client.posts_made_day >= inputs.client.service.messages_per_day,
+          // dayPostsReached: inputs.client.posts_made_day >= inputs.client.service.messages_per_day,
+          dayPostsReached: account.posts_made_day >= account.service.messages_per_day,
         }
       });
-
 
     } catch (e) {
 
