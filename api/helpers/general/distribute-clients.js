@@ -37,37 +37,38 @@ module.exports = {
     sails.log.debug('general:distributeClients helper...');
     sails.log.debug('input params: ', inputs);
 
-    const oldRoomWithClients = await Room.findOne({room: inputs.oldRoom})
-      .populate('client');
-    const newRoomWithClients = await Room.findOne({room: inputs.newRoom});
+    const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
+      .populate('account');
+    const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
+    const client = Client.findOne({id: oldRoomWithAccounts.account[0].client});
 
-    // sails.log.warn('oldRoomWithClients: ', oldRoomWithClients);
-    // sails.log.warn('newRoomWithClients: ', newRoomWithClients);
+    // sails.log.warn('oldRoomWithAccounts: ', oldRoomWithAccounts);
+    // sails.log.warn('newRoomWithAccounts: ', newRoomWithAccounts);
 
     try {
 
-      _.forEach(oldRoomWithClients.client, async function (clientRec) {
+      _.forEach(oldRoomWithAccounts.account, async function (accountRec) {
 
-        // sails.log.warn('clientRec: ', clientRec);
+        // sails.log.warn('accountRec: ', accountRec);
 
         if (
-          !clientRec.deleted
-          && !clientRec.banned
-          && !clientRec.admin
-          && clientRec.service_subscription_finalized
-          && clientRec.subscription_active
+          !client.deleted
+          && !client.banned
+          && !accountRec.deleted
+          && accountRec.service_subscription_finalized
+          && accountRec.subscription_active
         ) {
 
           if (_.random(0,1)) {
 
-            // sails.log.info('Gonna re-allocate this client: ', clientRec);
+            // sails.log.info('Gonna re-allocate this account: ', accountRec);
 
-            await Client.removeFromCollection(clientRec.id, 'room', oldRoomWithClients.id);
-            await Client.addToCollection(clientRec.id, 'room', newRoomWithClients.id);
-            await Room.updateOne({room: oldRoomWithClients.room})
-              .set({clients_number: oldRoomWithClients.clients_number - 1});
-            await Room.updateOne({room: newRoomWithClients.room})
-              .set({clients_number: newRoomWithClients.clients_number + 1});
+            await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id);
+            await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id);
+            await Room.updateOne({room: oldRoomWithAccounts.room})
+              .set({clients_number: oldRoomWithAccounts.clients_number - 1});
+            await Room.updateOne({room: newRoomWithAccounts.room})
+              .set({clients_number: newRoomWithAccounts.clients_number + 1});
           }
 
         }
