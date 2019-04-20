@@ -14,6 +14,12 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    aid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
+      type: 'string',
+      required: true,
+    },
     sl: {
       friendlyName: 'service level',
       description: 'service level',
@@ -36,6 +42,8 @@ module.exports = {
     sails.log.debug('************** confirmPayment helper **************');
 
     let client;
+    let account;
+    let accountInd;
     let updateBlock;
     let getBlock;
     let splitRes;
@@ -46,10 +54,7 @@ module.exports = {
 
       client = await Client.findOne({
         guid: inputs.cid,
-      })
-      // .populate('messages')
-      .populate('room')
-      .populate('service');
+      });
 
       if (!client) {
 
@@ -67,224 +72,271 @@ module.exports = {
           },
         });
 
-      } else {
+      }
+
+      /**
+       * found record for the specified criteria
+       */
+
+      sails.log('client was FOUND');
+
+      /**
+       * Check received service level corresponds to the one selected by the client
+       */
+
+      const accountRecordsRaw = await sails.helpers.storage.accountGet.with({
+        clientId: client.id,
+      });
+
+      const accountRecords = accountRecordsRaw.payload;
+
+      if (accountRecords.length === 0) {
 
         /**
-         * found record for the specified criteria
+         * Record(s) for the client's account(s) not found
          */
 
-        sails.log('client was FOUND');
-
-        /**
-         * Check received service level corresponds to the one selected by the client
-         */
-
-        if (inputs.sl !== client.payment_plan) {
-
-          return exits.success({
-            status: 'wrong_sl',
-            message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
-            payload: {
-              cid: inputs.cid,
-              client_sl: client.payment_plan,
-              inputs_sl: inputs.sl,
-            },
-          });
-
-        }
-
-        if (client.payment_made) {
-
-          return exits.success({
-            status: 'payment_was_done',
-            message: sails.config.custom.CONFIRM_PAYMENT_PAYMENT_WAS_MADE,
-            payload: {
-              cid: inputs.cid,
-              client_sl: client.payment_plan,
-              inputs_sl: inputs.sl,
-            },
-          });
-
-        }
-
-        switch (client.payment_plan) {
-          case 'platinum':
-
-            /**
-             * Update optin::selected_platinum block
-             */
-
-            updateBlock = 'optin::selected_platinum';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.done = true;
-              getBlock.next = 'optin::platinum_paid';
-            }
-
-
-            /**
-             * Update optin::platinum_paid block
-             */
-
-            updateBlock = 'optin::platinum_paid';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.enabled = true;
-            }
-
-            /**
-             * Generate rooms and link client to them
-             */
-
-            await linkRoomsToClient(client);
-
-            break;
-
-          case 'gold':
-
-            /**
-             * Update optin::selected_gold block
-             */
-
-            updateBlock = 'optin::selected_gold';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.done = true;
-              getBlock.next = 'optin::gold_paid';
-            }
-
-
-            /**
-             * Update optin::gold_paid block
-             */
-
-            updateBlock = 'optin::gold_paid';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.enabled = true;
-            }
-
-            /**
-             * Generate rooms and link client to them
-             */
-
-            await linkRoomsToClient(client);
-
-            break;
-
-          case 'bronze':
-
-            /**
-             * Update optin::selected_bronze block
-             */
-
-            updateBlock = 'optin::selected_bronze';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.done = true;
-              getBlock.next = 'optin::bronze_paid';
-            }
-
-
-            /**
-             * Update optin::bronze_paid block
-             */
-
-            updateBlock = 'optin::bronze_paid';
-
-            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-            updateFunnel = splitRes[0];
-            updateId = splitRes[1];
-
-
-            getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-            if (getBlock) {
-              getBlock.enabled = true;
-            }
-
-            /**
-             * Generate rooms and link client to them
-             */
-
-            await linkRoomsToClient(client);
-
-            break;
-
-          default:
-            throw new Error(`Wrong payment plan: ${client.payment_plan}`);
-        }
-
-        client.payment_made = true;
-        client.tos_accepted = true;
-
-        /**
-         * Try to find the initial block of the current funnel
-         */
-
-        let initialBlock = _.find(client.funnels[client.current_funnel],
-          {initial: true});
-
-        // sails.log.debug('initialBlock: ', initialBlock);
-
-        /**
-         * Check that the initial block was found
-         */
-
-        if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
-
-          await sails.helpers.funnel.proceedNextBlock.with({
-            client: client,
-            funnelName: client.current_funnel,
-            blockId: initialBlock.id,
-          });
-
-        }
+        sails.log.error('api/helpers/general/confirm-payment.js, Error: account(s) NOT FOUND, client: ', client);
 
         return exits.success({
-          status: 'success',
-          message: sails.config.custom.CONFIRM_PAYMENT_SUCCESS,
+          status: 'not_found',
+          message: sails.config.custom.ACCOUNT_NOT_FOUND,
           payload: {
-            client_guid: client.guid,
-          }
+            client: client,
+          },
         });
 
       }
+
+      /**
+       * found accountRecords for the specified criteria
+       */
+
+      sails.log.debug('api/helpers/general/confirm-payment.js, accout(s) FOUND: ', accountRecords);
+
+      client = _.assignIn(client, {accounts: accountRecords});
+
+      account = _.find(accountRecords, {guid: client.account_use});
+      accountInd = _.findIndex(accountRecords, (o) => {
+        return o.guid === account.guid;
+      });
+
+      if (typeof account === 'undefined') {
+
+        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by client.account_use');
+        throw new Error('api/helpers/general/confirm-payment, error: Cannot find account by client.account_use');
+
+      }
+
+
+      if (inputs.sl !== account.payment_plan) {
+
+        return exits.success({
+          status: 'wrong_sl',
+          message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
+          payload: {
+            cid: inputs.cid,
+            aid: inputs.aid,
+            account_sl: account.payment_plan,
+            inputs_sl: inputs.sl,
+          },
+        });
+
+      }
+
+      if (account.payment_made) {
+
+        return exits.success({
+          status: 'payment_was_done',
+          message: sails.config.custom.CONFIRM_PAYMENT_PAYMENT_WAS_MADE,
+          payload: {
+            cid: inputs.cid,
+            aid: inputs.aid,
+            account_sl: account.payment_plan,
+            inputs_sl: inputs.sl,
+          },
+        });
+
+      }
+
+      switch (account.payment_plan) {
+        case 'platinum':
+
+          /**
+           * Update optin::selected_platinum block
+           */
+
+          updateBlock = 'optin::selected_platinum';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.done = true;
+            getBlock.next = 'optin::platinum_paid';
+          }
+
+
+          /**
+           * Update optin::platinum_paid block
+           */
+
+          updateBlock = 'optin::platinum_paid';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.enabled = true;
+          }
+
+          /**
+           * Generate rooms and link client to them
+           */
+
+          await linkRoomsToClient(account);
+
+          break;
+
+        case 'gold':
+
+          /**
+           * Update optin::selected_gold block
+           */
+
+          updateBlock = 'optin::selected_gold';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.done = true;
+            getBlock.next = 'optin::gold_paid';
+          }
+
+
+          /**
+           * Update optin::gold_paid block
+           */
+
+          updateBlock = 'optin::gold_paid';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.enabled = true;
+          }
+
+          /**
+           * Generate rooms and link client to them
+           */
+
+          await linkRoomsToClient(account);
+
+          break;
+
+        case 'bronze':
+
+          /**
+           * Update optin::selected_bronze block
+           */
+
+          updateBlock = 'optin::selected_bronze';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.done = true;
+            getBlock.next = 'optin::bronze_paid';
+          }
+
+
+          /**
+           * Update optin::bronze_paid block
+           */
+
+          updateBlock = 'optin::bronze_paid';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+
+          getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.enabled = true;
+          }
+
+          /**
+           * Generate rooms and link client to them
+           */
+
+          await linkRoomsToClient(account);
+
+          break;
+
+        default:
+          throw new Error(`Wrong payment plan: ${account.payment_plan}`);
+      }
+
+      account.payment_made = true;
+      accountRecords[accountInd] = account;
+      client.tos_accepted = true;
+      client.accounts = accountRecords;
+
+      /**
+       * Try to find the initial block of the current funnel
+       */
+
+      let initialBlock = _.find(client.funnels[client.current_funnel],
+        {initial: true});
+
+      // sails.log.debug('initialBlock: ', initialBlock);
+
+      /**
+       * Check that the initial block was found
+       */
+
+      if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+        await sails.helpers.funnel.proceedNextBlock.with({
+          client: client,
+          funnelName: client.current_funnel,
+          blockId: initialBlock.id,
+        });
+
+      }
+
+      return exits.success({
+        status: 'success',
+        message: sails.config.custom.CONFIRM_PAYMENT_SUCCESS,
+        payload: {
+          client_guid: client.guid,
+        }
+      });
 
     } catch (e) {
 
@@ -309,21 +361,21 @@ module.exports = {
   }
 };
 
-async function linkRoomsToClient(clientRec) {
+async function linkRoomsToClient(accountRec) {
 
-  _.forEach(clientRec.room, async function (elem) {
+  _.forEach(accountRec.room, async function (elem) {
       let room = await Room.findOne({id: elem.id});
 
       if (room) {
-        await Client.removeFromCollection(clientRec.id, 'room', room.id);
+        await Account.removeFromCollection(accountRec.id, 'room', room.id);
         await Room.updateOne({id: room.id})
           .set({clients_number: room.clients_number - 1})
       }
   });
 
-  const rooms = await sails.helpers.general.getRoom(clientRec.service.rooms);
+  const rooms = await sails.helpers.general.getRoom(accountRec.service.rooms);
 
-  await Client.addToCollection(clientRec.id, 'room', rooms.payload.roomIDsRes);
+  await Account.addToCollection(accountRec.id, 'room', rooms.payload.roomIDsRes);
 
 
 }
