@@ -14,12 +14,6 @@ module.exports = {
       type: 'string',
       required: true,
     },
-    aid: {
-      friendlyName: 'account guid',
-      description: 'account guid',
-      type: 'string',
-      required: true,
-    },
     sl: {
       friendlyName: 'service level',
       description: 'service level',
@@ -135,7 +129,6 @@ module.exports = {
           message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
           payload: {
             cid: inputs.cid,
-            aid: inputs.aid,
             account_sl: account.payment_plan,
             inputs_sl: inputs.sl,
           },
@@ -150,7 +143,6 @@ module.exports = {
           message: sails.config.custom.CONFIRM_PAYMENT_PAYMENT_WAS_MADE,
           payload: {
             cid: inputs.cid,
-            aid: inputs.aid,
             account_sl: account.payment_plan,
             inputs_sl: inputs.sl,
           },
