@@ -80,10 +80,6 @@ module.exports = {
 
       sails.log('client was FOUND');
 
-      /**
-       * Check received service level corresponds to the one selected by the client
-       */
-
       const accountRecordsRaw = await sails.helpers.storage.accountGet.with({
         clientId: client.id,
       });
@@ -128,6 +124,9 @@ module.exports = {
 
       }
 
+      /**
+       * Check received service level corresponds to the one selected by the client
+       */
 
       if (inputs.sl !== account.payment_plan) {
 
