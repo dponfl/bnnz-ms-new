@@ -30,6 +30,8 @@ module.exports = {
     sails.log.debug('************** confirmSubscription helper **************');
 
     let client;
+    let account;
+    let accountInd;
     let updateBlock;
     let getBlock;
     let splitRes;
@@ -40,10 +42,7 @@ module.exports = {
 
       client = await Client.findOne({
         guid: inputs.cid,
-      })
-      // .populate('messages')
-        .populate('room')
-        .populate('service');
+      });
 
       if (!client) {
 
@@ -61,102 +60,144 @@ module.exports = {
           },
         });
 
-      } else {
+      }
+
+      /**
+       * found record for the specified criteria
+       */
+
+      sails.log('client was FOUND');
+
+      const accountRecordsRaw = await sails.helpers.storage.accountGet.with({
+        clientId: client.id,
+      });
+
+      const accountRecords = accountRecordsRaw.payload;
+
+      if (accountRecords.length === 0) {
 
         /**
-         * found record for the specified criteria
+         * Record(s) for the client's account(s) not found
          */
 
-        sails.log('client was FOUND');
-
-        if (client.subscription_made) {
-          return exits.success({
-            status: 'subscription_was_done',
-            message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUBSCRIPTION_WAS_MADE,
-            payload: {
-              cid: inputs.cid,
-            },
-          });
-        }
-
-        client.subscription_made = true;
-
-        /**
-         * Update optin::wait_subscription_check block
-         */
-
-        updateBlock = 'optin::wait_subscription_check';
-
-        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-        updateFunnel = splitRes[0];
-        updateId = splitRes[1];
-
-
-        getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-        if (getBlock) {
-          getBlock.done = true;
-          getBlock.next = 'optin::subscription_check_done';
-        }
-
-
-        /**
-         * Update optin::subscription_check_done block
-         */
-
-        updateBlock = 'optin::subscription_check_done';
-
-        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-        updateFunnel = splitRes[0];
-        updateId = splitRes[1];
-
-
-        getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-        if (getBlock) {
-          getBlock.enabled = true;
-        }
-
-        await sails.helpers.storage.clientUpdate.with({
-          criteria: {guid: client.guid},
-          data: {
-            current_funnel: client.current_funnel,
-            funnels: client.funnels,
-            subscription_made: client.subscription_made,
-          }
-        });
-
-
-        /**
-         * Try to find the initial block of the current funnel
-         */
-
-        let initialBlock = _.find(client.funnels[client.current_funnel],
-          {initial: true});
-
-        /**
-         * Check that the initial block was found
-         */
-
-        if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
-
-          await sails.helpers.funnel.proceedNextBlock.with({
-            client: client,
-            funnelName: client.current_funnel,
-            blockId: initialBlock.id,
-          });
-
-        }
+        sails.log.error('api/helpers/general/confirm-subscription.js, Error: account(s) NOT FOUND, client: ', client);
 
         return exits.success({
-          status: 'success',
-          message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUCCESS,
+          status: 'not_found',
+          message: sails.config.custom.ACCOUNT_NOT_FOUND,
           payload: {
-            client_guid: client.guid,
-          }
+            client: client,
+          },
         });
 
       }
+
+      /**
+       * found accountRecords for the specified criteria
+       */
+
+      sails.log.debug('api/helpers/general/confirm-subsciption.js, accout(s) FOUND: ', accountRecords);
+
+      client = _.assignIn(client, {accounts: accountRecords});
+
+      account = _.find(accountRecords, {guid: client.account_use});
+      accountInd = _.findIndex(accountRecords, (o) => {
+        return o.guid === account.guid;
+      });
+
+      if (typeof account === 'undefined') {
+
+        sails.log.error('api/helpers/general/confirm-subsciption, error: Cannot find account by client.account_use');
+        throw new Error('api/helpers/general/confirm-subsciption, error: Cannot find account by client.account_use');
+
+      }
+
+      if (account.subscription_made) {
+        return exits.success({
+          status: 'subscription_was_done',
+          message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUBSCRIPTION_WAS_MADE,
+          payload: {
+            cid: inputs.cid,
+          },
+        });
+      }
+
+      account.subscription_made = true;
+      accountRecords[accountInd] = account;
+      client.accounts = accountRecords;
+
+
+      /**
+       * Update optin::wait_subscription_check block
+       */
+
+      updateBlock = 'optin::wait_subscription_check';
+
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
+
+
+      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.done = true;
+        getBlock.next = 'optin::subscription_check_done';
+      }
+
+
+      /**
+       * Update optin::subscription_check_done block
+       */
+
+      updateBlock = 'optin::subscription_check_done';
+
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
+
+
+      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.enabled = true;
+      }
+
+      await sails.helpers.storage.clientUpdate.with({
+        criteria: {guid: client.guid},
+        data: client,
+      });
+
+
+      /**
+       * Try to find the initial block of the current funnel
+       */
+
+      let initialBlock = _.find(client.funnels[client.current_funnel],
+        {initial: true});
+
+      /**
+       * Check that the initial block was found
+       */
+
+      if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+        await sails.helpers.funnel.proceedNextBlock.with({
+          client: client,
+          funnelName: client.current_funnel,
+          blockId: initialBlock.id,
+        });
+
+      }
+
+      return exits.success({
+        status: 'success',
+        message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUCCESS,
+        payload: {
+          client_guid: client.guid,
+        }
+      });
+
 
     } catch (e) {
 
