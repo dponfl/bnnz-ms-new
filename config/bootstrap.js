@@ -42,8 +42,6 @@ module.exports.bootstrap = async function() {
     }
   });
 
-  // await sails.helpers.general.loadTranslationTokens();
-
   await sails.helpers.general.getConfig();
 
   await sails.helpers.general.activateSchedule();
