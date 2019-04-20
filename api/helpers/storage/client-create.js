@@ -36,7 +36,7 @@ module.exports = {
 
     try {
 
-      let client = await Client.create(inputs.client).fetch();
+      let client = await Client.create(_.omit(inputs.client, 'accounts')).fetch();
 
       const account = await sails.helpers.storage.accountCreate.with({
         account: {
