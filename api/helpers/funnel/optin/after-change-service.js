@@ -46,6 +46,12 @@ module.exports = {
     let updateFunnel;
     let updateId;
 
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
+
+
     try {
 
       sails.log.debug('/*************** optin::afterChangeService ***************/');
@@ -54,8 +60,8 @@ module.exports = {
        * Turn client.payment_plan to null
        */
 
-      inputs.client.payment_plan = null;
-      inputs.client.payment_plan_selected = false;
+      inputs.client.accounts[currentAccountInd].payment_plan = null;
+      inputs.client.accounts[currentAccountInd].payment_plan_selected = false;
 
       /**
        * Update optin::select_service_level block
