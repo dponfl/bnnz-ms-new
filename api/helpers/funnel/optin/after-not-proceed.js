@@ -48,6 +48,12 @@ module.exports = {
     let getServiceRes;
     let funnels;
 
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
+
+
 
     try {
 
@@ -72,9 +78,15 @@ module.exports = {
        */
 
       getServiceRes = await Service.findOne({
-        id: inputs.client.service.id,
+        id: inputs.client.accounts[currentAccountInd].service.id,
         deleted: false,
       });
+
+      if (!getServiceRes) {
+
+        throw new Error('api/helpers/funnel/optin/after-not-proceed error: service not found for service.id: ' + inputs.client.accounts[currentAccountInd].service.id);
+
+      }
 
       clientParams.current_funnel = getServiceRes.funnel_start;
 
