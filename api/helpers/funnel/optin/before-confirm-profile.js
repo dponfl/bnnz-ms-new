@@ -46,8 +46,10 @@ module.exports = {
 
   fn: async function (inputs,exits) {
 
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+
     let resHtml = inputs.htmlMsg;
-    let instProfile = 'https://www.instagram.com/' + _.trim(inputs.client.inst_profile);
+    const instProfile = 'https://www.instagram.com/' + _.trim(currentAccount.inst_profile);
 
     try {
 
