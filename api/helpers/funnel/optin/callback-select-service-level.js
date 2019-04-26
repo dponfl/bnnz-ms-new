@@ -44,6 +44,12 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
+
     try {
 
       sails.log.debug('/*************** optin::callbackSelectServiceLevel ***************/');
@@ -56,18 +62,18 @@ module.exports = {
       switch (inputs.query.data) {
         case 'sl_platinum':
           inputs.block.next = 'optin::selected_platinum';
-          inputs.client.payment_plan = 'platinum';
-          inputs.client.payment_plan_selected = true;
+          inputs.client.accounts[currentAccountInd].payment_plan = 'platinum';
+          inputs.client.accounts[currentAccountInd].payment_plan_selected = true;
           break;
         case 'sl_gold':
           inputs.block.next = 'optin::selected_gold';
-          inputs.client.payment_plan = 'gold';
-          inputs.client.payment_plan_selected = true;
+          inputs.client.accounts[currentAccountInd].payment_plan = 'gold';
+          inputs.client.accounts[currentAccountInd].payment_plan_selected = true;
           break;
         case 'sl_bronze':
           inputs.block.next = 'optin::selected_bronze';
-          inputs.client.payment_plan = 'bronze';
-          inputs.client.payment_plan_selected = true;
+          inputs.client.accounts[currentAccountInd].payment_plan = 'bronze';
+          inputs.client.accounts[currentAccountInd].payment_plan_selected = true;
           break;
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
