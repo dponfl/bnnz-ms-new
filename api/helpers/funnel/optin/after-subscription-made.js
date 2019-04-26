@@ -44,10 +44,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    let clientParams = {};
-    let getServiceRes;
-    let funnels;
-
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
 
     try {
 
@@ -56,17 +56,17 @@ module.exports = {
       inputs.block.done = true;
       inputs.block.shown = true;
 
-      if (inputs.client.profile_confirmed
-        && inputs.client.payment_made
-        && inputs.client.subscription_made
+      if (currentAccount.profile_confirmed
+        && currentAccount.payment_made
+        && currentAccount.subscription_made
       ) {
 
         /**
          * The client finalized subscription process
          */
 
-        inputs.client.service_subscription_finalized = true;
-        inputs.client.subscription_active = true;
+        inputs.client.accounts[currentAccountInd].service_subscription_finalized = true;
+        inputs.client.accounts[currentAccountInd].subscription_active = true;
 
       } else {
 
