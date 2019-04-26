@@ -45,7 +45,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
 
     try {
 
@@ -89,8 +92,8 @@ module.exports = {
         'clientId': inputs.client.guid,
         'firstName': inputs.client.first_name,
         'lastName': inputs.client.last_name,
-        'instagramProfile': inputs.client.inst_profile,
-        'paymentPlan': _.toUpper(inputs.client.payment_plan),
+        'instagramProfile': currentAccount.inst_profile,
+        'paymentPlan': _.toUpper(currentAccount.payment_plan),
       };
 
       let i = 0;
@@ -124,7 +127,7 @@ module.exports = {
       switch (inputs.query.data) {
         case 'subscription_confirm':
 
-          inputs.client.subscription_confirmed_by_client = true;
+          inputs.client.accounts[currentAccountInd].subscription_confirmed_by_client = true;
 
           /**
            * Generate email to admin that the client confirmed subscription
