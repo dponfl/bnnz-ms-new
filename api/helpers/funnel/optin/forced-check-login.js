@@ -39,6 +39,12 @@ module.exports = {
 
 
   fn: async function (inputs,exits) {
+
+    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+      return o.guid === currentAccount.guid;
+    });
+
     try {
 
       sails.log.debug('/*************** optin::forcedCheckLogin ***************/');
@@ -68,12 +74,12 @@ module.exports = {
          * Got Instagram profile
          */
 
-        inputs.client.inst_profile = _.trim(inputs.msg.text);
-        inputs.client.profile_provided = true;
+        inputs.client.accounts[currentAccountInd].inst_profile = _.trim(inputs.msg.text);
+        inputs.client.accounts[currentAccountInd].profile_provided = true;
 
         await sails.helpers.storage.clientUpdate.with({
           criteria: {guid: inputs.client.guid},
-          data: {inst_profile: inputs.client.inst_profile}
+          data: inputs.client
         });
 
         inputs.block.done = true;
