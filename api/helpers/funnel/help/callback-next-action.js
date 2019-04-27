@@ -55,6 +55,8 @@ module.exports = {
 
     try {
 
+      const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+
       sails.log.debug('/*************** help::callbackNextAction ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
@@ -93,7 +95,7 @@ module.exports = {
 
           const initialHelpFunnelRes = await sails.helpers.general.loadInitialFunnels.with({
             client: inputs.client,
-            clientCategory: inputs.client.service.funnel_name,
+            clientCategory: currentAccount.service.funnel_name,
             funnelName: 'help',
           });
 
@@ -205,7 +207,7 @@ module.exports = {
 
           await sails.helpers.general.loadInitialFunnels.with({
             client: inputs.client,
-            clientCategory: inputs.client.service.funnel_name,
+            clientCategory: currentAccount.service.funnel_name,
             funnelName: 'help',
           });
 
