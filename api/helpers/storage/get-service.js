@@ -66,12 +66,11 @@ module.exports = {
             funnel_name: serviceRecord.funnel_name,
             funnel_start: serviceRecord.funnel_start,
             rooms: serviceRecord.rooms,
-            messages: serviceRecord.messages,
-            messages_to_stars: serviceRecord.messages_to_stars,
-            check_profile: serviceRecord.check_profile,
-            check_payment: serviceRecord.check_payment,
-            check_subscription: serviceRecord.check_subscription,
+            posts_per_day: serviceRecord.posts_per_day,
+            incoming_posts_per_day: serviceRecord.incoming_posts_per_day,
             deleted: serviceRecord.deleted,
+            created_at: serviceRecord.createdAt,
+            updated_at: serviceRecord.updatedAt,
           }
         });
 

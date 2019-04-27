@@ -10,10 +10,6 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
-    guid: {
-      type: 'string',
-      unique: true,
-    },
     room: {
       type: 'number',
       columnType: 'integer',

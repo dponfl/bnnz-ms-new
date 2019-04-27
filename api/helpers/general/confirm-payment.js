@@ -43,6 +43,7 @@ module.exports = {
     let splitRes;
     let updateFunnel;
     let updateId;
+    let getServiceRes;
 
     try {
 
@@ -154,6 +155,13 @@ module.exports = {
         case 'platinum':
 
           /**
+           * Update service for the account in accordance to the selected one
+           */
+
+          getServiceRes = await sails.helpers.storage.getService.with({serviceName: account.payment_plan});
+          account.service = getServiceRes.payload;
+
+          /**
            * Update optin::selected_platinum block
            */
 
@@ -200,6 +208,13 @@ module.exports = {
         case 'gold':
 
           /**
+           * Update service for the account in accordance to the selected one
+           */
+
+          getServiceRes = await sails.helpers.storage.getService.with({serviceName: account.payment_plan});
+          account.service = getServiceRes.payload;
+
+          /**
            * Update optin::selected_gold block
            */
 
@@ -244,6 +259,13 @@ module.exports = {
           break;
 
         case 'bronze':
+
+          /**
+           * Update service for the account in accordance to the selected one
+           */
+
+          getServiceRes = await sails.helpers.storage.getService.with({serviceName: account.payment_plan});
+          account.service = getServiceRes.payload;
 
           /**
            * Update optin::selected_bronze block
@@ -354,20 +376,23 @@ module.exports = {
 
 async function linkRoomsToClient(accountRec) {
 
+  sails.log.debug('linkRoomsToClient, accountRec:', accountRec);
+
   _.forEach(accountRec.room, async function (elem) {
       let room = await Room.findOne({id: elem.id});
 
       if (room) {
         await Account.removeFromCollection(accountRec.id, 'room', room.id);
         await Room.updateOne({id: room.id})
-          .set({clients_number: room.clients_number - 1})
+          .set({clients_number: room.clients_number - 1});
       }
   });
 
   const rooms = await sails.helpers.general.getRoom(accountRec.service.rooms);
 
-  await Account.addToCollection(accountRec.id, 'room', rooms.payload.roomIDsRes);
+  sails.log.debug('linkRoomsToClient, rooms:', rooms);
 
+  await Account.addToCollection(accountRec.id, 'room', rooms.payload.roomIDsRes);
 
 }
 

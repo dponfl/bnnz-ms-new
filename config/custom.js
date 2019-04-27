@@ -40,7 +40,7 @@ module.exports.custom = {
   
 `,
 
-  ERROR_MSG_LENGTH: 600,
+  ERROR_MSG_LENGTH: 800,
 
   /**
    * ============================
