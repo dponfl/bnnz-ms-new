@@ -44,10 +44,14 @@ module.exports = {
 
     try {
 
-      const accounts = _.pick(inputs.data, 'accounts');
+      const accounts = _.get(inputs.data, 'accounts');
 
       _.forEach(accounts, async (acc) => {
-        await Account.update(acc.id).set(acc);
+        // await Account.update(acc.id).set(acc);
+        await sails.helpers.storage.accountUpdate.with({
+          criteria: {id: acc.id},
+          data: acc,
+        })
       });
 
       await Client.update(inputs.criteria).set(_.omit(inputs.data, 'accounts'));
@@ -70,8 +74,8 @@ module.exports = {
             params: inputs,
             error: {
               name: e.name || 'no error name',
-              message: e.message || 'no error message',
-              stack: e.stack || 'no error stack',
+              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
+              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
               code: e.code || 'no error code',
             }
           }

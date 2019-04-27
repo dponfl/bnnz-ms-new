@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require('lodash');
-const uuid = require('uuid-apikey');
+// const uuid = require('uuid-apikey');
 
 
 module.exports = {
@@ -107,8 +107,8 @@ module.exports = {
 
           params = {
             messenger: 'telegram',
-            guid: uuid.create().uuid,
-            key: uuid.create().apiKey,
+            // guid: uuid.create().uuid,
+            // key: uuid.create().apiKey,
             chat_id: msg.chat.id,
             first_name: msg.chat.first_name || '',
             last_name: msg.chat.last_name || '',
@@ -144,6 +144,7 @@ module.exports = {
            */
 
           getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
+          params.service_id = getServiceRes.payload.id;
 
           /**
            * Use info about funnel (from Service table) and load it from Funnels table

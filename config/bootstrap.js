@@ -44,7 +44,7 @@ module.exports.bootstrap = async function() {
 
   await sails.helpers.general.getConfig();
 
-  await sails.helpers.general.activateSchedule();
+  // await sails.helpers.general.activateSchedule();
 
   await sails.helpers.chatListeners.telegram.onMessage();
 

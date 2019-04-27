@@ -44,7 +44,12 @@ module.exports = {
 
     try {
 
-      await Account.update(inputs.criteria).set(inputs.data);
+
+      const accountRec = _.omit(inputs.data, ['service', 'room']);
+      const serviceData = _.get(inputs.data, 'service');
+      accountRec.service = serviceData.id;
+
+      await Account.update(inputs.criteria).set(accountRec);
 
       return exits.success({
         status: 'ok',
@@ -64,8 +69,8 @@ module.exports = {
             params: inputs,
             error: {
               name: e.name || 'no error name',
-              message: e.message || 'no error message',
-              stack: e.stack || 'no error stack',
+              message: _.truncate(e.message, {length: 320}) || 'no error message',
+              stack: _.truncate(e.stack, {length: 320}) || 'no error stack',
               code: e.code || 'no error code',
             }
           }

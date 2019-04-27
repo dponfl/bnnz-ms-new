@@ -68,8 +68,8 @@ module.exports = {
           payload: {
             error: {
               name: e.name || 'no error name',
-              message: e.message || 'no error message',
-              stack: e.stack || 'no error stack',
+              message: _.truncate(e.message, {length: 320}) || 'no error message',
+              stack: _.truncate(e.stack, {length: 320}) || 'no error stack',
               code: e.code || 'no error code',
             }
           }
