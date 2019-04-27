@@ -44,7 +44,10 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+
     try {
+
+      const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
       sails.log.debug('/*************** help::callbackStart ***************/');
 
@@ -142,7 +145,7 @@ module.exports = {
 
           await sails.helpers.general.loadInitialFunnels.with({
             client: inputs.client,
-            clientCategory: inputs.client.service.funnel_name,
+            clientCategory: currentAccount.service.funnel_name,
             funnelName: 'help',
           });
 
