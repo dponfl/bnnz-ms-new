@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::forcedCheckLogin',
+  friendlyName: 'help::forcedCheckLogin',
 
 
-  description: 'optin::forcedCheckLogin',
+  description: 'help::forcedCheckLogin',
 
 
   inputs: {
@@ -24,7 +24,6 @@ module.exports = {
       friendlyName: 'message',
       description: 'Message received',
       type: 'ref',
-      // required: true,
     },
   },
 
@@ -40,6 +39,8 @@ module.exports = {
 
   fn: async function (inputs,exits) {
 
+    let enteredProfile = _.trim(inputs.msg.text);
+
     const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
     const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
       return o.guid === currentAccount.guid;
@@ -47,17 +48,17 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::forcedCheckLogin ***************/');
+      sails.log.debug('/*************** help::forcedCheckLogin ***************/');
 
 
-      if (_.trim(inputs.msg.text) === '') {
+      if (enteredProfile === '') {
 
         /**
          * No Instagram profile entered
          */
 
         inputs.block.done = true;
-        inputs.block.next = 'optin::wrong_profile';
+        inputs.block.next = 'help::wrong_profile';
 
       } else {
 
@@ -65,11 +66,40 @@ module.exports = {
          * Got Instagram profile
          */
 
-        inputs.client.accounts[currentAccountInd].inst_profile = _.trim(inputs.msg.text);
-        inputs.client.accounts[currentAccountInd].profile_provided = true;
+        /**
+         * Check that there is no such Instagram profile among the existing accounts
+         */
+
+        let enteredAccountExists = false;
+
+        _.forEach(inputs.client.accounts, (acc) => {
+
+          if (acc.inst_profile === enteredProfile) {
+            enteredAccountExists = true;
+          }
+
+        });
+
+        if (enteredAccountExists) {
+
+          inputs.block.done = true;
+          inputs.block.next = 'help::profile_exists';
+
+        } else {
+
+          inputs.block.done = true;
+          inputs.block.next = 'help::confirm_profile';
+          inputs.client.inst_profile_tmp = enteredProfile;
+
+        }
+
+        // await sails.helpers.storage.clientUpdate.with({
+        //   criteria: {guid: inputs.client.guid},
+        //   data: inputs.client
+        // });
 
         inputs.block.done = true;
-        inputs.block.next = 'optin::confirm_profile';
+        inputs.block.next = 'help::confirm_profile';
 
       }
 
@@ -83,12 +113,11 @@ module.exports = {
       });
 
 
-
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/forced-check-login',
-          message: 'api/helpers/funnel/optin/forced-check-login error',
+          module: 'api/helpers/funnel/help/forced-check-login',
+          message: 'api/helpers/funnel/help/forced-check-login error',
           payload: {
             params: inputs,
             error: {

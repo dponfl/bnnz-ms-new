@@ -127,32 +127,13 @@ module.exports = {
 
         inputs.client.current_funnel = inputs.block.switchToFunnel;
 
-        // await sails.helpers.storage.clientUpdate.with({
-        //   criteria: {guid: inputs.client.guid},
-        //   data: {current_funnel: inputs.block.switchToFunnel}
-        // });
-
       }
 
       // let clientUpdateData = {
       //   current_funnel: inputs.client.current_funnel,
       //   funnels: inputs.client.funnels,
-      //   profile_provided: inputs.client.profile_provided,
-      //   profile_confirmed: inputs.client.profile_confirmed,
-      //   payment_plan: inputs.client.payment_plan,
-      //   payment_plan_selected: inputs.client.payment_plan_selected,
-      //   payment_made: inputs.client.payment_made,
-      //   subscription_confirmed_by_client: inputs.client.subscription_confirmed_by_client,
-      //   subscription_made: inputs.client.subscription_made,
-      //   service_subscription_finalized: inputs.client.service_subscription_finalized,
-      //   subscription_active: inputs.client.subscription_active,
+      //   accounts: inputs.client.accounts,
       // };
-
-      let clientUpdateData = {
-        current_funnel: inputs.client.current_funnel,
-        funnels: inputs.client.funnels,
-        accounts: inputs.client.accounts,
-      };
 
       /**
        * Get info about the service corresponding to the client's payment plan
@@ -161,13 +142,13 @@ module.exports = {
       if (currentAccount.payment_plan) {
 
         const getServiceRes = await sails.helpers.storage.getService.with({serviceName: currentAccount.payment_plan});
-        clientUpdateData.accounts[currentAccountInd].service = getServiceRes.payload.id;
+        inputs.client.accounts[currentAccountInd].service = getServiceRes.payload.id;
 
       }
 
       await sails.helpers.storage.clientUpdate.with({
         criteria: {guid: inputs.client.guid},
-        data: clientUpdateData
+        data: inputs.client
       });
 
       return exits.success();

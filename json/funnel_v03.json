@@ -836,6 +836,36 @@
       }
     },
     {
+      "id": "get_login",
+      "description": "",
+      "actionType": "forced",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::add_account_start",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "help::forcedCheckLogin",
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_GET_LOGIN_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_HELP_GET_LOGIN_02",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
