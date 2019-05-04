@@ -866,6 +866,31 @@
       }
     },
     {
+      "id": "wrong_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::get_login",
+      "next": "help::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "help::afterWrongProfile",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_WRONG_INST_LOGIN",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
