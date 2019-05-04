@@ -45,6 +45,12 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
     try {
 
       sails.log.debug('/*************** help::callbackAddAccount ***************/');
@@ -122,8 +128,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/help/callback-add_account',
-          message: 'api/helpers/funnel/help/callback-add_account error',
+          module: 'api/helpers/funnel/help/callback-add-account',
+          message: 'api/helpers/funnel/help/callback-add-account error',
           payload: {
             params: inputs,
             error: {

@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'help::callbackStart',
+  friendlyName: 'help::callbackProfileExists',
 
 
-  description: 'help::callbackStart',
+  description: 'help::callbackProfileExists',
 
 
   inputs: {
@@ -53,9 +53,7 @@ module.exports = {
 
     try {
 
-      const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
-
-      sails.log.debug('/*************** help::callbackStart ***************/');
+      sails.log.debug('/*************** help::callbackProfileExists ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
       sails.log.debug('Block: ', inputs.block);
@@ -63,15 +61,14 @@ module.exports = {
 
 
       switch (inputs.query.data) {
-        case 'help_send_post':
 
-          inputs.block.next = 'help::send_post';
+        case 'help_profile_exists_add_account_yes':
 
           /**
-           * Update help::send_post block
+           * Update help::get_login block
            */
 
-          updateBlock = 'help::send_post';
+          updateBlock = 'help::get_login';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -82,7 +79,9 @@ module.exports = {
 
           if (getBlock) {
 
-            getBlock.previous = 'help::start';
+            getBlock.shown = false;
+            getBlock.done = false;
+            getBlock.next = null;
 
           } else {
 
@@ -90,39 +89,16 @@ module.exports = {
 
           }
 
+          inputs.block.next = 'help::get_login';
           inputs.block.done = true;
-
-          await sails.helpers.funnel.afterHelperGeneric.with({
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.query,
-            next: true,
-            previous: true,
-            switchFunnel: true,
-          });
 
           break;
 
-        case 'help_add_account':
-
-          inputs.block.next = 'help::add_account_start';
-
-          inputs.block.done = true;
-
-          await sails.helpers.funnel.afterHelperGeneric.with({
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.query,
-            next: true,
-            previous: true,
-            switchFunnel: true,
-          });
-
-          break;
-
-        case 'help_return':
+        case 'help_profile_exists_add_account_no':
 
           inputs.block.next = inputs.block.previous;
+          inputs.block.enabled = false;
+          inputs.block.done = false;
 
           /**
            * Update block specified at 'previous' key
@@ -142,8 +118,6 @@ module.exports = {
             getBlock.enabled = true;
             getBlock.done = false;
             getBlock.next = null;
-            getBlock.switchToFunnel = null;
-            inputs.block.switchToFunnel = updateFunnel;
 
           } else {
 
@@ -151,48 +125,27 @@ module.exports = {
 
           }
 
-          inputs.block.done = true;
-
-          /**
-           * Save the current funnel at performed_funnels table
-           */
-
-          await sails.helpers.storage.performedFunnelsSave.with({
-            client_guid: inputs.client.guid,
-            current_funnel: inputs.client.current_funnel,
-            funnel_data: inputs.client.funnels,
-          });
-
-          /**
-           * Update Help funnel to the initial state to enable the client to perform it again
-           */
-
-          await sails.helpers.general.loadInitialFunnels.with({
-            client: inputs.client,
-            clientCategory: currentAccount.service.funnel_name,
-            funnelName: 'help',
-          });
-
-          await sails.helpers.funnel.afterHelperGeneric.with({
-            client: inputs.client,
-            block: inputs.block,
-            msg: inputs.query,
-            next: true,
-            previous: false,
-            switchFunnel: true,
-          });
-
           break;
 
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
       }
 
+      await sails.helpers.funnel.afterHelperGeneric.with({
+        client: inputs.client,
+        block: inputs.block,
+        msg: inputs.query,
+        next: true,
+        previous: false,
+        switchFunnel: true,
+      });
+
+
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/help/callback-start',
-          message: 'api/helpers/funnel/help/callback-start error',
+          module: 'api/helpers/funnel/help/callback-profile-exists',
+          message: 'api/helpers/funnel/help/callback-profile-exists error',
           payload: {
             params: inputs,
             error: {

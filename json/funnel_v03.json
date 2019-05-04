@@ -891,6 +891,50 @@
       }
     },
     {
+      "id": "profile_exists",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::start",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackProfileExists",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_ADD_ACCOUNT_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_HELP_ADD_ACCOUNT_02",
+            "style": "",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_HELP_ADD_ACCOUNT_CONFIRM_BTN_YES",
+              "callback_data": "help_profile_exists_add_account_yes"
+            }
+          ],
+          [
+            {
+              "text": "MSG_HELP_ADD_ACCOUNT_CONFIRM_BTN_NO",
+              "callback_data": "help_profile_exists_add_account_no"
+            }
+          ]
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
