@@ -71,6 +71,12 @@ module.exports = {
     account_use: {
       type: 'string',
     },
+    account_tmp: {
+      type: 'string',
+    },
+    inst_profile_tmp: {
+      type: 'string',
+    },
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

@@ -27,6 +27,12 @@ module.exports = {
       type: 'ref',
     },
 
+    otherConditions: {
+      friendlyName: 'Other search conditions',
+      description: 'Other search conditions',
+      type: 'ref',
+    },
+
   },
 
 
@@ -53,12 +59,13 @@ module.exports = {
        * Either accounts array or clientId to be specified
        */
 
-      if (inputs.clientId === 'undefined'
-        && inputs.accountIds === 'undefined'
-        && inputs.accountGuids === 'undefined'
+      if (_.isNil(inputs.clientId)
+        && _.isNil(inputs.accountIds)
+        && _.isNil(inputs.accountGuids)
+        && _.isNil(inputs.otherConditions)
       ) {
 
-        throw new Error(`Neither accounts not clientId provided, inputs: ${inputs}`);
+        throw new Error(`Neither accounts nor clientId nor other search conditions provided, inputs: ${inputs}`);
 
       }
 
@@ -77,6 +84,12 @@ module.exports = {
       if (_.has(inputs, 'clientId') && inputs.clientId) {
 
         searchConditions['client'] =  inputs.clientId;
+
+      }
+
+      if (!_.isNil(inputs.otherConditions)) {
+
+        searchConditions = _.assignIn(searchConditions, inputs.otherConditions);
 
       }
 
