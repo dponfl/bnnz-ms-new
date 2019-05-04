@@ -1,0 +1,860 @@
+{
+  "optin": [
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "next": "optin::general_info",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_HELLO",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "general_info",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::start",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackGeneralInfo",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_GENERAL_INFO",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_OPTIN_GENERAL_INFO_01",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_OPTIN_GENERAL_INFO_BTN_YES",
+              "callback_data": "general_info_yes"
+            }
+          ],
+          [
+            {
+              "text": "MSG_OPTIN_GENERAL_INFO_BTN_NO",
+              "callback_data": "general_info_no"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "not_proceed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::general_info",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterNotProceed",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_NO_RESPONSE_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_OPTIN_NO_RESPONSE_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "proceed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::general_info",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_YES_RESPONSE_01",
+            "style": "b",
+            "cr": "DCR"
+          }
+        ]
+      }
+    },
+    {
+      "id": "get_login",
+      "description": "",
+      "actionType": "forced",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::proceed",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "optin::forcedCheckLogin",
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_GET_LOGIN_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_OPTIN_GET_LOGIN_02",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::get_login",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterWrongProfile",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_WRONG_INST_LOGIN",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "confirm_profile",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::get_login",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "optin::beforeConfirmProfile",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"optin::callbackConfirmProfile",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PROFILE_CONFIRM_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PROFILE_CONFIRM_02",
+            "style": "b",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_PROFILE_CONFIRM_BTN_YES",
+              "callback_data": "profile_confirm_yes"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PROFILE_CONFIRM_BTN_NO",
+              "callback_data": "profile_confirm_no"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "try_again",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::confirm_profile",
+      "next": "optin::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterWrongProfileResponse",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_WRONG_PROFILE_RESPONSE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "we_have_several_service_levels",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::confirm_profile",
+      "next": "optin::select_service_level",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PROFILE_CONFIRMED_PROCEED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "select_service_level",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous":"optin::we_have_several_service_levels",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackSelectServiceLevel",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_SELECT_SERVICE_LEVEL",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_SERVICE_LEVEL_BTN_PLATINUM",
+              "callback_data": "sl_platinum"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_SERVICE_LEVEL_BTN_GOLD",
+              "callback_data": "sl_gold"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_SERVICE_LEVEL_BTN_BRONZE",
+              "callback_data": "sl_bronze"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_SERVICE_LEVEL_BTN_DESC",
+              "url": "http://www.bonanzainst.com/service_levels_desc"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "selected_platinum",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::select_service_level",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"optin::callbackSelectedPlatinum",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_PLATINUM",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SHOW_SLA",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_CHANGE_SERVICE",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_PAY",
+              "url": "http://www.bonanzainst.com/payment?sl=platinum&cid=XXXX"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_SHOW_SERVICE_AGREEMENT",
+              "url": "http://www.bonanzainst.com/service_agreement"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE",
+              "callback_data": "change_service"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "selected_gold",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::select_service_level",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"optin::callbackSelectedGold",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_GOLD",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SHOW_SLA",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_CHANGE_SERVICE",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_PAY",
+              "url": "http://www.bonanzainst.com/payment?sl=gold&cid=XXXX"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_SHOW_SERVICE_AGREEMENT",
+              "url": "http://www.bonanzainst.com/service_agreement"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE",
+              "callback_data": "change_service"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "selected_bronze",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::select_service_level",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"optin::callbackSelectedBronze",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_BRONZE",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SHOW_SLA",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_CHANGE_SERVICE",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_PAY",
+              "url": "http://www.bonanzainst.com/payment?sl=bronze&cid=XXXX"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_SHOW_SERVICE_AGREEMENT",
+              "url": "http://www.bonanzainst.com/service_agreement"
+            }
+          ],
+          [
+            {
+              "text":"MSG_OPTIN_PAYMENT_BTN_CHANGE_SERVICE",
+              "callback_data": "change_service"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "want_change_service_level",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": "optin::select_service_level",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterChangeService",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_CHANGE_SERVICE_LEVEL",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "platinum_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackPaidPlatinum",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_PLATINUM_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "gold_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackPaidGold",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_GOLD_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bronze_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackPaidBronze",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_PAYMENT_BRONZE_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_OPTIN_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_OPTIN_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "wait_subscription_check",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_OPTIN_SUBSCRIPTION",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "subscription_check_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "optin::wait_subscription_check",
+      "next": "general::start",
+      "switchToFunnel": "general",
+      "beforeHelper": null,
+      "afterHelper": "optin::afterSubscriptionMade",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_OPTIN_SUBSCRIPTION_CONFIRMED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "general": [
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": true,
+      "enabled": false,
+      "previous": "optin::subscription_check_done",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "general::callbackStart",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_START",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
+              "callback_data": "start_upload"
+            }
+          ],
+          [
+            {
+              "text": "MSG_GENERAL_BTN_GET_HELP",
+              "callback_data": "start_get_help"
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "help": [
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackStart",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_START_GENERAL",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_HELP_START_RETURN",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_HELP_BTN_START_SEND_POST",
+              "callback_data": "help_send_post"
+            }
+          ],
+          [
+            {
+              "text": "MSG_HELP_BTN_ADD_ACCOUNT",
+              "callback_data": "help_add_account"
+            }
+          ],
+          [
+            {
+              "text": "MSG_HELP_BTN_RETURN",
+              "callback_data": "help_return"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "send_post",
+      "description": "",
+      "actionType": "video",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::start",
+      "next": "help::next_action",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "help::afterSendPost",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "video": "Bonanza001-short.mp4",
+        "html": [
+          {
+            "text": "MSG_HELP_SEND_POST_VIDEO",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "next_action",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackNextAction",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_NEXT_ACTION_HELP",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_HELP_START_RETURN",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_HELP_BTN_HELP",
+              "callback_data": "help_start"
+            }
+          ],
+          [
+            {
+              "text": "MSG_HELP_BTN_RETURN",
+              "callback_data": "help_return"
+            }
+          ]
+        ]
+      }
+    }
+  ]
+}

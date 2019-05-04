@@ -96,6 +96,24 @@ module.exports = {
           });
 
           break;
+
+        case 'help_add_account':
+
+          inputs.block.next = 'help::add_account_start';
+
+          inputs.block.done = true;
+
+          await sails.helpers.funnel.afterHelperGeneric.with({
+            client: inputs.client,
+            block: inputs.block,
+            msg: inputs.query,
+            next: true,
+            previous: true,
+            switchFunnel: true,
+          });
+
+          break;
+
         case 'help_return':
 
           inputs.block.next = inputs.block.previous;
@@ -159,6 +177,7 @@ module.exports = {
           });
 
           break;
+          
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
       }
