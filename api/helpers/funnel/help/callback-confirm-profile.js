@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'optin::callbackConfirmProfile',
+  friendlyName: 'help::callbackConfirmProfile',
 
 
-  description: 'optin::callbackConfirmProfile',
+  description: 'help::callbackConfirmProfile',
 
 
   inputs: {
@@ -52,7 +52,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::callbackConfirmProfile ***************/');
+      sails.log.debug('/*************** help::callbackConfirmProfile ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
       sails.log.debug('Block: ', inputs.block);
@@ -60,13 +60,34 @@ module.exports = {
 
 
       switch (inputs.query.data) {
-        case 'profile_confirm_yes':
-          inputs.client.accounts[currentAccountInd].profile_confirmed = true;
-          inputs.block.next = 'optin::we_have_several_service_levels';
+        case 'new_profile_confirm_yes':
+
+          /**
+           * Create new account and link it to this client
+           */
+
+          const accountRaw = await sails.helpers.storage.accountCreate.with({
+            account: {
+              client: inputs.client.id,
+              inst_profile: inputs.client.inst_profile_tmp,
+              profile_provided: true,
+              profile_confirmed: true,
+            }
+          });
+
+          inputs.client.account_tmp = accountRaw.guid;
+          inputs.client.inst_profile_tmp = null;
+          inputs.block.next = 'help::we_have_several_service_levels';
+
           break;
-        case 'profile_confirm_no':
-          inputs.block.next = 'optin::try_again';
+
+        case 'new_profile_confirm_no':
+
+          inputs.client.inst_profile_tmp = null;
+          inputs.block.next = 'help::try_again';
+
           break;
+
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
       }
@@ -86,8 +107,8 @@ module.exports = {
     } catch (e) {
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/callback-confirm-profile',
-          message: 'api/helpers/funnel/optin/callback-confirm-profile error',
+          module: 'api/helpers/funnel/help/callback-confirm-profile',
+          message: 'api/helpers/funnel/help/callback-confirm-profile error',
           payload: {
             params: inputs,
             error: {

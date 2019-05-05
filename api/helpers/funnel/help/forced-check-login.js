@@ -91,10 +91,14 @@ module.exports = {
 
         if (enteredAccountExists) {
 
+          sails.log.warn('We got Instagram profile like already exists');
+
           inputs.block.done = true;
           inputs.block.next = 'help::profile_exists';
 
         } else {
+
+          sails.log.warn('We got new Instagram profile');
 
           inputs.block.done = true;
           inputs.block.next = 'help::confirm_profile';
