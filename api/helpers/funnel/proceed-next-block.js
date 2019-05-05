@@ -67,12 +67,23 @@ module.exports = {
 
     try {
 
+      sails.log.debug('/*************** api/helpers/funnel/proceed-next-block ***************/');
+      sails.log.debug('inputs.funnelName: ', inputs.funnelName);
+      sails.log.debug('inputs.blockId: ', inputs.blockId);
+
+
       let clientName = {
         firstName: inputs.client.first_name || null,
         lastName: inputs.client.last_name || null,
       };
 
       block = _.find(inputs.client.funnels[inputs.funnelName], {id: inputs.blockId});
+
+      if (_.isNil(block)) {
+
+        throw new Error(`block was not found, \n\ninputs.funnelName: ${inputs.funnelName} \n\ninputs.blockId : ${inputs.blockId}`);
+
+      }
 
       if (
         block.enabled

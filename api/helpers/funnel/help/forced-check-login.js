@@ -50,6 +50,11 @@ module.exports = {
 
       sails.log.debug('/*************** help::forcedCheckLogin ***************/');
 
+      sails.log.debug(`inputs.msg.text: ${inputs.msg.text}`);
+      sails.log.debug(`enteredProfile: ${enteredProfile}`);
+      sails.log.debug(`currentAccount: ${currentAccount}`);
+      sails.log.debug(`currentAccountInd: ${currentAccountInd}`);
+
 
       if (enteredProfile === '') {
 
@@ -74,11 +79,15 @@ module.exports = {
 
         _.forEach(inputs.client.accounts, (acc) => {
 
+          sails.log.warn(`acc: `, acc);
+
           if (acc.inst_profile === enteredProfile) {
             enteredAccountExists = true;
           }
 
         });
+
+        sails.log.warn(`enteredAccountExists: `, enteredAccountExists);
 
         if (enteredAccountExists) {
 
@@ -97,9 +106,6 @@ module.exports = {
         //   criteria: {guid: inputs.client.guid},
         //   data: inputs.client
         // });
-
-        inputs.block.done = true;
-        inputs.block.next = 'help::confirm_profile';
 
       }
 

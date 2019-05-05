@@ -59,6 +59,7 @@ module.exports = {
       sails.log.debug('Block: ', inputs.block);
       sails.log.debug('Query: ', inputs.query);
 
+      const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
       switch (inputs.query.data) {
 
@@ -81,15 +82,26 @@ module.exports = {
 
         case 'help_add_account_no':
 
-          inputs.block.next = inputs.block.previous;
-          inputs.block.enabled = false;
-          inputs.block.done = false;
-
           /**
-           * Update block specified at 'previous' key
+           * Get value of 'previous' of help::start block
            */
 
-          updateBlock = inputs.block.previous;
+          updateBlock = 'help::start';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
+
+
+          inputs.block.next = getBlock.previous;
+
+          /**
+           * Update block specified at 'next' key
+           */
+
+          updateBlock = inputs.block.next;
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -103,12 +115,37 @@ module.exports = {
             getBlock.enabled = true;
             getBlock.done = false;
             getBlock.next = null;
+            getBlock.switchToFunnel = null;
+            inputs.block.switchToFunnel = updateFunnel;
 
           } else {
 
             throw new Error(`Wrong block decoding for data: ${updateBlock}`);
 
           }
+
+          inputs.block.done = true;
+
+          /**
+           * Save the current funnel at performed_funnels table
+           */
+
+          await sails.helpers.storage.performedFunnelsSave.with({
+            client_guid: inputs.client.guid,
+            current_funnel: inputs.client.current_funnel,
+            funnel_data: inputs.client.funnels,
+          });
+
+          /**
+           * Update Help funnel to the initial state to enable the client to perform it again
+           */
+
+          await sails.helpers.general.loadInitialFunnels.with({
+            client: inputs.client,
+            clientCategory: currentAccount.service.funnel_name,
+            funnelName: 'help',
+          });
+
 
           await sails.helpers.funnel.afterHelperGeneric.with({
             client: inputs.client,

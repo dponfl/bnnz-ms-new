@@ -69,6 +69,12 @@ module.exports = {
      * 3) if switchToFunnel not null -> we need switch to the specific funnel
      */
 
+    let updateBlock;
+    let getBlockId;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
     const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
     const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
       return o.guid === currentAccount.guid;
@@ -76,7 +82,27 @@ module.exports = {
 
     try {
 
-      // inputs.block.done = true;
+      /**
+       * Update at client record the block specified at input.block
+       */
+
+      // updateFunnel = inputs.client.current_funnel;
+      // updateId = inputs.block.id;
+      //
+      //
+      // getBlockId = _.findIndex(inputs.client.funnels[updateFunnel], {id: updateId});
+      //
+      // sails.log.warn('!!!!!!!! afterHelperGeneric, getBlockId: ', getBlockId);
+      //
+      // if (getBlockId >= 0) {
+      //
+      //   inputs.client.funnels[updateFunnel][getBlockId] = inputs.block;
+      //
+      // } else {
+      //
+      //   throw new Error(`Block not found for funnel: ${updateFunnel} and block id: ${updateId}`);
+      //
+      // }
 
       if (inputs.next && inputs.block.next) {
 
