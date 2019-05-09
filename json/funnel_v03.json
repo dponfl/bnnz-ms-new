@@ -1029,6 +1029,57 @@
       }
     },
     {
+      "id": "select_service_level",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous":"help::we_have_several_service_levels",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackSelectServiceLevel",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_SELECT_SERVICE_LEVEL",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_HELP_SERVICE_LEVEL_BTN_PLATINUM",
+              "callback_data": "sl_platinum"
+            }
+          ],
+          [
+            {
+              "text":"MSG_HELP_SERVICE_LEVEL_BTN_GOLD",
+              "callback_data": "sl_gold"
+            }
+          ],
+          [
+            {
+              "text":"MSG_HELP_SERVICE_LEVEL_BTN_BRONZE",
+              "callback_data": "sl_bronze"
+            }
+          ],
+          [
+            {
+              "text":"MSG_HELP_SERVICE_LEVEL_BTN_DESC",
+              "url": "{landing_page}/service_levels_desc"
+            }
+          ]
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
