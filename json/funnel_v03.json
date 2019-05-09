@@ -795,7 +795,7 @@
       "previous": "help::start",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "help::beforeAddAccount",
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackAddAccount",
