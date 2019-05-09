@@ -979,6 +979,31 @@
       }
     },
     {
+      "id": "try_again",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::confirm_profile",
+      "next": "help::get_login",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "help::afterWrongProfileResponse",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_WRONG_PROFILE_RESPONSE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
