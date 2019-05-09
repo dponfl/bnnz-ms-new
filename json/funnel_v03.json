@@ -1004,6 +1004,31 @@
       }
     },
     {
+      "id": "we_have_several_service_levels",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::confirm_profile",
+      "next": "help::select_service_level",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_PROFILE_CONFIRMED_PROCEED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
