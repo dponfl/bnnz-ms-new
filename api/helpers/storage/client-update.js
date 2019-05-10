@@ -44,10 +44,18 @@ module.exports = {
 
     try {
 
+      sails.log.debug('*** storage:clientUpdate, inputs: ', inputs);
+
       const accounts = _.get(inputs.data, 'accounts');
+
+      sails.log.debug('*** storage:clientUpdate, accounts: ', accounts);
+
 
       _.forEach(accounts, async (acc) => {
         // await Account.update(acc.id).set(acc);
+
+        sails.log.debug('*** storage:clientUpdate, acc: ', acc);
+
         await sails.helpers.storage.accountUpdate.with({
           criteria: {id: acc.id},
           data: acc,

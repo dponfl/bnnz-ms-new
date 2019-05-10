@@ -14,6 +14,12 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    aid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
+      type: 'string',
+      required: true,
+    },
   },
 
 
@@ -100,17 +106,27 @@ module.exports = {
 
       client = _.assignIn(client, {accounts: accountRecords});
 
-      account = _.find(accountRecords, {guid: client.account_use});
+      account = _.find(accountRecords, {guid: inputs.aid});
+
+      if (_.isNil(account)) {
+
+        sails.log.error('api/helpers/general/confirm-subsciption, error: Cannot find account by inputs.aid=' + inputs.aid);
+
+        throw {err: {
+            module: 'api/helpers/general/confirm-subscription',
+            message: 'Cannot find account by inputs.aid=' + inputs.aid,
+            payload: {
+              params: inputs,
+            },
+          }
+        };
+
+      }
+
       accountInd = _.findIndex(accountRecords, (o) => {
         return o.guid === account.guid;
       });
 
-      if (typeof account === 'undefined') {
-
-        sails.log.error('api/helpers/general/confirm-subsciption, error: Cannot find account by client.account_use');
-        throw new Error('api/helpers/general/confirm-subsciption, error: Cannot find account by client.account_use');
-
-      }
 
       if (account.subscription_made) {
         return exits.success({
@@ -118,6 +134,7 @@ module.exports = {
           message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUBSCRIPTION_WAS_MADE,
           payload: {
             cid: inputs.cid,
+            aid: inputs.aid,
           },
         });
       }
@@ -128,10 +145,10 @@ module.exports = {
 
 
       /**
-       * Update optin::wait_subscription_check block
+       * Update wait_subscription_check block for the current funnel
        */
 
-      updateBlock = 'optin::wait_subscription_check';
+      updateBlock = client.current_funnel + '::wait_subscription_check';
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -142,15 +159,15 @@ module.exports = {
 
       if (getBlock) {
         getBlock.done = true;
-        getBlock.next = 'optin::subscription_check_done';
+        getBlock.next = client.current_funnel + '::subscription_check_done';
       }
 
 
       /**
-       * Update optin::subscription_check_done block
+       * Update subscription_check_done block for the current funnel
        */
 
-      updateBlock = 'optin::subscription_check_done';
+      updateBlock = client.current_funnel + '::subscription_check_done';
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -195,6 +212,7 @@ module.exports = {
         message: sails.config.custom.CONFIRM_SUBSCRIPTION_SUCCESS,
         payload: {
           client_guid: client.guid,
+          account_guid: account.guid,
         }
       });
 

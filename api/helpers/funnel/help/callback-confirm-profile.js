@@ -45,6 +45,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    let serviceName = 'generic';
+
     const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
     const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
       return o.guid === currentAccount.guid;
@@ -63,6 +65,12 @@ module.exports = {
         case 'new_profile_confirm_yes':
 
           /**
+           * Get info about the respective service
+           */
+
+          const getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
+
+          /**
            * Create new account and link it to this client
            */
 
@@ -72,10 +80,17 @@ module.exports = {
               inst_profile: inputs.client.inst_profile_tmp,
               profile_provided: true,
               profile_confirmed: true,
+              service: getServiceRes.payload.id,
             }
           });
 
-          inputs.client.account_tmp = accountRaw.guid;
+          if (_.isNil(accountRaw.payload.guid)) {
+
+            throw new Error(`ERROR: accountRaw.payload.guid does not defined, accountRaw: ${accountRaw}`);
+
+          }
+
+          inputs.client.account_tmp = accountRaw.payload.guid;
           inputs.client.inst_profile_tmp = null;
           inputs.block.next = 'help::we_have_several_service_levels';
 

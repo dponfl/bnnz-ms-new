@@ -73,9 +73,11 @@ module.exports = {
     },
     account_tmp: {
       type: 'string',
+      allowNull: true,
     },
     inst_profile_tmp: {
       type: 'string',
+      allowNull: true,
     },
 
 

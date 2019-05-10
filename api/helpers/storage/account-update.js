@@ -44,9 +44,25 @@ module.exports = {
 
     try {
 
-
+      sails.log.warn('*** storage:accountUpdate, inputs.data: ', inputs.data);
       const accountRec = _.omit(inputs.data, ['service', 'room']);
+      sails.log.warn('*** storage:accountUpdate, accountRec: ', accountRec);
       const serviceData = _.get(inputs.data, 'service');
+      sails.log.warn('*** storage:accountUpdate, serviceData: ', serviceData);
+
+      if (_.isNil(serviceData)) {
+
+        return exits.success({
+          status: 'ok',
+          message: 'Account record was not updated: no service info',
+          payload: {
+            criteria: inputs.criteria,
+            client: inputs.data
+          },
+        });
+
+      }
+
       accountRec.service = serviceData.id;
 
       await Account.update(inputs.criteria).set(accountRec);

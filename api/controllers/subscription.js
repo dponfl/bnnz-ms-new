@@ -15,6 +15,12 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    aid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
+      type: 'string',
+      required: true,
+    },
 
   },
 
@@ -35,6 +41,7 @@ module.exports = {
 
       let result = await sails.helpers.general.confirmSubscription.with({
         cid: inputs.cid,
+        aid: inputs.aid,
       });
 
       return exits.success(result);

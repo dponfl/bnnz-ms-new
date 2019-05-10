@@ -15,6 +15,12 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    aid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
+      type: 'string',
+      required: true,
+    },
     sl: {
       friendlyName: 'service level',
       description: 'service level',
@@ -41,6 +47,7 @@ module.exports = {
 
       let result = await sails.helpers.general.confirmPayment.with({
         cid: inputs.cid,
+        aid: inputs.aid,
         sl: inputs.sl,
       });
 

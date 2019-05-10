@@ -445,7 +445,7 @@ module.exports = {
           module: 'api/helpers/funnel/proceed-next-block',
           message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,
           payload: {
-            params: inputs,
+            // params: inputs,
             error: {
               name: e.name || 'no error name',
               message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',

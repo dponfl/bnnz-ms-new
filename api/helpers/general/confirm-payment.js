@@ -14,6 +14,12 @@ module.exports = {
       type: 'string',
       required: true,
     },
+    aid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
+      type: 'string',
+      required: true,
+    },
     sl: {
       friendlyName: 'service level',
       description: 'service level',
@@ -107,17 +113,27 @@ module.exports = {
 
       client = _.assignIn(client, {accounts: accountRecords});
 
-      account = _.find(accountRecords, {guid: client.account_use});
+      account = _.find(accountRecords, {guid: inputs.aid});
+
+      if (_.isNil(account)) {
+
+        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+
+        throw {err: {
+            module: 'api/helpers/general/confirm-payment',
+            message: 'Cannot find account by inputs.aid=' + inputs.aid,
+            payload: {
+              params: inputs,
+            },
+          }
+        };
+
+      }
+
       accountInd = _.findIndex(accountRecords, (o) => {
         return o.guid === account.guid;
       });
 
-      if (typeof account === 'undefined') {
-
-        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by client.account_use');
-        throw new Error('api/helpers/general/confirm-payment, error: Cannot find account by client.account_use');
-
-      }
 
       /**
        * Check received service level corresponds to the one selected by the client
@@ -162,10 +178,10 @@ module.exports = {
           account.service = getServiceRes.payload;
 
           /**
-           * Update optin::selected_platinum block
+           * Update selected_platinum block for the current funnel
            */
 
-          updateBlock = 'optin::selected_platinum';
+          updateBlock = client.current_funnel + '::selected_platinum';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -176,15 +192,15 @@ module.exports = {
 
           if (getBlock) {
             getBlock.done = true;
-            getBlock.next = 'optin::platinum_paid';
+            getBlock.next = client.current_funnel + '::platinum_paid';
           }
 
 
           /**
-           * Update optin::platinum_paid block
+           * Update platinum_paid block for the current funnel
            */
 
-          updateBlock = 'optin::platinum_paid';
+          updateBlock = client.current_funnel + '::platinum_paid';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -215,10 +231,10 @@ module.exports = {
           account.service = getServiceRes.payload;
 
           /**
-           * Update optin::selected_gold block
+           * Update selected_gold block for the current funnel
            */
 
-          updateBlock = 'optin::selected_gold';
+          updateBlock = client.current_funnel + '::selected_gold';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -229,15 +245,15 @@ module.exports = {
 
           if (getBlock) {
             getBlock.done = true;
-            getBlock.next = 'optin::gold_paid';
+            getBlock.next = client.current_funnel + '::gold_paid';
           }
 
 
           /**
-           * Update optin::gold_paid block
+           * Update gold_paid block for the current funnel
            */
 
-          updateBlock = 'optin::gold_paid';
+          updateBlock = client.current_funnel + '::gold_paid';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -268,10 +284,10 @@ module.exports = {
           account.service = getServiceRes.payload;
 
           /**
-           * Update optin::selected_bronze block
+           * Update selected_bronze block for the current funnel
            */
 
-          updateBlock = 'optin::selected_bronze';
+          updateBlock = client.current_funnel + '::selected_bronze';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -282,15 +298,15 @@ module.exports = {
 
           if (getBlock) {
             getBlock.done = true;
-            getBlock.next = 'optin::bronze_paid';
+            getBlock.next = client.current_funnel + '::bronze_paid';
           }
 
 
           /**
-           * Update optin::bronze_paid block
+           * Update bronze_paid block for the current funnel
            */
 
-          updateBlock = 'optin::bronze_paid';
+          updateBlock = client.current_funnel + '::bronze_paid';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
@@ -348,6 +364,7 @@ module.exports = {
         message: sails.config.custom.CONFIRM_PAYMENT_SUCCESS,
         payload: {
           client_guid: client.guid,
+          account_guid: account.guid,
         }
       });
 

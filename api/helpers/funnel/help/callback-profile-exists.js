@@ -53,6 +53,8 @@ module.exports = {
 
     try {
 
+      const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+
       sails.log.debug('/*************** help::callbackProfileExists ***************/');
 
       // sails.log.debug('Client: ', inputs.client);

@@ -45,12 +45,21 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    const newAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_tmp});
-    const newAccountInd = _.findIndex(inputs.client.accounts, (o) => {
-      return o.guid === newAccount.guid;
-    });
 
     try {
+
+      if (_.isNil(inputs.client.account_tmp)) {
+
+        sails.log.error('ERROR: inputs.client.account_tmp does not defined, inputs.client: ', inputs.client);
+        throw new Error(`ERROR: inputs.client.account_tmp does not defined, inputs.client: ${inputs.client}`);
+
+      }
+
+      const newAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_tmp});
+      const newAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+        return o.guid === newAccount.guid;
+      });
+
 
       sails.log.debug('/*************** help::callbackSelectServiceLevel ***************/');
 

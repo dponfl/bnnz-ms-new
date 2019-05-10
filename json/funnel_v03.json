@@ -1073,7 +1073,7 @@
           [
             {
               "text":"MSG_HELP_SERVICE_LEVEL_BTN_DESC",
-              "url": "{landing_page}/service_levels_desc"
+              "url": "http://www.bonanzainst.com/service_levels_desc"
             }
           ]
         ]
@@ -1116,7 +1116,7 @@
           [
             {
               "text":"MSG_HELP_PAYMENT_PLATINUM_BTN_PAY",
-              "url": "{landing_page}/payment?sl=platinum&p=3000&c=rub&cid=XXXX&acc={client.account_tmp}"
+              "url": "http://www.bonanzainst.com/payment?sl=platinum&p=3000&c=rub&cid=XXXX&acc={client.account_tmp}"
             }
           ],
           [

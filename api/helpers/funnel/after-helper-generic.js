@@ -75,10 +75,10 @@ module.exports = {
     let updateFunnel;
     let updateId;
 
-    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
-    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
-      return o.guid === currentAccount.guid;
-    });
+    // const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    // const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+    //   return o.guid === currentAccount.guid;
+    // });
 
     try {
 
@@ -161,16 +161,16 @@ module.exports = {
       //   accounts: inputs.client.accounts,
       // };
 
-      /**
-       * Get info about the service corresponding to the client's payment plan
-       */
-
-      if (currentAccount.payment_plan) {
-
-        const getServiceRes = await sails.helpers.storage.getService.with({serviceName: currentAccount.payment_plan});
-        inputs.client.accounts[currentAccountInd].service = getServiceRes.payload.id;
-
-      }
+      // /**
+      //  * Get info about the service corresponding to the client's payment plan
+      //  */
+      //
+      // if (currentAccount.payment_plan) {
+      //
+      //   const getServiceRes = await sails.helpers.storage.getService.with({serviceName: currentAccount.payment_plan});
+      //   inputs.client.accounts[currentAccountInd].service = getServiceRes.payload.id;
+      //
+      // }
 
       await sails.helpers.storage.clientUpdate.with({
         criteria: {guid: inputs.client.guid},
