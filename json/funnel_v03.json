@@ -806,7 +806,7 @@
           {
             "text": "MSG_HELP_ADD_ACCOUNT_01",
             "style": "",
-            "cr": "DCR"
+            "cr": "SCR"
           },
           {
             "text": "MSG_HELP_ADD_ACCOUNT_02",
@@ -844,7 +844,7 @@
       "previous": "help::add_account_start",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "help::beforeGetLogin",
       "afterHelper": null,
       "forcedHelper": "help::forcedCheckLogin",
       "callbackHelper": null,

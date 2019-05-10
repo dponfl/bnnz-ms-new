@@ -56,19 +56,19 @@ module.exports = {
        * Replace placeholder by the list of active Instagram profiles
        */
 
-      let activeProfilesList = '';
+      let activeProfilesList = sails.config.custom.DCR;
 
       _.forEach(inputs.client.accounts, (acc) => {
 
         if (acc.subscription_active) {
 
-          activeProfilesList = activeProfilesList + acc.inst_profile + sails.config.custom.SCR;
+          activeProfilesList = activeProfilesList + "• " + acc.inst_profile + sails.config.custom.SCR;
 
         }
 
       });
 
-      activeProfilesList = activeProfilesList + sails.config.custom.DCR;
+      // activeProfilesList = activeProfilesList + sails.config.custom.SCR;
 
 
       resHtml = _.replace(inputs.htmlMsg, '$connectedInstProfiles$', activeProfilesList);

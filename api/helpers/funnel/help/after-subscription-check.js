@@ -55,6 +55,8 @@ module.exports = {
 
       sails.log.debug('/*************** help::afterSubscriptionCheck ***************/');
 
+      const newAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_tmp});
+
       /**
        * Get value of 'previous' of help::start block
        */
@@ -115,7 +117,7 @@ module.exports = {
 
       await sails.helpers.general.loadInitialFunnels.with({
         client: inputs.client,
-        clientCategory: currentAccount.service.funnel_name,
+        clientCategory: newAccount.service.funnel_name,
         funnelName: 'help',
       });
 

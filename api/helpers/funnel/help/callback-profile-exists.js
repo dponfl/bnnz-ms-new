@@ -92,7 +92,9 @@ module.exports = {
           }
 
           inputs.block.next = 'help::get_login';
-          inputs.block.done = true;
+          inputs.block.done = false;
+          inputs.block.shown = false;
+          inputs.block.enabled = false;
 
           break;
 

@@ -143,66 +143,87 @@ module.exports = {
       accountRecords[accountInd] = account;
       client.accounts = accountRecords;
 
+      if (accountRecords.length === 1) {
 
-      /**
-       * Update wait_subscription_check block for the current funnel
-       */
+        /**
+         * Opt-in case
+         */
 
-      updateBlock = client.current_funnel + '::wait_subscription_check';
+        /**
+         * Update wait_subscription_check block for the current funnel
+         */
 
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
+        updateBlock = client.current_funnel + '::wait_subscription_check';
 
-
-      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.done = true;
-        getBlock.next = client.current_funnel + '::subscription_check_done';
-      }
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
 
 
-      /**
-       * Update subscription_check_done block for the current funnel
-       */
+        getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
-      updateBlock = client.current_funnel + '::subscription_check_done';
-
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
+        if (getBlock) {
+          getBlock.done = true;
+          getBlock.next = client.current_funnel + '::subscription_check_done';
+        }
 
 
-      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
+        /**
+         * Update subscription_check_done block for the current funnel
+         */
 
-      if (getBlock) {
-        getBlock.enabled = true;
-      }
+        updateBlock = client.current_funnel + '::subscription_check_done';
 
-      await sails.helpers.storage.clientUpdate.with({
-        criteria: {guid: client.guid},
-        data: client,
-      });
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
 
 
-      /**
-       * Try to find the initial block of the current funnel
-       */
+        getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
-      let initialBlock = _.find(client.funnels[client.current_funnel],
-        {initial: true});
+        if (getBlock) {
+          getBlock.enabled = true;
+        }
 
-      /**
-       * Check that the initial block was found
-       */
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: client.guid},
+          data: client,
+        });
 
-      if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
-        await sails.helpers.funnel.proceedNextBlock.with({
-          client: client,
-          funnelName: client.current_funnel,
-          blockId: initialBlock.id,
+        /**
+         * Try to find the initial block of the current funnel
+         */
+
+        let initialBlock = _.find(client.funnels[client.current_funnel],
+          {initial: true});
+
+        /**
+         * Check that the initial block was found
+         */
+
+        if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+          await sails.helpers.funnel.proceedNextBlock.with({
+            client: client,
+            funnelName: client.current_funnel,
+            blockId: initialBlock.id,
+          });
+
+        }
+
+      } else {
+
+        account.subscription_made = true;
+        account.service_subscription_finalized = true;
+        account.subscription_active = true;
+        accountRecords[accountInd] = account;
+        client.accounts = accountRecords;
+        client.account_tmp = null;
+
+        await sails.helpers.storage.clientUpdate.with({
+          criteria: {guid: client.guid},
+          data: client,
         });
 
       }

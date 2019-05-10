@@ -139,13 +139,13 @@ module.exports = {
           await sails.helpers.general.sendMailgun(subject, html);
 
 
-          inputs.block.next = 'help::wait_subscription_check';
+          inputs.block.next = 'help::subscription_check';
 
           /**
-           * Update help::wait_subscription_check block
+           * Update help::subscription_check block
            */
 
-          updateBlock = 'help::wait_subscription_check';
+          updateBlock = 'help::subscription_check';
 
           splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
           updateFunnel = splitRes[0];
