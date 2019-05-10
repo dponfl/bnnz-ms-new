@@ -1252,6 +1252,49 @@
       }
     },
     {
+      "id": "platinum_paid",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::selected_platinum",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "help::callbackPaidPlatinum",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_PAYMENT_PLATINUM_RECEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_HELP_PAYMENT_SIGN_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_HELP_MANDATORY_PROFILES",
+            "style": "",
+            "cr": "SCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_HELP_BTN_SUBS_CONFIRM",
+              "callback_data": "subscription_confirm"
+            }
+          ]
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
