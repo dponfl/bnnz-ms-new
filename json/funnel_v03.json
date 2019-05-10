@@ -1154,6 +1154,55 @@
       }
     },
     {
+      "id": "selected_gold",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "help::select_service_level",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper":"help::callbackSelectedGold",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_PAYMENT_GOLD",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_HELP_PAYMENT_SHOW_SLA",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text":"MSG_HELP_PAYMENT_CHANGE_SERVICE",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text":"MSG_HELP_PAYMENT_GOLD_BTN_PAY",
+              "url": "http://www.bonanzainst.com/payment?sl=gold&p=3000&c=rub&cid=XXXX&acc={client.account_tmp}"
+            }
+          ],
+          [
+            {
+              "text":"MSG_HELP_PAYMENT_BTN_CHANGE_SERVICE",
+              "callback_data": "change_service"
+            }
+          ]
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
