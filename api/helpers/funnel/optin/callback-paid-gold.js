@@ -66,6 +66,7 @@ module.exports = {
 
       const keys = [
         'clientId',
+        'accountId',
         'firstName',
         'lastName',
         'instagramProfile',
@@ -74,6 +75,7 @@ module.exports = {
 
       const lables = {
         'clientId': 'ID клиента: ',
+        'accountId': 'ID аккаунта: ',
         'firstName': 'Имя: ',
         'lastName': 'Фамилия: ',
         'instagramProfile': 'Инстаграм: ',
@@ -90,6 +92,7 @@ module.exports = {
 
       const clientData = {
         'clientId': inputs.client.guid,
+        'accountId': currentAccount.guid,
         'firstName': inputs.client.first_name,
         'lastName': inputs.client.last_name,
         'instagramProfile': currentAccount.inst_profile,
