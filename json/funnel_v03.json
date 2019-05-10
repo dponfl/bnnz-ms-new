@@ -1129,6 +1129,31 @@
       }
     },
     {
+      "id": "want_change_service_level",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": "help::select_service_level",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "help::afterChangeService",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text":"MSG_HELP_CHANGE_SERVICE_LEVEL",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
