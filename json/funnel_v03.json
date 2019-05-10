@@ -1381,6 +1381,31 @@
       }
     },
     {
+      "id": "subscription_check",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "help::afterSubscriptionCheck",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_HELP_SUBSCRIPTION",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "send_post",
       "description": "",
       "actionType": "video",
