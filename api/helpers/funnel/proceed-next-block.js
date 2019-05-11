@@ -92,6 +92,12 @@ module.exports = {
         && block.actionType
       ) {
 
+        /**
+         * Call blockModifyHelper to update block if needed
+         */
+
+        block = await activateBlockModifyHelper(inputs.client, block);
+
         switch (block.actionType) {
 
           case 'text':
@@ -609,6 +615,60 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
             helperName: block.beforeHelper,
             afterHelperBlock: beforeHelperBlock,
             afterHelperName: beforeHelperName,
+          }
+        }
+      };
+
+    }
+
+  }
+
+  return res;
+
+}
+
+async function activateBlockModifyHelper(client, block) {
+
+  let res = block;
+
+  // sails.log.warn('client:', client);
+  // sails.log.warn('block:', block);
+  // sails.log.warn('msg:', msg);
+  // sails.log.warn('htmlMsg:', htmlMsg);
+
+  if (!_.isNil(block.blockModifyHelper)) {
+
+    let splitBlockModifyHelperRes = _.split(block.blockModifyHelper, sails.config.custom.JUNCTION, 2);
+    let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
+    let blockModifyHelperName = splitBlockModifyHelperRes[1];
+
+    if (blockModifyHelperBlock && blockModifyHelperName) {
+
+      /**
+       * We managed to parse the specified blockModifyHelper and can perform it
+       */
+
+      let beforeHelperParams = {
+        client: client,
+        block: block,
+      };
+
+      res = await sails.helpers.funnel[blockModifyHelperBlock][blockModifyHelperName].with(beforeHelperParams);
+
+    } else {
+
+      /**
+       * Throw error: we could not parse the specified blockModifyHelper
+       */
+
+      throw {err: {
+          module: 'api/helpers/funnel/proceed-next-block',
+          message: sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR,
+          payload: {
+            params: inputs,
+            helperName: block.blockModifyHelper,
+            afterHelperBlock: blockModifyHelperBlock,
+            afterHelperName: blockModifyHelperName,
           }
         }
       };

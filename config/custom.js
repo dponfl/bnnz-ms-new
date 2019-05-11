@@ -208,6 +208,7 @@ module.exports.custom = {
   PROCEED_NEXT_BLOCK_ERROR: 'proceedNextBlock error',
   PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: 'Cannot parse afterHelper error',
   PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR: 'Cannot parse beforeHelper error',
+  PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR: 'Cannot parse blockModifyHelper error',
 
   /**
    * ----------------------------

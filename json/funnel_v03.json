@@ -13,6 +13,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -38,6 +39,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "optin::callbackGeneralInfo",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -82,6 +84,7 @@
       "afterHelper": "optin::afterNotProceed",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -112,6 +115,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -137,6 +141,7 @@
       "afterHelper": null,
       "forcedHelper": "optin::forcedCheckLogin",
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -167,6 +172,7 @@
       "afterHelper": "optin::afterWrongProfile",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -192,6 +198,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"optin::callbackConfirmProfile",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -236,6 +243,7 @@
       "afterHelper": "optin::afterWrongProfileResponse",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -261,6 +269,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -286,6 +295,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "optin::callbackSelectServiceLevel",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -337,6 +347,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"optin::callbackSelectedPlatinum",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -392,6 +403,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"optin::callbackSelectedGold",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -447,6 +459,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"optin::callbackSelectedBronze",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -502,6 +515,7 @@
       "afterHelper": "optin::afterChangeService",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -527,6 +541,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "optin::callbackPaidPlatinum",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -570,6 +585,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "optin::callbackPaidGold",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -613,6 +629,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "optin::callbackPaidBronze",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -656,6 +673,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -681,6 +699,7 @@
       "afterHelper": "optin::afterSubscriptionMade",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -708,6 +727,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "general::callbackStart",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -749,6 +769,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackStart",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -799,6 +820,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackAddAccount",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -848,6 +870,7 @@
       "afterHelper": null,
       "forcedHelper": "help::forcedCheckLogin",
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -878,6 +901,7 @@
       "afterHelper": "help::afterWrongProfile",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -903,6 +927,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackProfileExists",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -947,6 +972,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"help::callbackConfirmProfile",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -991,6 +1017,7 @@
       "afterHelper": "help::afterWrongProfileResponse",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1016,6 +1043,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1041,6 +1069,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackSelectServiceLevel",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1092,6 +1121,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"help::callbackSelectedPlatinum",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1141,6 +1171,7 @@
       "afterHelper": "help::afterChangeService",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1166,6 +1197,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"help::callbackSelectedGold",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1215,6 +1247,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper":"help::callbackSelectedBronze",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1264,6 +1297,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackPaidPlatinum",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1307,6 +1341,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackPaidGold",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1350,6 +1385,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackPaidBronze",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1393,6 +1429,7 @@
       "afterHelper": "help::afterSubscriptionCheck",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1418,6 +1455,7 @@
       "afterHelper": "help::afterSendPost",
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -1444,6 +1482,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "help::callbackNextAction",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
