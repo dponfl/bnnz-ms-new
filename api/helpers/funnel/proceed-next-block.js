@@ -106,7 +106,7 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimpleRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlSimpleRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
             let htmlSimple = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
 
@@ -145,7 +145,7 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImgRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlImgRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
             let htmlImg = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlImgRaw);
 
@@ -186,7 +186,7 @@ module.exports = {
              * Send video message
              */
 
-            let htmlVideoRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlVideoRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
             let htmlVideo = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlVideoRaw);
 
@@ -227,7 +227,7 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForcedRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlForcedRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
             let htmlForced = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlForcedRaw);
 
@@ -264,13 +264,13 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInlineRaw = parseMessageStyle(clientName, block.message, inputs.client.lang);
+            let htmlInlineRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
             let htmlInline = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlInlineRaw);
 
             let objBefore = block.message.inline_keyboard;
 
-            let objAfter = mapDeep(clientName, inputs.client.lang, objBefore);
+            let objAfter = mapDeep(inputs.client, clientName, inputs.client.lang, objBefore);
 
             // sails.log.debug('objAfter: ');
             // console.dir(objAfter);
@@ -475,9 +475,9 @@ module.exports = {
 
 };
 
-function mapDeep(clientName, lang, obj) {
+function mapDeep(clientRec, clientName, lang, obj) {
   if (_.isArray(obj)) {
-    let arr = obj.map(innerObj => mapDeep(clientName, lang, innerObj));
+    let arr = obj.map(innerObj => mapDeep(clientRec, clientName, lang, innerObj));
 
     // sails.log.info('mapDeep, arr: ', arr);
 
@@ -486,7 +486,7 @@ function mapDeep(clientName, lang, obj) {
     let ob = _.forEach(obj, (val, key, o) => {
       if (key == 'text') {
         // o[key] = t(lang, val);
-        o[key] = parseSpecialTokens(clientName, t(lang, val), lang) ;
+        o[key] = parseSpecialTokens(clientRec, clientName, t(lang, val), lang) ;
       }
       // return o;
     });
@@ -497,7 +497,7 @@ function mapDeep(clientName, lang, obj) {
   }
 }
 
-function parseSpecialTokens(clientName, msg, lang) {
+function parseSpecialTokens(clientRec, clientName, msg, lang) {
 
   let resultStr = msg;
 
@@ -532,12 +532,19 @@ function parseSpecialTokens(clientName, msg, lang) {
 
   resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
 
+  // sails.log.warn('clientRec.accounts: ', clientRec.accounts);
+  let currentAccount = _.find(clientRec.accounts, {guid: clientRec.account_use});
+  // sails.log.warn('currentAccount: ', currentAccount);
+  let profileOfCurrentAccount = currentAccount.inst_profile;
+  // sails.log.warn('profileOfCurrentAccount: ', profileOfCurrentAccount);
+  resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
+
 
   return resultStr;
 
 }
 
-function parseMessageStyle(clientName, msg, lang) {
+function parseMessageStyle(clientRec, clientName, msg, lang) {
   let resultHtml = '';
 
   for (let i = 0; i < msg.html.length; i++) {
@@ -558,7 +565,7 @@ function parseMessageStyle(clientName, msg, lang) {
 
   sails.log.warn('resultHtml, before:', resultHtml);
 
-  resultHtml = parseSpecialTokens(clientName, resultHtml, lang);
+  resultHtml = parseSpecialTokens(clientRec, clientName, resultHtml, lang);
 
   sails.log.warn('resultHtml, after:', resultHtml);
 

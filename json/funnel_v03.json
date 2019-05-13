@@ -727,7 +727,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "general::callbackStart",
-      "blockModifyHelper": null,
+      "blockModifyHelper": "general::blockModifyStart",
       "shown": false,
       "done": false,
       "message": {
@@ -751,6 +751,34 @@
               "callback_data": "start_get_help"
             }
           ]
+        ]
+      }
+    },
+    {
+      "id": "select_account",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": "general::start",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "general::callbackSelectAccount",
+      "blockModifyHelper": "general::blockModifySelectAccount",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_SELECT_ACCOUNT",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
         ]
       }
     }

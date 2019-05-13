@@ -13,6 +13,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -38,6 +39,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "xxx::xxx",
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -86,6 +88,7 @@
       "afterHelper": null,
       "forcedHelper": "xxx::xxx",
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -121,6 +124,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
@@ -147,6 +151,7 @@
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
+      "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {

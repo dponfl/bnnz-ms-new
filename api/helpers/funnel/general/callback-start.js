@@ -101,6 +101,7 @@ module.exports = {
 
           }
           break;
+
         case 'start_get_help':
 
           inputs.block.next = 'help::start';
@@ -124,6 +125,14 @@ module.exports = {
           }
 
           break;
+
+        case 'start_change_account':
+
+          inputs.block.done = true;
+          inputs.block.next = 'general::select_account';
+
+          break;
+
         default:
           throw new Error(`Wrong callback data: ${inputs.query.data}`);
       }
