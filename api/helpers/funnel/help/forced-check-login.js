@@ -81,7 +81,7 @@ module.exports = {
 
           sails.log.warn(`acc: `, acc);
 
-          if (acc.inst_profile === enteredProfile) {
+          if (_.trim(acc.inst_profile.toLowerCase()) === _.trim(enteredProfile.toLowerCase())) {
             enteredAccountExists = true;
           }
 
