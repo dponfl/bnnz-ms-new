@@ -26,10 +26,10 @@ module.exports = {
       type: 'ref',
       // required: true,
     },
-    htmlMsg: {
-      friendlyName: 'html message',
-      description: 'HTML message',
-      type: 'string',
+    payload: {
+      friendlyName: '{text, inline_keyboard} object',
+      description: '{text, inline_keyboard} object',
+      type: 'ref',
       required: true,
     },
   },
@@ -48,7 +48,7 @@ module.exports = {
 
     const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
-    let resHtml = inputs.htmlMsg;
+    let resHtml = inputs.payload.text;
     const instProfile = 'https://www.instagram.com/' + _.trim(currentAccount.inst_profile);
 
     try {
@@ -59,9 +59,12 @@ module.exports = {
        * Add Instagram profile link to html message
        */
 
-      resHtml = _.replace(inputs.htmlMsg, '$instagramProfile$', instProfile);
+      resHtml = _.replace(inputs.payload.text, '$instagramProfile$', instProfile);
 
-      return exits.success(resHtml);
+      return exits.success({
+        text: resHtml,
+        inline_keyboard: inputs.payload.inline_keyboard,
+      });
 
     } catch (e) {
 
