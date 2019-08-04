@@ -81,7 +81,7 @@ module.exports = {
            * Entered post looks ok
            */
 
-          let postBroadcastResult = await sails.helpers.general.postBroadcast(enteredPost);
+          let postBroadcastResult = await sails.helpers.general.postBroadcast(inputs.client, currentAccountInd, enteredPost);
 
           if (postBroadcastResult.status === 'ok') {
 
