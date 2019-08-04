@@ -66,7 +66,7 @@ module.exports = {
             funnel_name: serviceRecord.funnel_name,
             funnel_start: serviceRecord.funnel_start,
             rooms: serviceRecord.rooms,
-            max_outcoming_posts_per_day: serviceRecord.max_outcoming_posts_per_day,
+            max_outgoing_posts_per_day: serviceRecord.max_outgoing_posts_per_day,
             max_incoming_posts_per_day: serviceRecord.max_incoming_posts_per_day,
             deleted: serviceRecord.deleted,
             created_at: serviceRecord.createdAt,
