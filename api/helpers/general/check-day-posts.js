@@ -45,8 +45,7 @@ module.exports = {
         status: 'ok',
         message: '',
         payload: {
-          // dayPostsReached: inputs.client.posts_made_day >= inputs.client.service.messages_per_day,
-          dayPostsReached: account.posts_made_day >= account.service.messages_per_day,
+          dayPostsReached: account.posts_made_day >= account.service.max_outcoming_posts_per_day,
         }
       });
 

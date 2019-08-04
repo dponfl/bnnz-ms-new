@@ -30,12 +30,12 @@ module.exports = {
       columnType: 'integer',
       allowNull: true,
     },
-    posts_per_day: {
+    max_outcoming_posts_per_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
     },
-    incoming_posts_per_day: {
+    max_incoming_posts_per_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
