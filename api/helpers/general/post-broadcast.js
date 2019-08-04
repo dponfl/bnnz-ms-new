@@ -44,14 +44,31 @@ module.exports = {
 
     try {
 
-      const account = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+      const account = inputs.client.accounts[inputs.accountId];
 
-      if (typeof account === 'undefined') {
-
-        sails.log.error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
-        throw new Error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
-
+      if (account == null) {
+        sails.log.error('api/helpers/general/post-broadcast, error: Cannot find account by input.accountId');
+        throw new Error('api/helpers/general/post-broadcast, error: Cannot find account by input.accountId');
       }
+
+      /**
+       * Check if the client reached the max outgoing posts on active account
+       */
+
+      if (account.posts_made_day >= account.service.max_outgoing_posts_per_day) {
+        return exits.success({
+          status: 'nok',
+          message: 'Max amount of outgoing posts reached',
+          payload: {
+            posts_made_day: account.posts_made_day,
+            max_outgoing_posts_per_day: account.service.max_outgoing_posts_per_day,
+          },
+        });
+      }
+
+      /**
+       *
+       */
 
       return exits.success({
         status: 'ok',
@@ -66,7 +83,7 @@ module.exports = {
       sails.log.error('api/helpers/general/post-broadcast, error: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/broadcast',
+          module: 'api/helpers/general/post-broadcast',
           message: sails.config.custom.GENERAL_HELPER_ERROR,
           payload: {
             params: inputs,
