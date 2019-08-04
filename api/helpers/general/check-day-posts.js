@@ -28,7 +28,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log('general:checDayPosts helper...');
+    sails.log('general:checkDayPosts helper...');
 
     try {
 
