@@ -61,7 +61,20 @@ module.exports = {
              * Record for the client was found
              */
 
-            clientsList[clientRecord.id] = clientRecord;
+            clientsList[clientRecord.id] = _.pick(clientRecord, [
+              'id',
+              'guid',
+              'first_name',
+              'last_name',
+              'chat_id',
+              'username',
+              'messenger',
+              'deleted',
+              'banned',
+              'admin',
+              'lang',
+              'account_use',
+            ]);
 
             // sails.log.warn('clientsList: ', clientsList);
           }
