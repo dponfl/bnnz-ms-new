@@ -40,8 +40,7 @@ module.exports = {
 
     try {
 
-      _.forEach(inputs.rooms, async (room) => {
-
+      for (const room of inputs.rooms) {
         const accountsListByRoom = await Account.find()
           .populate('room', {
             where: {
@@ -49,10 +48,7 @@ module.exports = {
             }
           });
 
-        // sails.log.warn('accountsListByRoom: ', accountsListByRoom);
-
-        _.forEach(accountsListByRoom, async (acc) => {
-
+        for (const acc of accountsListByRoom) {
           const clientRecord = await Client.findOne({
             id: acc.client,
           });
@@ -68,12 +64,9 @@ module.exports = {
             clientsList[clientRecord.id] = clientRecord;
 
             // sails.log.warn('clientsList: ', clientsList);
-
           }
-
-        });
-
-      });
+        }
+      }
 
       // sails.log.info('clientsList: ', clientsList);
 
