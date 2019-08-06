@@ -1,3 +1,5 @@
+const t = require('../../services/translate').t;
+
 module.exports = {
 
 
@@ -52,6 +54,21 @@ module.exports = {
       }
 
       /**
+       * Check if the account has the active subscription
+       */
+
+      if (!account.subscription_active) {
+        return exits.success({
+          status: 'nok',
+          message: 'Account has not active subscription',
+          payload: {
+            accountId: inputs.accountId,
+            subscription_active: account.subscription_active,
+          },
+        });
+      }
+
+      /**
        * Check if the client reached the max outgoing posts on active account
        */
 
@@ -67,15 +84,45 @@ module.exports = {
       }
 
       /**
-       *
+       * Collect list of all clients living in the rooms of this account
        */
+
+      const accoutnRoomsList = [];
+
+      _.forEach(account.room, (room) => {
+        if (room.active) {
+          accoutnRoomsList.push(room.id);
+        }
+      });
+
+      const clientsListRaw = await sails.helpers.storage.getClientsByRooms(accoutnRoomsList);
+      let clientsList;
+
+      if (clientsListRaw.status === 'ok') {
+        clientsList = clientsListRaw.payload;
+      }
+
+      _.forEach(clientsList, async (client) => {
+
+        /**
+         * Делаем так, чтобы отправитель не получил этого сообщения :)
+         */
+
+        if (client.id !== inputs.client.id) {
+          let useLang = (_.has(sails.config.custom.config.lang, client.lang) ? client.lang : 'ru');
+          let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST") +
+            sails.config.custom.config.SCR + inputs.postLink;
+          let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
+            chatId: client.chat_id,
+            html: htmlPostBroadcast,
+          });
+        }
+      });
 
       return exits.success({
         status: 'ok',
-        message: '',
-        payload: {
-          dayPostsReached: account.posts_made_day >= account.service.messages_per_day,
-        }
+        message: 'postBroadcast performed',
+        payload: {}
       });
 
     } catch (e) {
