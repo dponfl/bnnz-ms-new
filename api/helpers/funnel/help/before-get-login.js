@@ -26,10 +26,10 @@ module.exports = {
       type: 'ref',
       // required: true,
     },
-    htmlMsg: {
-      friendlyName: 'html message',
-      description: 'HTML message',
-      type: 'string',
+    payload: {
+      friendlyName: '{text, inline_keyboard} object',
+      description: '{text, inline_keyboard} object',
+      type: 'ref',
       required: true,
     },
   },
@@ -126,7 +126,7 @@ module.exports = {
 
       }
 
-      return exits.success(inputs.htmlMsg);
+      return exits.success(inputs.payload);
 
     } catch (e) {
 

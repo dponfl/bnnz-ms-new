@@ -26,10 +26,10 @@ module.exports = {
       type: 'ref',
       // required: true,
     },
-    htmlMsg: {
-      friendlyName: 'html message',
-      description: 'HTML message',
-      type: 'string',
+    payload: {
+      friendlyName: '{text, inline_keyboard} object',
+      description: '{text, inline_keyboard} object',
+      type: 'ref',
       required: true,
     },
   },
@@ -71,9 +71,12 @@ module.exports = {
       // activeProfilesList = activeProfilesList + sails.config.custom.SCR;
 
 
-      resHtml = _.replace(inputs.htmlMsg, '$connectedInstProfiles$', activeProfilesList);
+      resHtml = _.replace(inputs.payload.text, '$connectedInstProfiles$', activeProfilesList);
 
-      return exits.success(resHtml);
+      return exits.success({
+        text: resHtml,
+        inline_keyboard: inputs.payload.inline_keyboard,
+      });
 
     } catch (e) {
 

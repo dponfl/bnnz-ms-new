@@ -108,7 +108,7 @@ module.exports = {
 
             let htmlSimpleRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
-            let htmlSimple = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
+            let {text: htmlSimple} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
 
             sails.log.debug('htmlSimple: ', htmlSimple);
 
@@ -147,7 +147,7 @@ module.exports = {
 
             let htmlImgRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
-            let htmlImg = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlImgRaw);
+            let {text: htmlImg} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlImgRaw);
 
             let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
               chatId: inputs.client.chat_id,
@@ -188,7 +188,7 @@ module.exports = {
 
             let htmlVideoRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
-            let htmlVideo = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlVideoRaw);
+            let {text: htmlVideo} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlVideoRaw);
 
             let videoRes = await sails.helpers.mgw[inputs.client.messenger]['videoMessage'].with({
               chatId: inputs.client.chat_id,
@@ -229,7 +229,7 @@ module.exports = {
 
             let htmlForcedRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
-            let htmlForced = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlForcedRaw);
+            let {text: htmlForced} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlForcedRaw);
 
             let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
               chatId: inputs.client.chat_id,
@@ -266,11 +266,9 @@ module.exports = {
 
             let htmlInlineRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
 
-            let htmlInline = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlInlineRaw);
+            let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlInlineRaw);
 
-            let objBefore = block.message.inline_keyboard;
-
-            let objAfter = mapDeep(inputs.client, clientName, inputs.client.lang, objBefore);
+            let objAfter = mapDeep(inputs.client, clientName, inputs.client.lang, keyboardInline);
 
             // sails.log.debug('objAfter: ');
             // console.dir(objAfter);
@@ -575,7 +573,10 @@ function parseMessageStyle(clientRec, clientName, msg, lang) {
 
 async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
-  let res = htmlMsg;
+  let res = {
+    text: htmlMsg,
+    inline_keyboard: block.message.inline_keyboard,
+  };
 
   // sails.log.warn('client:', client);
   // sails.log.warn('block:', block);
@@ -597,7 +598,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
       let beforeHelperParams = {
         client: client,
         block: block,
-        htmlMsg: htmlMsg
+        payload: res,
       };
 
       if (msg) {

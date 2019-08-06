@@ -26,10 +26,10 @@ module.exports = {
       type: 'ref',
       // required: true,
     },
-    htmlMsg: {
-      friendlyName: 'html message',
-      description: 'HTML message',
-      type: 'string',
+    payload: {
+      friendlyName: '{text, inline_keyboard} object',
+      description: '{text, inline_keyboard} object',
+      type: 'ref',
       required: true,
     },
   },
@@ -57,9 +57,12 @@ module.exports = {
        * Add Instagram profile link to html message
        */
 
-      resHtml = _.replace(inputs.htmlMsg, '$instagramProfileNew$', instProfile);
+      resHtml = _.replace(inputs.payload.text, '$instagramProfileNew$', instProfile);
 
-      return exits.success(resHtml);
+      return exits.success({
+        text: resHtml,
+        inline_keyboard: inputs.payload.inline_keyboard,
+      });
 
     } catch (e) {
 
