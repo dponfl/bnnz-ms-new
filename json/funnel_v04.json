@@ -793,7 +793,7 @@
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
-      "forcedHelper": "general::makePost",
+      "forcedHelper": "general::forcedMakePost",
       "callbackHelper": null,
       "blockModifyHelper": null,
       "shown": false,
