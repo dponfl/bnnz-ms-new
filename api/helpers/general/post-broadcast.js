@@ -109,9 +109,9 @@ module.exports = {
          */
 
         if (client.id !== inputs.client.id) {
-          let useLang = (_.has(sails.config.custom.config.lang, client.lang) ? client.lang : 'ru');
+          let useLang = (_.has(sails.config.custom.lang, client.lang) ? client.lang : 'ru');
           let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST") +
-            sails.config.custom.config.SCR + inputs.postLink;
+            sails.config.custom.SCR + inputs.postLink;
           let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
             chatId: client.chat_id,
             html: htmlPostBroadcast,
