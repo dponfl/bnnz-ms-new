@@ -108,12 +108,19 @@ module.exports = {
          * Делаем так, чтобы отправитель не получил этого сообщения :)
          */
 
-        if (client.id !== inputs.client.id) {
-          let useLang = (_.has(sails.config.custom.lang, client.lang) ? client.lang : 'ru');
-          let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST") +
+        if (client.client.id !== inputs.client.id) {
+          let useLang = (_.has(sails.config.custom.lang, client.lang) ? client.client.lang : 'ru');
+          let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST_1") +
+            client.account.inst_profile +
+            t(useLang, "MSG_GENERAL_POST_BROADCAST_2") +
             sails.config.custom.SCR + inputs.postLink;
+
+          /**
+           *
+           */
+
           let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
-            chatId: client.chat_id,
+            chatId: client.client.chat_id,
             html: htmlPostBroadcast,
           });
         }
