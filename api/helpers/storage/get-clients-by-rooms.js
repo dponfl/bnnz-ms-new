@@ -56,7 +56,8 @@ module.exports = {
 
         for (const acc of accountsListByRoom) {
 
-          if (acc.posts_received_day < acc.service.) {
+          if (acc.posts_received_day < acc.service.max_incoming_posts_per_day) {
+
             const clientRecord = await Client.findOne({
               where: {
                 id: acc.client,
