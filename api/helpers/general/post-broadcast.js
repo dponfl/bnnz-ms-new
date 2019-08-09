@@ -116,8 +116,16 @@ module.exports = {
             sails.config.custom.SCR + inputs.postLink;
 
           /**
-           *
+           * Увеличиваем счетчики сообщений, отправленных клиенту
            */
+
+          await sails.helpers.storage.accountUpdate.with({
+            criteria: {id: client.account.id},
+            data: {
+              posts_received_day: client.account.posts_received_day++,
+              posts_received_total: client.account.posts_received_total++,
+            },
+          });
 
           let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
             chatId: client.client.chat_id,
