@@ -93,7 +93,9 @@ module.exports = {
                   'id',
                   'guid',
                   'inst_profile',
-                ]),
+                  'posts_received_day',
+                  'posts_received_total',
+            ]),
               } ;
 
               // sails.log.warn('clientsList: ', clientsList);
