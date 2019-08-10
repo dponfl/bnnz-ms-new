@@ -807,6 +807,37 @@
           }
         ]
       }
+    },
+    {
+      "id": "wrong_post",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "general::make_post",
+      "next": "general::make_post",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "general::afterWrongPost",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_WRONG_LINK",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_GENERAL_ENTER_POST_LINK_AGAIN",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
     }
   ],
   "help": [
