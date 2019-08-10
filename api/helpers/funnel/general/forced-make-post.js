@@ -94,6 +94,7 @@ module.exports = {
              */
 
             inputs.client.accounts[currentAccountInd]['posts_made_day']++;
+            inputs.client.accounts[currentAccountInd]['posts_made_total']++;
 
             /**
              * Можем переходить на следующий блок
