@@ -41,7 +41,13 @@ module.exports = {
     try {
 
       for (const room of inputs.rooms) {
-        const accountsListByRoom = await Account.find()
+        const accountsListByRoom = await Account.find({
+          where: {
+            subscription_active: true,
+            deleted: false,
+          }
+        })
+          .populate('service')
           .populate('room', {
             where: {
               id: room,
@@ -49,34 +55,51 @@ module.exports = {
           });
 
         for (const acc of accountsListByRoom) {
-          const clientRecord = await Client.findOne({
-            id: acc.client,
-          });
 
-          // sails.log.warn('clientRecord: ', clientRecord);
+          if (acc.posts_received_day < acc.service.max_incoming_posts_per_day) {
 
-          if (clientRecord) {
+            const clientRecord = await Client.findOne({
+              where: {
+                id: acc.client,
+                deleted: false,
+                banned: false,
+              }
+            });
 
-            /**
-             * Record for the client was found
-             */
+            // sails.log.warn('clientRecord: ', clientRecord);
 
-            clientsList[clientRecord.id] = _.pick(clientRecord, [
-              'id',
-              'guid',
-              'first_name',
-              'last_name',
-              'chat_id',
-              'username',
-              'messenger',
-              'deleted',
-              'banned',
-              'admin',
-              'lang',
-              'account_use',
-            ]);
+            if (clientRecord) {
 
-            // sails.log.warn('clientsList: ', clientsList);
+              /**
+               * Record for the client was found
+               */
+
+              clientsList[clientRecord.id] = {
+                client: _.pick(clientRecord, [
+                  'id',
+                  'guid',
+                  'first_name',
+                  'last_name',
+                  'chat_id',
+                  'username',
+                  'messenger',
+                  'deleted',
+                  'banned',
+                  'admin',
+                  'lang',
+                  'account_use',
+                ]),
+                account: _.pick(acc, [
+                  'id',
+                  'guid',
+                  'inst_profile',
+                  'posts_received_day',
+                  'posts_received_total',
+            ]),
+              } ;
+
+              // sails.log.warn('clientsList: ', clientsList);
+            }
           }
         }
       }
