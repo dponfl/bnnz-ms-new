@@ -838,6 +838,32 @@
           }
         ]
       }
+    },
+    {
+      "id": "post_sent",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "general::make_post",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "general::afterPostSent",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_POST_SUCCESS",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ],
   "help": [
