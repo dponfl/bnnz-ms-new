@@ -864,6 +864,32 @@
           }
         ]
       }
+    },
+    {
+      "id": "post_next",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "previous": "general::post_sent",
+      "next": "general::start",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "general::afterPostNext",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_CAN_SEND_NEW_POST",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ],
   "help": [

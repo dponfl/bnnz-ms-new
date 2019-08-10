@@ -111,6 +111,7 @@
         "MSG_GENERAL_WRONG_LINK": "$FirstName, это не ссылка на пост в Инстаграм.",
         "MSG_GENERAL_POST_SUCCESS": "$FirstName, твой пост успешно отправлен другим участникам.",
         "MSG_GENERAL_ENTER_POST_LINK_AGAIN": "Попробуй снова.",
+        "MSG_GENERAL_CAN_SEND_NEW_POST": "Можешь продолжать отправку новых постов.",
         "MSG_HELP_START": "Help funnel: start message",
         "MSG_HELP_START_GENERAL": "Это раздел, где ты можешь получить подсказки по работе со мной :) и подключить к сервису дополнительный аккаунт Инстаграм. Для этого используй кнопки ниже.",
         "MSG_HELP_START_RETURN": "Чтобы выйти из режима помощи, нажми кнопку ВЕРНУТЬСЯ",
