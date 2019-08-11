@@ -108,7 +108,7 @@
         "MSG_GENERAL_SELECT_ACCOUNT": "Выбери аккаунт на который ты хочешь переключиться с помощью кнопок ниже. Текущий аккаунт отмечен знаком (*)",
         "MSG_GENERAL_POST_BROADCAST_1": "Новый пост твоего друга (сообщение для аккаунта ",
         "MSG_GENERAL_POST_BROADCAST_2": ")",
-        "MSG_GENERAL_WRONG_LINK": "$FirstName, это не ссылка на пост в Инстаграм.",
+        "MSG_GENERAL_WRONG_LINK": "$FirstName$, это не ссылка на пост в Инстаграм.",
         "MSG_GENERAL_POST_SUCCESS": "$FirstName, твой пост успешно отправлен другим участникам.",
         "MSG_GENERAL_ENTER_POST_LINK_AGAIN": "Попробуй снова.",
         "MSG_HELP_START": "Help funnel: start message",
