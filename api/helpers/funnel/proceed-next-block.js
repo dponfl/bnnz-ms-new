@@ -499,12 +499,12 @@ function parseSpecialTokens(clientRec, clientName, msg, lang) {
 
   let resultStr = msg;
 
-  let firstName = clientName.firstName || '';
-  let lastName = clientName.lastName || '';
+  const firstName = clientName.firstName || '';
+  const lastName = clientName.lastName || '';
 
-  let configPricePlatinum = confObj(lang).price.platinum;
-  let configPriceGold = confObj(lang).price.gold;
-  let configPriceBronze = confObj(lang).price.bronze;
+  const configPricePlatinum = confObj(lang).price.platinum;
+  const configPriceGold = confObj(lang).price.gold;
+  const configPriceBronze = confObj(lang).price.bronze;
 
   let mandatoryProfileList = '';
 
@@ -531,11 +531,18 @@ function parseSpecialTokens(clientRec, clientName, msg, lang) {
   resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
 
   // sails.log.warn('clientRec.accounts: ', clientRec.accounts);
-  let currentAccount = _.find(clientRec.accounts, {guid: clientRec.account_use});
+  const currentAccount = _.find(clientRec.accounts, {guid: clientRec.account_use});
   // sails.log.warn('currentAccount: ', currentAccount);
-  let profileOfCurrentAccount = currentAccount.inst_profile;
+  const profileOfCurrentAccount = currentAccount.inst_profile;
   // sails.log.warn('profileOfCurrentAccount: ', profileOfCurrentAccount);
   resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
+
+  /**
+   * Кол-во сообщений, отправленных с текущего аккаунта за сутки
+   */
+
+  const numberOfMessagesSentToday = currentAccount.posts_made_day;
+  resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
 
 
   return resultStr;

@@ -890,6 +890,45 @@
           }
         ]
       }
+    },
+    {
+      "id": "max_posts",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "general::callbackMaxPosts",
+      "blockModifyHelper": "general::blockModifyMaxPosts",
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_GENERAL_LIMIT_ACHEIVED",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_GENERAL_LIMIT_ACHEIVED_ACTION",
+            "style": "b",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_GENERAL_BTN_CHECK_NEW_POST",
+              "callback_data": "check_new_post"
+            }
+          ]
+        ]
+      }
     }
   ],
   "help": [
