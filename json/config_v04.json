@@ -109,6 +109,7 @@
         "MSG_GENERAL_POST_BROADCAST_1": "Новый пост твоего друга (сообщение для аккаунта ",
         "MSG_GENERAL_POST_BROADCAST_2": ")",
         "MSG_GENERAL_WRONG_LINK": "$FirstName$, это не ссылка на пост в Инстаграм.",
+        "MSG_GENERAL_POST_SUCCESS": "$FirstName$, твой пост успешно отправлен другим участникам.",
         "MSG_GENERAL_ENTER_POST_LINK_AGAIN": "Попробуй снова.",
         "MSG_GENERAL_CAN_SEND_NEW_POST": "Можешь продолжать отправку новых постов.",
         "MSG_GENERAL_LIMIT_ACHEIVED_MSG": "Ты достиг суточного лимита отправки постов на текущем аккаунте ($CurrentAccount$): ты отправил $PostsSent$ постов - это максимальное количество постов в сутки согласно твоему уровню обслуживания на этом аккаунте.",
