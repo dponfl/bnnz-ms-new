@@ -34,8 +34,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.debug('general:distributeClients helper...');
-    sails.log.debug('input params: ', inputs);
+    sails.log.info('general:distributeClients helper...');
+    // sails.log.debug('input params: ', inputs);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
       .populate('account');
@@ -84,7 +84,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/distribute-clients, error: ', e);
+      // sails.log.error('api/helpers/general/distribute-clients, error: ', e);
 
       throw {err: {
           module: 'api/helpers/general/distribute-clients',

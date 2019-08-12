@@ -67,9 +67,9 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** api/helpers/funnel/proceed-next-block ***************/');
-      sails.log.debug('inputs.funnelName: ', inputs.funnelName);
-      sails.log.debug('inputs.blockId: ', inputs.blockId);
+      sails.log.info('/*************** api/helpers/funnel/proceed-next-block ***************/');
+      // sails.log.debug('inputs.funnelName: ', inputs.funnelName);
+      // sails.log.debug('inputs.blockId: ', inputs.blockId);
 
 
       let clientName = {
@@ -110,15 +110,15 @@ module.exports = {
 
             let {text: htmlSimple} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
 
-            sails.log.debug('htmlSimple: ', htmlSimple);
+            // sails.log.debug('htmlSimple: ', htmlSimple);
 
             let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
               chatId: inputs.client.chat_id,
               html: htmlSimple,
             });
 
-            sails.log.debug('simpleRes: ', simpleRes);
-            sails.log.debug('simpleRes payload: ', simpleRes.payload);
+            // sails.log.debug('simpleRes: ', simpleRes);
+            // sails.log.debug('simpleRes payload: ', simpleRes.payload);
 
             block.message_id = simpleRes.payload.message_id;
 
@@ -155,8 +155,8 @@ module.exports = {
               html: htmlImg,
             });
 
-            sails.log.debug('imgRes: ', imgRes);
-            sails.log.debug('imgRes payload: ', imgRes.payload);
+            // sails.log.debug('imgRes: ', imgRes);
+            // sails.log.debug('imgRes payload: ', imgRes.payload);
 
             block.message_id = imgRes.payload.message_id;
 
@@ -196,8 +196,8 @@ module.exports = {
               html: htmlVideo,
             });
 
-            sails.log.debug('videoRes: ', videoRes);
-            sails.log.debug('videoRes payload: ', videoRes.payload);
+            // sails.log.debug('videoRes: ', videoRes);
+            // sails.log.debug('videoRes payload: ', videoRes.payload);
 
             block.message_id = videoRes.payload.message_id;
 
@@ -236,8 +236,8 @@ module.exports = {
               html: htmlForced,
             });
 
-            sails.log.debug('forcedRes: ', forcedRes);
-            sails.log.debug('forcedRes payload: ', forcedRes.payload);
+            // sails.log.debug('forcedRes: ', forcedRes);
+            // sails.log.debug('forcedRes payload: ', forcedRes.payload);
 
             block.message_id = forcedRes.payload.message_id;
 
@@ -279,8 +279,8 @@ module.exports = {
               inlineKeyboard: objAfter,
             });
 
-            sails.log.debug('inlineRes: ', inlineRes);
-            sails.log.debug('inlineRes payload: ', inlineRes.payload);
+            // sails.log.debug('inlineRes: ', inlineRes);
+            // sails.log.debug('inlineRes payload: ', inlineRes.payload);
 
             block.message_id = inlineRes.payload.message_id;
 
@@ -415,8 +415,8 @@ module.exports = {
         let nextFunnel = splitRes[0];
         let nextId = splitRes[1];
 
-        sails.log.debug('nextFunnel: ', nextFunnel);
-        sails.log.debug('nextId: ', nextId);
+        // sails.log.debug('nextFunnel: ', nextFunnel);
+        // sails.log.debug('nextId: ', nextId);
 
         if (
           nextFunnel
@@ -443,7 +443,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/funnel/proceed-next-block, error: ', e);
+      // sails.log.error('api/helpers/funnel/proceed-next-block, error: ', e);
 
       throw {err: {
           module: 'api/helpers/funnel/proceed-next-block',
@@ -568,11 +568,11 @@ function parseMessageStyle(clientRec, clientName, msg, lang) {
         : '');
   }
 
-  sails.log.warn('resultHtml, before:', resultHtml);
+  // sails.log.warn('resultHtml, before:', resultHtml);
 
   resultHtml = parseSpecialTokens(clientRec, clientName, resultHtml, lang);
 
-  sails.log.warn('resultHtml, after:', resultHtml);
+  // sails.log.warn('resultHtml, after:', resultHtml);
 
 
   return resultHtml;

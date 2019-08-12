@@ -48,7 +48,7 @@ module.exports = {
 
       let client = await Client.create(_.omit(inputs.client, ['accounts', 'service_id'])).fetch();
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client response: ', client);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client response: ', client);
 
       const accountRaw = await sails.helpers.storage.accountCreate.with({
         account: {
@@ -57,7 +57,7 @@ module.exports = {
         }
       });
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> accountCreate response: ', accountRaw);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> accountCreate response: ', accountRaw);
 
       let acc = [];
       acc.push(accountRaw.payload);
@@ -67,14 +67,14 @@ module.exports = {
         account_use: accountRaw.payload.guid
       });
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data to update client record: ', client);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data to update client record: ', client);
 
       client = await sails.helpers.storage.clientUpdate.with({
         criteria: {guid: client.guid},
         data: client,
       });
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> updated client data: ', client);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> updated client data: ', client);
 
       return exits.success({
         status: 'ok',

@@ -57,7 +57,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::afterNotProceed ***************/');
+      sails.log.info('/*************** optin::afterNotProceed ***************/');
 
       inputs.block.done = true;
 

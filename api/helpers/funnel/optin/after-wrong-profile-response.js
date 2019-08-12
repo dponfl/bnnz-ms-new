@@ -48,7 +48,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::afterWrongProfileResponse ***************/');
+      sails.log.info('/*************** optin::afterWrongProfileResponse ***************/');
 
       /**
        * Update optin::get_login block

@@ -46,11 +46,11 @@ module.exports = {
   fn: async function (inputs, exits) {
     try {
 
-      sails.log.debug('/*************** optin::callbackGeneralInfo ***************/');
+      sails.log.info('/*************** optin::callbackGeneralInfo ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       switch (inputs.query.data) {

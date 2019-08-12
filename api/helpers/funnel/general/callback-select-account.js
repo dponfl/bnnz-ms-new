@@ -50,19 +50,19 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::callbackSelectAccount ***************/');
+      sails.log.info('/*************** general::callbackSelectAccount ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
-      sails.log.warn('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      sails.log.warn('Account selected: ', inputs.query.data);
-      sails.log.warn('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      // sails.log.warn('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      // sails.log.warn('Account selected: ', inputs.query.data);
+      // sails.log.warn('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
       const accGuid = _.split(inputs.query.data, 'acc_');
-      sails.log.warn('addGuid: ', accGuid);
+      // sails.log.warn('addGuid: ', accGuid);
 
       inputs.block.done = true;
 

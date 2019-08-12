@@ -40,10 +40,10 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** supervisorCallback ***************/');
+      sails.log.info('/*************** supervisorCallback ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       /**
@@ -175,7 +175,7 @@ module.exports = {
                * Throw error -> initial block was not found
                */
 
-              sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR');
+              // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR');
 
               throw {err: {
                   module: 'api/helpers/funnel/supervisor-callback',
@@ -211,7 +211,7 @@ module.exports = {
              * Throw error: we could not parse the specified callbackHelper
              */
 
-            sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR');
+            // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR');
 
             throw {err: {
                 module: 'api/helpers/funnel/supervisor-callback',
@@ -230,7 +230,7 @@ module.exports = {
 
         } else {
 
-          sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR');
+          // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR');
 
           throw {err: {
               module: 'api/helpers/funnel/supervisor-callback',
@@ -247,7 +247,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR: ', e);
+      // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR: ', e);
 
       throw {err: {
           module: 'api/helpers/funnel/supervisor-callback',

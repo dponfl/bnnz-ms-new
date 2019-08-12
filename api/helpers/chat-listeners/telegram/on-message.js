@@ -33,11 +33,11 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.warn('******************** telegramListener.onMessage ********************');
+    sails.log.info('******************** telegramListener.onMessage ********************');
 
     sails.config.custom.telegramBot.on('message', async (msg) => {
 
-      sails.log.debug('Message received: ', msg);
+      // sails.log.debug('Message received: ', msg);
 
       /**
        * Try to get the client record from DB
@@ -65,7 +65,7 @@ module.exports = {
           msg: msg
         });
 
-        sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-message, clientGet result:', getClientResponse);
+        // sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-message, clientGet result:', getClientResponse);
 
         if (getClientResponse.status === 'not_found') {
 
@@ -133,7 +133,7 @@ module.exports = {
 
             getServiceRefRes = await sails.helpers.storage.getServiceRef.with({serviceKey: useServiceRefKey});
 
-            sails.log.info('getServiceRefRes: ', getServiceRefRes);
+            // sails.log.info('getServiceRefRes: ', getServiceRefRes);
 
             serviceName = getServiceRefRes.service;
 
@@ -159,7 +159,7 @@ module.exports = {
 
           params.funnels = funnels.funnel_data || null;
 
-          sails.log.warn('params: ', params);
+          // sails.log.warn('params: ', params);
 
           getClientResponse = await sails.helpers.storage.clientCreate(params);
 

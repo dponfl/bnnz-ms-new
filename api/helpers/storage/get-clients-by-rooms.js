@@ -34,7 +34,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log(moduleName + ', inputs: ', inputs);
+    sails.log.info(moduleName + ', inputs: ', inputs);
 
     let clientsList = {};
 

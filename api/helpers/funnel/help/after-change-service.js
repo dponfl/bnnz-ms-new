@@ -54,7 +54,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::afterChangeService ***************/');
+      sails.log.info('/*************** help::afterChangeService ***************/');
 
       /**
        * Turn client.payment_plan to null

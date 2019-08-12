@@ -56,11 +56,11 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::callbackMaxPosts ***************/');
+      sails.log.info('/*************** general::callbackMaxPosts ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
 

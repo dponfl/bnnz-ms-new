@@ -53,7 +53,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::afterSubscriptionCheck ***************/');
+      sails.log.info('/*************** help::afterSubscriptionCheck ***************/');
 
       const newAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_tmp});
 

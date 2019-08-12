@@ -42,7 +42,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::afterPostSent ***************/');
+      sails.log.info('/*************** general::afterPostSent ***************/');
 
       /**
        * Проверить не достигнуто ли максимальное суточное кол-во отправленных сообщений

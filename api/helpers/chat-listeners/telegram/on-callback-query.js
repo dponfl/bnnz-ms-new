@@ -32,13 +32,13 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.warn('******************** telegramListener.onCallbackQuery ********************');
+    sails.log.info('******************** telegramListener.onCallbackQuery ********************');
 
     sails.config.custom.telegramBot.on('callback_query', async (query) => {
 
       try {
 
-        sails.log.info('Got callback query: ', query);
+        // sails.log.info('Got callback query: ', query);
 
         await sails.config.custom.telegramBot.answerCallbackQuery(query.id);
 
@@ -51,7 +51,7 @@ module.exports = {
           msg: query,
         });
 
-        sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-callback-query, clientGet result:', getClientResponse);
+        // sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-callback-query, clientGet result:', getClientResponse);
 
 
         /**

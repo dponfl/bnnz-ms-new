@@ -49,7 +49,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::afterWrongProfile ***************/');
+      sails.log.info('/*************** help::afterWrongProfile ***************/');
 
       let splitRes = _.split(inputs.block.previous, sails.config.custom.JUNCTION, 2);
       let nextFunnel = splitRes[0];

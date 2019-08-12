@@ -51,7 +51,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::beforeConfirmProfile ***************/');
+      sails.log.info('/*************** help::beforeConfirmProfile ***************/');
 
       /**
        * Add Instagram profile link to html message

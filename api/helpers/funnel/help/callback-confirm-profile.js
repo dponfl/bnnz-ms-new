@@ -54,11 +54,11 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::callbackConfirmProfile ***************/');
+      sails.log.info('/*************** help::callbackConfirmProfile ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       switch (inputs.query.data) {

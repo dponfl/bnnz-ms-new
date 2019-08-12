@@ -51,7 +51,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::afterSubscriptionMade ***************/');
+      sails.log.info('/*************** optin::afterSubscriptionMade ***************/');
 
       inputs.block.done = true;
       inputs.block.shown = true;
@@ -102,7 +102,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/funnel/optin/after-subscription-made, error: ', e);
+      // sails.log.error('api/helpers/funnel/optin/after-subscription-made, error: ', e);
 
       throw {err: {
           module: 'api/helpers/funnel/optin/after-subscription-made',

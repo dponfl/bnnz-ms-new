@@ -48,12 +48,12 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::forcedCheckLogin ***************/');
+      sails.log.info('/*************** help::forcedCheckLogin ***************/');
 
-      sails.log.debug(`inputs.msg.text: ${inputs.msg.text}`);
-      sails.log.debug(`enteredProfile: ${enteredProfile}`);
-      sails.log.debug(`currentAccount: ${currentAccount}`);
-      sails.log.debug(`currentAccountInd: ${currentAccountInd}`);
+      // sails.log.debug(`inputs.msg.text: ${inputs.msg.text}`);
+      // sails.log.debug(`enteredProfile: ${enteredProfile}`);
+      // sails.log.debug(`currentAccount: ${currentAccount}`);
+      // sails.log.debug(`currentAccountInd: ${currentAccountInd}`);
 
 
       if (enteredProfile === '') {
@@ -79,7 +79,7 @@ module.exports = {
 
         _.forEach(inputs.client.accounts, (acc) => {
 
-          sails.log.warn(`acc: `, acc);
+          // sails.log.warn(`acc: `, acc);
 
           if (_.trim(acc.inst_profile.toLowerCase()) === _.trim(enteredProfile.toLowerCase())) {
             enteredAccountExists = true;
@@ -87,18 +87,18 @@ module.exports = {
 
         });
 
-        sails.log.warn(`enteredAccountExists: `, enteredAccountExists);
+        // sails.log.warn(`enteredAccountExists: `, enteredAccountExists);
 
         if (enteredAccountExists) {
 
-          sails.log.warn('We got Instagram profile like already exists');
+          // sails.log.warn('We got Instagram profile like already exists');
 
           inputs.block.done = true;
           inputs.block.next = 'help::profile_exists';
 
         } else {
 
-          sails.log.warn('We got new Instagram profile');
+          // sails.log.warn('We got new Instagram profile');
 
           inputs.block.done = true;
           inputs.block.next = 'help::confirm_profile';

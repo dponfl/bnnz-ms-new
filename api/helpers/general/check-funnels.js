@@ -27,7 +27,7 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    sails.log('Check funnels performed...');
+    sails.log.info('Check funnels performed...');
 
     let checkError = [];
 

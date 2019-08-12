@@ -72,7 +72,7 @@ module.exports = {
 
     }
 
-    sails.log.info('ServiceRef.findOne, serviceRefRecord: ', serviceRefRecord);
+    // sails.log.info('ServiceRef.findOne, serviceRefRecord: ', serviceRefRecord);
 
     if (!serviceRefRecord) {
 

@@ -50,7 +50,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::beforeAddAccount ***************/');
+      sails.log.info('/*************** help::beforeAddAccount ***************/');
 
       /**
        * Replace placeholder by the list of active Instagram profiles

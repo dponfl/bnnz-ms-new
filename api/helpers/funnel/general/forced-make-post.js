@@ -48,12 +48,12 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::forcedMakePost ***************/');
+      sails.log.info('/*************** help::forcedMakePost ***************/');
 
-      sails.log.debug(`inputs.msg.text: ${inputs.msg.text}`);
-      sails.log.debug(`enteredPost: ${enteredPost}`);
-      sails.log.debug(`currentAccount: ${currentAccount}`);
-      sails.log.debug(`currentAccountInd: ${currentAccountInd}`);
+      // sails.log.debug(`inputs.msg.text: ${inputs.msg.text}`);
+      // sails.log.debug(`enteredPost: ${enteredPost}`);
+      // sails.log.debug(`currentAccount: ${currentAccount}`);
+      // sails.log.debug(`currentAccountInd: ${currentAccountInd}`);
 
 
       if (enteredPost === '') {
