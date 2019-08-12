@@ -58,6 +58,10 @@ module.exports = {
        */
 
       if (!account.subscription_active) {
+        sails.log.error('api/helpers/general/post-broadcast: Account has not active subscription', {
+          accountId: inputs.accountId,
+          subscription_active: account.subscription_active,
+        });
         return exits.success({
           status: 'nok',
           message: 'Account has not active subscription',
@@ -73,6 +77,10 @@ module.exports = {
        */
 
       if (account.posts_made_day >= account.service.max_outgoing_posts_per_day) {
+        sails.log.error('api/helpers/general/post-broadcast: Max amount of outgoing posts reached', {
+          posts_made_day: account.posts_made_day,
+          max_outgoing_posts_per_day: account.service.max_outgoing_posts_per_day,
+        });
         return exits.success({
           status: 'nok',
           message: 'Max amount of outgoing posts reached',
@@ -89,20 +97,27 @@ module.exports = {
 
       const accoutnRoomsList = [];
 
-      _.forEach(account.room, (room) => {
+      for (const room in account.room) {
         if (room.active) {
           accoutnRoomsList.push(room.id);
         }
-      });
+      }
+
+      sails.log.warn('api/helpers/general/post-broadcast, accoutnRoomsList:', accoutnRoomsList);
 
       const clientsListRaw = await sails.helpers.storage.getClientsByRooms(accoutnRoomsList);
+
+      sails.log.warn('api/helpers/general/post-broadcast, clientsListRaw:', clientsListRaw);
+
       let clientsList;
 
       if (clientsListRaw.status === 'ok') {
         clientsList = clientsListRaw.payload;
       }
 
-      _.forEach(clientsList, async (client) => {
+      sails.log.warn('api/helpers/general/post-broadcast, clientsList:', clientsList);
+
+      for (const client in clientsList) {
 
         /**
          * Делаем так, чтобы отправитель не получил этого сообщения :)
@@ -132,7 +147,7 @@ module.exports = {
             html: htmlPostBroadcast,
           });
         }
-      });
+      }
 
       return exits.success({
         status: 'ok',
