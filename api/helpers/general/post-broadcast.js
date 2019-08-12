@@ -42,7 +42,11 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log('general:postBroadcast helper...');
+    sails.log.info('general:postBroadcast helper...');
+
+    sails.log.info('inputs.accountId: ', inputs.accountId);
+    sails.log.info('inputs.client.accounts[inputs.accountId]: ', inputs.client.accounts[inputs.accountId]);
+
 
     try {
 
@@ -97,7 +101,7 @@ module.exports = {
 
       const accoutnRoomsList = [];
 
-      for (const room in account.room) {
+      for (const room of account.room) {
         if (room.active) {
           accoutnRoomsList.push(room.id);
         }
@@ -117,13 +121,18 @@ module.exports = {
 
       sails.log.warn('api/helpers/general/post-broadcast, clientsList:', clientsList);
 
-      for (const client in clientsList) {
+      for (const clientKey in clientsList) {
 
         /**
          * Делаем так, чтобы отправитель не получил этого сообщения :)
          */
 
+        const client = clientsList[clientKey];
+
         if (client.client.id !== inputs.client.id) {
+
+          sails.log.info('api/helpers/general/post-broadcast, gonna send post to the client: ', client.client.id);
+
           let useLang = (_.has(sails.config.custom.lang, client.lang) ? client.client.lang : 'ru');
           let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST_1") +
             client.account.inst_profile +
@@ -141,6 +150,8 @@ module.exports = {
               posts_received_total: client.account.posts_received_total++,
             },
           });
+
+          sails.log.info('api/helpers/general/post-broadcast, increased posts sent counters for the accoutn: ', client.account.id);
 
           let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
             chatId: client.client.chat_id,
