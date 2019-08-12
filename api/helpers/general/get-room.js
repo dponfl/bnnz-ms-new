@@ -30,7 +30,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.debug('general:getRoom helper...');
+    sails.log.info('general:getRoom helper...');
     // sails.log.debug('input params: ', inputs);
 
     let roomRecordWeGet;
@@ -57,7 +57,7 @@ module.exports = {
       });
 
     } catch (e) {
-      sails.log.error('api/helpers/general/get-room, error: ', e);
+      // sails.log.error('api/helpers/general/get-room, error: ', e);
       throw {err: {
           module: 'api/helpers/general/get-room',
           message: sails.config.custom.GENERAL_HELPER_ERROR,
@@ -78,7 +78,7 @@ module.exports = {
 
 async function getOneRoom(doNotUseRooms) {
 
-  sails.log.warn('<<<<<<< !!!!!! >>>>>>> getOneRoom, doNotUseRooms: ', doNotUseRooms);
+  // sails.log.warn('<<<<<<< !!!!!! >>>>>>> getOneRoom, doNotUseRooms: ', doNotUseRooms);
 
   let totalRooms = 0; // counter of how many rooms exists before new allocation
   let checkedRooms = []; // we mark room by used=true if this room was already allocated for this client
@@ -100,7 +100,7 @@ async function getOneRoom(doNotUseRooms) {
       }
     });
 
-    sails.log.warn('checkedRooms: ', checkedRooms);
+    // sails.log.warn('checkedRooms: ', checkedRooms);
 
     if (!totalRooms) {
 
@@ -122,7 +122,7 @@ async function getOneRoom(doNotUseRooms) {
         return !val.used;
       });
 
-      sails.log.warn('filteredRooms: ', filteredRooms);
+      // sails.log.warn('filteredRooms: ', filteredRooms);
 
       if (filteredRooms.length > 0) {
 
@@ -181,7 +181,7 @@ async function getOneRoom(doNotUseRooms) {
 
   } catch (e) {
 
-    sails.log.error('api/helpers/general/get-room=>getOneRoom, error: ', e);
+    // sails.log.error('api/helpers/general/get-room=>getOneRoom, error: ', e);
     throw {err: {
         module: 'api/helpers/general/get-room=>getOneRoom',
         message: sails.config.custom.GENERAL_HELPER_ERROR,

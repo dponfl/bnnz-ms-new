@@ -48,7 +48,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::afterWrongProfileResponse ***************/');
+      sails.log.info('/*************** help::afterWrongProfileResponse ***************/');
 
       /**
        * Update help::get_login block

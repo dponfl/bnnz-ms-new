@@ -66,7 +66,7 @@ module.exports = {
 
         if (err) {
 
-          sails.log.error('sendMailgun, sending mail, error: ', err);
+          // sails.log.error('sendMailgun, sending mail, error: ', err);
 
           throw {
             err: {
@@ -81,7 +81,7 @@ module.exports = {
 
         }
 
-        sails.log.debug('sendMailgun, email was successfully sent: ', body);
+        // sails.log.debug('sendMailgun, email was successfully sent: ', body);
 
         return exits.success({
           status: 'ok',

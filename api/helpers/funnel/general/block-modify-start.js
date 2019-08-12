@@ -45,10 +45,10 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::blockModifyStart ***************/');
+      sails.log.info('/*************** general::blockModifyStart ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Block: ', inputs.block);
 
       if (inputs.client.accounts.length > 1
         && inputs.block.message.html.length <= 1

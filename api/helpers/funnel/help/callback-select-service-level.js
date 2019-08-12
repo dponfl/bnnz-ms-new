@@ -61,11 +61,11 @@ module.exports = {
       });
 
 
-      sails.log.debug('/*************** help::callbackSelectServiceLevel ***************/');
+      sails.log.info('/*************** help::callbackSelectServiceLevel ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       switch (inputs.query.data) {

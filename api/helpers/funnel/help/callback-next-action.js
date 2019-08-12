@@ -57,11 +57,11 @@ module.exports = {
 
       const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
-      sails.log.debug('/*************** help::callbackNextAction ***************/');
+      sails.log.info('/*************** help::callbackNextAction ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       switch (inputs.query.data) {

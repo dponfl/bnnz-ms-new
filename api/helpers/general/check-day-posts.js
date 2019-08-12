@@ -28,7 +28,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log('general:checkDayPosts helper...');
+    sails.log.info('general:checkDayPosts helper...');
 
     try {
 
@@ -36,7 +36,7 @@ module.exports = {
 
       if (typeof account === 'undefined') {
 
-        sails.log.error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
+        // sails.log.error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
         throw new Error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
 
       }
@@ -51,7 +51,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/check-day-posts, error: ', e);
+      // sails.log.error('api/helpers/general/check-day-posts, error: ', e);
 
       throw {err: {
           module: 'api/helpers/general/check-day-posts',

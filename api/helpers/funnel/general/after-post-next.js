@@ -36,7 +36,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::afterPostNext ***************/');
+      sails.log.info('/*************** general::afterPostNext ***************/');
 
       const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
       const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {

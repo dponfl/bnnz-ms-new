@@ -52,11 +52,11 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::callbackConfirmProfile ***************/');
+      sails.log.info('/*************** optin::callbackConfirmProfile ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
-      sails.log.debug('Block: ', inputs.block);
-      sails.log.debug('Query: ', inputs.query);
+      // sails.log.debug('Block: ', inputs.block);
+      // sails.log.debug('Query: ', inputs.query);
 
 
       switch (inputs.query.data) {

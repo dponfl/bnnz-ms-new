@@ -45,7 +45,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::blockModifySelectAccount ***************/');
+      sails.log.info('/*************** general::blockModifySelectAccount ***************/');
 
       // sails.log.debug('Client: ', inputs.client);
       // sails.log.debug('Block: ', inputs.block);

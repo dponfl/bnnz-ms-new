@@ -26,7 +26,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.warn('******************** ' + moduleName + ' ********************');
+    sails.log.info('******************** ' + moduleName + ' ********************');
 
     try {
 

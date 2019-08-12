@@ -61,7 +61,7 @@ module.exports = {
         client: inputs.account.client || null,
       };
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Data for create account: ', accountRec);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Data for create account: ', accountRec);
 
       let account = await Account.create(accountRec).fetch();
 
@@ -69,7 +69,7 @@ module.exports = {
         .populate('room')
         .populate('service');
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Created account data: ', account);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Created account data: ', account);
 
       return exits.success({
         status: 'ok',

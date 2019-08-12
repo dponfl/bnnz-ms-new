@@ -40,7 +40,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log(moduleName + ', inputs: ', inputs);
+    sails.log.info(moduleName + ', inputs: ', inputs);
 
     let clientRecord;
     let accountRecord;
@@ -71,7 +71,7 @@ module.exports = {
 
     if (_.isNil(chatId)) {
 
-      sails.log.error('clientGet, no chat id in the message, input.msg: ', inputs.msg);
+      // sails.log.error('clientGet, no chat id in the message, input.msg: ', inputs.msg);
 
       throw {err: {
           module: 'api/helpers/storage/get-client',
@@ -98,7 +98,7 @@ module.exports = {
          * Record for the client was not found
          */
 
-        sails.log(moduleName + ', client was NOT FOUND');
+        // sails.log(moduleName + ', client was NOT FOUND');
 
         return exits.success({
           status: 'not_found',
@@ -115,7 +115,7 @@ module.exports = {
          * found clientRecord for the specified criteria
          */
 
-        sails.log(moduleName + ', client was FOUND: ', clientRecord);
+        // sails.log(moduleName + ', client was FOUND: ', clientRecord);
 
         const accountRecordRaw = await sails.helpers.storage.accountGet.with({
           clientId: clientRecord.id,
@@ -129,7 +129,7 @@ module.exports = {
            * Record(s) for the client's account(s) not found
            */
 
-          sails.log(moduleName + ', account(s) NOT FOUND');
+          // sails.log(moduleName + ', account(s) NOT FOUND');
 
           return exits.success({
             status: 'not_found',
@@ -146,7 +146,7 @@ module.exports = {
            * found accountRecord for the specified criteria
            */
 
-          sails.log(moduleName + ', accout(s) FOUND: ', accountRecord);
+          // sails.log(moduleName + ', accout(s) FOUND: ', accountRecord);
 
           return exits.success({
             status: 'found',
@@ -161,7 +161,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('clientGet, Client.findOne error, input.msg: ', inputs.msg);
+      // sails.log.error('clientGet, Client.findOne error, input.msg: ', inputs.msg);
 
       throw {err: {
           module: 'api/helpers/storage/get-client',

@@ -40,8 +40,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.debug('general:loadInitialFunnels helper...');
-    sails.log.debug('input params: ', inputs);
+    sails.log.info('general:loadInitialFunnels helper...');
+    // sails.log.debug('input params: ', inputs);
 
     try {
 
@@ -50,7 +50,7 @@ module.exports = {
         active: true
       });
 
-      sails.log.debug('funnels: ', funnels);
+      // sails.log.debug('funnels: ', funnels);
 
       inputs.client.funnels[inputs.funnelName] = funnels.funnel_data[inputs.funnelName];
 
@@ -72,7 +72,7 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/load-initial-funnels, error: ', e);
+      // sails.log.error('api/helpers/general/load-initial-funnels, error: ', e);
 
       throw {err: {
           module: 'api/helpers/general/load-initial-funnels',

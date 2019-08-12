@@ -97,7 +97,7 @@ module.exports = {
         .populate('service')
         .populate('room');
 
-      sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> account data object: ', account);
+      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> account data object: ', account);
 
       return exits.success({
         status: 'ok',

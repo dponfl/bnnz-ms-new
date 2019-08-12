@@ -53,7 +53,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** help::afterSendPost ***************/');
+      sails.log.info('/*************** help::afterSendPost ***************/');
 
       inputs.block.done = true;
 

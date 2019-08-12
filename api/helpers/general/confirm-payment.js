@@ -39,7 +39,7 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    sails.log.debug('************** confirmPayment helper **************');
+    sails.log.info('************** confirmPayment helper **************');
 
     let client;
     let account;
@@ -63,7 +63,7 @@ module.exports = {
          * Reply that the client was not found
          */
 
-        sails.log('client was NOT FOUND');
+        // sails.log('client was NOT FOUND');
 
         return exits.success({
           status: 'not_found',
@@ -79,7 +79,7 @@ module.exports = {
        * found record for the specified criteria
        */
 
-      sails.log('client was FOUND');
+      // sails.log('client was FOUND');
 
       const accountRecordsRaw = await sails.helpers.storage.accountGet.with({
         clientId: client.id,
@@ -93,7 +93,7 @@ module.exports = {
          * Record(s) for the client's account(s) not found
          */
 
-        sails.log.error('api/helpers/general/confirm-payment.js, Error: account(s) NOT FOUND, client: ', client);
+        // sails.log.error('api/helpers/general/confirm-payment.js, Error: account(s) NOT FOUND, client: ', client);
 
         return exits.success({
           status: 'not_found',
@@ -109,7 +109,7 @@ module.exports = {
        * found accountRecords for the specified criteria
        */
 
-      sails.log.debug('api/helpers/general/confirm-payment.js, accout(s) FOUND: ', accountRecords);
+      // sails.log.debug('api/helpers/general/confirm-payment.js, accout(s) FOUND: ', accountRecords);
 
       client = _.assignIn(client, {accounts: accountRecords});
 
@@ -117,7 +117,7 @@ module.exports = {
 
       if (_.isNil(account)) {
 
-        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+        // sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
 
         throw {err: {
             module: 'api/helpers/general/confirm-payment',
@@ -370,8 +370,8 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/confirm-payment error, input: ', inputs);
-      sails.log.error('api/helpers/general/confirm-payment error, error: ', e);
+      // sails.log.error('api/helpers/general/confirm-payment error, input: ', inputs);
+      // sails.log.error('api/helpers/general/confirm-payment error, error: ', e);
 
       throw {err: {
           module: 'api/helpers/general/confirm-payment',
@@ -393,7 +393,7 @@ module.exports = {
 
 async function linkRoomsToClient(accountRec) {
 
-  sails.log.debug('linkRoomsToClient, accountRec:', accountRec);
+  // sails.log.debug('linkRoomsToClient, accountRec:', accountRec);
 
   _.forEach(accountRec.room, async function (elem) {
       let room = await Room.findOne({id: elem.id});
@@ -407,7 +407,7 @@ async function linkRoomsToClient(accountRec) {
 
   const rooms = await sails.helpers.general.getRoom(accountRec.service.rooms);
 
-  sails.log.debug('linkRoomsToClient, rooms:', rooms);
+  // sails.log.debug('linkRoomsToClient, rooms:', rooms);
 
   await Account.addToCollection(accountRec.id, 'room', rooms.payload.roomIDsRes);
 

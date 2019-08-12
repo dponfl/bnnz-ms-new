@@ -47,7 +47,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::forcedCheckLogin ***************/');
+      sails.log.info('/*************** optin::forcedCheckLogin ***************/');
 
 
       if (_.trim(inputs.msg.text) === '') {

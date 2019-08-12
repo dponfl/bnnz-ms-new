@@ -53,7 +53,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** optin::beforeConfirmProfile ***************/');
+      sails.log.info('/*************** optin::beforeConfirmProfile ***************/');
 
       /**
        * Add Instagram profile link to html message

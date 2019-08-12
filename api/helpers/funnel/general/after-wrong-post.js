@@ -42,7 +42,7 @@ module.exports = {
 
     try {
 
-      sails.log.debug('/*************** general::afterWrongPost ***************/');
+      sails.log.info('/*************** general::afterWrongPost ***************/');
 
       /**
        * Update general::make_post
