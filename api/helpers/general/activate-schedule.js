@@ -29,9 +29,25 @@ module.exports = {
 
     sails.log.warn('******************** ' + moduleName + ' ********************');
 
+/*
+
+  *    *    *    *    *    *
+  ┬    ┬    ┬    ┬    ┬    ┬
+  │    │    │    │    │    │
+  │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+  │    │    │    │    └───── month (1 - 12)
+  │    │    │    └────────── day of month (1 - 31)
+  │    │    └─────────────── hour (0 - 23)
+  │    └──────────────────── minute (0 - 59)
+  └───────────────────────── second (0 - 59, OPTIONAL)
+
+
+
+*/
 
     // const scheduleRules = '*/1 */1 * * * *'; // every one second
     // const scheduleRules = '*/5 */1 * * * *'; // every 5 seconds
+    // const scheduleRules = '42 * * * *'; // Execute a cron job when the minute is 42 (e.g. 19:42, 20:42, etc.)
 
     const schedules = [];
 
