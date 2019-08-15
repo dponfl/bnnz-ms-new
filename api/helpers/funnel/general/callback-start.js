@@ -64,6 +64,7 @@ module.exports = {
                * The client cannot send more posts today
                */
 
+              inputs.block.done = true;
               inputs.block.next = 'general::max_posts';
 
               /**
@@ -91,6 +92,7 @@ module.exports = {
                * The client can send more posts today
                */
 
+              inputs.block.done = true;
               inputs.block.next = 'general::make_post';
 
             }
@@ -104,6 +106,7 @@ module.exports = {
 
         case 'start_get_help':
 
+          inputs.block.done = true;
           inputs.block.next = 'help::start';
           inputs.block.switchToFunnel = 'help';
 

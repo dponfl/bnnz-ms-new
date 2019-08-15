@@ -126,24 +126,26 @@ module.exports = {
 
         }
 
+      } else {
+
+        /**
+         * Proceed the generic text message
+         */
+
+        /**
+         * Save the received simple message
+         */
+
+        await sails.helpers.storage.messageSave.with({
+          message: inputs.msg.text,
+          message_format: 'simple',
+          messenger: inputs.client.messenger,
+          message_originator: 'client',
+          client_id: inputs.client.id,
+          client_guid: inputs.client.guid
+        });
+
       }
-
-      /**
-       * Proceed the generic text message
-       */
-
-      /**
-       * Save the received simple message
-       */
-
-      await sails.helpers.storage.messageSave.with({
-        message: inputs.msg.text,
-        message_format: 'simple',
-        messenger: inputs.client.messenger,
-        message_originator: 'client',
-        client_id: inputs.client.id,
-        client_guid: inputs.client.guid
-      });
 
       /**
        * Try to find the initial block of the current funnel

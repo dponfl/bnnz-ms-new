@@ -66,7 +66,7 @@ module.exports = {
 
       switch (inputs.query.data) {
         case 'check_new_post':
-          let checkDayPostsRes = await sails.helpers.general.checkDayPosts(inputs.client);
+          const checkDayPostsRes = await sails.helpers.general.checkDayPosts(inputs.client);
           if (checkDayPostsRes.status === 'ok') {
 
             if (checkDayPostsRes.payload.dayPostsReached) {
@@ -104,11 +104,6 @@ module.exports = {
 
               if (getBlock) {
 
-                getBlock.enabled = true;
-                getBlock.done = false;
-                getBlock.next = null;
-                getBlock.switchToFunnel = null;
-                inputs.block.switchToFunnel = updateFunnel;
                 updateBlockPrevious = getBlock.previous;
 
               } else {
@@ -118,6 +113,7 @@ module.exports = {
               }
 
               inputs.block.done = true;
+              inputs.block.next = 'general::start';
 
               /**
                * Update General funnel to the initial state to enable the client to perform it again
@@ -211,7 +207,7 @@ module.exports = {
           inputs.client.funnels = initialGeneralFunnelRes .payload.client.funnels;
 
           /**
-           * Сохранить сохраненное значение ключа previous блока start
+           * Загрузить сохраненное значение ключа previous блока start
            */
 
           updateBlock = 'general::start';
@@ -236,12 +232,38 @@ module.exports = {
 
           }
 
+          /**
+           * Организовать перехолд на блок select_account
+           */
+
+          updateBlock = 'general::select_account';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          getBlock = _.find(inputs.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.enabled = true;
+            getBlock.shown = false;
+            getBlock.done = false;
+            getBlock.next = null;
+            getBlock.switchToFunnel = null;
+            getBlock.previous = "general::start";
+
+          } else {
+
+            throw new Error(`Wrong block decoding for data: ${updateBlock}`);
+
+          }
+
           await sails.helpers.funnel.afterHelperGeneric.with({
             client: inputs.client,
             block: inputs.block,
             msg: inputs.query,
             next: true,
-            previous: true,
+            previous: false,
             switchFunnel: true,
           });
           break;

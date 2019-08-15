@@ -910,7 +910,7 @@
       "message": {
         "html": [
           {
-            "text": "MSG_GENERAL_LIMIT_ACHEIVED",
+            "text": "MSG_GENERAL_LIMIT_ACHEIVED_MSG",
             "style": "",
             "cr": "DCR"
           },

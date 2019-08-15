@@ -100,6 +100,7 @@ module.exports = {
              * Можем переходить на следующий блок
              */
 
+            inputs.block.done = true;
             inputs.block.next = 'general::post_sent';
 
           } else {

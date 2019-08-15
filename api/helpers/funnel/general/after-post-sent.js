@@ -61,6 +61,7 @@ module.exports = {
          * На этом аккаунте нельзя больше отправлять постов в текущий день
          */
 
+        inputs.block.done = true;
         inputs.block.next = "general::max_posts";
 
         /**
@@ -88,6 +89,7 @@ module.exports = {
          * На этом аккаунте можно еще отправлять посты в текущий день
          */
 
+        inputs.block.done = true;
         inputs.block.next = "general::post_next";
       }
 

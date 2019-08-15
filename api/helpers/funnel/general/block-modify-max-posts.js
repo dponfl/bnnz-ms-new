@@ -50,25 +50,33 @@ module.exports = {
       // sails.log.debug('Client: ', inputs.client);
       // sails.log.debug('Block: ', inputs.block);
 
+      const blockAlreadyWasModified = _.find(resBlock.message.inline_keyboard, (elem) => {
+
+        // sails.log.warn('blockAlreadyWasModified, elem: ', elem);
+        // sails.log.warn('blockAlreadyWasModified, elem.callback_data: ', elem[0].callback_data);
+
+        return elem[0].callback_data === "сhange_account";
+      });
+
       if (inputs.client.accounts.length > 1
-        && inputs.block.message.html.length <= 1
+        && blockAlreadyWasModified == null
       ) {
 
-        messageHtml = _.concat(inputs.block.message.html,{
+        messageHtml = _.concat(inputs.block.message.html, {
           "text": "MSG_GENERAL_LIMIT_ACHEIVED_ACOUNT",
           "style": "b",
           "cr": ""
         });
 
-        messageInlineKeyboard = _.concat(inputs.block.message.inline_keyboard, [[
+        messageInlineKeyboard = [
           {
             "text": "MSG_GENERAL_BTN_CHANGE_ACCOUNT",
             "callback_data": "сhange_account"
           }
-        ]]);
+        ];
 
         resBlock.message.html = messageHtml;
-        resBlock.message.inline_keyboard = messageInlineKeyboard;
+        resBlock.message.inline_keyboard.push(messageInlineKeyboard);
 
       }
 
