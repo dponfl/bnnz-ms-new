@@ -113,6 +113,7 @@ module.exports = {
           module: 'api/helpers/storage/account-get',
           message: sails.config.custom.ACCOUNTGET_ERROR,
           payload: {},
+        }
       };
     }
 
