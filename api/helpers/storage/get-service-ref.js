@@ -32,15 +32,20 @@ module.exports = {
 
     if (!uuid.isAPIKey(inputs.serviceKey)) {
 
+      const errorLocation = 'api/helpers/storage/get-service-ref';
+      const errorMsg = sails.config.custom.SERVICEREF_NOT_API_KEY;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', {
+        params: inputs,
+      });
+
       throw {err: {
-          module: 'api/helpers/storage/get-service-ref',
-          message: sails.config.custom.SERVICEREF_NOT_API_KEY,
-          payload: {
-            params: inputs,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
     let serviceRefRecord;
@@ -55,21 +60,18 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/storage/get-service-ref';
+      const errorMsg = sails.config.custom.SERVICEREF_GENERAL_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/storage/get-service-ref',
-          message: sails.config.custom.SERVICEREF_GENERAL_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
     // sails.log.info('ServiceRef.findOne, serviceRefRecord: ', serviceRefRecord);
@@ -80,12 +82,18 @@ module.exports = {
        * record for the specified criteria was not found
        */
 
+      const errorLocation = 'api/helpers/storage/get-service-ref';
+      const errorMsg = sails.config.custom.SERVICEREF_NOT_FOUND;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', {
+        params: inputs,
+      });
+
       throw {err: {
-          module: 'api/helpers/storage/get-service-ref',
-          message: sails.config.custom.SERVICEREF_NOT_FOUND,
-          payload: {
-            params: inputs,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
 
@@ -111,22 +119,18 @@ module.exports = {
 
       } catch (e) {
 
-        throw {err: {
-            module: 'api/helpers/storage/get-service-ref',
-            message: sails.config.custom.SERVICEREF_UPDATE_ERROR,
-            payload: {
-              params: inputs,
-              error: {
-                name: e.name || 'no error name',
-                message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-                stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-                code: e.code || 'no error code',
-              }
-            }
+        const errorLocation = 'api/helpers/storage/get-service-ref';
+        const errorMsg = sails.config.custom.SERVICEREF_UPDATE_ERROR;
 
+        sails.log.error(errorLocation + ', error: ' + errorMsg);
+        sails.log.error(errorLocation + ', error details: ', e);
+
+        throw {err: {
+            module: errorLocation,
+            message: errorMsg,
+            payload: {},
           }
         };
-
       }
 
     }
