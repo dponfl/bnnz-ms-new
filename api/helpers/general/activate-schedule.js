@@ -78,15 +78,18 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/activate-schedule, error: ', e);
+      const errorLocation = 'api/helpers/general/activate-schedule';
+      const errorMsg = 'Error';
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/activate-schedule',
-          message: 'api/helpers/general/activate-schedule: general error',
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };
-
     }
 
     return exits.success({

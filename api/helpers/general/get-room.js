@@ -58,14 +58,18 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/get-room, error: ', e);
+      const errorLocation = 'api/helpers/general/get-room';
+      const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/get-room',
-          message: sails.config.custom.GENERAL_HELPER_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
-      }
+      };
     }
   }
 };
@@ -175,14 +179,18 @@ async function getOneRoom(doNotUseRooms) {
 
   } catch (e) {
 
-    sails.log.error('api/helpers/general/get-room=>getOneRoom, error: ', e);
+    const errorLocation = 'api/helpers/general/get-room=>getOneRoom';
+    const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+    sails.log.error(errorLocation + ', error: ' + errorMsg);
+    sails.log.error(errorLocation + ', error details: ', e);
 
     throw {err: {
-        module: 'api/helpers/general/get-room=>getOneRoom',
-        message: sails.config.custom.GENERAL_HELPER_ERROR,
+        module: errorLocation,
+        message: errorMsg,
         payload: {},
       }
-    }
+    };
   }
 }
 

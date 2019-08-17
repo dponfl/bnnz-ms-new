@@ -238,12 +238,15 @@ module.exports = {
 
     } catch (e) {
 
-      // sails.log.error('api/helpers/general/confirm-subscription error, input: ', inputs);
-      sails.log.error('api/helpers/general/confirm-subscription error, error: ', e);
+      const errorLocation = 'api/helpers/general/confirm-subscription';
+      const errorMsg = sails.config.custom.CONFIRM_SUBSCRIPTION_GENERAL_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/confirm-subscription',
-          message: sails.config.custom.CONFIRM_SUBSCRIPTION_GENERAL_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };

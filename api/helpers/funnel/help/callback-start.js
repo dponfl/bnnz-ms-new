@@ -190,11 +190,15 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/funnel/help/callback-start, error: ', e);
+      const errorLocation = 'api/helpers/funnel/help/callback-start';
+      const errorMsg = 'Error';
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/funnel/help/callback-start',
-          message: 'api/helpers/funnel/help/callback-start error',
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };

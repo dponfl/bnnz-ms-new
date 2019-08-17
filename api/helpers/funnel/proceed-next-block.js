@@ -390,18 +390,18 @@ module.exports = {
            * Throw error: we could not parse the specified afterHelper
            */
 
+          const errorLocation = 'api/helpers/funnel/proceed-next-block';
+          const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR;
+
+          sails.log.error(errorLocation + ', error: ' + errorMsg);
+          sails.log.error(errorLocation + ', error details: ', e);
+
           throw {err: {
-              module: 'api/helpers/funnel/proceed-next-block',
-              message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
-              payload: {
-                params: inputs,
-                helperName: block.afterHelper,
-                afterHelperBlock: afterHelperBlock,
-                afterHelperName: afterHelperName,
-              }
+              module: errorLocation,
+              message: errorMsg,
+              payload: {},
             }
           };
-
         }
 
       }
@@ -444,23 +444,18 @@ module.exports = {
 
     } catch (e) {
 
-      // sails.log.error('api/helpers/funnel/proceed-next-block, error: ', e);
+      const errorLocation = 'api/helpers/funnel/proceed-next-block';
+      const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/funnel/proceed-next-block',
-          message: sails.config.custom.PROCEED_NEXT_BLOCK_ERROR,
-          payload: {
-            // params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
     return exits.success({status: 'ok',
@@ -623,18 +618,18 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
        * Throw error: we could not parse the specified beforeHelper
        */
 
+      const errorLocation = 'api/helpers/funnel/proceed-next-block';
+      const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/funnel/proceed-next-block',
-          message: sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR,
-          payload: {
-            params: inputs,
-            helperName: block.beforeHelper,
-            afterHelperBlock: beforeHelperBlock,
-            afterHelperName: beforeHelperName,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }
@@ -677,18 +672,18 @@ async function activateBlockModifyHelper(client, block) {
        * Throw error: we could not parse the specified blockModifyHelper
        */
 
+      const errorLocation = 'api/helpers/funnel/proceed-next-block';
+      const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/funnel/proceed-next-block',
-          message: sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR,
-          payload: {
-            params: inputs,
-            helperName: block.blockModifyHelper,
-            afterHelperBlock: blockModifyHelperBlock,
-            afterHelperName: blockModifyHelperName,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }
