@@ -117,14 +117,12 @@ module.exports = {
 
       if (_.isNil(account)) {
 
-        // sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
 
         throw {err: {
             module: 'api/helpers/general/confirm-payment',
             message: 'Cannot find account by inputs.aid=' + inputs.aid,
-            payload: {
-              params: inputs,
-            },
+            payload: {},
           }
         };
 

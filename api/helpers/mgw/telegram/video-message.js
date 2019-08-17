@@ -69,11 +69,15 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/mgw/telegram/video-message, error: ', e);
+      const errorLocation = 'api/helpers/mgw/telegram/video-message';
+      const errorMsg = sails.config.custom.IMG_MESSAGE_SEND_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/mgw/telegram/video-message',
-          message: sails.config.custom.IMG_MESSAGE_SEND_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };

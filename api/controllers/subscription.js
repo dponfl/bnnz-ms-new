@@ -48,12 +48,15 @@ module.exports = {
 
     } catch (e) {
 
-      // sails.log.error('api/controllers/subscription error, input: ', inputs);
-      sails.log.error('api/controllers/subscription error, error: ', e);
+      const errorLocation = 'api/controllers/subscription';
+      const errorMsg = sails.config.custom.SUBSCRIPTION_CONTROLLER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/controllers/subscription',
-          message: sails.config.custom.SUBSCRIPTION_CONTROLLER_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };

@@ -79,18 +79,21 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/storage/account-create, error: ', e);
+      const errorLocation = 'api/helpers/storage/account-create';
+      const errorMsg = sails.config.custom.ACCOUNTCREATE_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/storage/account-create',
-          message: sails.config.custom.ACCOUNTCREATE_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };
     }
 
   }
-
 
 };
 

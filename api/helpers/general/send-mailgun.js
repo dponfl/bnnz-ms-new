@@ -66,16 +66,16 @@ module.exports = {
 
         if (err) {
 
-          // sails.log.error('sendMailgun, sending mail, error: ', err);
+          const errorLocation = 'api/helpers/general/send-mailgun';
+          const errorMsg = sails.config.custom.SEND_MAILGUN_SEND_MESSAGE_ERROR;
 
-          throw {
-            err: {
-              module: 'api/helpers/general/send-mailgun',
-              message: sails.config.custom.SEND_MAILGUN_SEND_MESSAGE_ERROR,
-              payload: {
-                params: inputs,
-                error: err
-              }
+          sails.log.error(errorLocation + ', error: ' + errorMsg);
+          sails.log.error(errorLocation + ', error details: ', e);
+
+          throw {err: {
+              module: errorLocation,
+              message: errorMsg,
+              payload: {},
             }
           };
 
@@ -93,18 +93,16 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/general/send-mailgun';
+      const errorMsg = sails.config.custom.SEND_MAILGUN_GENERAL_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/general/send-mailgun',
-          message: sails.config.custom.SEND_MAILGUN_GENERAL_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
 

@@ -177,6 +177,20 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = '___';
+      const errorMsg = ___;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
+      throw {err: {
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
+        }
+      };
+
+
       throw {err: {
           module: 'api/helpers/funnel/optin/callback-paid-gold',
           message: 'api/helpers/funnel/optin/callback-paid-gold error',

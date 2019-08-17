@@ -68,30 +68,34 @@ module.exports = {
 
       // return exits.success({status: 'nok', message: 'No method or wrong method', payload: {}});
 
+      const errorLocation = 'api/helpers/general/send-rest';
+      const errorMsg = sails.config.custom.SENDREST_NO_METHOD;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/general/send-rest',
-          message: sails.config.custom.SENDREST_NO_METHOD,
-          payload: {
-            params: inputs,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
     if (!inputs.url) {
 
-      // return exits.success({status: 'nok', message: 'No url', payload: {}});
+      const errorLocation = 'api/helpers/general/send-rest';
+      const errorMsg = sails.config.custom.SENDREST_NO_URL;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/send-rest',
-          message: sails.config.custom.SENDREST_NO_URL,
-          payload: {
-            params: inputs,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
     let options = {
@@ -105,14 +109,16 @@ module.exports = {
 
     if (!result) {
 
-      // return exits.success({status: 'nok', message: 'No result from rp', payload: {}});
+      const errorLocation = 'api/helpers/general/send-rest';
+      const errorMsg = sails.config.custom.SENDREST_NO_RESULT;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/send-rest',
-          message: sails.config.custom.SENDREST_NO_RESULT,
-          payload: {
-            params: inputs,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
 

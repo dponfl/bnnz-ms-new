@@ -72,11 +72,15 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/general/load-initial-funnels, error: ', e);
+      const errorLocation = 'api/helpers/general/load-initial-funnels';
+      const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/general/load-initial-funnels',
-          message: sails.config.custom.GENERAL_HELPER_ERROR,
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };

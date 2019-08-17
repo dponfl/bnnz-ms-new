@@ -227,15 +227,18 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/funnel/help/callback-next-action, error: ', e);
+      const errorLocation = 'api/helpers/funnel/help/callback-next-action';
+      const errorMsg = 'Error';
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/funnel/help/callback-next-action',
-          message: 'api/helpers/funnel/help/callback-next-action error',
+          module: errorLocation,
+          message: errorMsg,
           payload: {},
         }
       };
-
     }
 
 
