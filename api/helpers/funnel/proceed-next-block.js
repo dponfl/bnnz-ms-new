@@ -4,6 +4,7 @@ const _ = require('lodash');
 
 const t = require('../../services/translate').t;
 const confObj = require('../../services/translate').getConfigObj;
+const emoji = require('node-emoji');
 
 
 
@@ -544,9 +545,9 @@ function parseSpecialTokens(clientRec, clientName, msg, lang) {
   const numberOfMessagesSentToday = currentAccount.posts_made_day;
   resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
 
+  resultStr = emoji.emojify(resultStr);
 
   return resultStr;
-
 }
 
 function parseMessageStyle(clientRec, clientName, msg, lang) {
