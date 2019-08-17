@@ -110,14 +110,12 @@ module.exports = {
 
       if (_.isNil(account)) {
 
-        // sails.log.error('api/helpers/general/confirm-subsciption, error: Cannot find account by inputs.aid=' + inputs.aid);
+        sails.log.error('api/helpers/general/confirm-subsciption, error: Cannot find account by inputs.aid=' + inputs.aid);
 
         throw {err: {
             module: 'api/helpers/general/confirm-subscription',
             message: 'Cannot find account by inputs.aid=' + inputs.aid,
-            payload: {
-              params: inputs,
-            },
+            payload: {},
           }
         };
 
@@ -241,20 +239,12 @@ module.exports = {
     } catch (e) {
 
       // sails.log.error('api/helpers/general/confirm-subscription error, input: ', inputs);
-      // sails.log.error('api/helpers/general/confirm-subscription error, error: ', e);
+      sails.log.error('api/helpers/general/confirm-subscription error, error: ', e);
 
       throw {err: {
           module: 'api/helpers/general/confirm-subscription',
           message: sails.config.custom.CONFIRM_SUBSCRIPTION_GENERAL_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          },
+          payload: {},
         }
       };
 
