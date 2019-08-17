@@ -12,8 +12,7 @@ module.exports = {
 
     message: {
       type: 'string',
-      columnType: 'text',
-      charset: 'utf8mb4',
+      columnType: 'text CHARACTER SET utf8mb4',
     },
     message_format: {
       type: 'string',
