@@ -78,6 +78,7 @@ module.exports = {
           module: 'api/helpers/general/load-initial-funnels',
           message: sails.config.custom.GENERAL_HELPER_ERROR,
           payload: {},
+        }
       };
 
     }
