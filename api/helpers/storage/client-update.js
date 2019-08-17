@@ -75,21 +75,18 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/storage/client-update';
+      const errorMsg = sails.config.custom.CLIENTUPDATE_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/storage/client-update',
-          message: sails.config.custom.CLIENTUPDATE_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }

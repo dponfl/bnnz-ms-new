@@ -84,18 +84,16 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/storage/client-create';
+      const errorMsg = sails.config.custom.CLIENTCREATE_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/storage/client-create',
-          message: sails.config.custom.CLIENTCREATE_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: 620}) || 'no error message',
-              stack: _.truncate(e.stack, {length: 620}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
     }
