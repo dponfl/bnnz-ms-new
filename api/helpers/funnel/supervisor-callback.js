@@ -179,7 +179,6 @@ module.exports = {
               const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR;
 
               sails.log.error(errorLocation + ', error: ' + errorMsg);
-              sails.log.error(errorLocation + ', error details: ', e);
 
               throw {err: {
                   module: errorLocation,
@@ -216,7 +215,6 @@ module.exports = {
             const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR;
 
             sails.log.error(errorLocation + ', error: ' + errorMsg);
-            sails.log.error(errorLocation + ', error details: ', e);
 
             throw {err: {
                 module: errorLocation,
@@ -232,7 +230,6 @@ module.exports = {
           const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR;
 
           sails.log.error(errorLocation + ', error: ' + errorMsg);
-          sails.log.error(errorLocation + ', error details: ', e);
 
           throw {err: {
               module: errorLocation,

@@ -45,7 +45,6 @@ module.exports = {
         const errorMsg = sails.config.custom.SERVICE_NOT_FOUND;
 
         sails.log.error(errorLocation + ', error: ' + errorMsg);
-        sails.log.error(errorLocation + ', error details: ', e);
 
         throw {err: {
             module: errorLocation,

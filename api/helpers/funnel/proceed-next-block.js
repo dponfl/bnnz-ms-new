@@ -394,7 +394,6 @@ module.exports = {
           const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR;
 
           sails.log.error(errorLocation + ', error: ' + errorMsg);
-          sails.log.error(errorLocation + ', error details: ', e);
 
           throw {err: {
               module: errorLocation,
@@ -622,7 +621,6 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
       const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,
@@ -676,7 +674,6 @@ async function activateBlockModifyHelper(client, block) {
       const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,
