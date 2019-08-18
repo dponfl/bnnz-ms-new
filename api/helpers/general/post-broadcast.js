@@ -135,17 +135,10 @@ module.exports = {
           // sails.log.info('api/helpers/general/post-broadcast, gonna send post to the client: ', client.client.id);
 
           let useLang = (_.has(sails.config.custom.lang, client.lang) ? client.client.lang : 'ru');
-          let htmlPostBroadcast = t(useLang, "MSG_GENERAL_POST_BROADCAST_1") +
+          let htmlPostBroadcast = emoji.emojify(t(useLang, "MSG_GENERAL_POST_BROADCAST_1"), () => '') +
             client.account.inst_profile +
-            t(useLang, "MSG_GENERAL_POST_BROADCAST_2") +
+            emoji.emojify(t(useLang, "MSG_GENERAL_POST_BROADCAST_2"), () => '') +
             sails.config.custom.SCR + inputs.postLink;
-
-          /**
-           * Обрабатываем эмодзи
-           */
-
-          htmlPostBroadcast = emoji.emojify(htmlPostBroadcast);
-
 
           /**
            * Увеличиваем счетчики сообщений, отправленных клиенту
