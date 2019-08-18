@@ -539,7 +539,7 @@ function parseSpecialTokens(clientRec, clientName, msg, lang) {
   const numberOfMessagesSentToday = currentAccount.posts_made_day;
   resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
 
-  resultStr = emoji.emojify(resultStr);
+  resultStr = emoji.emojify(resultStr, () => '');
 
   return resultStr;
 }
