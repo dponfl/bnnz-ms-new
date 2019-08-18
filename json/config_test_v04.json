@@ -107,7 +107,7 @@
         "MSG_GENERAL_BTN_CHANGE_ACCOUNT": "ИЗМЕНИТЬ ТЕКУЩИЙ АККАУНТ",
         "MSG_GENERAL_SELECT_ACCOUNT": "Выбери аккаунт на который ты хочешь переключиться с помощью кнопок ниже. Текущий аккаунт отмечен знаком (*)",
         "MSG_GENERAL_POST_BROADCAST_1": "Новый пост твоего друга (сообщение для аккаунта ",
-        "MSG_GENERAL_POST_BROADCAST_2": "). Не забудь лайкнуть :like: его :point_right: ",
+        "MSG_GENERAL_POST_BROADCAST_2": "). Не забудь лайкнуть :thumbup: его :point_right: ",
         "MSG_GENERAL_WRONG_LINK": "$FirstName$, это не ссылка на пост в Инстаграм.",
         "MSG_GENERAL_POST_SUCCESS": "$FirstName$, твой пост успешно отправлен другим участникам.",
         "MSG_GENERAL_ENTER_POST_LINK_AGAIN": "Попробуй снова.",
