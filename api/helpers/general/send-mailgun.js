@@ -70,7 +70,7 @@ module.exports = {
           const errorMsg = sails.config.custom.SEND_MAILGUN_SEND_MESSAGE_ERROR;
 
           sails.log.error(errorLocation + ', error: ' + errorMsg);
-          sails.log.error(errorLocation + ', error details: ', e);
+          sails.log.error(errorLocation + ', error details: ', err);
 
           throw {err: {
               module: errorLocation,

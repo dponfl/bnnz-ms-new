@@ -64,7 +64,6 @@ module.exports = {
       const errorMsg = sails.config.custom.CHECKFUNNELS_GENERAL_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,

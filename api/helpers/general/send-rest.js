@@ -72,7 +72,6 @@ module.exports = {
       const errorMsg = sails.config.custom.SENDREST_NO_METHOD;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,
@@ -88,7 +87,6 @@ module.exports = {
       const errorMsg = sails.config.custom.SENDREST_NO_URL;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,
@@ -113,7 +111,6 @@ module.exports = {
       const errorMsg = sails.config.custom.SENDREST_NO_RESULT;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
           module: errorLocation,
