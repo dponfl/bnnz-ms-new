@@ -1,4 +1,5 @@
 const t = require('../../services/translate').t;
+const emoji = require('node-emoji');
 
 module.exports = {
 
@@ -140,6 +141,13 @@ module.exports = {
             sails.config.custom.SCR + inputs.postLink;
 
           /**
+           * Обрабатываем эмодзи
+           */
+
+          htmlPostBroadcast = emoji.emojify(htmlPostBroadcast);
+
+
+          /**
            * Увеличиваем счетчики сообщений, отправленных клиенту
            */
 
@@ -162,6 +170,20 @@ module.exports = {
             chatId: client.client.chat_id,
             html: htmlPostBroadcast,
           });
+
+          /**
+           * Save the sent message
+           */
+
+          await sails.helpers.storage.messageSave.with({
+            message: htmlPostBroadcast,
+            message_format: 'post broadcast',
+            messenger: client.client.messenger,
+            message_originator: 'client',
+            client_id: client.client.id,
+            client_guid: client.client.guid
+          });
+
         }
       }
 
