@@ -156,18 +156,12 @@ module.exports = {
 
     } catch (e) {
 
+      sails.log.error('api/helpers/funnel/help/after-change-service, error: ', e);
+
       throw {err: {
           module: 'api/helpers/funnel/help/after-change-service',
           message: 'api/helpers/funnel/help/after-change-service error',
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          payload: {},
         }
       };
 

@@ -99,11 +99,15 @@ module.exports = {
              * Throw error: we could not parse the specified forcedHelper
              */
 
+            sails.log.error('api/helpers/funnel/after-helper-generic, error: ',
+              sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR
+            );
+
+
             throw {err: {
                 module: 'api/helpers/funnel/supervisor-text',
                 message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
                 payload: {
-                  params: inputs,
                   block: forcedReplyBlock,
                   helperName: forcedReplyBlock.forcedHelper,
                   forcedHelperBlock: forcedHelperBlock,
@@ -116,11 +120,14 @@ module.exports = {
 
         } else {
 
+          sails.log.error('api/helpers/funnel/supervisor-text',
+            sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR
+            );
+
           throw {err: {
               module: 'api/helpers/funnel/supervisor-text',
               message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
-              payload: {
-                params: inputs,              }
+              payload: {},
             }
           };
 
@@ -188,11 +195,14 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
+        sails.log.error('api/helpers/funnel/supervisor-text, error: ',
+          sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR
+          );
+
         throw {err: {
             module: 'api/helpers/funnel/supervisor-text',
             message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
-            payload: {
-              params: inputs,            }
+            payload: {},
           }
         };
 
@@ -200,23 +210,19 @@ module.exports = {
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/funnel/supervisor-text';
+      const errorMsg = sails.config.custom.SUPERVISORTEXTHELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/funnel/supervisor-text',
-          message: sails.config.custom.SUPERVISORTEXTHELPER_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
-
 
   }
 

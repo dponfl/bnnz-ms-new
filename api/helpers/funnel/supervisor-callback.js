@@ -175,17 +175,17 @@ module.exports = {
                * Throw error -> initial block was not found
                */
 
-              // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR');
+              const errorLocation = 'api/helpers/funnel/supervisor-callback';
+              const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR;
+
+              sails.log.error(errorLocation + ', error: ' + errorMsg);
 
               throw {err: {
-                  module: 'api/helpers/funnel/supervisor-callback',
-                  message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
-                  payload: {
-                    params: inputs,
-                  }
+                  module: errorLocation,
+                  message: errorMsg,
+                  payload: {},
                 }
               };
-
             }
 
 
@@ -211,59 +211,50 @@ module.exports = {
              * Throw error: we could not parse the specified callbackHelper
              */
 
-            // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR');
+            const errorLocation = 'api/helpers/funnel/supervisor-callback';
+            const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR;
+
+            sails.log.error(errorLocation + ', error: ' + errorMsg);
 
             throw {err: {
-                module: 'api/helpers/funnel/supervisor-callback',
-                message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
-                payload: {
-                  params: inputs,
-                  block: block,
-                  helperName: block.callbackHelper,
-                  callbackHelperBlock: callbackHelperBlock,
-                  callbackHelperName: callbackHelperName,
-                }
+                module: errorLocation,
+                message: errorMsg,
+                payload: {},
               }
             };
-
           }
 
         } else {
 
-          // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR');
+          const errorLocation = 'api/helpers/funnel/supervisor-callback';
+          const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR;
+
+          sails.log.error(errorLocation + ', error: ' + errorMsg);
 
           throw {err: {
-              module: 'api/helpers/funnel/supervisor-callback',
-              message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR,
-              payload: {
-                params: inputs,
-              }
+              module: errorLocation,
+              message: errorMsg,
+              payload: {},
             }
           };
-
         }
 
       }
 
     } catch (e) {
 
-      // sails.log.error('Error: api/helpers/funnel/supervisor-callback, sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR: ', e);
+      const errorLocation = 'api/helpers/funnel/supervisor-callback';
+      const errorMsg = sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/funnel/supervisor-callback',
-          message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }

@@ -102,20 +102,16 @@ module.exports = {
 
     } catch (e) {
 
-      // sails.log.error('api/helpers/funnel/optin/after-subscription-made, error: ', e);
+      const errorLocation = 'api/helpers/funnel/optin/after-subscription-made';
+      const errorMsg = 'Error';
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/helpers/funnel/optin/after-subscription-made',
-          message: 'api/helpers/funnel/optin/after-subscription-made error',
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
 

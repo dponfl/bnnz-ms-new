@@ -60,16 +60,17 @@ module.exports = {
       //   payload: {checkError: checkError}
       // });
 
+      const errorLocation = 'api/helpers/general/check-funnels';
+      const errorMsg = sails.config.custom.CHECKFUNNELS_GENERAL_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+
       throw {err: {
-          module: 'api/helpers/general/check-funnels',
-          message: sails.config.custom.CHECKFUNNELS_GENERAL_ERROR,
-          payload: {
-            params: inputs,
-            checkError: checkError,
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }

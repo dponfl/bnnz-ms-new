@@ -57,21 +57,19 @@ module.exports = {
       });
 
     } catch (e) {
-      // sails.log.error('api/helpers/general/get-room, error: ', e);
+
+      const errorLocation = 'api/helpers/general/get-room';
+      const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/general/get-room',
-          message: sails.config.custom.GENERAL_HELPER_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: 320}) || 'no error message',
-              stack: _.truncate(e.stack, {length: 320}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
-      }
+      };
     }
   }
 };
@@ -181,21 +179,18 @@ async function getOneRoom(doNotUseRooms) {
 
   } catch (e) {
 
-    // sails.log.error('api/helpers/general/get-room=>getOneRoom, error: ', e);
+    const errorLocation = 'api/helpers/general/get-room=>getOneRoom';
+    const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+    sails.log.error(errorLocation + ', error: ' + errorMsg);
+    sails.log.error(errorLocation + ', error details: ', e);
+
     throw {err: {
-        module: 'api/helpers/general/get-room=>getOneRoom',
-        message: sails.config.custom.GENERAL_HELPER_ERROR,
-        payload: {
-          params: doNotUseRooms,
-          error: {
-            name: e.name || 'no error name',
-            message: _.truncate(e.message, {length: 320}) || 'no error message',
-            stack: _.truncate(e.stack, {length: 320}) || 'no error stack',
-            code: e.code || 'no error code',
-          }
-        }
+        module: errorLocation,
+        message: errorMsg,
+        payload: {},
       }
-    }
+    };
   }
 }
 

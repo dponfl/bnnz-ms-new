@@ -59,24 +59,18 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/controllers/test error, input: ', inputs);
-      sails.log.error('api/controllers/test error, error: ', e);
+      const errorLocation = 'api/controllers/test';
+      const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: 'api/controllers/test',
-          message: sails.config.custom.GENERAL_HELPER_ERROR,
-          payload: {
-            params: inputs,
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: 320}) || 'no error message',
-              stack: _.truncate(e.stack, {length: 320}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          },
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
-
     }
 
   }
