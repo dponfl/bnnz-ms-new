@@ -609,7 +609,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
       }
 
-      res = await sails.helpers.funnel[inputs.client.funnel_name][beforeHelperBlock][beforeHelperName].with(beforeHelperParams);
+      res = await sails.helpers.funnel[client.funnel_name][beforeHelperBlock][beforeHelperName].with(beforeHelperParams);
 
     } else {
 
@@ -662,7 +662,7 @@ async function activateBlockModifyHelper(client, block) {
         block: block,
       };
 
-      res = await sails.helpers.funnel[inputs.client.funnel_name][blockModifyHelperBlock][blockModifyHelperName].with(beforeHelperParams);
+      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName].with(beforeHelperParams);
 
     } else {
 
