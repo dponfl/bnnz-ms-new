@@ -62,6 +62,9 @@ module.exports = {
     lang: {
       type: 'string',
     },
+    funnel_name: {
+      type: 'string',
+    },
     current_funnel: {
       type: 'string',
     },

@@ -151,6 +151,7 @@ module.exports = {
            */
 
           params.current_funnel = getServiceRes.payload.funnel_start;
+          params.funnel_name = getServiceRes.payload.funnel_name;
 
           funnels = await Funnels.findOne({
             name: getServiceRes.payload.funnel_name,
