@@ -27,6 +27,8 @@ module.exports.custom = {
   cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
   cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
 
+  apiUuid: 'c3930d4a-fac2-4028-b322-3fc4e26d10db', // for key 'RE9GTJP-ZB140A5-PCH3ZH5-W9PH1PX'
+
   tokens: {},
 
   testClient: {},
@@ -295,6 +297,15 @@ module.exports.custom = {
 
   SUBSCRIPTION_CONTROLLER_ERROR: 'Subscription controller error',
 
+
+  /**
+   * ----------------------------
+   * update controller
+   * ----------------------------
+   */
+
+
+  UPDATE_CONTROLLER_ERROR: 'Config update controller error',
 
 
   /**

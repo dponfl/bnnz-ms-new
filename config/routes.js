@@ -33,8 +33,9 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'POST /payment': { action: 'payment' },
-  'POST /subscription': { action: 'subscription' },
-  'POST /test': { action: 'test' },
+  'POST /update': { controller: 'api', action: 'update' },
+  'POST /payment': { controller: 'api', action: 'payment' },
+  'POST /subscription': { controller: 'api', action: 'subscription' },
+  'POST /test': { controller: 'api', action: 'test' },
 
 };

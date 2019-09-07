@@ -9,6 +9,12 @@ module.exports = {
 
   inputs: {
 
+    key: {
+      friendlyName: 'API key',
+      description: 'API key',
+      type: 'string',
+      required: true,
+    },
     cid: {
       friendlyName: 'client guid',
       description: 'client guid',
@@ -44,6 +50,17 @@ module.exports = {
     sails.log.warn('Params: ', inputs);
 
     try {
+
+      const checkApiKeyResult = await sails.helpers.general.checkApiKey.with({
+        apiKey: inputs.key,
+      });
+
+      if (checkApiKeyResult.status !== 'ok') {
+        return exits.success({
+          status: 'nok',
+          message: 'Wrong API key',
+        });
+      }
 
       let result = await sails.helpers.general.confirmPayment.with({
         cid: inputs.cid,
