@@ -39,12 +39,60 @@ module.exports = {
 
       try {
 
-        if (_.trim(msg.text).match(/test/i)) {
+        if (_.trim(msg.text).match(/^pay$/i)) {
 
-          await sails.helpers.mgw.telegram['simpleMessage'].with({
+          // await sails.helpers.mgw.telegram['simpleMessage'].with({
+          //   chatId: msg.chat.id,
+          //   html: `Payment gateway name: ${sails.config.custom.config.pgw.name}`,
+          // });
+
+          const paymentResult = await sails.helpers.mgw.telegram.pgw.sendInvoice.with({
             chatId: msg.chat.id,
-            html: `Payment gateway name: ${sails.config.custom.config.pgw.name}`,
-          });
+            title: 'SocialGrow Platinum 1 месяц',
+            description: 'Подписка на сервис SocialGrow Platinum на 1 месяц',
+            payload: 'payload string',
+            startParameter: 'startParameter string',
+            currency: 'RUB',
+            prices: [
+              {
+                label: '',
+                amount: 10000,
+              }
+            ],
+            options: {
+              need_name: true,
+              need_phone_number: true,
+              need_email: true,
+              send_phone_number_to_provider: true,
+              send_email_to_provider: true,
+              provider_data: {
+                receipt: {
+                  items: [
+                    {
+                      description: 'Подписка на сервис SocialGrow Platinum на 1 месяц',
+                      quantity: '1.00',
+                      amount: {
+                        value: '100.00',
+                        currency: 'RUB',
+                      },
+                      vat_code: 1,
+                    },
+                  ],
+                },
+              },
+              reply_markup: {
+                inline_keyboard: [
+                  [
+                    {
+                      text: 'Оплатить: 100.00 руб.',
+                      callback_data: 'payment_made',
+                      pay: true,
+                    }
+                  ]
+                ]
+              }
+            }
+          })
 
         }
 

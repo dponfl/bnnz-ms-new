@@ -2,8 +2,8 @@
   "general": {
     "instagram_post_prefix": "https://www.instagram.com/"
   },
-  "pgw": {
-    "name": "yandex"
+  "payments": {
+    "provider": "SBERBANK_TEST"
   },
   "rooms": {
     "clients_per_room": 5

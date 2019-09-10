@@ -38,25 +38,24 @@ module.exports = {
 
       // sails.log.warn('sails.config.custom.config: ', sails.config.custom.config);
 
-      if (!sails.config.custom.config) {
+      if (sails.config.custom.config == null) {
 
-        throw new Error('Critical error: No chat config');
+        throw new Error('Critical error: Cannot get config');
 
       }
 
     } catch (e) {
 
+      const errorLocation = 'api/helpers/general/get-chat-config';
+      const errorMsg = 'api/helpers/general/get-chat-config: general error';
+
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
+
       throw {err: {
-          module: 'api/helpers/general/get-chat-config',
-          message: 'api/helpers/general/get-chat-config: general error',
-          payload: {
-            error: {
-              name: e.name || 'no error name',
-              message: _.truncate(e.message, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error message',
-              stack: _.truncate(e.stack, {length: sails.config.custom.ERROR_MSG_LENGTH}) || 'no error stack',
-              code: e.code || 'no error code',
-            }
-          }
+          module: errorLocation,
+          message: errorMsg,
+          payload: {},
         }
       };
 
