@@ -3,7 +3,10 @@
     "instagram_post_prefix": "https://www.instagram.com/"
   },
   "payments": {
-    "provider": "SBERBANK_TEST"
+    "telegram": {
+      "provider": "YANDEX",
+      "env": "TEST"
+    }
   },
   "rooms": {
     "clients_per_room": 5

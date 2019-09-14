@@ -1,3 +1,7 @@
+"use strict";
+
+const uuid = require('uuid-apikey');
+
 module.exports = {
 
 
@@ -30,13 +34,6 @@ module.exports = {
       required: true,
     },
 
-    payload: {
-      friendlyName: 'payload',
-      description: 'Bot defined invoice payload',
-      type: 'string',
-      required: true,
-    },
-
     startParameter: {
       friendlyName: 'startParameter',
       description: 'Deep-linking parameter',
@@ -64,6 +61,20 @@ module.exports = {
       type: 'ref',
     },
 
+    clientId: {
+      friendlyName: 'client_id',
+      description: 'Link to the Client record',
+      type: 'string',
+      required: true,
+    },
+
+    clientGuid: {
+      friendlyName: 'client_guid',
+      description: 'Link to the Client record',
+      type: 'string',
+      required: true,
+    },
+
   },
 
   exits: {
@@ -80,7 +91,7 @@ module.exports = {
 
     try {
 
-      const paymentProviderTokenResponseRaw = await sails.helpers.general.getPaymentToken();
+      const paymentProviderTokenResponseRaw = await sails.helpers.general.getPaymentToken('telegram');
 
       if (paymentProviderTokenResponseRaw.status === 'ok'
       ) {
@@ -91,11 +102,13 @@ module.exports = {
           throw new Error('Error: Cannot get payment provider token');
         }
 
+        const paymentUuid = uuid.create();
+
         const sendInvoiceResult = await sails.config.custom.telegramBot.sendInvoice(
           inputs.chatId,
           inputs.title,
           inputs.description,
-          inputs.payload,
+          paymentUuid.uuid,
           paymentProviderToken,
           inputs.startParameter,
           inputs.currency,
@@ -103,10 +116,31 @@ module.exports = {
           inputs.options || {},
         );
 
+        const paymentProvider = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
+          '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
+
+        await sails.helpers.storage.paymentCreate.with({
+          paymentStatus: sails.config.custom.enums.paymentStatus.INVOICE,
+          paymentData: {
+            title: inputs.title,
+            description: inputs.description,
+            startParameter: inputs.startParameter,
+            currency: inputs.currency,
+            prices: inputs.prices,
+            options: inputs.options || {},
+          },
+          paymentResponse: sendInvoiceResult,
+          paymentProvider: paymentProvider,
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
+          clientId: inputs.clientId,
+          clientGuid: inputs.clientGuid
+        });
+
+
         return exits.success({
           status: 'ok',
           message: 'Test success',
-          payload: {},
+          payload: sendInvoiceResult,
         })
 
       }

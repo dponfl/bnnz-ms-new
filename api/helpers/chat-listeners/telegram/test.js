@@ -32,67 +32,49 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('******************** telegramListener.test ********************');
+    sails.log.info('******************** api/helpers/chat-listeners/telegram/test.js ********************');
 
-    sails.config.custom.telegramBot.on('message', async (msg) => {
+    sails.config.custom.telegramBot.on('text', async (msg) => {
 
 
       try {
 
+        const getClientRaw = await sails.helpers.storage.clientGet.with({
+          messenger: 'telegram',
+          msg: msg
+        });
+
+        if (getClientRaw.status !== 'found') {
+          throw new Error(`Client not found, msg: ${msg}`);
+        }
+
+        const client = getClientRaw.payload;
+
         if (_.trim(msg.text).match(/^pay$/i)) {
 
-          // await sails.helpers.mgw.telegram['simpleMessage'].with({
-          //   chatId: msg.chat.id,
-          //   html: `Payment gateway name: ${sails.config.custom.config.pgw.name}`,
-          // });
+          const paymentProvider = sails.config.custom.config.payments[client.messenger]['provider'].toLowerCase();
 
-          const paymentResult = await sails.helpers.mgw.telegram.pgw.sendInvoice.with({
-            chatId: msg.chat.id,
-            title: 'SocialGrow Platinum 1 месяц',
-            description: 'Подписка на сервис SocialGrow Platinum на 1 месяц',
-            payload: 'payload string',
-            startParameter: 'startParameter string',
+          if (paymentProvider == null) {
+            throw new Error(`No payment provider, config: ${msg}`);
+          }
+
+          const paymentResult = await sails.helpers.pgw[paymentProvider]['sendInvoice'].with({
+            messenger: client.messenger,
+            chatId: client.chat_id,
+            title: 'SocialGrowth "Супе-дупер пакет"',
+            description: 'Подписка на сервис SocialGrowth "Супе-дупер пакет" на 1 месяц',
+            payload: 'payload',
+            startParameter: 'start',
             currency: 'RUB',
             prices: [
               {
-                label: '',
-                amount: 10000,
+                label: 'Наименование товара',
+                amount: '100.77',
               }
             ],
-            options: {
-              need_name: true,
-              need_phone_number: true,
-              need_email: true,
-              send_phone_number_to_provider: true,
-              send_email_to_provider: true,
-              provider_data: {
-                receipt: {
-                  items: [
-                    {
-                      description: 'Подписка на сервис SocialGrow Platinum на 1 месяц',
-                      quantity: '1.00',
-                      amount: {
-                        value: '100.00',
-                        currency: 'RUB',
-                      },
-                      vat_code: 1,
-                    },
-                  ],
-                },
-              },
-              reply_markup: {
-                inline_keyboard: [
-                  [
-                    {
-                      text: 'Оплатить: 100.00 руб.',
-                      callback_data: 'payment_made',
-                      pay: true,
-                    }
-                  ]
-                ]
-              }
-            }
-          })
+            clientId: client.id,
+            clientGuid: client.guid,
+          });
 
         }
 

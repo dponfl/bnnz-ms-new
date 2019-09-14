@@ -48,7 +48,7 @@ module.exports.bootstrap = async function() {
 
   await sails.helpers.chatListeners.telegram.test();
 
-  // await sails.helpers.chatListeners.telegram.onMessage();
+  // await sails.helpers.chatListeners.telegram.onText();
   // await sails.helpers.chatListeners.telegram.onCallbackQuery();
 
 };

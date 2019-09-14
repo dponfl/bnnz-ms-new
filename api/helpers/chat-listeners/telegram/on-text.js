@@ -7,7 +7,7 @@ const _ = require('lodash');
 module.exports = {
 
 
-  friendlyName: 'On message',
+  friendlyName: 'On text message',
 
 
   description: 'Manage text Telegram messages',
@@ -33,9 +33,9 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('******************** telegramListener.onMessage ********************');
+    sails.log.info('******************** telegramListener.onText ********************');
 
-    sails.config.custom.telegramBot.on('message', async (msg) => {
+    sails.config.custom.telegramBot.on('text', async (msg) => {
 
       // sails.log.debug('Message received: ', msg);
 

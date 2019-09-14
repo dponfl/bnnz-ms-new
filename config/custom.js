@@ -27,9 +27,22 @@ module.exports.custom = {
   cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
   cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
 
-  apiUuid: 'c3930d4a-fac2-4028-b322-3fc4e26d10db', // for key 'RE9GTJP-ZB140A5-PCH3ZH5-W9PH1PX'
+  apiUuid: process.env.API_UUID || '',
 
   tokens: {},
+
+  enums: {
+    paymentStatus: {
+      INVOICE: 'invoice',
+      PRECHECKOUT: 'pre_checkout',
+      SUCCESS: 'successful_payment',
+    },
+
+    messenger: {
+      TELEGRAM: 'telegram',
+    }
+
+  },
 
   testClient: {},
 
@@ -188,6 +201,14 @@ module.exports.custom = {
    */
 
   MESSAGESAVE_ERROR: 'Message record create error',
+
+  /**
+   * ----------------------------
+   * paymentCreate
+   * ----------------------------
+   */
+
+  PAYMENT_CREATE_ERROR: 'Payment record create error',
 
   /**
    * ----------------------------

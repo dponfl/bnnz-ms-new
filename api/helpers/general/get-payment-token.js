@@ -9,7 +9,12 @@ module.exports = {
   description: 'Get payment token',
 
   inputs: {
-
+    messenger: {
+      friendlyName: 'messenger',
+      description: 'Messenger name',
+      type: 'string',
+      required: true,
+    },
   },
 
   exits: {
@@ -26,10 +31,11 @@ module.exports = {
 
     try {
 
-      const paymentProvider = sails.config.custom.config.paymens.provider;
+      const paymentProvider = sails.config.custom.config.payments[inputs.messenger]['provider'].toUpperCase() +
+      '_' + sails.config.custom.config.payments[inputs.messenger]['env'].toUpperCase();
 
       if (paymentProvider == null) {
-        throw new Error('Critical error: Cannot get payment provider from config');
+        throw new Error(`Critical error: Cannot get payment provider from config, config.payments: ${sails.config.custom.config.paymens}`);
       }
 
       const paymentProviderTokenKey = paymentProvider + '_TOKEN';
