@@ -80,14 +80,34 @@ module.exports = {
 
     try {
 
-      let paymentData = inputs.paymentData;
-      paymentData.options.provider_token = '***';
-      paymentData.options.provider_data = JSON.parse(paymentData.options.provider_data);
-      paymentData.options.reply_markup = JSON.parse(paymentData.options.reply_markup);
-      paymentData.options.prices = JSON.parse(paymentData.options.prices);
+      let paymentData = {};
+      let paymentId = '';
 
+      if (inputs.paymentData.options != null) {
+
+        paymentData = inputs.paymentData;
+        paymentData.options.provider_token = '***';
+        paymentData.options.provider_data = JSON.parse(paymentData.options.provider_data);
+        paymentData.options.reply_markup = JSON.parse(paymentData.options.reply_markup);
+        paymentData.options.prices = JSON.parse(paymentData.options.prices);
+        paymentId = paymentData.options.payload;
+
+      }
+
+      if (inputs.paymentResponse.invoice_payload != null) {
+
+        paymentId = inputs.paymentResponse.invoice_payload;
+
+      }
+
+      if (inputs.paymentData.preCheckoutQuery != null) {
+
+        paymentData = inputs.paymentData;
+        paymentId = inputs.paymentData.preCheckoutQuery.invoice_payload;
+      }
 
       await Payments.create({
+        payment_id: paymentId,
         payment_status: inputs.paymentStatus,
         payment_data: paymentData,
         payment_response: inputs.paymentResponse,
@@ -120,7 +140,6 @@ module.exports = {
     }
 
   }
-
 
 };
 

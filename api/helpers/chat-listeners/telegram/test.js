@@ -61,14 +61,13 @@ module.exports = {
           const paymentResult = await sails.helpers.pgw[paymentProvider]['sendInvoice'].with({
             messenger: client.messenger,
             chatId: client.chat_id,
-            title: 'SocialGrowth "Супе-дупер пакет"',
-            description: 'Подписка на сервис SocialGrowth "Супе-дупер пакет" на 1 месяц',
-            payload: 'payload',
+            title: 'SocialGrowth "Супер-дупер пакет"',
+            description: 'Подписка на сервис SocialGrowth "Супер-дупер пакет" на 1 месяц',
             startParameter: 'start',
             currency: 'RUB',
             prices: [
               {
-                label: 'Наименование товара',
+                label: '"Супер-дупер пакет" на 1 месяц',
                 amount: '100.77',
               }
             ],

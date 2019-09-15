@@ -87,7 +87,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('Telegram sendInvoice: ', inputs);
+    // sails.log.info('********************* Telegram sendInvoice: ', inputs);
 
     try {
 
@@ -133,7 +133,7 @@ module.exports = {
           paymentProvider: paymentProvider,
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           clientId: inputs.clientId,
-          clientGuid: inputs.clientGuid
+          clientGuid: inputs.clientGuid,
         });
 
 

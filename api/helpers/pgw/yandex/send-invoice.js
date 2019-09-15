@@ -38,13 +38,6 @@ module.exports = {
       required: true,
     },
 
-    payload: {
-      friendlyName: 'payload',
-      description: 'Bot defined invoice payload',
-      type: 'string',
-      required: true,
-    },
-
     startParameter: {
       friendlyName: 'startParameter',
       description: 'Deep-linking parameter',
@@ -92,7 +85,7 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
-    sails.log.info('************************* Yandex sendInvoice: ', inputs);
+    // sails.log.info('************************* Yandex sendInvoice: ', inputs);
 
     try {
 
@@ -153,8 +146,8 @@ module.exports = {
         clientGuid: inputs.clientGuid
       });
 
-      sails.log.info(`sendInvoiceRaw: ${sendInvoiceRaw}`);
-      sails.log.info(`sendInvoiceRaw.payload: ${sendInvoiceRaw.payload}`);
+      // sails.log.info(`sendInvoiceRaw: ${sendInvoiceRaw}`);
+      // sails.log.info(`sendInvoiceRaw.payload: ${sendInvoiceRaw.payload}`);
 
       return exits.success({
         status: 'ok',

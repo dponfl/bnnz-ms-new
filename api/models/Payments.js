@@ -10,6 +10,9 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
+    payment_id: {
+      type: 'string',
+    },
     payment_status: {
       type: 'string', // 'invoice', 'pre_checkout', 'successful_payment'
     },

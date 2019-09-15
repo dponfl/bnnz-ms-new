@@ -212,6 +212,45 @@ module.exports.custom = {
 
   /**
    * ----------------------------
+   * paymentGetByIdAndStatus
+   * ----------------------------
+   */
+
+  PAYMENT_GET_BY_PAYMENT_ID_ERROR: 'Payment get by payment id error',
+  PAYMENT_RECORD_NOT_FOUND: 'Payment record was not found',
+  PAYMENT_RECORD_FOUND: 'Payment record was found',
+
+
+  /**
+   * ----------------------------
+   * checkPreCheckout
+   * ----------------------------
+   */
+
+  CHECK_PRE_CHECKOUT_ERROR: 'Check pre_checkout error',
+  CHECK_PRE_CHECKOUT_OK: 'Check pre_checkout success',
+
+  /**
+   * ----------------------------
+   * answerPreCheckoutQuery
+   * ----------------------------
+   */
+
+  ANSWER_PRE_CHECKOUT_QUERY_ERROR: 'answer_pre_checkout_query error',
+  ANSWER_PRE_CHECKOUT_QUERY_OK: 'answer_pre_checkout_query success',
+  ANSWER_PRE_CHECKOUT_QUERY_NOK: 'answer_pre_checkout_query NOT successful',
+
+  /**
+   * ----------------------------
+   * onPreCheckoutQuery
+   * ----------------------------
+   */
+
+  ON_PRE_CHECKOUT_QUERY_ERROR: 'pre_checkout_query error',
+  ON_PRE_CHECKOUT_QUERY_OK: 'pre_checkout_query success',
+
+  /**
+   * ----------------------------
    * message gateways
    * ----------------------------
    */
