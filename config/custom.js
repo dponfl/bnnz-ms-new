@@ -34,8 +34,13 @@ module.exports.custom = {
   enums: {
     paymentStatus: {
       INVOICE: 'invoice',
+      INVOICE_ERROR: 'invoice_error',
       PRECHECKOUT: 'pre_checkout',
+      PRECHECKOUT_ERROR: 'pre_checkout_error',
+      CHECKOUT: 'checkout',
+      CHECKOUT_ERROR: 'checkout_error',
       SUCCESS: 'successful_payment',
+      SUCCESS_ERROR: 'successful_payment_error',
     },
 
     messenger: {
@@ -232,6 +237,15 @@ module.exports.custom = {
 
   /**
    * ----------------------------
+   * checkSuccessfulPayment
+   * ----------------------------
+   */
+
+  CHECK_SUCCESSFUL_PAYMENT_ERROR: 'Check successful_payment error',
+  CHECK_SUCCESSFUL_PAYMENT_OK: 'Check successful_payment success',
+
+  /**
+   * ----------------------------
    * answerPreCheckoutQuery
    * ----------------------------
    */
@@ -248,6 +262,15 @@ module.exports.custom = {
 
   ON_PRE_CHECKOUT_QUERY_ERROR: 'pre_checkout_query error',
   ON_PRE_CHECKOUT_QUERY_OK: 'pre_checkout_query success',
+
+  /**
+   * ----------------------------
+   * onSuccessfulPayment
+   * ----------------------------
+   */
+
+  ON_SUCCESSFUL_PAYMENT_ERROR: 'successful_payment error',
+  ON_SUCCESSFUL_PAYMENT_OK: 'successful_payment success',
 
   /**
    * ----------------------------

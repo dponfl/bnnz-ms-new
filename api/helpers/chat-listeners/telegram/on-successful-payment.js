@@ -2,10 +2,10 @@
 
 module.exports = {
 
-  friendlyName: 'On pre_checkout_query message',
+  friendlyName: 'On successful_payment message',
 
 
-  description: 'Manage pre_checkout_query Telegram messages',
+  description: 'Manage successful_payment Telegram messages',
 
 
   inputs: {
@@ -27,9 +27,9 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
-    sails.log.info('******************** telegramListener.onPreCheckoutQuery ********************');
+    sails.log.info('******************** telegramListener.onSuccessfulPayment ********************');
 
-    sails.config.custom.telegramBot.on('pre_checkout_query', async (msg) => {
+    sails.config.custom.telegramBot.on('successful_payment', async (msg) => {
 
       try {
 
@@ -38,23 +38,19 @@ module.exports = {
 
         const clientRaw = await sails.helpers.storage.clientGet.with({
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
-          msg: {
-            chat: {
-              id: msg.from.id,
-            }
-          }
+          msg: msg,
         });
 
         if (clientRaw == null || clientRaw.status !== 'found') {
 
           await sails.helpers.storage.paymentCreate.with({
-            paymentStatus: sails.config.custom.enums.paymentStatus.PRECHECKOUT_ERROR,
+            paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS_ERROR,
             paymentData: {
             },
             paymentResponse: msg,
             paymentProvider: paymentProviderAndEnv,
             messenger: sails.config.custom.enums.messenger.TELEGRAM,
-            comments: `Client record not found for chatId: ${msg.from.id}`,
+            comments: `Client record not found for chatId: ${msg.chat.id}`,
             clientId: 'client not found',
             clientGuid: 'client not found',
           });
@@ -64,47 +60,31 @@ module.exports = {
 
         const client = clientRaw.payload;
 
-        const paymentProvider = sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM]['provider'].toLowerCase();
 
-        if (paymentProvider == null) {
+        const checkSuccessfulPaymentResult = await sails.helpers.mgw.telegram.checkSuccessfulPayment.with({
+          paymentResponse: msg,
+        });
+
+        if (checkSuccessfulPaymentResult.status === 'ok') {
 
           await sails.helpers.storage.paymentCreate.with({
-            paymentStatus: sails.config.custom.enums.paymentStatus.PRECHECKOUT_ERROR,
+            paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS,
             paymentData: {
+              successfulPayment: msg.successful_payment,
             },
             paymentResponse: msg,
             paymentProvider: paymentProviderAndEnv,
             messenger: sails.config.custom.enums.messenger.TELEGRAM,
-            comments: 'Config has no payment provider',
             clientId: client.id,
             clientGuid: client.guid,
           });
-
-          throw new Error(`No payment provider, config: ${sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM]}`);
-        }
-
-        const checkInvoiceResult = await sails.helpers.mgw.telegram.checkPreCheckout.with({
-          paymentResponse: msg,
-        });
-
-        if (checkInvoiceResult.status === 'ok') {
-
-          const answerPreCheckoutQueryResult = await sails.helpers.mgw.telegram.answerPreCheckoutQuery.with({
-            client: client,
-            preCheckoutQuery: msg,
-            isOk: true,
-          });
-
-          if (answerPreCheckoutQueryResult.status !== 'ok') {
-            throw new Error(`answerPreCheckoutQueryResult not successful, answerPreCheckoutQueryResult: ${answerPreCheckoutQueryResult}`);
-          }
 
         }
 
       } catch (e) {
 
-        const errorLocation = 'api/helpers/chat-listeners/telegram/on-pre-checkout-query';
-        const errorMsg = sails.config.custom.ON_PRE_CHECKOUT_QUERY_ERROR;
+        const errorLocation = 'api/helpers/chat-listeners/telegram/on-successful-payment.js';
+        const errorMsg = sails.config.custom.ON_SUCCESSFUL_PAYMENT_ERROR;
 
         sails.log.error(errorLocation + ', error: ' + errorMsg);
         sails.log.error(errorLocation + ', error details: ', e);

@@ -59,13 +59,13 @@ module.exports = {
         }
         );
 
+      const paymentProviderAndEnv = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
+        '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
+
       if (answerPreCheckoutQueryResult) {
 
-        const paymentProviderAndEnv = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
-          '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
-
         await sails.helpers.storage.paymentCreate.with({
-          paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS,
+          paymentStatus: sails.config.custom.enums.paymentStatus.CHECKOUT,
           paymentData: {
             preCheckoutQuery: inputs.preCheckoutQuery,
             isOk: inputs.isOk,
@@ -84,6 +84,22 @@ module.exports = {
           payload: {},
         });
       } else {
+
+        await sails.helpers.storage.paymentCreate.with({
+          paymentStatus: sails.config.custom.enums.paymentStatus.CHECKOUT_ERROR,
+          paymentData: {
+            preCheckoutQuery: inputs.preCheckoutQuery,
+            isOk: inputs.isOk,
+            errorMessage: inputs.errorMessage || '',
+          },
+          paymentResponse: answerPreCheckoutQueryResult,
+          paymentProvider: paymentProviderAndEnv,
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
+          comments: 'answerPreCheckoutQueryResult return False',
+          clientId: inputs.client.id,
+          clientGuid: inputs.client.guid,
+        });
+
         return exits.success({
           status: 'nok',
           message: sails.config.custom.ANSWER_PRE_CHECKOUT_QUERY_NOK,

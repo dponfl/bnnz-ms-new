@@ -2,10 +2,10 @@
 
 module.exports = {
 
-  friendlyName: 'sendInvoice',
+  friendlyName: 'Check pre_checkout data',
 
 
-  description: 'sendInvoice',
+  description: 'Check pre_checkout data',
 
 
   inputs: {
@@ -27,12 +27,12 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
-    // sails.log.info('************************* Yandex checkPreCheckout: ', inputs);
+    // sails.log.info('************************* Telegram checkPreCheckout: ', inputs);
 
     try {
 
       if (inputs.paymentResponse.invoice_payload == null) {
-        throw new Error(`No invoice_payload: ${inputs.paymentResponse}`);
+        throw new Error(`checkPreCheckout, No invoice_payload: ${inputs.paymentResponse}`);
       }
 
       const paymentId = inputs.paymentResponse.invoice_payload;
@@ -43,7 +43,7 @@ module.exports = {
       });
 
       if (invoiceRaw.status !== 'ok') {
-        throw new Error(`No invoice found: ${invoiceRaw}`);
+        throw new Error(`checkPreCheckout, No invoice found: ${invoiceRaw}`);
       }
 
       const invoice = invoiceRaw.payload;
@@ -54,7 +54,7 @@ module.exports = {
         || invoice.payment_response.invoice.total_amount !== inputs.paymentResponse.total_amount
         || invoice.payment_response.invoice.currency !== inputs.paymentResponse.currency
       ) {
-        throw new Error(`Pre_checkout response does not corresponds invoice, invoice: ${invoice} Pre_checkout: ${inputs.paymentResponse}`);
+        throw new Error(`checkPreCheckout, Pre_checkout response does not corresponds invoice, invoice: ${invoice} Pre_checkout: ${inputs.paymentResponse}`);
       }
 
       return exits.success({

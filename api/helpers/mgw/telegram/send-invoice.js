@@ -93,13 +93,34 @@ module.exports = {
 
       const paymentProviderTokenResponseRaw = await sails.helpers.general.getPaymentToken('telegram');
 
-      if (paymentProviderTokenResponseRaw.status === 'ok'
-      ) {
+      if (paymentProviderTokenResponseRaw.status === 'ok') {
 
         const paymentProviderToken = paymentProviderTokenResponseRaw.payload.paymentProviderToken;
 
+        const paymentProvider = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
+          '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
+
         if (paymentProviderToken == null) {
-          throw new Error('Error: Cannot get payment provider token');
+
+          await sails.helpers.storage.paymentCreate.with({
+            paymentStatus: sails.config.custom.enums.paymentStatus.INVOICE_ERROR,
+            paymentData: {
+              title: inputs.title,
+              description: inputs.description,
+              startParameter: inputs.startParameter,
+              currency: inputs.currency,
+              prices: inputs.prices,
+              options: inputs.options || {},
+            },
+            paymentResponse: sendInvoiceResult,
+            paymentProvider: paymentProvider,
+            messenger: sails.config.custom.enums.messenger.TELEGRAM,
+            comments: 'Cannot get payment provider token',
+            clientId: inputs.clientId,
+            clientGuid: inputs.clientGuid,
+          });
+
+          throw new Error('sendInvoice, Error: Cannot get payment provider token');
         }
 
         const paymentUuid = uuid.create();
@@ -116,8 +137,6 @@ module.exports = {
           inputs.options || {},
         );
 
-        const paymentProvider = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
-          '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
 
         await sails.helpers.storage.paymentCreate.with({
           paymentStatus: sails.config.custom.enums.paymentStatus.INVOICE,

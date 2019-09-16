@@ -28,6 +28,9 @@ module.exports = {
     messenger: {
       type: 'string',
     },
+    comments: {
+      type: 'string',
+    },
     client_id: {
       model: 'client',
     },

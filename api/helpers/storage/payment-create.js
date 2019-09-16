@@ -40,10 +40,16 @@ module.exports = {
     },
 
     messenger: {
-      friendlyName: 'currency',
-      description: 'currency',
+      friendlyName: 'messenger',
+      description: 'messenger',
       type: 'string',
       required: true,
+    },
+
+    comments: {
+      friendlyName: 'comments',
+      description: 'comments',
+      type: 'string',
     },
 
     clientId: {
@@ -106,6 +112,12 @@ module.exports = {
         paymentId = inputs.paymentData.preCheckoutQuery.invoice_payload;
       }
 
+      if (inputs.paymentData.successfulPayment != null) {
+
+        paymentData = inputs.paymentData;
+        paymentId = inputs.paymentData.successfulPayment.invoice_payload;
+      }
+
       await Payments.create({
         payment_id: paymentId,
         payment_status: inputs.paymentStatus,
@@ -113,6 +125,7 @@ module.exports = {
         payment_response: inputs.paymentResponse,
         payment_provider: inputs.paymentProvider,
         messenger: inputs.messenger,
+        comments: inputs.comments || '',
         client_id: inputs.clientId,
         client_guid: inputs.clientGuid,
       });
