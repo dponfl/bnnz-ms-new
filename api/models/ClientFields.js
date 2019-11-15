@@ -1,31 +1,30 @@
 "use strict";
 
 /**
- * Funnels.js
+ * Client.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'funnels',
+  tableName: 'client_fields',
   migrate: 'safe',
   attributes: {
 
-    name: {
+    client_guid: {
       type: 'string',
-      required: true,
+    },
+    field: {
+      type: 'string',
+    },
+    old_value: {
+      type: 'string',
+    },
+    new_value: {
+      type: 'string',
     },
 
-    active: {
-      type: 'boolean',
-      required: true,
-    },
-
-    funnel_data: {
-      type: 'json',
-      required: true,
-    },
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗

@@ -1,3 +1,5 @@
+"use strict";
+
 const t = require('../../services/translate').t;
 const emoji = require('node-emoji');
 
