@@ -148,6 +148,15 @@ module.exports.custom = {
 
   CLIENTUPDATE_ERROR: 'Client record update error',
 
+  /**
+   * ----------------------------
+   * clientFieldsPut
+   * ----------------------------
+   */
+
+  CLIENTFIELDSPUT_ERROR: 'ClientFields record create error',
+
+
 
   /**
    * ----------------------------

@@ -75,6 +75,20 @@ module.exports = {
             clientGuid: client.guid,
           });
 
+          await sails.helpers.storage.clientUpdate.with({
+            criteria: {guid: client.guid},
+            data: {
+              ref_key: "Bla-bla-bla",
+            }
+          });
+
+          await sails.helpers.storage.clientUpdate.with({
+            criteria: {id: client.id},
+            data: {
+              ref_key: "Ta-ta-ta",
+            }
+          });
+
         }
 
       } catch (err) {

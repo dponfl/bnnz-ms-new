@@ -30,8 +30,6 @@ module.exports.bootstrap = async function() {
   // ]);
   // ```
 
-  // require('../api/services/coreNodes/chatListeners/telegramListener');
-
   sails.config.custom.telegramBot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
     polling: {
       interval: 300,

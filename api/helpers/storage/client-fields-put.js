@@ -113,7 +113,7 @@ module.exports = {
     } catch (e) {
 
       const errorLocation = 'api/helpers/storage/client-fields-put';
-      const errorMsg = sails.config.custom.CLIENTUPDATE_ERROR;
+      const errorMsg = sails.config.custom.CLIENTFIELDSPUT_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);

@@ -64,6 +64,17 @@ module.exports = {
         })
       });
 
+      const clientRec = await Client.findOne({
+        where: inputs.criteria,
+      });
+
+      if (clientRec != null) {
+        await sails.helpers.storage.clientFieldsPut.with({
+          clientGuid: clientRec.guid,
+          data: inputs.data,
+        })
+      }
+
       await Client.update(inputs.criteria).set(_.omit(inputs.data, 'accounts'));
 
       return exits.success({
