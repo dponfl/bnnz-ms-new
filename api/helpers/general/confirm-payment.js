@@ -1,5 +1,7 @@
 "use strict";
 
+const moment = require('moment');
+
 module.exports = {
 
 
@@ -332,6 +334,20 @@ module.exports = {
       }
 
       account.payment_made = true;
+
+      /**
+       * Обновляем информацию об оплаченом периоде
+       * (исходим из того, что оплата поступает за 1 месяц)
+       */
+
+      if (account.subscription_until != null) {
+        account.subscription_from = moment(account.subscription_until).add(1,'d').format();
+        account.subscription_until = moment(account.subscription_from).add(1,'M').format();
+      } else {
+        account.subscription_from = moment().format();
+        account.subscription_until = moment(account.subscription_from).add(1,'M').format();
+      }
+
       accountRecords[accountInd] = account;
       client.tos_accepted = true;
       client.accounts = accountRecords;
@@ -357,6 +373,17 @@ module.exports = {
           blockId: initialBlock.id,
         });
 
+      }
+
+      // Сохраняем обновлённую информацию для client & account (clientUpdate)
+
+      const clientUpdateRes = await sails.helpers.storage.clientUpdate.with({
+        criteria: {guid: client.guid},
+        data: client,
+      });
+
+      if (clientUpdateRes.status != null && clientUpdateRes.status !== 'ok') {
+        throw new Error('Wrong clientUpdate response: ' + JSON.stringify(clientUpdateRes));
       }
 
       return exits.success({
