@@ -79,7 +79,7 @@ module.exports = {
 
         }
 
-        if (_.trim(msg.text).match(/^do$/i) {
+        if (_.trim(msg.text).match(/^do$/i)) {
 
           // await sails.helpers.storage.clientUpdate.with({
           //   criteria: {guid: client.guid},

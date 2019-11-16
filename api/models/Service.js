@@ -42,6 +42,16 @@ module.exports = {
       columnType: 'integer',
       allowNull: true,
     },
+    make_likes_min: {
+      type: 'number',
+      columnType: 'integer',
+      allowNull: true,
+    },
+    make_comments_min: {
+      type: 'number',
+      columnType: 'integer',
+      allowNull: true,
+    },
     deleted: {
       type: 'boolean',
     },
