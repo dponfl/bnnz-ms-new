@@ -49,13 +49,14 @@ module.exports = {
       let parseRefResult = null;
       let parseSlResult = null;
       let useRefKey = '';
-      let useIsRef = false;
+      // let useIsRef = false;
       let useServiceRefKey = '';
       let getLangRes;
       let useLang;
       let params = {};
-      let getServiceRefRes = null;
+      let getServiceRefResRaw = null;
       let serviceName = 'generic';
+      const role = 'user';
 
 
       try {
@@ -87,7 +88,7 @@ module.exports = {
 
           if (parseRefResult) {
 
-            useIsRef = true;
+            // useIsRef = true;
             useRefKey = parseRefResult[1];
 
           }
@@ -115,7 +116,8 @@ module.exports = {
             username: msg.chat.username,
             lang: useLang,
             ref_key: useRefKey,
-            is_ref: useIsRef,
+            // is_ref: useIsRef,
+            role: role,
           };
 
 
@@ -131,11 +133,12 @@ module.exports = {
              * set flag the this service reference key is used
              */
 
-            getServiceRefRes = await sails.helpers.storage.getServiceRef.with({serviceKey: useServiceRefKey});
+            getServiceRefResRaw = await sails.helpers.storage.getServiceRef.with({serviceKey: useServiceRefKey});
 
-            // sails.log.info('getServiceRefRes: ', getServiceRefRes);
+            // sails.log.info('getServiceRefResRaw: ', getServiceRefResRaw);
 
-            serviceName = getServiceRefRes.service;
+            serviceName = getServiceRefResRaw.payload.service;
+            params.role = getServiceRefResRaw.payload.role;
 
           }
 

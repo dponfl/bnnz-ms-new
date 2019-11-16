@@ -62,7 +62,7 @@ module.exports = {
         'password',
         'deleted',
         'banned',
-        'admin', // после смены названия поля нужно будет поменять
+        'role',
         'lang',
         'funnel_name',
         'current_funnel',

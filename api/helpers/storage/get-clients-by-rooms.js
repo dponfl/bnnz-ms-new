@@ -85,7 +85,7 @@ module.exports = {
                   'messenger',
                   'deleted',
                   'banned',
-                  'admin',
+                  'role',
                   'lang',
                   'account_use',
                 ]),

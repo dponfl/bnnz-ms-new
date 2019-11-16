@@ -54,8 +54,8 @@ module.exports = {
     banned: {
       type: 'boolean',
     },
-    admin: {
-      type: 'boolean',
+    role: {
+      type: 'string',
     },
     messages: {
       collection: 'messages',
