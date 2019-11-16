@@ -11,7 +11,7 @@ module.exports = {
 
   inputs: {
 
-    criteria: {
+    criteria: { // критерий должен обеспечивать выбор ОДНОГО аккаунта
       friendlyName: 'criteria',
       description: 'Criteria to update account record',
       type: 'ref',
@@ -71,6 +71,16 @@ module.exports = {
         sails.log.warn('*** storage:accountUpdate, no service data in inputs.data: ', inputs.data);
       }
 
+      const accountRecord = await Account.findOne({
+        where: inputs.criteria,
+      });
+
+      if (accountRecord != null) {
+        await sails.helpers.storage.accountFieldsPut.with({
+          accountGuid: accountRecord.guid,
+          data: inputs.data,
+        })
+      }
 
       await Account.update(inputs.criteria).set(accountRec);
 

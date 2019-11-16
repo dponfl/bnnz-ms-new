@@ -20,12 +20,12 @@ module.exports = {
     },
     subscription_from: {
       type: 'string',
-      columnType: 'datetime',
+      // columnType: 'datetime',
       allowNull: true,
     },
     subscription_until: {
       type: 'string',
-      columnType: 'datetime',
+      // columnType: 'datetime',
       allowNull: true,
     },
     deleted: {

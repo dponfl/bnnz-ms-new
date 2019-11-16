@@ -157,6 +157,15 @@ module.exports.custom = {
   CLIENTFIELDSPUT_ERROR: 'ClientFields record create error',
 
 
+  /**
+   * ----------------------------
+   * accountFieldsPut
+   * ----------------------------
+   */
+
+  ACCOUNTFIELDSPUT_ERROR: 'AccountFields record create error',
+
+
 
   /**
    * ----------------------------

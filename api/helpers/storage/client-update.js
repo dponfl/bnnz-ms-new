@@ -11,7 +11,7 @@ module.exports = {
 
   inputs: {
 
-    criteria: {
+    criteria: { // критерий должен обеспечивать выбор ОДНОГО клиента
       friendlyName: 'criteria',
       description: 'Criteria to update client record',
       type: 'ref',

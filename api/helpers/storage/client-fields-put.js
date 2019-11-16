@@ -91,8 +91,8 @@ module.exports = {
           const clientFieldRec = {
             client_guid: inputs.clientGuid,
             field: clientFieldKey,
-            old_value: clientRec[clientFieldKey],
-            new_value: clientFieldValue,
+            old_value: _.toString(clientRec[clientFieldKey]),
+            new_value: _.toString(clientFieldValue),
           };
 
           await ClientFields.create(clientFieldRec);

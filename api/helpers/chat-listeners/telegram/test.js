@@ -1,6 +1,8 @@
 "use strict";
 
 const _ = require('lodash');
+const moment = require('moment');
+
 
 
 module.exports = {
@@ -75,19 +77,36 @@ module.exports = {
             clientGuid: client.guid,
           });
 
-          await sails.helpers.storage.clientUpdate.with({
-            criteria: {guid: client.guid},
-            data: {
-              ref_key: "Bla-bla-bla",
-            }
-          });
+        }
 
-          await sails.helpers.storage.clientUpdate.with({
-            criteria: {id: client.id},
-            data: {
-              ref_key: "Ta-ta-ta",
-            }
-          });
+        if (_.trim(msg.text).match(/^do$/i) {
+
+          // await sails.helpers.storage.clientUpdate.with({
+          //   criteria: {guid: client.guid},
+          //   data: {ref_key: 'Bla-bla-bla'}
+          // });
+          //
+          // await sails.helpers.storage.clientUpdate.with({
+          //   criteria: {id: client.id},
+          //   data: {ref_key: 'Ta-ta-ta'}
+          // });
+          //
+          // await sails.helpers.storage.accountUpdate.with({
+          //   criteria: {guid: 'de6d7f1c-b931-46a0-975d-c0fd7e3a8bcd'},
+          //   data: {
+          //     subscription_from: moment().format(),
+          //     subscription_active: false,
+          //   }
+          // });
+          //
+          // await sails.helpers.storage.accountUpdate.with({
+          //   criteria: {guid: 'de6d7f1c-b931-46a0-975d-c0fd7e3a8bcd'},
+          //   data: {
+          //     subscription_from: moment().add(1,'m').format(),
+          //     subscription_active: true,
+          //   }
+          // });
+
 
         }
 
