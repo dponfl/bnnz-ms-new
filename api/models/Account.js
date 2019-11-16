@@ -50,6 +50,22 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
+    requested_likes_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    made_likes_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    requested_comments_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    made_comments_day: {
+      type: 'number',
+      columnType: 'integer',
+    },
     profile_provided: {
       type: 'boolean',
     },

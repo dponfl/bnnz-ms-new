@@ -42,12 +42,12 @@ module.exports = {
       columnType: 'integer',
       allowNull: true,
     },
-    make_likes_min: {
+    make_likes: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
     },
-    make_comments_min: {
+    make_comments: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,

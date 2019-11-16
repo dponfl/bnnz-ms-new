@@ -102,21 +102,22 @@ module.exports = {
        * Collect list of all clients living in the rooms of this account
        */
 
-      const accoutnRoomsList = [];
+      const accountRoomsList = [];
 
       for (const room of account.room) {
         if (room.active) {
-          accoutnRoomsList.push(room.id);
+          accountRoomsList.push(room.id);
         }
       }
 
-      // sails.log.warn('api/helpers/general/post-broadcast, accoutnRoomsList:', accoutnRoomsList);
+      // sails.log.warn('api/helpers/general/post-broadcast, accountRoomsList:', accountRoomsList);
 
-      const clientsListRaw = await sails.helpers.storage.getClientsByRooms(accoutnRoomsList);
+      const clientsListRaw = await sails.helpers.storage.getClientsByRooms(accountRoomsList);
 
       // sails.log.warn('api/helpers/general/post-broadcast, clientsListRaw:', clientsListRaw);
 
       let clientsList;
+      let htmlPost;
 
       if (clientsListRaw.status === 'ok') {
         clientsList = clientsListRaw.payload;
@@ -142,6 +143,8 @@ module.exports = {
             emoji.emojify(t(useLang, "MSG_GENERAL_POST_BROADCAST_2"), () => '') +
             sails.config.custom.SCR + inputs.postLink;
 
+          htmlPost = htmlPostBroadcast;
+
           /**
            * Увеличиваем счетчики сообщений, отправленных клиенту
            */
@@ -166,21 +169,28 @@ module.exports = {
             html: htmlPostBroadcast,
           });
 
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSave.with({
-            message: htmlPostBroadcast,
-            message_format: 'post broadcast',
-            messenger: client.client.messenger,
-            message_originator: 'client',
-            client_id: client.client.id,
-            client_guid: client.client.guid
-          });
 
         }
       }
+
+      /**
+       * Save the sent message
+       */
+
+      await sails.helpers.storage.messageSave.with({
+        message: htmlPost,
+        message_format: 'post broadcast',
+        messenger: inputs.client.messenger,
+        message_originator: 'client',
+        client_id: inputs.client.id,
+        client_guid: inputs.client.guid,
+      });
+
+      /**
+       * Save post details at "post" table
+       */
+
+      // Add code here
 
       return exits.success({
         status: 'ok',
