@@ -43,6 +43,11 @@ module.exports.custom = {
       SUCCESS_ERROR: 'successful_payment_error',
     },
 
+    paymentType: {
+      DEPOSIT: 'deposit',
+      WITHDRAWAL: 'withdrawal',
+    },
+
     messenger: {
       TELEGRAM: 'telegram',
     }

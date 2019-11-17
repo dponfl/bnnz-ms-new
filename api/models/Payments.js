@@ -12,11 +12,33 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
+    /**
+     * Тип платежа: deposit/withdrawal
+     */
+    type: {
+      type: 'string',
+    },
+    /**
+     * Размер платежа
+     */
+    amount: {
+      type: 'number',
+    },
+    /**
+     * Валюта платежа
+     */
+    currency: {
+      type: 'string',
+    },
     payment_id: {
       type: 'string',
     },
+    /**
+     * Статус платежа в соответствии с платёжным шлюзом Telegram
+     * ('invoice', 'pre_checkout', 'successful_payment')
+     */
     payment_status: {
-      type: 'string', // 'invoice', 'pre_checkout', 'successful_payment'
+      type: 'string',
     },
     payment_data: {
       type: 'json',
@@ -24,6 +46,9 @@ module.exports = {
     payment_response: {
       type: 'json',
     },
+    /**
+     * Наименование платёжного провайдера
+     */
     payment_provider: {
       type: 'string',
     },
@@ -37,6 +62,9 @@ module.exports = {
       model: 'client',
     },
     client_guid: {
+      type: 'string',
+    },
+    account_guid: {
       type: 'string',
     },
 

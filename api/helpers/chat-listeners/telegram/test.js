@@ -57,7 +57,7 @@ module.exports = {
           const paymentProvider = sails.config.custom.config.payments[client.messenger]['provider'].toLowerCase();
 
           if (paymentProvider == null) {
-            throw new Error(`No payment provider, config: ${msg}`);
+            throw new Error(`No payment provider config for messenger: ${client.messenger}`);
           }
 
           const paymentResult = await sails.helpers.pgw[paymentProvider]['sendInvoice'].with({
@@ -75,6 +75,7 @@ module.exports = {
             ],
             clientId: client.id,
             clientGuid: client.guid,
+            accountGuid: client.account_use,
           });
 
         }

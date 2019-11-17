@@ -66,6 +66,34 @@ module.exports = {
       required: true,
     },
 
+    accountGuid: {
+      friendlyName: 'account_guid',
+      description: 'Link to the Account record',
+      type: 'string',
+      required: true,
+    },
+
+    type: {
+      friendlyName: 'payment type',
+      description: 'payment type',
+      type: 'string',
+      required: true,
+    },
+
+    amount: {
+      friendlyName: 'amount',
+      description: 'amount',
+      type: 'number',
+      required: true,
+    },
+
+    currency: {
+      friendlyName: 'currency',
+      description: 'currency',
+      type: 'string',
+      required: true,
+    },
+
   },
 
 
@@ -128,6 +156,10 @@ module.exports = {
         comments: inputs.comments || '',
         client_id: inputs.clientId,
         client_guid: inputs.clientGuid,
+        account_guid: inputs.accountGuid,
+        type: inputs.type,
+        amount: inputs.amount,
+        currency: inputs.currency,
       });
 
       return exits.success({

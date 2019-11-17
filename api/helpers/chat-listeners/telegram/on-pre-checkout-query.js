@@ -57,6 +57,7 @@ module.exports = {
             comments: `Client record not found for chatId: ${msg.from.id}`,
             clientId: 'client not found',
             clientGuid: 'client not found',
+            accountGuid: 'no account',
           });
 
           throw new Error(`Client record not found, msg: ${msg} Messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
@@ -78,6 +79,7 @@ module.exports = {
             comments: 'Config has no payment provider',
             clientId: client.id,
             clientGuid: client.guid,
+            accountGuid: client.account_use,
           });
 
           throw new Error(`No payment provider, config: ${sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM]}`);

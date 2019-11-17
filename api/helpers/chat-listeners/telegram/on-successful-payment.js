@@ -77,6 +77,10 @@ module.exports = {
             messenger: sails.config.custom.enums.messenger.TELEGRAM,
             clientId: client.id,
             clientGuid: client.guid,
+            accountGuid: client.account_use,
+            type: sails.config.custom.enums.paymentType.DEPOSIT,
+            amount: msg.successful_payment.total_amount/100 || 0,
+            currency: msg.successful_payment.currency || 'XXX',
           });
 
         }

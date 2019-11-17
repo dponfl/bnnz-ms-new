@@ -73,6 +73,13 @@ module.exports = {
       required: true,
     },
 
+    accountGuid: {
+      friendlyName: 'account_guid',
+      description: 'Link to the Account record',
+      type: 'string',
+      required: true,
+    },
+
   },
 
   exits: {
@@ -143,7 +150,8 @@ module.exports = {
         prices: prices,
         options: options,
         clientId: inputs.clientId,
-        clientGuid: inputs.clientGuid
+        clientGuid: inputs.clientGuid,
+        accountGuid: inputs.accountGuid,
       });
 
       // sails.log.info(`sendInvoiceRaw: ${sendInvoiceRaw}`);

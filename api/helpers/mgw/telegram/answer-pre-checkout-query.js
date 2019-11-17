@@ -76,6 +76,10 @@ module.exports = {
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           clientId: inputs.client.id,
           clientGuid: inputs.client.guid,
+          accountGuid: inputs.client.account_use,
+          type: sails.config.custom.enums.paymentType.DEPOSIT,
+          amount: inputs.preCheckoutQuery.total_amount/100 || 0,
+          currency: inputs.preCheckoutQuery.currency || 'XXX',
         });
 
         return exits.success({
@@ -98,6 +102,7 @@ module.exports = {
           comments: 'answerPreCheckoutQueryResult return False',
           clientId: inputs.client.id,
           clientGuid: inputs.client.guid,
+          accountGuid: inputs.client.account_use,
         });
 
         return exits.success({

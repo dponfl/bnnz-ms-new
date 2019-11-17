@@ -75,6 +75,13 @@ module.exports = {
       required: true,
     },
 
+    accountGuid: {
+      friendlyName: 'account_guid',
+      description: 'Link to the Account record',
+      type: 'string',
+      required: true,
+    },
+
   },
 
   exits: {
@@ -118,6 +125,7 @@ module.exports = {
             comments: 'Cannot get payment provider token',
             clientId: inputs.clientId,
             clientGuid: inputs.clientGuid,
+            accountGuid: inputs.accountGuid,
           });
 
           throw new Error('sendInvoice, Error: Cannot get payment provider token');
@@ -153,6 +161,10 @@ module.exports = {
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           clientId: inputs.clientId,
           clientGuid: inputs.clientGuid,
+          accountGuid: inputs.accountGuid,
+          type: sails.config.custom.enums.paymentType.DEPOSIT,
+          amount: inputs.prices[0].amount/100 || 0,
+          currency: inputs.currency,
         });
 
 
