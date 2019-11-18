@@ -1,28 +1,27 @@
 "use strict";
 
 /**
- * AccountFields.js
+ * Ref.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'account_fields',
+  tableName: 'ref',
   migrate: 'safe',
   attributes: {
 
-    account_guid: {
+    client_guid: {
       type: 'string',
+      unique: true,
+      required: true,
     },
-    field: {
-      type: 'string',
+    ref_up: {
+      type: 'json',
     },
-    old_value: {
-      type: 'string',
-    },
-    new_value: {
-      type: 'string',
+    ref_down: {
+      type: 'json',
     },
 
 
