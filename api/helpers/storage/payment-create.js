@@ -14,7 +14,7 @@ module.exports = {
     paymentStatus: {
       friendlyName: 'Payment status',
       description: 'Payment status',
-      type: 'string', // 'invoice', 'pre_checkout', 'successful_payment'
+      type: 'string',
       required: true,
     },
 
@@ -33,8 +33,8 @@ module.exports = {
     },
 
     paymentProvider: {
-      friendlyName: 'currency',
-      description: 'currency',
+      friendlyName: 'payment provider',
+      description: 'payment provider',
       type: 'string',
       required: true,
     },

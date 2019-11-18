@@ -41,11 +41,20 @@ module.exports.custom = {
       CHECKOUT_ERROR: 'checkout_error',
       SUCCESS: 'successful_payment',
       SUCCESS_ERROR: 'successful_payment_error',
+      SUCCESS_COMMISSION: 'successful_commission',
+      ERROR_COMMISSION: 'error_commission',
     },
 
     paymentType: {
       DEPOSIT: 'deposit',
       WITHDRAWAL: 'withdrawal',
+      REFUND: 'refund',
+      COMMISSION_DEPOSIT: 'commission_deposit',
+      COMMISSION_WITHDRAWAL: 'commission_withdrawal',
+    },
+
+    paymentProvider: {
+      DEFAULT: 'ref commission provider default',
     },
 
     messenger: {
