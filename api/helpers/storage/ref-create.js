@@ -1,98 +1,34 @@
 "use strict";
 
-const uuid = require('uuid-apikey');
-
 module.exports = {
 
 
-  friendlyName: 'Payment create',
+  friendlyName: 'Referral table record create',
 
 
-  description: 'Create initial payment record',
+  description: 'Create referral record',
 
 
   inputs: {
 
-    paymentStatus: {
-      friendlyName: 'Payment status',
-      description: 'Payment status',
-      type: 'string',
-      required: true,
-    },
-
-    paymentData: {
-      friendlyName: 'Payment data sent',
-      description: 'Payment data sent',
-      type: 'ref',
-      required: true,
-    },
-
-    paymentResponse: {
-      friendlyName: 'Payment response',
-      description: 'Payment response',
-      type: 'ref',
-      required: true,
-    },
-
-    paymentProvider: {
-      friendlyName: 'payment provider',
-      description: 'payment provider',
-      type: 'string',
-      required: true,
-    },
-
-    messenger: {
-      friendlyName: 'messenger',
-      description: 'messenger',
-      type: 'string',
-      required: true,
-    },
-
-    comments: {
-      friendlyName: 'comments',
-      description: 'comments',
-      type: 'string',
-    },
-
-    clientId: {
-      friendlyName: 'client_id',
-      description: 'Link to the Client record',
-      type: 'string',
-      required: true,
-    },
-
     clientGuid: {
-      friendlyName: 'client_guid',
-      description: 'Link to the Client record',
+      friendlyName: 'Client guid',
+      description: 'Client guid',
       type: 'string',
       required: true,
     },
 
-    accountGuid: {
-      friendlyName: 'account_guid',
-      description: 'Link to the Account record',
-      type: 'string',
+    refUp: {
+      friendlyName: 'Referral upwards',
+      description: 'Referral upwards',
+      type: 'ref',
       required: true,
     },
 
-    type: {
-      friendlyName: 'payment type',
-      description: 'payment type',
-      type: 'string',
-      required: true,
-    },
-
-    amount: {
-      friendlyName: 'amount',
-      description: 'amount',
-      type: 'number',
-      required: true,
-    },
-
-    currency: {
-      friendlyName: 'currency',
-      description: 'currency',
-      type: 'string',
+    refDown: {
+      friendlyName: 'Referral downwards',
+      description: 'Referral downwards',
+      type: 'ref',
       required: true,
     },
 
@@ -115,8 +51,6 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     try {
-
-      const guid = uuid.create().uuid;
 
       let paymentData = {};
       let paymentId = '';
@@ -151,7 +85,6 @@ module.exports = {
       }
 
       await Payments.create({
-        guid: guid,
         payment_id: paymentId,
         payment_status: inputs.paymentStatus,
         payment_data: paymentData,

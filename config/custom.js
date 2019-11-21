@@ -49,12 +49,27 @@ module.exports.custom = {
       DEPOSIT: 'deposit',
       WITHDRAWAL: 'withdrawal',
       REFUND: 'refund',
-      COMMISSION_DEPOSIT: 'commission_deposit',
-      COMMISSION_WITHDRAWAL: 'commission_withdrawal',
+      COMMISSION_CALCULATION: 'commission_calculation',
+      // COMMISSION_DEPOSIT: 'commission_deposit',
+      // COMMISSION_WITHDRAWAL: 'commission_withdrawal',
     },
 
     paymentProvider: {
       DEFAULT: 'ref commission provider default',
+    },
+
+    analytics: {
+      frequency: {
+        DAILY: 'daily',
+        WEEKLY: 'weekly',
+        MONTHLY: 'monthly',
+      },
+      event: {
+        COM_VAL: 'commissions_value',
+        CLIENTS_ACTIVE: 'clients_active',
+        CLIENTS_DEL: 'clients_deleted',
+        CLIENTS_BANNED: 'clients_banned',
+      }
     },
 
     messenger: {

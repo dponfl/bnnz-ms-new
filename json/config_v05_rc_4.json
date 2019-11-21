@@ -8,6 +8,98 @@
       "env": "TEST"
     }
   },
+  "commissions": {
+    "RUB": [
+      {
+        "level": 1,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 2,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 3,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 4,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 5,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 6,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 7,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      },
+      {
+        "level": 8,
+        "sl": {
+          "bronze": 10,
+          "gold": 10,
+          "platinum": 10,
+          "bronze_prof": 10,
+          "gold_prof": 10,
+          "platinum_prof": 10
+        }
+      }
+    ]
+  },
   "rooms": {
     "clients_per_room": 5
   },

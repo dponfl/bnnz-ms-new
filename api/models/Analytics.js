@@ -1,75 +1,37 @@
-"use strict";
-
 /**
- * Payments.js
+ * Analytics.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'payments',
+  tableName: 'analytics',
   migrate: 'safe',
   attributes: {
     guid: {
       type: 'string',
       unique: true,
     },
-    /**
-     * Тип платежа: deposit/withdrawal
-     */
-    type: {
+    frequency: {
       type: 'string',
     },
-    /**
-     * Размер платежа
-     */
-    amount: {
-      type: 'number',
+    event: {
+      type: 'string',
     },
-    /**
-     * Валюта платежа
-     */
+    value: {
+      type: 'string',
+    },
     currency: {
       type: 'string',
     },
-    payment_id: {
+    period: {
       type: 'string',
     },
-    /**
-     * Статус платежа в соответствии с платёжным шлюзом Telegram
-     * ('invoice', 'pre_checkout', 'successful_payment')
-     */
-    payment_status: {
+    elapsed_time: {
       type: 'string',
     },
-    payment_data: {
-      type: 'json',
-    },
-    payment_response: {
-      type: 'json',
-    },
-    /**
-     * Наименование платёжного провайдера
-     */
-    payment_provider: {
-      type: 'string',
-    },
-    messenger: {
-      type: 'string',
-    },
-    comments: {
-      type: 'string',
-    },
-    client_id: {
-      model: 'client',
-    },
-    client_guid: {
-      type: 'string',
-    },
-    account_guid: {
-      type: 'string',
-    },
+
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
