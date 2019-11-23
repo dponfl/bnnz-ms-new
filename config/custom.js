@@ -50,6 +50,7 @@ module.exports.custom = {
       WITHDRAWAL: 'withdrawal',
       REFUND: 'refund',
       COMMISSION_CALCULATION: 'commission_calculation',
+      TRANSFER: 'transfer',
       // COMMISSION_DEPOSIT: 'commission_deposit',
       // COMMISSION_WITHDRAWAL: 'commission_withdrawal',
     },
@@ -60,15 +61,20 @@ module.exports.custom = {
 
     analytics: {
       frequency: {
+        HOURLY: 'hourly',
         DAILY: 'daily',
         WEEKLY: 'weekly',
         MONTHLY: 'monthly',
       },
       event: {
-        COM_VAL: 'commissions_value',
-        CLIENTS_ACTIVE: 'clients_active',
-        CLIENTS_DEL: 'clients_deleted',
-        CLIENTS_BANNED: 'clients_banned',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
+        xxxxxx: 'xxxxxxx',
       }
     },
 

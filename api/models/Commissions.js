@@ -1,35 +1,26 @@
 /**
- * Analytics.js
+ * Commissions.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'analytics',
+  tableName: 'commissions',
   migrate: 'safe',
   attributes: {
-    guid: {
-      type: 'string',
-      unique: true,
-    },
-    frequency: {
+
+    account_guid: {
       type: 'string',
     },
-    event: {
+    type: {
       type: 'string',
     },
-    value: {
-      type: 'string',
+    amount: {
+      type: 'number',
     },
     currency: {
       type: 'string',
-    },
-    period: {
-      type: 'string',
-    },
-    elapsed_time: {
-      type: 'number',
     },
 
 

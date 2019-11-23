@@ -1,16 +1,14 @@
 "use strict";
 
-const _ = require('lodash');
-
-const moduleName = 'general:getChatConfig';
+const moduleName = 'general:getConfig';
 
 
 module.exports = {
 
 
-  friendlyName: 'Get chat config',
+  friendlyName: 'Get platform config',
 
-  description: 'Get chat config',
+  description: 'Get platform config',
 
   inputs: {
 
@@ -39,15 +37,18 @@ module.exports = {
       // sails.log.warn('sails.config.custom.config: ', sails.config.custom.config);
 
       if (sails.config.custom.config == null) {
-
         throw new Error('Critical error: Cannot get config');
+      } else {
 
+        await sails.helpers.analytics.buildEventsSchedule();
+
+        sails.log.info('Platform configuration loaded successfully');
       }
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/general/get-chat-config';
-      const errorMsg = 'api/helpers/general/get-chat-config: general error';
+      const errorLocation = 'api/helpers/general/get-config';
+      const errorMsg = 'api/helpers/general/get-config: general error';
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
