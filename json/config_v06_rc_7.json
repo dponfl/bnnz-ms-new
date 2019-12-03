@@ -160,15 +160,6 @@
         }
       },
       {
-        "event": "clients",
-        "schedule": {
-          "hourly":   false,
-          "daily":    true,
-          "weekly":   true,
-          "monthly":  true
-        }
-      },
-      {
         "event": "clients_active",
         "schedule": {
           "hourly":   false,
@@ -205,7 +196,7 @@
         }
       },
       {
-        "event": "accounts",
+        "event": "accounts_active_all",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -214,7 +205,7 @@
         }
       },
       {
-        "event": "accounts_active",
+        "event": "accounts_deleted_all",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -223,7 +214,7 @@
         }
       },
       {
-        "event": "accounts_deleted",
+        "event": "accounts_banned_all",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -232,7 +223,7 @@
         }
       },
       {
-        "event": "accounts_banned",
+        "event": "accounts_active_test",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -241,7 +232,142 @@
         }
       },
       {
-        "event": "new_accounts",
+        "event": "accounts_deleted_test",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_banned_test",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_active_bronze",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_deleted_bronze",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_banned_bronze",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_active_gold",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_deleted_gold",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_banned_gold",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_active_platinum",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_deleted_platinum",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_banned_platinum",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_all",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_test",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_bronze",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_gold",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_platinum",
         "schedule": {
           "hourly":   true,
           "daily":    true,
@@ -261,7 +387,7 @@
       {
         "event": "refunds_rub",
         "schedule": {
-          "hourly":   false,
+          "hourly":   true,
           "daily":    true,
           "weekly":   true,
           "monthly":  true
