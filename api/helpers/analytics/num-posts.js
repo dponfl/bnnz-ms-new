@@ -2,13 +2,13 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:calcNumPosts';
+const moduleName = 'analytics:numPosts';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:calcNumPosts',
+  friendlyName: 'analytics:numPosts',
 
   description: 'Calculate data for num_posts event',
 
@@ -61,19 +61,24 @@ module.exports = {
 
       elapsedTime = moment.duration(elapsedTimeEnd.diff(elapsedTimeStart)).asSeconds();
 
-      /**
-       * Сохраняем подсчитанное значение в таблице "analytics"
-       */
+      // sails.log.info(`Start: ${moment(inputs.start).format()}`);
+      // sails.log.info(`End: ${moment(inputs.end).format()}`);
+      // sails.log.info(`numPosts: ${numPosts}`);
+      // sails.log.info(`elapsedTime: ${elapsedTime}`);
 
-      sails.log.info(`Start: ${moment(inputs.start).format()}`);
-      sails.log.info(`End: ${moment(inputs.end).format()}`);
-      sails.log.info(`numPosts: ${numPosts}`);
-      sails.log.info(`elapsedTime: ${elapsedTime}`);
+      return exits.success({
+        status: 'ok',
+        message: 'Success',
+        payload: {
+          value: numPosts,
+          elapsedTime: elapsedTime,
+        }
+      });
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/analytics/calc-num-posts';
-      const errorMsg = 'api/helpers/analytics/calc-num-posts: General error';
+      const errorLocation = 'api/helpers/analytics/num-posts';
+      const errorMsg = 'api/helpers/analytics/num-posts: General error';
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
@@ -86,12 +91,6 @@ module.exports = {
       };
 
     }
-
-    return exits.success({
-      status: 'ok',
-      message: 'Success',
-      payload: {}
-    });
 
   } // fn
 

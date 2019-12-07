@@ -24,6 +24,7 @@ module.exports = {
     },
     currency: {
       type: 'string',
+      allowNull: true,
     },
     period: {
       type: 'string',
