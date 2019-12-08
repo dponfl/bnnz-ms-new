@@ -4,15 +4,15 @@ const _ = require('lodash');
 const moment = require('moment');
 const uuid = require('uuid-apikey');
 
-const moduleName = 'general::schedule::analytics-hourly';
+const moduleName = 'general::schedule::analytics-daily';
 
 
 module.exports = {
 
 
-  friendlyName: 'Scheduler for calculation and saving hourly analytics data',
+  friendlyName: 'Scheduler for calculation and saving daily analytics data',
 
-  description: 'Scheduler for calculation and saving hourly analytics data',
+  description: 'Scheduler for calculation and saving daily analytics data',
 
   inputs: {
 
@@ -38,10 +38,10 @@ module.exports = {
        * Формируем временные границы, частоту события, период рассчёта
        */
 
-      const eventsStart = moment().subtract(1, 'hours').startOf('hour').format();
-      const eventsEnd = moment().startOf('hour').subtract(1, 'seconds').format();
-      const eventFrequency = sails.config.custom.enums.analytics.frequency.HOURLY;
-      const eventPeriod = moment().subtract(1, 'hours').startOf('hour').format('YYYY-MM-DD HH:mm:ss');
+      const eventsStart = moment().subtract(1, 'days').startOf('day').format();
+      const eventsEnd = moment().startOf('day').subtract(1, 'seconds').format();
+      const eventFrequency = sails.config.custom.enums.analytics.frequency.DAILY;
+      const eventPeriod = moment().subtract(1, 'days').startOf('hour').format('YYYY-MM-DD');
 
       sails.log.info(`eventStart: ${eventsStart} eventEnd: ${eventsEnd}`);
 
@@ -49,7 +49,7 @@ module.exports = {
        * Выполняем список событий
        */
 
-      _.forEach(sails.config.custom.config.analyticSchedule.hourly, async (event) => {
+      _.forEach(sails.config.custom.config.analyticSchedule.daily, async (event) => {
 
         const eventHelperName = _.camelCase(event);
 

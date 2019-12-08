@@ -2,15 +2,15 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:numPosts';
+const moduleName = 'analytics:numPostsAllLikes';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:numPosts',
+  friendlyName: 'analytics:numPostsAllLikes',
 
-  description: 'Calculate data for num_posts event',
+  description: 'Calculate data for num_posts_all_likes event',
 
   inputs: {
     start: {
@@ -53,7 +53,8 @@ module.exports = {
           createdAt: {
             '>=': moment(inputs.start).format(),
             '<=': moment(inputs.end).format()
-          }
+          },
+          all_likes_done: true,
         },
       });
 
