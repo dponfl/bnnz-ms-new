@@ -51,12 +51,6 @@ module.exports.bootstrap = async function() {
   await sails.helpers.chatListeners.telegram.onPreCheckoutQuery();
   await sails.helpers.chatListeners.telegram.onSuccessfulPayment();
 
-  // await sails.helpers.analytics.calcNumPosts.with({
-  //   start: '2019-12-02',
-  //   // end: '2019-12-04 12:26:18',
-  //   end: '2019-12-03',
-  // });
-
   await sails.helpers.general.schedule.analyticsHourly();
   await sails.helpers.general.schedule.analyticsDaily();
 

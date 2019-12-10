@@ -28,8 +28,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    let events = null;
-
     try {
 
       sails.log.warn(`********** ${moduleName} is running: ` + moment().format() + ' **********');
@@ -49,34 +47,55 @@ module.exports = {
        * Выполняем список событий
        */
 
-      _.forEach(sails.config.custom.config.analyticSchedule.hourly, async (event) => {
-
-        const eventHelperName = _.camelCase(event);
-
-        const eventRawResult = await sails.helpers.analytics[eventHelperName].with({
-          start: eventsStart,
-          end: eventsEnd,
-        });
-
-        sails.log.info(`event: ${moduleName}::${eventHelperName}, eventRawResult: \n`, eventRawResult);
+      for (const event of sails.config.custom.config.analyticSchedule.hourly) {
 
         /**
-         * Сохраняем подсчитанное значение в таблице "analytics"
+         * Нужно проверить, что записи для рассчитанного eventPeriod и события event
+         * ещё нет в базе данных
          */
 
-        const analyticsRec = {
-          guid: uuid.create().uuid,
+        const getRecCond = {
           frequency: eventFrequency,
           event: event,
-          value: eventRawResult.payload.value || 0,
-          currency: eventRawResult.payload.currency || null,
           period: eventPeriod,
-          elapsed_time: eventRawResult.payload.elapsedTime || 0,
         };
 
-        await Analytics.create(analyticsRec);
+        const getRec = await Analytics.findOne(getRecCond);
 
-      });
+        if (getRec == null) {
+
+          const eventHelperName = _.camelCase(event);
+
+          const eventRawResult = await sails.helpers.analytics[eventHelperName].with({
+            start: eventsStart,
+            end: eventsEnd,
+          });
+
+          sails.log.info(`event: ${moduleName}::${eventHelperName}, eventRawResult: \n`, eventRawResult);
+
+          /**
+           * Сохраняем подсчитанное значение в таблице "analytics"
+           */
+
+          const analyticsRec = {
+            guid: uuid.create().uuid,
+            frequency: eventFrequency,
+            event: event,
+            value: eventRawResult.payload.value || 0,
+            currency: eventRawResult.payload.currency || null,
+            period: eventPeriod,
+            elapsed_time: eventRawResult.payload.elapsedTime || 0,
+          };
+
+          await Analytics.create(analyticsRec);
+
+        } else {
+
+          sails.log.warn('Record for the following conditions already exists: \n', getRecCond);
+
+        }
+
+      }
 
     } catch (e) {
 
