@@ -4,15 +4,15 @@ const _ = require('lodash');
 const moment = require('moment');
 const uuid = require('uuid-apikey');
 
-const moduleName = 'general::schedule::analytics-daily';
+const moduleName = 'general::schedule::analytics-weekly';
 
 
 module.exports = {
 
 
-  friendlyName: 'Scheduler for calculation and saving daily analytics data',
+  friendlyName: 'Scheduler for calculation and saving weekly analytics data',
 
-  description: 'Scheduler for calculation and saving daily analytics data',
+  description: 'Scheduler for calculation and saving weekly analytics data',
 
   inputs: {
 
@@ -42,10 +42,10 @@ module.exports = {
        * Формируем временные границы, частоту события, период рассчёта
        */
 
-      const eventsStart = moment().subtract(1, 'days').startOf('day').format();
-      const eventsEnd = moment().startOf('day').subtract(1, 'seconds').format();
-      const eventFrequency = sails.config.custom.enums.analytics.frequency.DAILY;
-      const eventPeriod = moment().subtract(1, 'days').startOf('day').format('YYYY-MM-DD');
+      const eventsStart = moment().subtract(1, 'weeks').startOf('week').format();
+      const eventsEnd = moment().startOf('week').subtract(1, 'seconds').format();
+      const eventFrequency = sails.config.custom.enums.analytics.frequency.WEEKLY;
+      const eventPeriod = moment().subtract(1, 'weeks').startOf('week').format('YYYY-MM-DD');
 
       sails.log.info(`eventStart: ${eventsStart} eventEnd: ${eventsEnd}`);
 
@@ -53,7 +53,7 @@ module.exports = {
        * Выполняем список событий
        */
 
-      for (const event of sails.config.custom.config.analyticSchedule.daily) {
+      for (const event of sails.config.custom.config.analyticSchedule.weekly) {
 
         /**
          * Нужно проверить, что записи для рассчитанного eventPeriod и события event

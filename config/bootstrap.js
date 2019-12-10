@@ -53,5 +53,6 @@ module.exports.bootstrap = async function() {
 
   await sails.helpers.general.schedule.analyticsHourly();
   await sails.helpers.general.schedule.analyticsDaily();
+  await sails.helpers.general.schedule.analyticsWeekly();
 
 };
