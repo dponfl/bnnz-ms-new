@@ -158,6 +158,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "clients_active",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
