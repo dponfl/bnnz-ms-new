@@ -140,6 +140,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "num_posts_acc_min",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
