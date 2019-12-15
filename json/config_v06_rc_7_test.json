@@ -167,6 +167,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "clients_deleted",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
