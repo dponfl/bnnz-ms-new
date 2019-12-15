@@ -185,6 +185,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "new_clients",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
