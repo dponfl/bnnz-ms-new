@@ -205,6 +205,15 @@
         }
       },
       {
+        "event": "accounts_not_active_all",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
         "event": "accounts_deleted_all",
         "schedule": {
           "hourly":   false,
@@ -259,6 +268,15 @@
         }
       },
       {
+        "event": "accounts_not_active_bronze",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
         "event": "accounts_deleted_bronze",
         "schedule": {
           "hourly":   false,
@@ -278,6 +296,15 @@
       },
       {
         "event": "accounts_active_gold",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "accounts_not_active_gold",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -313,6 +340,15 @@
         }
       },
       {
+        "event": "accounts_not_active_platinum",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
         "event": "accounts_deleted_platinum",
         "schedule": {
           "hourly":   false,
@@ -331,7 +367,16 @@
         }
       },
       {
-        "event": "new_accounts_all",
+        "event": "new_accounts_active_all",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_not_active_all",
         "schedule": {
           "hourly":   true,
           "daily":    true,
@@ -349,7 +394,7 @@
         }
       },
       {
-        "event": "new_accounts_bronze",
+        "event": "new_accounts_active_bronze",
         "schedule": {
           "hourly":   true,
           "daily":    true,
@@ -358,7 +403,7 @@
         }
       },
       {
-        "event": "new_accounts_gold",
+        "event": "new_accounts_not_active_bronze",
         "schedule": {
           "hourly":   true,
           "daily":    true,
@@ -367,7 +412,34 @@
         }
       },
       {
-        "event": "new_accounts_platinum",
+        "event": "new_accounts_active_gold",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_not_active_gold",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_active_platinum",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
+      },
+      {
+        "event": "new_accounts_not_active_platinum",
         "schedule": {
           "hourly":   true,
           "daily":    true,

@@ -44,6 +44,12 @@ module.exports = {
       type: 'boolean',
     },
     /**
+     * флаг, что аккаунт забанен
+     */
+    banned: {
+      type: 'boolean',
+    },
+    /**
      * Инстаграм профайл аккаунта клиента
      */
     inst_profile: {

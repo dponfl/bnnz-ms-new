@@ -46,6 +46,7 @@ module.exports = {
         subscription_from: inputs.account.subscription_from || null,
         subscription_until: inputs.account.subscription_until || null,
         deleted: inputs.account.deleted || false,
+        banned: inputs.account.banned || false,
         inst_profile: inputs.account.inst_profile || '',
         posts_made_day: inputs.account.posts_made_day || 0,
         posts_received_day: inputs.account.posts_received_day || 0,
