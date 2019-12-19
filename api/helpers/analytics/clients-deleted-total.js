@@ -2,15 +2,15 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:accountsActiveAll';
+const moduleName = 'analytics:clientsDeletedTotal';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:accountsActiveAll',
+  friendlyName: 'analytics:clientsDeletedTotal',
 
-  description: 'Calculate data for accounts_active_all event',
+  description: 'Calculate data for clients_deleted_total event',
 
   inputs: {
     start: {
@@ -42,17 +42,15 @@ module.exports = {
     let elapsedTimeStart;
     let elapsedTimeEnd;
     let elapsedTime;
-    let numAccounts;
+    let numClients;
 
     try {
 
       elapsedTimeStart = moment();
 
-      numAccounts = await Account.count({
+      numClients = await Client.count({
         where: {
-          deleted: false,
-          banned: false,
-          subscription_active: true,
+          deleted: true,
         },
       });
 
@@ -62,14 +60,14 @@ module.exports = {
 
       // sails.log.info(`Start: ${moment(inputs.start).format()}`);
       // sails.log.info(`End: ${moment(inputs.end).format()}`);
-      // sails.log.info(`numAccounts: ${numAccounts}`);
+      // sails.log.info(`numClients: ${numClients}`);
       // sails.log.info(`elapsedTime: ${elapsedTime}`);
 
       return exits.success({
         status: 'ok',
         message: 'Success',
         payload: {
-          value: numAccounts,
+          value: numClients,
           elapsedTime: elapsedTime,
         }
       });

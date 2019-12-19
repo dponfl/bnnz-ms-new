@@ -2,15 +2,15 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:accountsNotActiveAll';
+const moduleName = 'analytics:accountsDeletedAllTotal';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:accountsNotActiveAll',
+  friendlyName: 'analytics:accountsDeletedAllTotal',
 
-  description: 'Calculate data for accounts_not_active_all event',
+  description: 'Calculate data for accounts_deleted_all_total event',
 
   inputs: {
     start: {
@@ -50,7 +50,7 @@ module.exports = {
 
       numAccounts = await Account.count({
         where: {
-          subscription_active: false,
+          deleted: true,
         },
       });
 

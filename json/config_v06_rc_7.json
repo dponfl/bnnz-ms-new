@@ -160,7 +160,7 @@
         }
       },
       {
-        "event": "clients_active",
+        "event": "clients_active_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -169,7 +169,7 @@
         }
       },
       {
-        "event": "clients_deleted",
+        "event": "clients_deleted_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -178,7 +178,7 @@
         }
       },
       {
-        "event": "clients_banned",
+        "event": "clients_banned_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -196,7 +196,7 @@
         }
       },
       {
-        "event": "accounts_active_all",
+        "event": "accounts_active_all_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -205,7 +205,7 @@
         }
       },
       {
-        "event": "accounts_not_active_all",
+        "event": "accounts_not_active_all_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -214,7 +214,7 @@
         }
       },
       {
-        "event": "accounts_deleted_all",
+        "event": "accounts_deleted_all_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -223,7 +223,7 @@
         }
       },
       {
-        "event": "accounts_banned_all",
+        "event": "accounts_banned_all_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -232,7 +232,7 @@
         }
       },
       {
-        "event": "accounts_active_test",
+        "event": "accounts_active_test_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -241,7 +241,7 @@
         }
       },
       {
-        "event": "accounts_deleted_test",
+        "event": "accounts_deleted_test_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -250,7 +250,7 @@
         }
       },
       {
-        "event": "accounts_banned_test",
+        "event": "accounts_banned_test_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -259,7 +259,7 @@
         }
       },
       {
-        "event": "accounts_active_bronze",
+        "event": "accounts_active_bronze_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -268,7 +268,7 @@
         }
       },
       {
-        "event": "accounts_not_active_bronze",
+        "event": "accounts_not_active_bronze_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -277,7 +277,7 @@
         }
       },
       {
-        "event": "accounts_deleted_bronze",
+        "event": "accounts_deleted_bronze_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -286,7 +286,7 @@
         }
       },
       {
-        "event": "accounts_banned_bronze",
+        "event": "accounts_banned_bronze_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -295,7 +295,7 @@
         }
       },
       {
-        "event": "accounts_active_gold",
+        "event": "accounts_active_gold_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -304,7 +304,7 @@
         }
       },
       {
-        "event": "accounts_not_active_gold",
+        "event": "accounts_not_active_gold_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -313,7 +313,7 @@
         }
       },
       {
-        "event": "accounts_deleted_gold",
+        "event": "accounts_deleted_gold_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -322,7 +322,7 @@
         }
       },
       {
-        "event": "accounts_banned_gold",
+        "event": "accounts_banned_gold_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -331,7 +331,7 @@
         }
       },
       {
-        "event": "accounts_active_platinum",
+        "event": "accounts_active_platinum_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -340,7 +340,7 @@
         }
       },
       {
-        "event": "accounts_not_active_platinum",
+        "event": "accounts_not_active_platinum_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -349,7 +349,7 @@
         }
       },
       {
-        "event": "accounts_deleted_platinum",
+        "event": "accounts_deleted_platinum_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,
@@ -358,7 +358,7 @@
         }
       },
       {
-        "event": "accounts_banned_platinum",
+        "event": "accounts_banned_platinum_total",
         "schedule": {
           "hourly":   false,
           "daily":    true,

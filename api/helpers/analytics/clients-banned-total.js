@@ -2,15 +2,15 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:clientsBanned';
+const moduleName = 'analytics:clientsBannedTotal';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:clientsBanned',
+  friendlyName: 'analytics:clientsBannedTotal',
 
-  description: 'Calculate data for clients_banned event',
+  description: 'Calculate data for clients_banned_total event',
 
   inputs: {
     start: {
