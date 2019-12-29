@@ -21,6 +21,9 @@ module.exports = {
     service: {
       type: 'string',
     },
+    unique: {
+      type: 'boolean',
+    },
     used: {
       type: 'boolean',
     },

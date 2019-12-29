@@ -50,6 +50,8 @@ module.exports = {
 
       numAccounts = await Account.count({
         where: {
+          deleted: false,
+          banned: false,
           subscription_active: false,
         },
       });

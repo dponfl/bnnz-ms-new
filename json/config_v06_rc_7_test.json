@@ -230,6 +230,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "accounts_active_test_personal_total",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },

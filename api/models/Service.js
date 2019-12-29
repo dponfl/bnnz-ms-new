@@ -16,7 +16,16 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    /**
+     * Internal service name
+     */
     name: {
+      type: 'string',
+    },
+    /**
+     * Public service name
+     */
+    title: {
       type: 'string',
     },
     funnel_name: {
