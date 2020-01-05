@@ -392,6 +392,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "accounts_banned_platinum_personal_total",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
