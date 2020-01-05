@@ -437,6 +437,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "accounts_not_active_bronze_commercial_total",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
