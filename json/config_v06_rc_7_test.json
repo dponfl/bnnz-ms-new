@@ -671,6 +671,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "new_accounts_active_test_commercial",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
