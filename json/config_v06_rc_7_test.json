@@ -707,6 +707,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "new_accounts_not_active_silver_commercial",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
