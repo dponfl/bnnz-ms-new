@@ -592,7 +592,7 @@
         }
       },
       {
-        "event": "new_accounts_test_personal",
+        "event": "new_accounts_active_test_personal",
         "schedule": {
           "hourly":   true,
           "daily":    true,
@@ -673,7 +673,7 @@
         }
       },
       {
-        "event": "new_accounts_test_commercial",
+        "event": "new_accounts_active_test_commercial",
         "schedule": {
           "hourly":   true,
           "daily":    true,
