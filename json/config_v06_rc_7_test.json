@@ -536,6 +536,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "accounts_active_platinum_commercial_total",
+        "schedule": {
+          "hourly":   false,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
