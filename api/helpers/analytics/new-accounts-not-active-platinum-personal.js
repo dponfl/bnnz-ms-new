@@ -2,15 +2,15 @@
 
 const moment = require('moment');
 
-const moduleName = 'analytics:accountsNotActivePlatinumPersonalTotal';
+const moduleName = 'analytics:newAccountsNotActivePlatinumPersonal';
 
 
 module.exports = {
 
 
-  friendlyName: 'analytics:accountsNotActivePlatinumPersonalTotal',
+  friendlyName: 'analytics:newAccountsNotActivePlatinumPersonal',
 
-  description: 'Calculate data for accounts_not_active_platinum_personal_total event',
+  description: 'Calculate data for new_accounts_not_active_platinum_personal event',
 
   inputs: {
     start: {
@@ -57,6 +57,10 @@ module.exports = {
 
         numAccounts = await Account.count({
           where: {
+            createdAt: {
+              '>=': moment(inputs.start).format(),
+              '<=': moment(inputs.end).format()
+            },
             deleted: false,
             banned: false,
             subscription_active: false,
