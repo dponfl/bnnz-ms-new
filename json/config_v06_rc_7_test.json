@@ -761,6 +761,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "refunds_rub",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
