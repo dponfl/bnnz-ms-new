@@ -58,7 +58,7 @@ module.exports.custom = {
       COMMISSION_CALCULATION: 'commission_calculation',
       TRANSFER: 'transfer',
       // COMMISSION_DEPOSIT: 'commission_deposit',
-      // COMMISSION_WITHDRAWAL: 'commission_withdrawal',
+      COMMISSION_WITHDRAWAL: 'commission_withdrawal',
     },
 
     paymentProvider: {

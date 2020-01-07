@@ -770,6 +770,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "commissions_rub",
+        "schedule": {
+          "hourly":   false,
+          "daily":    false,
+          "weekly":   false,
+          "monthly":  true
+        }
       }
     ]
   },
