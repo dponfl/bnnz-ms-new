@@ -32,6 +32,12 @@ module.exports.custom = {
   tokens: {},
 
   enums: {
+    paymentCurrency: {
+      RUB: 'RUB',
+      EUR: 'EUR',
+      USD: 'USD',
+    },
+
     paymentStatus: {
       INVOICE: 'invoice',
       INVOICE_ERROR: 'invoice_error',

@@ -752,6 +752,15 @@
           "weekly":   true,
           "monthly":  true
         }
+      },
+      {
+        "event": "deposits_received_rub",
+        "schedule": {
+          "hourly":   true,
+          "daily":    true,
+          "weekly":   true,
+          "monthly":  true
+        }
       }
     ]
   },
