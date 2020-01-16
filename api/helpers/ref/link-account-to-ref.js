@@ -143,8 +143,6 @@ module.exports = {
            * Прямое/непосредственное подключение
            */
 
-          // await createDirectLink(new_account_guid, ref_account.guid, refRec);
-
           await linkAccount(new_account_guid, ref_account.guid, refRec, true);
 
         } else {
@@ -152,8 +150,6 @@ module.exports = {
           /**
            * Подключение переливом
            */
-
-          // await createIndirectLink();
 
           await linkAccount(new_account_guid, ref_account.guid, refRec, false);
 
@@ -186,18 +182,18 @@ module.exports = {
 
         await sails.helpers.storage.refDownCreate.with({
           accountGuid: new_account_guid,
-          refAccountGuid: selectedRefRec.guid,
+          refAccountGuid: selectedRefRec.account_guid,
           level: sails.config.custom.config.ref.general.noRefLevel,
           type: sails.config.custom.enums.ref.refDownType.NOREF,
         });
 
         await sails.helpers.storage.refUpCreate.with({
           accountGuid: new_account_guid,
-          refAccountGuid: selectedRefRec.guid,
+          refAccountGuid: selectedRefRec.account_guid,
           index: 1,
         });
 
-        used_ref_up.push(selectedRefRec.guid);
+        used_ref_up.push(selectedRefRec.account_guid);
 
         await finalizeRefUpRecords(new_account_guid, used_ref_up);
 
@@ -306,7 +302,7 @@ async function linkAccount(newAccountGuid, refAccountGuid, refRec, useDirectLink
 
     await sails.helpers.storage.refDownCreate.with({
       accountGuid: newAccountGuid,
-      refAccountGuid: selectedRefRec.guid,
+      refAccountGuid: selectedRefRec.account_guid,
       level: sails.config.custom.config.ref.general.overFlowLevel,
       type: sails.config.custom.enums.ref.refDownType.OVERFLOW,
     });
@@ -395,7 +391,8 @@ async function getRandomRefRecordLessSomeAccounts(omitAccountsArray) {
   } else if (refRecs.length === 0) {
     return null;
   } else {
-    return refRecs[_.random(refRecs.length - 1)];
+    // return refRecs[_.random(refRecs.length - 1)];
+    return refRecs[0];
   }
 
 }
@@ -408,7 +405,7 @@ async function finalizeRefUpRecords(newAccountGuid, omitAccountsArray) {
    */
 
   let ref_up_perform = true;
-  let use_ref_up_index = omitAccountsArray.length - 1;
+  let use_ref_up_index = omitAccountsArray.length;
   let selectedRefRec = null;
 
   while (use_ref_up_index <= sails.config.custom.config.ref.general.max_ref_up_links && ref_up_perform) {
