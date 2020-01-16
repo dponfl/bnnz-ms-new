@@ -5,16 +5,16 @@ const uuid = require('uuid-apikey');
 module.exports = {
 
 
-  friendlyName: 'Get service level',
+  friendlyName: 'Get category',
 
 
-  description: 'Get info depends on service level',
+  description: 'Get category',
 
 
   inputs: {
-    serviceKey: {
-      friendlyName: 'serviceKey',
-      description: 'Service key',
+    categoryKey: {
+      friendlyName: 'categoryKey',
+      description: 'Category key',
       type: 'string',
       required: true,
     },
@@ -32,10 +32,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    if (!uuid.isAPIKey(inputs.serviceKey)) {
+    if (!uuid.isAPIKey(inputs.categoryKey)) {
 
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_NOT_API_KEY;
+      const errorLocation = 'api/helpers/storage/get-category-ref';
+      const errorMsg = sails.config.custom.CATEGORYREF_NOT_API_KEY;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', {
@@ -50,21 +50,21 @@ module.exports = {
       };
     }
 
-    let serviceRefRecord;
-    let updatedServiceRefRec;
+    let categoryRefRecord;
+    let updatedCategoryRefRec;
 
     try {
 
-      serviceRefRecord = await ServiceRef.findOne({
-        key: inputs.serviceKey,
+      categoryRefRecord = await CategoryRef.findOne({
+        key: inputs.categoryKey,
         used: false,
         deleted: false,
       });
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_GENERAL_ERROR;
+      const errorLocation = 'api/helpers/storage/get-category-ref';
+      const errorMsg = sails.config.custom.CATEGORYREF_GENERAL_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
@@ -77,16 +77,16 @@ module.exports = {
       };
     }
 
-    // sails.log.info('ServiceRef.findOne, serviceRefRecord: ', serviceRefRecord);
+    // sails.log.info('CategoryRef.findOne, categoryRefRecord: ', categoryRefRecord);
 
-    if (!serviceRefRecord) {
+    if (!categoryRefRecord) {
 
       /**
        * record for the specified criteria was not found
        */
 
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_NOT_FOUND;
+      const errorLocation = 'api/helpers/storage/get-category-ref';
+      const errorMsg = sails.config.custom.CATEGORYREF_NOT_FOUND;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', {
@@ -108,31 +108,26 @@ module.exports = {
 
       try {
 
-        if (serviceRefRecord.unique) {
+        if (categoryRefRecord.unique) {
 
-          updatedServiceRefRec = await ServiceRef.updateOne({key: inputs.serviceKey}).set({used: true});
+          updatedCategoryRefRec = await CategoryRef.updateOne({key: inputs.categoryKey}).set({used: true});
 
         } else {
 
-          updatedServiceRefRec = serviceRefRecord;
+          updatedCategoryRefRec = categoryRefRecord;
 
         }
 
         return exits.success({
           status: 'ok',
-          message: sails.config.custom.SERVICEREF_FOUND,
-          // payload: {
-          //   guid: serviceRefRecord.guid,
-          //   key: serviceRefRecord.key,
-          //   service: serviceRefRecord.service,
-          // }
-          payload: updatedServiceRefRec,
+          message: sails.config.custom.CATEGORYREF_FOUND,
+          payload: updatedCategoryRefRec,
         });
 
       } catch (e) {
 
-        const errorLocation = 'api/helpers/storage/get-service-ref';
-        const errorMsg = sails.config.custom.SERVICEREF_UPDATE_ERROR;
+        const errorLocation = 'api/helpers/storage/get-category-ref';
+        const errorMsg = sails.config.custom.CATEGORYREF_UPDATE_ERROR;
 
         sails.log.error(errorLocation + ', error: ' + errorMsg);
         sails.log.error(errorLocation + ', error details: ', e);

@@ -21,11 +21,17 @@ module.exports = {
     ref_account_guid: {
       type: 'string',
     },
+    index: {
+      type: 'string',
+    },
     signed: {
       type: 'boolean',
     },
     active: {
       type: 'boolean',
+    },
+    checkedAt: {
+      type: 'string',
     },
 
 

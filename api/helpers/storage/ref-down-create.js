@@ -2,37 +2,46 @@
 
 const uuid = require('uuid-apikey');
 
-const moduleName = 'storage:refCreate';
+const moduleName = 'storage:refDownCreate';
 
 
 module.exports = {
 
 
-  friendlyName: 'storage:refCreate',
+  friendlyName: 'storage:refDownCreate',
 
 
-  description: 'Create initial ref record',
+  description: 'Create refDown record',
 
 
   inputs: {
 
     accountGuid: {
       friendlyName: 'account guid',
-      description: 'Account guid',
+      description: 'account guid',
       type: 'string',
       required: true,
     },
 
-    directLinkedAccountsNum: {
-      friendlyName: 'direct_linked_accounts_num',
-      description: 'direct_linked_accounts_num',
-      type: 'number',
+    refAccountGuid: {
+      friendlyName: 'ref account guid',
+      description: 'ref account guid',
+      type: 'string',
+      required: true,
     },
 
-    totalLinkedAccountsNum: {
-      friendlyName: 'total_linked_accounts_num',
-      description: 'total_linked_accounts_num',
-      type: 'number',
+    level: {
+      friendlyName: 'relation level',
+      description: 'relation level',
+      type: 'string',
+      required: true,
+    },
+
+    type: {
+      friendlyName: 'relation type',
+      description: 'relation type',
+      type: 'string',
+      required: true,
     },
 
   },
@@ -57,19 +66,20 @@ module.exports = {
 
       const uuidApiKey = uuid.create();
 
-      const refRec = {
+      const refDownRec = {
         guid: uuidApiKey.uuid,
         account_guid: inputs.accountGuid,
-        direct_linked_accounts_num: inputs.directLinkedAccountsNum || 0,
-        total_linked_accounts_num: inputs.totalLinkedAccountsNum || 0,
+        ref_account_guid: inputs.refAccountGuid,
+        level: inputs.level,
+        type: inputs.type,
       };
 
-      const refRecRaw = await Ref.create(refRec).fetch();
+      const refDownRecRaw = await RefDown.create(refDownRec).fetch();
 
       return exits.success({
         status: 'ok',
-        message: 'Ref record created',
-        payload: refRecRaw,
+        message: 'RefDown record created',
+        payload: refDownRecRaw,
       })
 
     } catch (e) {

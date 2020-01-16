@@ -41,22 +41,22 @@ module.exports = {
       columnType: 'integer',
       allowNull: true,
     },
-    max_outgoing_posts_per_day: {
+    max_outgoing_posts_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
     },
-    max_incoming_posts_per_day: {
+    max_incoming_posts_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
     },
-    make_likes: {
+    make_likes_min_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,
     },
-    make_comments: {
+    make_comments_min_day: {
       type: 'number',
       columnType: 'integer',
       allowNull: true,

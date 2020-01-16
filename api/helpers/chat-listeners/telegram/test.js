@@ -34,7 +34,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('******************** api/helpers/chat-listeners/telegram/test.js ********************');
+    sails.log.info('******************** api/helpers/chat-listeners/telegram/test-01.js ********************');
 
     sails.config.custom.telegramBot.on('text', async (msg) => {
 

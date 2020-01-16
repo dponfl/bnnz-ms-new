@@ -151,6 +151,15 @@ module.exports.custom = {
       }
     },
 
+    ref: {
+      refDownType: {
+        FIRST: 'first',
+        NORMAL: 'normal',
+        OVERFLOW: 'overflow',
+        NOREF: 'no_ref',
+      },
+    },
+
     messenger: {
       TELEGRAM: 'telegram',
     }
@@ -295,6 +304,18 @@ module.exports.custom = {
   SERVICEREF_NOT_FOUND: 'Service ref id was not found, deleted or in use already',
   SERVICEREF_FOUND: 'Service ref id was found',
   SERVICEREF_UPDATE_ERROR: 'Service ref record update error',
+
+  /**
+   * ----------------------------
+   * getCategoryRef
+   * ----------------------------
+   */
+
+  CATEGORYREF_GENERAL_ERROR: 'Category ref general error',
+  CATEGORYREF_NOT_API_KEY: 'Category ref id is NOT API Key',
+  CATEGORYREF_NOT_FOUND: 'Category ref id was not found, deleted or in use already',
+  CATEGORYREF_FOUND: 'Category ref id was found',
+  CATEGORYREF_UPDATE_ERROR: 'Category ref record update error',
 
   /**
    * ----------------------------

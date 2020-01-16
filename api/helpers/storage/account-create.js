@@ -40,11 +40,22 @@ module.exports = {
 
     try {
 
+      const uuidApiKey = uuid.create();
+
       const accountRec = {
-        guid: uuid.create().uuid,
+        guid: uuidApiKey.uuid,
+        ref_key: uuidApiKey.apiKey,
         subscription_active: inputs.account.subscription_active || false,
         subscription_from: inputs.account.subscription_from || null,
         subscription_until: inputs.account.subscription_until || null,
+        service: inputs.account.service || null,
+        payment_plan: inputs.account.payment_plan || null,
+        payment_made: inputs.account.payment_made || false,
+        next_subscription_from: inputs.account.next_subscription_from || null,
+        next_subscription_until: inputs.account.next_subscription_until || null,
+        next_service: inputs.account.next_service || null,
+        next_payment_plan: inputs.account.next_payment_plan || null,
+        next_payment_made: inputs.account.next_payment_made || false,
         deleted: inputs.account.deleted || false,
         banned: inputs.account.banned || false,
         inst_profile: inputs.account.inst_profile || '',
@@ -55,12 +66,9 @@ module.exports = {
         profile_provided: inputs.account.profile_provided || false,
         profile_confirmed: inputs.account.profile_confirmed || false,
         payment_plan_selected: inputs.account.payment_plan_selected || false,
-        payment_plan: inputs.account.payment_plan || null,
-        payment_made: inputs.account.payment_made || false,
         subscription_confirmed_by_client: inputs.account.subscription_confirmed_by_client || false,
         subscription_made: inputs.account.subscription_made || false,
         service_subscription_finalized: inputs.account.service_subscription_finalized || false,
-        service: inputs.account.service || null,
         client: inputs.account.client || null,
       };
 

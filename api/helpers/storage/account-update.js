@@ -47,10 +47,12 @@ module.exports = {
     try {
 
       // sails.log.warn('*** storage:accountUpdate, inputs.data: ', inputs.data);
-      const accountRec = _.omit(inputs.data, ['service', 'room']);
+      const accountRec = _.omit(inputs.data, ['service', 'room', 'next_service']);
       // sails.log.warn('*** storage:accountUpdate, accountRec: ', accountRec);
       const serviceData = _.get(inputs.data, 'service');
+      const nextServiceData = _.get(inputs.data, 'next_service');
       // sails.log.warn('*** storage:accountUpdate, serviceData: ', serviceData);
+      // sails.log.warn('*** storage:accountUpdate, nextServiceData: ', nextServiceData);
 
       // if (_.isNil(serviceData)) {
       //
@@ -69,6 +71,12 @@ module.exports = {
         accountRec.service = serviceData.id;
       } else {
         sails.log.warn('*** storage:accountUpdate, no service data in inputs.data: ', inputs.data);
+      }
+
+      if (nextServiceData) {
+        accountRec.next_service = nextServiceData.id;
+      } else {
+        sails.log.warn('*** storage:accountUpdate, no next_service data in inputs.data: ', inputs.data);
       }
 
       const accountRecord = await Account.findOne({

@@ -8,97 +8,116 @@
       "env": "TEST"
     }
   },
-  "commissions": {
-    "RUB": [
-      {
-        "level": 1,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
+  "ref": {
+    "general": {
+      "max_direct_links": 3,
+      "max_ref_down_links": 20,
+      "max_ref_up_links": 8,
+      "initialRecLevel": 0,
+      "overFlowLevel": 1000,
+      "noRefLevel": 1000
+    },
+    "commissions": {
+      "depth": {
+        "user": 8,
+        "user_star": 8,
+        "user_friend": 8,
+        "user_mlm": 12,
+        "user_leadgen": 8,
+        "founder": 8,
+        "admin": 8
       },
-      {
-        "level": 2,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
+      "RUB": [
+        {
+          "level": 1,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 2,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 3,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 4,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 5,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 6,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 7,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
+        },
+        {
+          "level": 8,
+          "sl": {
+            "bronze": 10,
+            "gold": 10,
+            "platinum": 10,
+            "bronze_prof": 10,
+            "gold_prof": 10,
+            "platinum_prof": 10
+          }
         }
-      },
-      {
-        "level": 3,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      },
-      {
-        "level": 4,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      },
-      {
-        "level": 5,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      },
-      {
-        "level": 6,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      },
-      {
-        "level": 7,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      },
-      {
-        "level": 8,
-        "sl": {
-          "bronze": 10,
-          "gold": 10,
-          "platinum": 10,
-          "bronze_prof": 10,
-          "gold_prof": 10,
-          "platinum_prof": 10
-        }
-      }
-    ]
+      ]
+    }
   },
   "rooms": {
     "clients_per_room": 5

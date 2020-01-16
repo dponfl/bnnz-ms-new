@@ -39,27 +39,29 @@ module.exports = {
 
       // sails.log.debug('Message received: ', msg);
 
-      /**
-       * Try to get the client record from DB
-       */
-
       let getClientResponse = null;
       let getServiceRes = null;
       let funnels = null;
       let parseRefResult = null;
-      let parseSlResult = null;
+      let parseServiceResult = null;
+      let parseCategoryResult = null;
       let useRefKey = '';
-      // let useIsRef = false;
       let useServiceRefKey = '';
+      let useCategoryRefKey = '';
       let getLangRes;
       let useLang;
       let params = {};
       let getServiceRefResRaw = null;
+      let getCategoryRefResRaw = null;
       let serviceName = 'generic';
-      const role = 'user';
+      let categoryName = 'user';
 
 
       try {
+
+        /**
+         * Try to get the client record from DB
+         */
 
         getClientResponse = await sails.helpers.storage.clientGet.with({
           messenger: 'telegram',
@@ -78,11 +80,12 @@ module.exports = {
 
             /**
              * If we got start command - try to parse it and get referral key (ref)
-             * and service reference key (sref)
+             * and service reference key (srf)
              */
 
-            parseRefResult = _.trim(msg.text).match(/ref(\S+)/i);
-            parseSlResult = _.trim(msg.text).match(/sref(\S+)/i);
+            parseRefResult = _.trim(msg.text).match(/ref(\S{31})/);
+            parseServiceResult = _.trim(msg.text).match(/srf(\S{31})/);
+            parseCategoryResult = _.trim(msg.text).match(/cat(\S{31})/);
 
           }
 
@@ -93,9 +96,15 @@ module.exports = {
 
           }
 
-          if (parseSlResult) {
+          if (parseServiceResult) {
 
-            useServiceRefKey = parseSlResult[1];
+            useServiceRefKey = parseServiceResult[1];
+
+          }
+
+          if (parseCategoryResult) {
+
+            useCategoryRefKey = parseServiceResult[1];
 
           }
 
@@ -108,16 +117,13 @@ module.exports = {
 
           params = {
             messenger: 'telegram',
-            // guid: uuid.create().uuid,
-            // key: uuid.create().apiKey,
             chat_id: msg.chat.id,
             first_name: msg.chat.first_name || '',
             last_name: msg.chat.last_name || '',
             username: msg.chat.username,
             lang: useLang,
             ref_key: useRefKey,
-            // is_ref: useIsRef,
-            role: role,
+            category: category,
           };
 
 
@@ -138,8 +144,6 @@ module.exports = {
             // sails.log.info('getServiceRefResRaw: ', getServiceRefResRaw);
 
             serviceName = getServiceRefResRaw.payload.service;
-            params.role = getServiceRefResRaw.payload.role;
-
           }
 
           /**
@@ -148,6 +152,27 @@ module.exports = {
 
           getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
           params.service_id = getServiceRes.payload.id;
+
+          /**
+           * Get info about client's category
+           */
+
+          if (useCategoryRefKey) {
+
+            /**
+             * Client has category reference key - we need to get category
+             * and save it at client's profile
+             */
+
+            getCategoryRefResRaw = await sails.helpers.storage.getCategoryRef.with({categoryKey: useCategoryRefKey});
+
+            // sails.log.info('getCategoryRefResRaw: ', getCategoryRefResRaw);
+
+            categoryName = getCategoryRefResRaw.payload.category;
+          }
+
+          params.category = categoryName;
+
 
           /**
            * Use info about funnel (from Service table) and load it from Funnels table

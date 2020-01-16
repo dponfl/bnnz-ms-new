@@ -22,6 +22,9 @@ module.exports = {
     level: {
       type: 'number',
     },
+    type: {
+      type: 'string',
+    },
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
