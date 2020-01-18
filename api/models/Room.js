@@ -20,6 +20,22 @@ module.exports = {
       type: 'boolean',
       required: true,
     },
+    bronze: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    gold: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    platinum: {
+      type: 'number',
+      columnType: 'integer',
+    },
+    star: {
+      type: 'number',
+      columnType: 'integer',
+    },
     clients_number: {
       type: 'number',
       columnType: 'integer',

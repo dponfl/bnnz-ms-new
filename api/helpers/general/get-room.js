@@ -2,6 +2,8 @@
 
 const _ = require('lodash');
 
+const moduleName = 'general:getRoom';
+
 module.exports = {
 
 
@@ -16,6 +18,13 @@ module.exports = {
       friendlyName: 'number of rooms to be found/created',
       description: 'number of rooms to be found/created',
       type: 'number',
+      required: true,
+    },
+
+    clientCategory: {
+      friendlyName: 'client category',
+      description: 'client category',
+      type: 'string',
       required: true,
     }
   },
@@ -32,7 +41,16 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    /**
+     * Находит/создаёт inputs.roomsNum комнат для размещения клиента
+     * (соответственно увеличивая счётчики клиентов в них)
+     * Возвращает:
+     *  - массив объектов комнат
+     *  - массив ID этих комнат
+     */
+
     sails.log.info('general:getRoom helper...');
+
     // sails.log.debug('input params: ', inputs);
 
     let roomRecordWeGet;
@@ -43,7 +61,7 @@ module.exports = {
     try {
 
       for (let i=0; i < inputs.roomsNum; i++) {
-        roomRecordWeGet = await getOneRoom(usedRooms);
+        roomRecordWeGet = await getOneRoom(usedRooms, inputs.clientCategory);
         usedRooms.push(roomRecordWeGet);
         roomResultArray.push(roomRecordWeGet);
         roomResultIDsArray.push(roomRecordWeGet.id);
@@ -76,19 +94,69 @@ module.exports = {
   }
 };
 
-async function getOneRoom(doNotUseRooms) {
+async function getOneRoom(doNotUseRooms, clientCategory) {
+
+  /**
+   * Возвращает елемент таблицы Room в который может размещаться клиент
+   * (счётчик клиентов соответственно увеличивается)
+   */
 
   // sails.log.warn('<<<<<<< !!!!!! >>>>>>> getOneRoom, doNotUseRooms: ', doNotUseRooms);
 
   let totalRooms = 0; // counter of how many rooms exists before new allocation
-  let checkedRooms = []; // we mark room by used=true if this room was already allocated for this client
+  let checkedRooms = []; // we mark room by used=true if this room was
+  // already allocated for this client (e.g. the room is in "doNotUseRooms" array)
   let filteredRooms = []; // keep list of rooms not allocated to the client yet
   let roomRec;
+  let rooms;
 
   try {
 
-    totalRooms = await Room.count({active: true});
-    let rooms = await Room.find({active: true});
+    totalRooms = await Room.count();
+
+    switch (clientCategory) {
+      case 'bronze':
+
+        rooms = await Room.find({
+          where: {
+            active: true
+          },
+        });
+        break;
+
+      case 'gold':
+
+        rooms = await Room.find({
+          where: {
+            active: true,
+            gold: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.gold}
+          },
+        });
+        break;
+
+      case 'platinum':
+
+        rooms = await Room.find({
+          where: {
+            active: true,
+            platinum: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.platinum}
+          },
+        });
+        break;
+
+      case 'star':
+
+        rooms = await Room.find({
+          where: {
+            active: true,
+            star: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.star}
+          },
+        });
+        break;
+
+      default: throw new Error(`${moduleName}, error: Unknown client category="${clientCategory}"`);
+    }
+
 
     _.forEach(rooms, function (val) {
       if (!_.find(doNotUseRooms, function (el) {
@@ -110,6 +178,10 @@ async function getOneRoom(doNotUseRooms) {
 
       roomRec = await Room.create({
         room: 1,
+        bronze: 0,
+        gold: 0,
+        platinum: 0,
+        star: 0,
         clients_number: 0,
         active: true,
       }).fetch();
@@ -138,6 +210,10 @@ async function getOneRoom(doNotUseRooms) {
 
         roomRec = await Room.create({
           room: totalRooms + 1,
+          bronze: 0,
+          gold: 0,
+          platinum: 0,
+          star: 0,
           clients_number: 0,
           active: true,
         }).fetch();
@@ -150,7 +226,10 @@ async function getOneRoom(doNotUseRooms) {
      * Check if the selected room have vacant space
      */
 
-    if (roomRec.clients_number >= sails.config.custom.config.rooms.clients_per_room) {
+    if (roomRec.clients_number >= sails.config.custom.config.rooms.clients_per_room
+      || (clientCategory === 'bronze'
+        && roomRec.bronze >= sails.config.custom.config.rooms.clients_distribution_by_category.bronze)
+    ) {
 
       /**
        * We need to create a new room and distribute the existing clients of roomRec
@@ -159,6 +238,10 @@ async function getOneRoom(doNotUseRooms) {
 
       const newRoom = await Room.create({
         room: totalRooms + 1,
+        bronze: clientCategory === 'bronze' ? 1 : 0,
+        gold: clientCategory === 'gold' ? 1 : 0,
+        platinum: clientCategory === 'platinum' ? 1 : 0,
+        star: clientCategory === 'star' ? 1 : 0,
         clients_number: 1,
         active: true,
       }).fetch();
@@ -172,8 +255,14 @@ async function getOneRoom(doNotUseRooms) {
 
     } else {
 
-      await Room.updateOne({room: roomRec.room})
-        .set({clients_number: roomRec.clients_number + 1});
+      roomRec = await Room.updateOne({room: roomRec.room})
+        .set({
+          bronze: clientCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+          gold: clientCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+          platinum: clientCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+          star: clientCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+          clients_number: roomRec.clients_number + 1
+        });
 
     }
 
