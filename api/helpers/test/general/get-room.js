@@ -43,12 +43,24 @@ module.exports = {
       //   active: true,
       // });
 
-      const res = await sails.helpers.general.getRoom.with({
-        roomsNum: 3,
-        clientCategory: 'bronze',
-      });
+      /**
+       * Clear Room table and allocate rooms for 3 "bronze" clients
+       */
 
-      console.log('res: ', JSON.stringify(res, null, '   '));
+      if (true) {
+        await Room.destroy({});
+
+        for (let i = 0; i < 3; i++) {
+          const res = await sails.helpers.general.getRoom.with({
+            roomsNum: 3,
+            clientCategory: 'bronze',
+          });
+
+          console.log('res: ', JSON.stringify(res, null, '   '));
+        }
+      }
+
+
 
       return exits.success({
         status: 'ok',
