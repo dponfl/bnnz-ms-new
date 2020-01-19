@@ -21,9 +21,9 @@ module.exports = {
       required: true,
     },
 
-    clientCategory: {
-      friendlyName: 'client category',
-      description: 'client category',
+    accountCategory: {
+      friendlyName: 'account category',
+      description: 'account category',
       type: 'string',
       required: true,
     }
@@ -61,7 +61,7 @@ module.exports = {
     try {
 
       for (let i=0; i < inputs.roomsNum; i++) {
-        roomRecordWeGet = await getOneRoom(usedRooms, inputs.clientCategory);
+        roomRecordWeGet = await getOneRoom(usedRooms, inputs.accountCategory);
         usedRooms.push(roomRecordWeGet);
         roomResultArray.push(roomRecordWeGet);
         roomResultIDsArray.push(roomRecordWeGet.id);
@@ -94,7 +94,7 @@ module.exports = {
   }
 };
 
-async function getOneRoom(doNotUseRooms, clientCategory) {
+async function getOneRoom(doNotUseRooms, accountCategory) {
 
   /**
    * Возвращает елемент таблицы Room в который может размещаться клиент
@@ -114,7 +114,7 @@ async function getOneRoom(doNotUseRooms, clientCategory) {
 
     totalRooms = await Room.count();
 
-    switch (clientCategory) {
+    switch (accountCategory) {
       case 'bronze':
 
         rooms = await Room.find({
@@ -154,7 +154,7 @@ async function getOneRoom(doNotUseRooms, clientCategory) {
         });
         break;
 
-      default: throw new Error(`${moduleName}, error: Unknown client category="${clientCategory}"`);
+      default: throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
     }
 
 
@@ -227,7 +227,7 @@ async function getOneRoom(doNotUseRooms, clientCategory) {
      */
 
     if (roomRec.clients_number >= sails.config.custom.config.rooms.clients_per_room
-      || (clientCategory === 'bronze'
+      || (accountCategory === 'bronze'
         && roomRec.bronze >= sails.config.custom.config.rooms.clients_distribution_by_category.bronze)
     ) {
 
@@ -238,15 +238,16 @@ async function getOneRoom(doNotUseRooms, clientCategory) {
 
       const newRoom = await Room.create({
         room: totalRooms + 1,
-        bronze: clientCategory === 'bronze' ? 1 : 0,
-        gold: clientCategory === 'gold' ? 1 : 0,
-        platinum: clientCategory === 'platinum' ? 1 : 0,
-        star: clientCategory === 'star' ? 1 : 0,
+        bronze: accountCategory === 'bronze' ? 1 : 0,
+        gold: accountCategory === 'gold' ? 1 : 0,
+        platinum: accountCategory === 'platinum' ? 1 : 0,
+        star: accountCategory === 'star' ? 1 : 0,
         clients_number: 1,
         active: true,
       }).fetch();
 
       await sails.helpers.general.distributeClients.with({
+        accountCategory: accountCategory,
         oldRoom: roomRec.room,
         newRoom: totalRooms + 1
       });
@@ -257,10 +258,10 @@ async function getOneRoom(doNotUseRooms, clientCategory) {
 
       roomRec = await Room.updateOne({room: roomRec.room})
         .set({
-          bronze: clientCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
-          gold: clientCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
-          platinum: clientCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
-          star: clientCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+          bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+          gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+          platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+          star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
           clients_number: roomRec.clients_number + 1
         });
 

@@ -10,12 +10,20 @@ module.exports = {
 
 
   inputs: {
+    accountCategory: {
+      friendlyName: 'account category',
+      description: 'account category',
+      type: 'string',
+      required: true,
+    },
+
     oldRoom: {
       friendlyName: 'oldRoom number',
       description: 'oldRoom number',
       type: 'number',
       required: true,
     },
+
     newRoom: {
       friendlyName: 'newRoom number',
       description: 'newRoom number',

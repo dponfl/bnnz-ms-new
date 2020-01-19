@@ -133,7 +133,8 @@
       "gold_commercial": "gold",
       "platinum_commercial": "platinum",
       "star": "star",
-      "friend": "bronze"
+      "friend": "bronze",
+      "generic": "bronze"
     },
     "clients_distribution_by_category": {
       "bronze": 9,
