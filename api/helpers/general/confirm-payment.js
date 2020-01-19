@@ -219,7 +219,7 @@ module.exports = {
            * Generate rooms and link client to them
            */
 
-          await linkRoomsToClient(account);
+          await sails.helpers.general.reallocateRoomsToAccount(account);
 
           break;
 
@@ -272,7 +272,7 @@ module.exports = {
            * Generate rooms and link client to them
            */
 
-          await linkRoomsToClient(account);
+          await sails.helpers.general.reallocateRoomsToAccount(account);
 
           break;
 
@@ -325,7 +325,7 @@ module.exports = {
            * Generate rooms and link client to them
            */
 
-          await linkRoomsToClient(account);
+          await sails.helpers.general.reallocateRoomsToAccount(account);
 
           break;
 
@@ -413,25 +413,4 @@ module.exports = {
   }
 };
 
-async function linkRoomsToClient(accountRec) {
-
-  // sails.log.debug('linkRoomsToClient, accountRec:', accountRec);
-
-  _.forEach(accountRec.room, async function (elem) {
-      let room = await Room.findOne({id: elem.id});
-
-      if (room) {
-        await Account.removeFromCollection(accountRec.id, 'room', room.id);
-        await Room.updateOne({id: room.id})
-          .set({clients_number: room.clients_number - 1});
-      }
-  });
-
-  const rooms = await sails.helpers.general.getRoom(accountRec.service.rooms);
-
-  // sails.log.debug('linkRoomsToClient, rooms:', rooms);
-
-  await Account.addToCollection(accountRec.id, 'room', rooms.payload.roomIDsRes);
-
-}
 
