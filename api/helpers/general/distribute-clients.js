@@ -65,6 +65,7 @@ module.exports = {
           !client.deleted
           && !client.banned
           && !accountRec.deleted
+          && !accountRec.banned
           && accountRec.service_subscription_finalized
           && accountRec.subscription_active
         ) {
@@ -75,10 +76,63 @@ module.exports = {
 
             await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id);
             await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id);
-            await Room.updateOne({room: oldRoomWithAccounts.room})
-              .set({clients_number: oldRoomWithAccounts.clients_number - 1});
-            await Room.updateOne({room: newRoomWithAccounts.room})
-              .set({clients_number: newRoomWithAccounts.clients_number + 1});
+
+            switch (inputs.accountCategory) {
+              case 'bronze':
+                await Room.updateOne({room: oldRoomWithAccounts.room})
+                  .set({
+                    bronze: oldRoomWithAccounts.bronze - 1,
+                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                  });
+                await Room.updateOne({room: newRoomWithAccounts.room})
+                  .set({
+                    bronze: newRoomWithAccounts.bronze + 1,
+                    clients_number: newRoomWithAccounts.clients_number + 1,
+                  });
+                break;
+
+              case 'gold':
+                await Room.updateOne({room: oldRoomWithAccounts.room})
+                  .set({
+                    gold: oldRoomWithAccounts.gold - 1,
+                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                  });
+                await Room.updateOne({room: newRoomWithAccounts.room})
+                  .set({
+                    gold: newRoomWithAccounts.gold + 1,
+                    clients_number: newRoomWithAccounts.clients_number + 1,
+                  });
+                break;
+
+              case 'platinum':
+                await Room.updateOne({room: oldRoomWithAccounts.room})
+                  .set({
+                    platinum: oldRoomWithAccounts.platinum - 1,
+                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                  });
+                await Room.updateOne({room: newRoomWithAccounts.room})
+                  .set({
+                    platinum: newRoomWithAccounts.platinum + 1,
+                    clients_number: newRoomWithAccounts.clients_number + 1,
+                  });
+                break;
+
+              case 'star':
+                await Room.updateOne({room: oldRoomWithAccounts.room})
+                  .set({
+                    star: oldRoomWithAccounts.star - 1,
+                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                  });
+                await Room.updateOne({room: newRoomWithAccounts.room})
+                  .set({
+                    star: newRoomWithAccounts.star + 1,
+                    clients_number: newRoomWithAccounts.clients_number + 1,
+                  });
+                break;
+
+              default: throw new Error(`${moduleName}, error: Unknown account category="${inputs.accountCategory}"`);
+            }
+
           }
 
         }
