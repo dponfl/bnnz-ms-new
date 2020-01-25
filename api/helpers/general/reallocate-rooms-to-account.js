@@ -100,9 +100,8 @@ module.exports = {
         }
       });
 
-      const rooms = await sails.helpers.general.getRoom.with({
-        roomsNum: inputs.account.service.rooms,
-        accountCategory: accountCategory,
+      const rooms = await sails.helpers.general.allocateRooms.with({
+        accountGuid: inputs.account.guid,
       });
 
       // sails.log.debug('linkRoomsToClient, rooms:', rooms);

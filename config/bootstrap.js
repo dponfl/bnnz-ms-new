@@ -57,6 +57,6 @@ module.exports.bootstrap = async function() {
   // await sails.helpers.general.schedule.analyticsMonthly();
 
   // await sails.helpers.test.ref.linkAccountToRef();
-  await sails.helpers.test.general.getRoom();
+  await sails.helpers.test.general.allocateRooms();
 
 };

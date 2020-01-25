@@ -1,19 +1,21 @@
-"use strict";
+"use strict"
+
+const moduleName = 'general:mixAccountsInRooms';
 
 module.exports = {
 
 
-  friendlyName: 'Distribute clients between two rooms',
+  friendlyName: 'Mix accounts for two rooms',
 
 
-  description: 'Distribute clients of oldRoom between oldRoom and newRoom',
+  description: 'Mix accounts of oldRoom between oldRoom and newRoom',
 
 
   inputs: {
-    accountCategory: {
-      friendlyName: 'account category',
-      description: 'account category',
-      type: 'string',
+    accountRec: {
+      friendlyName: 'account record',
+      description: 'account record',
+      type: 'ref',
       required: true,
     },
 
@@ -44,13 +46,13 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('general:distributeClients helper...');
+    sails.log.info(`*** ${moduleName} ***`);
     // sails.log.debug('input params: ', inputs);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
       .populate('account');
     const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
-    const client = Client.findOne({id: oldRoomWithAccounts.account[0].client});
+    const client = Client.findOne({id: inputs.accountRec.client});
 
     // sails.log.warn('oldRoomWithAccounts: ', oldRoomWithAccounts);
     // sails.log.warn('newRoomWithAccounts: ', newRoomWithAccounts);
@@ -141,14 +143,14 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: 'Distribute clients success',
+        message: 'Mix accounts in rooms success',
         payload: {
         }
       });
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/general/distribute-clients';
+      const errorLocation = 'api/helpers/general/mix-accounts-in-rooms';
       const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);

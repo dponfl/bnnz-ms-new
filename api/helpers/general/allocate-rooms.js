@@ -2,28 +2,21 @@
 
 const _ = require('lodash');
 
-const moduleName = 'general:getRoom';
+const moduleName = 'general:allocateRooms';
 
 module.exports = {
 
 
-  friendlyName: 'Find or create a new room',
+  friendlyName: 'Find or create a new rooms and allocates them to the account',
 
 
-  description: 'Find or create a new room',
+  description: 'Find or create a new rooms and allocates them to the account',
 
 
   inputs: {
-    roomsNum: {
-      friendlyName: 'number of rooms to be found/created',
-      description: 'number of rooms to be found/created',
-      type: 'number',
-      required: true,
-    },
-
-    accountCategory: {
-      friendlyName: 'account category',
-      description: 'account category',
+    accountGuid: {
+      friendlyName: 'account guid',
+      description: 'account guid',
       type: 'string',
       required: true,
     }
@@ -42,14 +35,14 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     /**
-     * Находит/создаёт inputs.roomsNum комнат для размещения клиента
-     * (соответственно увеличивая счётчики клиентов в них)
+     * Находит/создаёт количество комнат в соответствии с уровнем сервиса аккаунта
+     * (соответственно увеличивая счётчики аккаунтов в них) и связывает их с аккаунтом
      * Возвращает:
      *  - массив объектов комнат
      *  - массив ID этих комнат
      */
 
-    sails.log.info('general:getRoom helper...');
+    sails.log.info(`*** ${moduleName} ***`);
 
     // sails.log.debug('input params: ', inputs);
 
@@ -60,8 +53,20 @@ module.exports = {
 
     try {
 
-      for (let i=0; i < inputs.roomsNum; i++) {
-        roomRecordWeGet = await getOneRoom(usedRooms, inputs.accountCategory);
+      const accountRaw = await sails.helpers.storage.accountGet.with({
+        accountGuids: [inputs.accountGuid],
+      });
+
+      if (accountRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: Unknown accountGuid="${inputs.accountGuid}"`);
+      }
+
+      const account = accountRaw.payload;
+
+      const roomsNum = account.service.rooms;
+
+      for (let i=0; i < roomsNum; i++) {
+        roomRecordWeGet = await allocateOneRoom(usedRooms, account);
         usedRooms.push(roomRecordWeGet);
         roomResultArray.push(roomRecordWeGet);
         roomResultIDsArray.push(roomRecordWeGet.id);
@@ -69,7 +74,7 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: 'Room found',
+        message: 'Rooms allocated',
         payload: {
           roomRes: roomResultArray,
           roomIDsRes: roomResultIDsArray,
@@ -94,14 +99,14 @@ module.exports = {
   }
 };
 
-async function getOneRoom(doNotUseRooms, accountCategory) {
+async function allocateOneRoom(doNotUseRooms, accountRec) {
 
   /**
    * Возвращает елемент таблицы Room в который может размещаться клиент
    * (счётчик клиентов соответственно увеличивается)
    */
 
-  // sails.log.warn('<<<<<<< !!!!!! >>>>>>> getOneRoom, doNotUseRooms: ', doNotUseRooms);
+  // sails.log.warn('<<<<<<< !!!!!! >>>>>>> allocateOneRoom, doNotUseRooms: ', doNotUseRooms);
 
   let totalRooms = 0; // counter of how many rooms exists before new allocation
   let checkedRooms = []; // we mark room by used=true if this room was
@@ -113,6 +118,8 @@ async function getOneRoom(doNotUseRooms, accountCategory) {
   try {
 
     totalRooms = await Room.count();
+
+    const accountCategory = sails.config.custom.config.rooms.category_by_service[accountRec.service.name];
 
     switch (accountCategory) {
       case 'bronze':
@@ -246,8 +253,10 @@ async function getOneRoom(doNotUseRooms, accountCategory) {
         active: true,
       }).fetch();
 
-      await sails.helpers.general.distributeClients.with({
-        accountCategory: accountCategory,
+      await Account.addToCollection(accountRec.id, 'room', newRoom.id);
+
+      await sails.helpers.general.mixAccountsInRooms.with({
+        accountRec: accountRec,
         oldRoom: roomRec.room,
         newRoom: totalRooms + 1
       });
@@ -271,7 +280,7 @@ async function getOneRoom(doNotUseRooms, accountCategory) {
 
   } catch (e) {
 
-    const errorLocation = 'api/helpers/general/get-room=>getOneRoom';
+    const errorLocation = 'api/helpers/general/allocate-rooms=>allocateOneRoom';
     const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
 
     sails.log.error(errorLocation + ', error: ' + errorMsg);
