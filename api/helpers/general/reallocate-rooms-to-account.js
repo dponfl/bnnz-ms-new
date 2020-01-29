@@ -106,12 +106,10 @@ module.exports = {
 
       // sails.log.debug('linkRoomsToClient, rooms:', rooms);
 
-      await Account.addToCollection(inputs.account.id, 'room', rooms.payload.roomIDsRes);
-
       return exits.success({
         status: 'ok',
         message: 'Rooms re-allocated to the account',
-        payload: {}
+        payload: {rooms: rooms}
       });
 
     } catch (e) {

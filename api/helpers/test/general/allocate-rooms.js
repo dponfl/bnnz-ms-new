@@ -33,6 +33,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const bronzeServiceId = 10;
+    const goldServiceId = 30;
+    const platinumServiceId = 40;
+
     try {
 
       /**
@@ -74,17 +78,14 @@ module.exports = {
       if (false) {
         await Room.destroy({});
 
-        const numAccounts = 3;
+        const accounts = await accountsCreate(testClient, [
+          {
+            numAccounts: 3,
+            service: bronzeServiceId,
+          }
+        ]);
 
-        const accounts = await accountsCreate(testClient, numAccounts);
-
-        for (let i = 0; i < numAccounts; i++) {
-          const res = await sails.helpers.general.allocateRooms.with({
-            accountGuid: accounts[i].guid,
-          });
-
-          console.log('res: ', JSON.stringify(res, null, '   '));
-        }
+        await allocateRoomsForAccounts(accounts);
       }
 
 
@@ -95,17 +96,14 @@ module.exports = {
       if (false) {
         await Room.destroy({});
 
-        const numAccounts = 9;
+        const accounts = await accountsCreate(testClient, [
+          {
+            numAccounts: 9,
+            service: bronzeServiceId,
+          }
+        ]);
 
-        const accounts = await accountsCreate(testClient, numAccounts);
-
-        for (let i = 0; i < numAccounts; i++) {
-          const res = await sails.helpers.general.allocateRooms.with({
-            accountGuid: accounts[i].guid,
-          });
-
-          console.log('res: ', JSON.stringify(res, null, '   '));
-        }
+        await allocateRoomsForAccounts(accounts);
       }
 
 
@@ -113,26 +111,44 @@ module.exports = {
        * Clear Room table and allocate rooms for 10 "bronze" accounts
        */
 
+      if (true) {
+        await Room.destroy({});
+
+        const accounts = await accountsCreate(testClient, [
+          {
+            numAccounts: 10,
+            service: bronzeServiceId,
+          }
+        ]);
+
+        await allocateRoomsForAccounts(accounts);
+      }
+
+
+      /**
+       * Clear Room table and allocate rooms for
+       *    3 "bronze" accounts
+       *    2 "gold" accounts
+       *    1 "platinum" account
+       */
+
       // if (false) {
       //   await Room.destroy({});
       //
-      //   const numAccounts = 10;
-      //
-      //   const accounts = await accountsCreate(testClient, numAccounts);
-      //
-      //   // sails.log('accounts: ', JSON.stringify(accounts, null, '   '));
+      //   const accounts = await accountsCreate(testClient, [
+      //     {
+      //       numAccounts: 3,
+      //       service: bronzeServiceId,
+      //     }
+      //   ]);
       //
       //   for (let i = 0; i < numAccounts; i++) {
-      //     const res = await sails.helpers.general.getRoom.with({
-      //       roomsNum: 3,
-      //       accountCategory: 'bronze',
+      //     const res = await sails.helpers.general.allocateRooms.with({
+      //       accountGuid: accounts[i].guid,
       //     });
       //
-      //     for (let j=0; j < res.payload.roomIDsRes.length; j++) {
-      //       await Account.addToCollection(accounts[i].id, 'room', res.payload.roomIDsRes[j]);
-      //     }
-      //
-      //     console.log('res: ', JSON.stringify(res, null, '   '));
+      //     sails.log.debug(`accountGuid: ${accounts[i].guid} accountId: ${accounts[i].id}\n
+      //     rooms: ${JSON.stringify(res.payload.roomIDsRes, null, '')}\n\n`)
       //   }
       // }
 
@@ -161,27 +177,43 @@ module.exports = {
   }
 };
 
-async function accountsCreate(clientRec, numAccounts) {
+async function accountsCreate(clientRec, accounts) {
 
   const accountsArray = [];
 
-  for (let i=0; i < numAccounts; i++) {
-
-    const testAccountUuidApiKey = uuid.create();
-    const account = await Account.create({
-      guid: testAccountUuidApiKey.uuid,
-      subscription_active: true,
-      service_subscription_finalized: true,
-      service: 10,
-      ref_key: testAccountUuidApiKey.apiKey,
-      deleted: false,
-      banned: false,
-      client: clientRec.id,
-    }).fetch();
-    accountsArray.push(account);
-
+  for (const account of accounts) {
+    for (let i=0; i < account.numAccounts; i++) {
+      const testAccountUuidApiKey = uuid.create();
+      const newAccount = await Account.create({
+        guid: testAccountUuidApiKey.uuid,
+        subscription_active: true,
+        service_subscription_finalized: true,
+        service: account.service,
+        ref_key: testAccountUuidApiKey.apiKey,
+        deleted: false,
+        banned: false,
+        client: clientRec.id,
+      }).fetch();
+      accountsArray.push(newAccount);
+    }
   }
+
   return accountsArray;
+}
+
+async function allocateRoomsForAccounts(accountsArray) {
+
+  for (const account of accountsArray) {
+    const res = await sails.helpers.general.allocateRooms.with({
+      accountGuid: account.guid,
+    });
+
+    sails.log.debug(`accountGuid: ${account.guid} accountId: ${account.id}
+rooms: ${JSON.stringify(res.payload.roomIDsRes, null, '   ')}\n`)
+  }
+
+  return true;
+
 }
 
 async function accountDelete(accounts) {

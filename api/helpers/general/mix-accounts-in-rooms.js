@@ -47,19 +47,20 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     sails.log.info(`*** ${moduleName} ***`);
-    // sails.log.debug('input params: ', inputs);
+    sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
       .populate('account');
     const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
-    const client = Client.findOne({id: inputs.accountRec.client});
+    const client = await Client.findOne({id: inputs.accountRec.client});
 
     // sails.log.warn('oldRoomWithAccounts: ', oldRoomWithAccounts);
     // sails.log.warn('newRoomWithAccounts: ', newRoomWithAccounts);
 
     try {
 
-      _.forEach(oldRoomWithAccounts.account, async function (accountRec) {
+      // _.forEach(oldRoomWithAccounts.account, async function (accountRec) {
+      for (const accountRec of oldRoomWithAccounts.account) {
 
         // sails.log.warn('accountRec: ', accountRec);
 
@@ -72,14 +73,22 @@ module.exports = {
           && accountRec.subscription_active
         ) {
 
-          if (_.random(0,1)) {
+          const accountCategory = sails.config.custom.config.rooms.category_by_service[inputs.accountRec.service.name];
+
+          if (accountCategory == null) {
+            throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}" for inputs.accountRec.service.name=${inputs.accountRec.service.name}`);
+          }
+
+          const newRoomHasSpaceToAllocateAccount = newRoomWithAccounts[accountCategory] < sails.config.custom.config.rooms.clients_distribution_by_category[accountCategory];
+
+          if (_.random(0,1) && newRoomHasSpaceToAllocateAccount) {
 
             // sails.log.info('Gonna re-allocate this account: ', accountRec);
 
             await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id);
             await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id);
 
-            switch (inputs.accountCategory) {
+            switch (accountCategory) {
               case 'bronze':
                 await Room.updateOne({room: oldRoomWithAccounts.room})
                   .set({
@@ -91,6 +100,10 @@ module.exports = {
                     bronze: newRoomWithAccounts.bronze + 1,
                     clients_number: newRoomWithAccounts.clients_number + 1,
                   });
+                oldRoomWithAccounts.bronze = oldRoomWithAccounts.bronze - 1;
+                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                newRoomWithAccounts.bronze = newRoomWithAccounts.bronze + 1;
+                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
                 break;
 
               case 'gold':
@@ -104,6 +117,10 @@ module.exports = {
                     gold: newRoomWithAccounts.gold + 1,
                     clients_number: newRoomWithAccounts.clients_number + 1,
                   });
+                oldRoomWithAccounts.gold = oldRoomWithAccounts.gold - 1;
+                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                newRoomWithAccounts.gold = newRoomWithAccounts.gold + 1;
+                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
                 break;
 
               case 'platinum':
@@ -117,6 +134,10 @@ module.exports = {
                     platinum: newRoomWithAccounts.platinum + 1,
                     clients_number: newRoomWithAccounts.clients_number + 1,
                   });
+                oldRoomWithAccounts.platinum = oldRoomWithAccounts.platinum - 1;
+                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                newRoomWithAccounts.platinum = newRoomWithAccounts.platinum + 1;
+                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
                 break;
 
               case 'star':
@@ -130,16 +151,20 @@ module.exports = {
                     star: newRoomWithAccounts.star + 1,
                     clients_number: newRoomWithAccounts.clients_number + 1,
                   });
+                oldRoomWithAccounts.star = oldRoomWithAccounts.star - 1;
+                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                newRoomWithAccounts.star = newRoomWithAccounts.star + 1;
+                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
                 break;
 
-              default: throw new Error(`${moduleName}, error: Unknown account category="${inputs.accountCategory}"`);
+              default: throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
             }
 
           }
 
         }
 
-      });
+      }
 
       return exits.success({
         status: 'ok',

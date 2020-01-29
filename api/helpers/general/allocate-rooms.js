@@ -61,7 +61,11 @@ module.exports = {
         throw new Error(`${moduleName}, error: Unknown accountGuid="${inputs.accountGuid}"`);
       }
 
-      const account = accountRaw.payload;
+      const account = accountRaw.payload[0] || null;
+
+      if (account == null) {
+        throw new Error(`${moduleName}, error: Unexpected result="${accountRaw.payload}"`);
+      }
 
       const roomsNum = account.service.rooms;
 
@@ -258,7 +262,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
       await sails.helpers.general.mixAccountsInRooms.with({
         accountRec: accountRec,
         oldRoom: roomRec.room,
-        newRoom: totalRooms + 1
+        newRoom: newRoom.room
       });
 
       roomRec = newRoom;
@@ -273,6 +277,8 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
           clients_number: roomRec.clients_number + 1
         });
+
+      await Account.addToCollection(accountRec.id, 'room', roomRec.id);
 
     }
 
