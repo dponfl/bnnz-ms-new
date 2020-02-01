@@ -66,7 +66,7 @@ module.exports = {
               await Room.updateOne({id: room.id})
                 .set({
                   bronze: room.bronze - 1,
-                  clients_number: room.clients_number - 1
+                  accounts_number: room.accounts_number - 1
                 });
               break;
 
@@ -74,7 +74,7 @@ module.exports = {
               await Room.updateOne({id: room.id})
                 .set({
                   gold: room.gold - 1,
-                  clients_number: room.clients_number - 1
+                  accounts_number: room.accounts_number - 1
                 });
               break;
 
@@ -82,7 +82,7 @@ module.exports = {
               await Room.updateOne({id: room.id})
                 .set({
                   platinum: room.platinum - 1,
-                  clients_number: room.clients_number - 1
+                  accounts_number: room.accounts_number - 1
                 });
               break;
 
@@ -90,7 +90,7 @@ module.exports = {
               await Room.updateOne({id: room.id})
                 .set({
                   star: room.star - 1,
-                  clients_number: room.clients_number - 1
+                  accounts_number: room.accounts_number - 1
                 });
               break;
 

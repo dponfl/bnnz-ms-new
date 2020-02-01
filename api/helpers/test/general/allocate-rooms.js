@@ -36,6 +36,7 @@ module.exports = {
     const bronzeServiceId = 10;
     const goldServiceId = 30;
     const platinumServiceId = 40;
+    const starServiceId = 50;
 
     try {
 
@@ -111,7 +112,7 @@ module.exports = {
        * Clear Room table and allocate rooms for 10 "bronze" accounts
        */
 
-      if (true) {
+      if (false) {
         await Room.destroy({});
 
         const accounts = await accountsCreate(testClient, [
@@ -132,26 +133,72 @@ module.exports = {
        *    1 "platinum" account
        */
 
-      // if (false) {
-      //   await Room.destroy({});
-      //
-      //   const accounts = await accountsCreate(testClient, [
-      //     {
-      //       numAccounts: 3,
-      //       service: bronzeServiceId,
-      //     }
-      //   ]);
-      //
-      //   for (let i = 0; i < numAccounts; i++) {
-      //     const res = await sails.helpers.general.allocateRooms.with({
-      //       accountGuid: accounts[i].guid,
-      //     });
-      //
-      //     sails.log.debug(`accountGuid: ${accounts[i].guid} accountId: ${accounts[i].id}\n
-      //     rooms: ${JSON.stringify(res.payload.roomIDsRes, null, '')}\n\n`)
-      //   }
-      // }
+      if (false) {
+        await Room.destroy({});
 
+        const accounts = await accountsCreate(testClient, [
+          {
+            numAccounts: 3,
+            service: bronzeServiceId,
+          },
+          {
+            numAccounts: 2,
+            service: goldServiceId,
+          },
+          {
+            numAccounts: 1,
+            service: platinumServiceId,
+          },
+        ]);
+
+        await allocateRoomsForAccounts(accounts);
+      }
+
+
+      /**
+       * Clear Room table and allocate rooms for
+       *    3 + 3 "bronze" accounts
+       *    2 + 2 "gold" accounts
+       *    1 + 1 "platinum" account
+       *    1 "star" account
+       */
+
+      if (true) {
+        await Room.destroy({});
+
+        const accounts = await accountsCreate(testClient, [
+          {
+            numAccounts: 3,
+            service: bronzeServiceId,
+          },
+          {
+            numAccounts: 2,
+            service: goldServiceId,
+          },
+          {
+            numAccounts: 1,
+            service: platinumServiceId,
+          },
+          {
+            numAccounts: 1,
+            service: starServiceId,
+          },
+          {
+            numAccounts: 3,
+            service: bronzeServiceId,
+          },
+          {
+            numAccounts: 2,
+            service: goldServiceId,
+          },
+          {
+            numAccounts: 1,
+            service: platinumServiceId,
+          },
+        ]);
+
+        await allocateRoomsForAccounts(accounts);
+      }
 
 
       return exits.success({

@@ -140,7 +140,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         rooms = await Room.find({
           where: {
             active: true,
-            gold: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.gold}
+            gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
           },
         });
         break;
@@ -150,7 +150,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         rooms = await Room.find({
           where: {
             active: true,
-            platinum: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.platinum}
+            platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
           },
         });
         break;
@@ -160,7 +160,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         rooms = await Room.find({
           where: {
             active: true,
-            star: {'<': sails.config.custom.config.rooms.clients_distribution_by_category.star}
+            star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
           },
         });
         break;
@@ -193,7 +193,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         gold: 0,
         platinum: 0,
         star: 0,
-        clients_number: 0,
+        accounts_number: 0,
         active: true,
       }).fetch();
 
@@ -225,7 +225,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           gold: 0,
           platinum: 0,
           star: 0,
-          clients_number: 0,
+          accounts_number: 0,
           active: true,
         }).fetch();
 
@@ -237,9 +237,9 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
      * Check if the selected room have vacant space
      */
 
-    if (roomRec.clients_number >= sails.config.custom.config.rooms.clients_per_room
+    if (roomRec.accounts_number >= sails.config.custom.config.rooms.accounts_per_room
       || (accountCategory === 'bronze'
-        && roomRec.bronze >= sails.config.custom.config.rooms.clients_distribution_by_category.bronze)
+        && roomRec.bronze >= sails.config.custom.config.rooms.accounts_distribution_by_category.bronze)
     ) {
 
       /**
@@ -253,7 +253,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         gold: accountCategory === 'gold' ? 1 : 0,
         platinum: accountCategory === 'platinum' ? 1 : 0,
         star: accountCategory === 'star' ? 1 : 0,
-        clients_number: 1,
+        accounts_number: 1,
         active: true,
       }).fetch();
 
@@ -275,7 +275,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
           platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
           star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
-          clients_number: roomRec.clients_number + 1
+          accounts_number: roomRec.accounts_number + 1
         });
 
       await Account.addToCollection(accountRec.id, 'room', roomRec.id);

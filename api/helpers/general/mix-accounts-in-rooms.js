@@ -79,7 +79,7 @@ module.exports = {
             throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}" for inputs.accountRec.service.name=${inputs.accountRec.service.name}`);
           }
 
-          const newRoomHasSpaceToAllocateAccount = newRoomWithAccounts[accountCategory] < sails.config.custom.config.rooms.clients_distribution_by_category[accountCategory];
+          const newRoomHasSpaceToAllocateAccount = newRoomWithAccounts[accountCategory] < sails.config.custom.config.rooms.accounts_distribution_by_category[accountCategory];
 
           if (_.random(0,1) && newRoomHasSpaceToAllocateAccount) {
 
@@ -93,68 +93,68 @@ module.exports = {
                 await Room.updateOne({room: oldRoomWithAccounts.room})
                   .set({
                     bronze: oldRoomWithAccounts.bronze - 1,
-                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                    accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   });
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     bronze: newRoomWithAccounts.bronze + 1,
-                    clients_number: newRoomWithAccounts.clients_number + 1,
+                    accounts_number: newRoomWithAccounts.accounts_number + 1,
                   });
                 oldRoomWithAccounts.bronze = oldRoomWithAccounts.bronze - 1;
-                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.bronze = newRoomWithAccounts.bronze + 1;
-                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
+                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
                 break;
 
               case 'gold':
                 await Room.updateOne({room: oldRoomWithAccounts.room})
                   .set({
                     gold: oldRoomWithAccounts.gold - 1,
-                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                    accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   });
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     gold: newRoomWithAccounts.gold + 1,
-                    clients_number: newRoomWithAccounts.clients_number + 1,
+                    accounts_number: newRoomWithAccounts.accounts_number + 1,
                   });
                 oldRoomWithAccounts.gold = oldRoomWithAccounts.gold - 1;
-                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.gold = newRoomWithAccounts.gold + 1;
-                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
+                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
                 break;
 
               case 'platinum':
                 await Room.updateOne({room: oldRoomWithAccounts.room})
                   .set({
                     platinum: oldRoomWithAccounts.platinum - 1,
-                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                    accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   });
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     platinum: newRoomWithAccounts.platinum + 1,
-                    clients_number: newRoomWithAccounts.clients_number + 1,
+                    accounts_number: newRoomWithAccounts.accounts_number + 1,
                   });
                 oldRoomWithAccounts.platinum = oldRoomWithAccounts.platinum - 1;
-                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.platinum = newRoomWithAccounts.platinum + 1;
-                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
+                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
                 break;
 
               case 'star':
                 await Room.updateOne({room: oldRoomWithAccounts.room})
                   .set({
                     star: oldRoomWithAccounts.star - 1,
-                    clients_number: oldRoomWithAccounts.clients_number - 1,
+                    accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   });
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     star: newRoomWithAccounts.star + 1,
-                    clients_number: newRoomWithAccounts.clients_number + 1,
+                    accounts_number: newRoomWithAccounts.accounts_number + 1,
                   });
                 oldRoomWithAccounts.star = oldRoomWithAccounts.star - 1;
-                oldRoomWithAccounts.clients_number = oldRoomWithAccounts.clients_number - 1;
+                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.star = newRoomWithAccounts.star + 1;
-                newRoomWithAccounts.clients_number = newRoomWithAccounts.clients_number + 1;
+                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
                 break;
 
               default: throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);

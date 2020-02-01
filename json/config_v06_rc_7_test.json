@@ -101,7 +101,28 @@
     ]
   },
   "rooms": {
-    "clients_per_room": 5
+    "accounts_per_room": 12,
+    "category_by_service": {
+      "test_personal": "bronze",
+      "bronze_personal": "bronze",
+      "silver_personal": "bronze",
+      "gold_personal": "gold",
+      "platinum_personal": "platinum",
+      "test_commercial": "bronze",
+      "bronze_commercial": "bronze",
+      "silver_commercial": "bronze",
+      "gold_commercial": "gold",
+      "platinum_commercial": "platinum",
+      "star": "star",
+      "friend": "bronze",
+      "generic": "bronze"
+    },
+    "accounts_distribution_by_category": {
+      "bronze": 9,
+      "gold": 1,
+      "platinum": 1,
+      "star": 1
+    }
   },
   "analytics": {
     "events_schedule": [

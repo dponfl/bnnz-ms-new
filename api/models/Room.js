@@ -36,7 +36,7 @@ module.exports = {
       type: 'number',
       columnType: 'integer',
     },
-    clients_number: {
+    accounts_number: {
       type: 'number',
       columnType: 'integer',
     },
