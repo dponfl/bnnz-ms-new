@@ -123,11 +123,13 @@
     "accounts_per_room": 12,
     "category_by_service": {
       "test_personal": "bronze",
+      "test_personal_initial": "bronze",
       "bronze_personal": "bronze",
       "silver_personal": "bronze",
       "gold_personal": "gold",
       "platinum_personal": "platinum",
       "test_commercial": "bronze",
+      "test_commercial_initial": "bronze",
       "bronze_commercial": "bronze",
       "silver_commercial": "bronze",
       "gold_commercial": "gold",
@@ -142,6 +144,9 @@
       "platinum": 1,
       "star": 1
     }
+  },
+  "accounts": {
+    "test_initial_period": "5 days"
   },
   "analytics": {
     "events_schedule": [
