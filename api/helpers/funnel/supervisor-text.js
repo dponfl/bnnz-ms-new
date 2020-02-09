@@ -54,6 +54,7 @@ module.exports = {
          */
 
         await sails.helpers.storage.messageSave.with({
+          message_id: inputs.msg.message_id || 0,
           message: inputs.msg.text,
           message_format: 'forced',
           messenger: inputs.client.messenger,
@@ -146,6 +147,7 @@ module.exports = {
          */
 
         await sails.helpers.storage.messageSave.with({
+          message_id: inputs.msg.message_id || 0,
           message: inputs.msg.text,
           message_format: 'simple',
           messenger: inputs.client.messenger,

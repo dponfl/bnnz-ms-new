@@ -130,6 +130,7 @@ module.exports = {
              */
 
             await sails.helpers.storage.messageSave.with({
+              message_id: simpleRes.payload.message_id || 0,
               message: htmlSimple,
               message_format: 'simple',
               messenger: inputs.client.messenger,
@@ -168,6 +169,7 @@ module.exports = {
              */
 
             await sails.helpers.storage.messageSave.with({
+              message_id: imgRes.payload.message_id || 0,
               message: JSON.stringify({
                 img: sails.config.custom.cloudinaryImgUrl + block.message.img,
                 html: htmlImg,
@@ -209,6 +211,7 @@ module.exports = {
              */
 
             await sails.helpers.storage.messageSave.with({
+              message_id: videoRes.payload.message_id || 0,
               message: JSON.stringify({
                 video: sails.config.custom.cloudinaryVideoUrl + block.message.img,
                 html: htmlVideo,
@@ -249,6 +252,7 @@ module.exports = {
              */
 
             await sails.helpers.storage.messageSave.with({
+              message_id: forcedRes.payload.message_id || 0,
               message: htmlForced,
               message_format: 'forced',
               messenger: inputs.client.messenger,
@@ -292,6 +296,7 @@ module.exports = {
              */
 
             await sails.helpers.storage.messageSave.with({
+              message_id: inlineRes.payload.message_id || 0,
               message: htmlInline,
               message_format: 'callback',
               messenger: inputs.client.messenger,

@@ -16,6 +16,15 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    messenger: {
+      type: 'string',
+    },
+    /**
+     * message_id - уникальный идентификатор сообщения внутри мессенджера
+     */
+    message_id: {
+      type: 'number',
+    },
     account_guid: {
       type: 'string',
     },
@@ -33,12 +42,6 @@ module.exports = {
      */
     total_dislikes: {
       type: 'number',
-    },
-    accounts_to_make_likes: {
-      type: 'json',
-    },
-    accounts_to_make_comments: {
-      type: 'json',
     },
     /**
      * количество полученных лайков

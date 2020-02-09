@@ -11,7 +11,12 @@ module.exports = {
   tableName: 'messages',
   migrate: 'safe',
   attributes: {
-
+    /**
+     * message_id - уникальный идентификатор сообщения внутри мессенджера
+     */
+    message_id: {
+      type: 'number',
+    },
     message: {
       type: 'string',
       columnType: 'text CHARACTER SET utf8mb4',

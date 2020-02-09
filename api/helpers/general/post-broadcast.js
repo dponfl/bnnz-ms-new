@@ -169,28 +169,36 @@ module.exports = {
             html: htmlPostBroadcast,
           });
 
+          /**
+           * Save the sent message
+           */
+
+          /**
+           * ВНИМАНИЕ: Эти сообщения в таблице "messages"
+           * скорее всего сохранять вообще не нужно.
+           * Вместо этого нужно сохранять серию сообщений, которые летят каждому
+           * аккаунту и это нужно делать в таблице "posts".
+           */
+
+          await sails.helpers.storage.messageSave.with({
+            message_id: simpleRes.payload.message_id || 0,
+            message: htmlPost,
+            message_format: 'post broadcast',
+            messenger: inputs.client.messenger,
+            message_originator: 'client',
+            client_id: inputs.client.id,
+            client_guid: inputs.client.guid,
+          });
+
+          /**
+           * Save post details at "post" table
+           */
+
+          // Add code here
+
 
         }
       }
-
-      /**
-       * Save the sent message
-       */
-
-      await sails.helpers.storage.messageSave.with({
-        message: htmlPost,
-        message_format: 'post broadcast',
-        messenger: inputs.client.messenger,
-        message_originator: 'client',
-        client_id: inputs.client.id,
-        client_guid: inputs.client.guid,
-      });
-
-      /**
-       * Save post details at "post" table
-       */
-
-      // Add code here
 
       return exits.success({
         status: 'ok',

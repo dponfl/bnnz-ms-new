@@ -154,8 +154,31 @@
     "test_initial_period": "5 days"
   },
   "tasks": {
+    "comments_ratio": 0.8,
     "comments": {
-      "max_not_performed_before_post_blocking": {
+      "max_missed_before_post_blocking": {
+        "test_personal_initial": 8,
+        "test_personal": 8,
+        "bronze_personal": 5,
+        "silver_personal": 3,
+        "gold_personal": 3,
+        "platinum_personal": 3,
+        "test_commercial_initial": 8,
+        "test_commercial": 8,
+        "bronze_commercial": 5,
+        "silver_commercial": 3,
+        "gold_commercial": 3,
+        "platinum_commercial": 3,
+        "star054": 5,
+        "star108": 5,
+        "star153": 5,
+        "star306": 5,
+        "star504": 5,
+        "star810": 5
+      }
+    },
+    "likes": {
+      "max_missed_before_post_blocking": {
         "test_personal_initial": 8,
         "test_personal": 8,
         "bronze_personal": 5,

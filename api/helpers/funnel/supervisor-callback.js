@@ -53,6 +53,8 @@ module.exports = {
        */
 
       await sails.helpers.storage.messageSave.with({
+        message_id: inputs.query.message.message_id || 0,
+        callback_query_id: inputs.query.id || 0,
         message: inputs.query.data,
         message_format: 'callback',
         messenger: inputs.client.messenger,
