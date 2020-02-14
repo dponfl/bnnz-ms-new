@@ -33,7 +33,7 @@ module.exports = {
 
     try {
 
-      let some = 'one';
+      let some = process.env.TEST_VAL || null;
       let val = null;
 
       switch (some) {
@@ -55,8 +55,8 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: '**************',
-        payload: {},
+        message: 'Test finished',
+        payload: {val: val},
       })
     } catch (e) {
 

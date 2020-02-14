@@ -26,13 +26,15 @@
     "uuid-apikey": "^1.4.1"
   },
   "devDependencies": {
-    "@sailshq/eslint": "^4.19.3"
+    "@sailshq/eslint": "^4.19.3",
+    "casual": "^1.6.2",
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1"
   },
   "scripts": {
     "start": "node app.js --verbose",
-    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
-    "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
-    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
+    "test": "node ./node_modules/mocha/bin/mocha test/lifecycle.test.js test/**/*.test.js",
+    "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'"
   },
   "main": "app.js",
   "repository": {
