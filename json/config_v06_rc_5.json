@@ -151,11 +151,18 @@
     }
   },
   "accounts": {
-    "test_initial_period": "5 days"
+    "test_initial_period": {
+      "unit": "days",
+      "amount": 5
+    }
   },
   "tasks": {
     "comments_ratio": 0.8,
     "comments": {
+      "check_period": {
+        "unit": "hours",
+        "amount": 24
+      },
       "max_missed_before_post_blocking": {
         "test_personal_initial": 8,
         "test_personal": 8,
@@ -178,6 +185,10 @@
       }
     },
     "likes": {
+      "check_period": {
+        "unit": "hours",
+        "amount": 24
+      },
       "max_missed_before_post_blocking": {
         "test_personal_initial": 8,
         "test_personal": 8,

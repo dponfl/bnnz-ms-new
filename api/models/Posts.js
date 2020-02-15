@@ -44,6 +44,18 @@ module.exports = {
       type: 'number',
     },
     /**
+     * количество созданных заданий на лайки
+     */
+    requested_likes: {
+      type: 'number',
+    },
+    /**
+     * количество созданных заданий на комментарии
+     */
+    requested_comments: {
+      type: 'number',
+    },
+    /**
      * количество полученных лайков
      */
     received_likes: {

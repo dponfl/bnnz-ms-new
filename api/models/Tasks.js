@@ -32,7 +32,9 @@ module.exports = {
     make_comment_performed: {
       type: 'boolean',
     },
-
+    comment_text: {
+      type: 'string',
+    },
 
 
 

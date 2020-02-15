@@ -1,6 +1,6 @@
 "use strict";
 
-var sails = require('sails');
+const sails = require('sails');
 
 // Before running any tests...
 before(function(done) {
@@ -16,6 +16,12 @@ before(function(done) {
     // and disable all logs except errors and warnings:
     // hooks: { grunt: false },
     log: { level: 'error' },
+    datastores: {
+      default: {
+        adapter: 'sails-mysql',
+        url: process.env.TEST_DATABASE_URL,
+      }
+    }
 
   }, function(err) {
     if (err) { return done(err); }
