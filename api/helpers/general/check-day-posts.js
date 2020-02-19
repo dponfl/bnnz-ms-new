@@ -1,12 +1,14 @@
 "use strict";
 
+const moduleName = 'general:checkDayPosts';
+
 module.exports = {
 
 
   friendlyName: 'Check day posts',
 
 
-  description: 'Check if the client reached the day daily posts',
+  description: 'Check if the client reached the day limit for sending posts',
 
 
   inputs: {
@@ -30,16 +32,16 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('general:checkDayPosts helper...');
+    sails.log.info(`******************** ${moduleName} ********************`);
 
     try {
 
       const account = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
-      if (typeof account === 'undefined') {
+      if (account == null) {
 
         // sails.log.error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
-        throw new Error('api/helpers/general/check-day-posts, error: Cannot find account by client.account_use');
+        throw new Error(`${moduleName}, error: Cannot find account by client.account_use`);
 
       }
 

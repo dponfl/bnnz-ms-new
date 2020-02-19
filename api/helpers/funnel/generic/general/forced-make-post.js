@@ -83,30 +83,19 @@ module.exports = {
            * Entered post looks ok
            */
 
-          let postBroadcastResult = await sails.helpers.general.postBroadcast.with({
+          let generateTasksResult = await sails.helpers.tasks.generateTasks.with({
             client: inputs.client,
             accountId: currentAccountInd,
             postLink: enteredPost,
           });
 
-          if (postBroadcastResult.status === 'ok') {
-
-            /**
-             * Увеличиваем счётчик отправленных сообщений по текущему аккаунту
-             */
-
-            inputs.client.accounts[currentAccountInd]['posts_made_day']++;
-            inputs.client.accounts[currentAccountInd]['posts_made_total']++;
-
-            /**
-             * Можем переходить на следующий блок
-             */
+          if (generateTasksResult.status === 'ok') {
 
             inputs.block.done = true;
             inputs.block.next = 'general::post_sent';
 
           } else {
-            throw new Error(`Wrong reply from sails.helpers.general.postBroadcast: ${postBroadcastResult}`);
+            throw new Error(`Wrong reply from sails.helpers.tasks.generateTasks: ${generateTasksResult}`);
           }
 
         } else {

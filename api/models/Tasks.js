@@ -17,8 +17,20 @@ module.exports = {
     post_guid: {
       type: 'string',
     },
+    client_guid: {
+      type: 'string',
+    },
     account_guid: {
       type: 'string',
+    },
+    messenger: {
+      type: 'string',
+    },
+    /**
+     * message_id - уникальный идентификатор сообщения внутри мессенджера
+     */
+    message_id: {
+      type: 'number',
     },
     make_like: {
       type: 'boolean',

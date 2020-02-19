@@ -1,5 +1,7 @@
 "use strict";
 
+const moduleName = 'funnel::generic::general::callback-start';
+
 module.exports = {
 
 
@@ -46,9 +48,16 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
     try {
 
-      sails.log.info('/*************** general::callbackStart ***************/');
+      sails.log.info(`*************** ${moduleName} ***************`);
 
       // sails.log.debug('Client: ', inputs.client);
       // sails.log.debug('Block: ', inputs.block);
@@ -101,7 +110,7 @@ module.exports = {
 
           } else {
 
-            throw new Error(`Wrong reply from sails.helpers.general.checkDayPosts: ${checkDayPostsRes}`);
+            throw new Error(`${moduleName}, Wrong reply from general::checkDayPosts: ${checkDayPostsRes}`);
 
           }
           break;
@@ -139,7 +148,7 @@ module.exports = {
           break;
 
         default:
-          throw new Error(`Wrong callback data: ${inputs.query.data}`);
+          throw new Error(`${moduleName}, Wrong callback data: ${inputs.query.data}`);
       }
 
       await sails.helpers.funnel.afterHelperGeneric.with({
@@ -154,7 +163,7 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/funnel/general/callback-start';
+      const errorLocation = `${moduleName}`;
       const errorMsg = 'Error';
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);

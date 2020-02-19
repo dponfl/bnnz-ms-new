@@ -16,14 +16,8 @@ module.exports = {
       type: 'string',
       unique: true,
     },
-    messenger: {
+    client_guid: {
       type: 'string',
-    },
-    /**
-     * message_id - уникальный идентификатор сообщения внутри мессенджера
-     */
-    message_id: {
-      type: 'number',
     },
     account_guid: {
       type: 'string',
