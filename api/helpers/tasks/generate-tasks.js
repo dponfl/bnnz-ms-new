@@ -72,6 +72,44 @@ module.exports = {
     try {
 
       /**
+       * Проверяем, что переданный объект клиента имеет аккаун
+       * с переданным inputs.accountId
+       */
+
+      const account = inputs.client.accounts[inputs.accountId];
+
+      if (account == null) {
+        sails.log.error(`${moduleName}, error: Cannot find account by input.accountId`);
+        throw new Error(`${moduleName}, error: Cannot find account by input.accountId`);
+      }
+
+      /**
+       * Проверяем, что этот аккаунт имеет активную подписку
+       */
+
+      if (!account.subscription_active) {
+        sails.log.error(`${moduleName}, error: Account has no active subscription:
+        accountId: ${inputs.accountId}
+        subscription_active: ${account.subscription_active}`);
+        throw new Error(`${moduleName}, error: Account has not active subscription:
+        accountId: ${inputs.accountId}
+        subscription_active: ${account.subscription_active}`);
+      }
+
+      /**
+       * Проверяем, что аккаунт на превысил суточные лимиты отправки постов
+       */
+
+      if (account.posts_made_day >= account.service.max_outgoing_posts_per_day) {
+        sails.log.error(`${moduleName}, error: Max amount of outgoing posts reached
+          posts_made_day: ${account.posts_made_day},
+          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_per_day}`);
+        throw new Error(`${moduleName}, error: Max amount of outgoing posts reached
+          posts_made_day: ${account.posts_made_day},
+          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_per_day}`);
+      }
+
+      /**
        * Создаём запись в таблице Posts
        */
 
@@ -100,12 +138,30 @@ module.exports = {
        * и у которых не исчерпаны суточные лимиты на получение постов
        */
 
-      
+      const accountRoomsList = [];
+
+      for (const room of account.room) {
+        if (room.active) {
+          accountRoomsList.push(room.id);
+        }
+      }
+
+      const accountsListRaw = await sails.helpers.storage.getClientsByRooms(accountRoomsList);
+
+      if (accountsListRaw.status === 'ok') {
+        accountsList = accountsListRaw.payload;
+      }
+
+
+
+
+
+
 
       return exits.success({
         status: 'ok',
-        message: 'Post record created',
-        payload: postRecRaw,
+        message: 'Generate tasks performed',
+        payload: {},
       })
 
     } catch (e) {
