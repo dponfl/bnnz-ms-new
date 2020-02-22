@@ -30,7 +30,7 @@ module.exports = {
      * message_id - уникальный идентификатор сообщения внутри мессенджера
      */
     message_id: {
-      type: 'number',
+      type: 'string',
     },
     make_like: {
       type: 'boolean',

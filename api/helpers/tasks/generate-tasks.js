@@ -22,12 +22,6 @@ module.exports = {
       type: 'ref',
       required: true,
     },
-    accountId: {
-      friendlyName: 'accountId',
-      description: 'accountId',
-      type: 'number',
-      required: true,
-    },
     postLink: {
       friendlyName: 'postLink',
       description: 'postLink',
@@ -72,15 +66,16 @@ module.exports = {
     try {
 
       /**
-       * Проверяем, что переданный объект клиента имеет аккаун
-       * с переданным inputs.accountId
+       * Получаем текущий аккаунт клиенгта
        */
 
-      const account = inputs.client.accounts[inputs.accountId];
+      const account = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
 
       if (account == null) {
-        sails.log.error(`${moduleName}, error: Cannot find account by input.accountId`);
-        throw new Error(`${moduleName}, error: Cannot find account by input.accountId`);
+        sails.log.error(`${moduleName}, error: Cannot get account in use from client record:
+        ${JSON.stringify(inputs.client)}`);
+        throw new Error(`${moduleName}, error: Cannot get account in use from client record:
+        ${JSON.stringify(inputs.client)}`);
       }
 
       /**
@@ -89,11 +84,9 @@ module.exports = {
 
       if (!account.subscription_active) {
         sails.log.error(`${moduleName}, error: Account has no active subscription:
-        accountId: ${inputs.accountId}
-        subscription_active: ${account.subscription_active}`);
+        account: ${JSON.stringify(account)}`);
         throw new Error(`${moduleName}, error: Account has not active subscription:
-        accountId: ${inputs.accountId}
-        subscription_active: ${account.subscription_active}`);
+        account: ${JSON.stringify(account)}`);
       }
 
       /**
@@ -113,24 +106,13 @@ module.exports = {
        * Создаём запись в таблице Posts
        */
 
-      const uuidApiKey = uuid.create();
+      const postRecRaw = await sails.helpers.storage.postsCreate.with({
+        clientGuid: inputs.client.guid,
+        accountGuid: inputs.account.guid,
+        postLink: inputs.postLink,
+      });
 
-      const postRec = {
-        guid: uuidApiKey.uuid,
-        client_guid: inputs.client.guid,
-        account_guid: inputs.accountId,
-        link: inputs.postLink,
-        total_likes: 0,
-        total_dislikes: 0,
-        requested_likes: inputs.requestedLikes || 0,
-        requested_comments: inputs.requestedComments || 0,
-        received_likes: 0,
-        received_comments: 0,
-        all_likes_done: false,
-        all_comments_done: false,
-      };
-
-      const postRecRaw = await Posts.create(postRec).fetch();
+      const postRec = postRecRaw.payload;
 
       /**
        * Получаем список всех активных аккаунтов (accountsList),
@@ -146,15 +128,51 @@ module.exports = {
         }
       }
 
-      const accountsListRaw = await sails.helpers.storage.getClientsByRooms(accountRoomsList);
+      const accountsListRaw = await sails.helpers.storage.getAccountsByRooms(accountRoomsList);
 
       if (accountsListRaw.status === 'ok') {
-        accountsList = accountsListRaw.payload;
+
+        /**
+         * Удаляем из списка аккаунт, отправивший пост
+         */
+
+        accountsList = _.filter(accountsListRaw.payload, (acc) => {
+          return acc.guid !== account.guid;
+        });
       }
 
+      /**
+       * Для каждого аккаунта из accountsList
+       * нужно сформировать задание и отправить соответствующее сообщение
+       */
+
+      for (const acc of accountsList) {
+
+        const taskType = await sails.helpers.tasks.generateTaskType().payload;
+
+        const taskRecRaw = await sails.helpers.storage.tasksCreate.with({
+          clientGuid: inputs.client.guid,
+          accountGuid: acc.guid,
+          postGuid: postRec.guid,
+          messenger: inputs.client.messenger,
+          makeLike: true,
+          makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
+        });
+
+        await sails.helpers.storage.postsUpdate.with({
+          criteria: {guid: postRec.guid},
+          data: {
+            requested_likes: ++postRec.requested_likes,
+            requested_comments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+              ? ++postRec.requested_comments
+              : postRec.requested_comments,
+          }
+        });
 
 
 
+
+      }
 
 
 

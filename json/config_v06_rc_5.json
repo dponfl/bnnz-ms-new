@@ -157,6 +157,10 @@
     }
   },
   "tasks": {
+    "task_types": {
+      "LIKE": "like",
+      "LIKE_AND_COMMENT": "like_and_comment"
+    },
     "comments_ratio": 0.8,
     "comments": {
       "check_period": {

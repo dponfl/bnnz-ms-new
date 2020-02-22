@@ -43,10 +43,10 @@ module.exports = {
 
     let enteredPost = _.trim(inputs.msg.text);
 
-    const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
-    const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
-      return o.guid === currentAccount.guid;
-    });
+    // const currentAccount = _.find(inputs.client.accounts, {guid: inputs.client.account_use});
+    // const currentAccountInd = _.findIndex(inputs.client.accounts, (o) => {
+    //   return o.guid === currentAccount.guid;
+    // });
 
     try {
 
@@ -85,7 +85,6 @@ module.exports = {
 
           let generateTasksResult = await sails.helpers.tasks.generateTasks.with({
             client: inputs.client,
-            accountId: currentAccountInd,
             postLink: enteredPost,
           });
 
