@@ -213,7 +213,7 @@ module.exports = {
             await sails.helpers.storage.messageSave.with({
               message_id: videoRes.payload.message_id || 0,
               message: JSON.stringify({
-                video: sails.config.custom.cloudinaryVideoUrl + block.message.img,
+                video: sails.config.custom.cloudinaryVideoUrl + block.message.video,
                 html: htmlVideo,
               }),
               message_format: 'video',

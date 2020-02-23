@@ -54,13 +54,9 @@ module.exports = {
         const arr = inputs.data.map(async (innerObj) => await sails.helpers.messageProcessor.mapDeep.with({
           client: inputs.client,
           data: innerObj,
-        }).payload);
+        }));
 
-        return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
-          payload: arr,
-        })
+        return exits.success(arr);
 
       } else if (_.isObject(inputs.data)) {
         let ob = _.forEach(inputs.data, async (val, key, o) => {
@@ -68,15 +64,11 @@ module.exports = {
             o[key] = await sails.helpers.messageProcessor.parseSpecialTokens.with({
               client: inputs.client,
               message: t(inputs.client.lang, val),
-            }).payload ;
+            });
           }
         });
 
-        return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
-          payload: ob,
-        })
+        return exits.success(ob);
 
       }
 

@@ -73,11 +73,7 @@ module.exports = {
         message: inputs.message,
       });
 
-      return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: resultHtml,
-      })
+      return exits.success(resultHtml);
 
     } catch (e) {
 

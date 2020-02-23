@@ -97,11 +97,7 @@ module.exports = {
 
       resultStr = emoji.emojify(resultStr, () => '');
 
-      return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: resultStr,
-      })
+      return exits.success(resultStr);
 
     } catch (e) {
 

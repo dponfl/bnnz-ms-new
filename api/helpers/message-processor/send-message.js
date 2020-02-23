@@ -46,6 +46,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    let sendMessageResult = null;
+
     try {
 
       switch (inputs.messageData.actionType) {
@@ -56,23 +58,17 @@ module.exports = {
            * Send simple text message
            */
 
-          let htmlSimpleRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
+          const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyle.with({
+            client: inputs.client,
+            message: inputs.messageData,
+          });
 
-          let {text: htmlSimple} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlSimpleRaw);
-
-          // sails.log.debug('htmlSimple: ', htmlSimple);
-
-          let simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
+          const simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
             chatId: inputs.client.chat_id,
             html: htmlSimple,
           });
 
-          // sails.log.debug('simpleRes: ', simpleRes);
-          // sails.log.debug('simpleRes payload: ', simpleRes.payload);
-
-          block.message_id = simpleRes.payload.message_id;
-
-          block.shown = true;
+          sendMessageResult = simpleRes;
 
           /**
            * Save the sent message
@@ -81,7 +77,7 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: simpleRes.payload.message_id || 0,
             message: htmlSimple,
-            message_format: 'simple',
+            message_format: 'push simple',
             messenger: inputs.client.messenger,
             message_originator: 'bot',
             client_id: inputs.client.id,
@@ -96,22 +92,18 @@ module.exports = {
            * Send img message
            */
 
-          let htmlImgRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
+          const htmlImg = await sails.helpers.messageProcessor.parseMessageStyle.with({
+            client: inputs.client,
+            message: inputs.messageData,
+          });
 
-          let {text: htmlImg} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlImgRaw);
-
-          let imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
+          const imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
             chatId: inputs.client.chat_id,
-            imgPath: sails.config.custom.cloudinaryImgUrl + block.message.img,
+            imgPath: sails.config.custom.cloudinaryImgUrl + inputs.messageData.message.img,
             html: htmlImg,
           });
 
-          // sails.log.debug('imgRes: ', imgRes);
-          // sails.log.debug('imgRes payload: ', imgRes.payload);
-
-          block.message_id = imgRes.payload.message_id;
-
-          block.shown = true;
+          sendMessageResult = imgRes;
 
           /**
            * Save the sent message
@@ -120,10 +112,10 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: imgRes.payload.message_id || 0,
             message: JSON.stringify({
-              img: sails.config.custom.cloudinaryImgUrl + block.message.img,
+              img: sails.config.custom.cloudinaryImgUrl + inputs.messageData.message.img,
               html: htmlImg,
             }),
-            message_format: 'img',
+            message_format: 'push img',
             messenger: inputs.client.messenger,
             message_originator: 'bot',
             client_id: inputs.client.id,
@@ -138,22 +130,18 @@ module.exports = {
            * Send video message
            */
 
-          let htmlVideoRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
+          const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyle.with({
+            client: inputs.client,
+            message: inputs.messageData,
+          });
 
-          let {text: htmlVideo} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlVideoRaw);
-
-          let videoRes = await sails.helpers.mgw[inputs.client.messenger]['videoMessage'].with({
+          const videoRes = await sails.helpers.mgw[inputs.client.messenger]['videoMessage'].with({
             chatId: inputs.client.chat_id,
-            videoPath: sails.config.custom.cloudinaryVideoUrl + block.message.video,
+            videoPath: sails.config.custom.cloudinaryVideoUrl + inputs.messageData.message.video,
             html: htmlVideo,
           });
 
-          // sails.log.debug('videoRes: ', videoRes);
-          // sails.log.debug('videoRes payload: ', videoRes.payload);
-
-          block.message_id = videoRes.payload.message_id;
-
-          block.shown = true;
+          sendMessageResult = videoRes;
 
           /**
            * Save the sent message
@@ -162,10 +150,10 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: videoRes.payload.message_id || 0,
             message: JSON.stringify({
-              video: sails.config.custom.cloudinaryVideoUrl + block.message.img,
+              video: sails.config.custom.cloudinaryVideoUrl + inputs.messageData.message.video,
               html: htmlVideo,
             }),
-            message_format: 'video',
+            message_format: 'push video',
             messenger: inputs.client.messenger,
             message_originator: 'bot',
             client_id: inputs.client.id,
@@ -180,21 +168,17 @@ module.exports = {
            * Send forced reply message
            */
 
-          let htmlForcedRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
+          const htmlForced = await sails.helpers.messageProcessor.parseMessageStyle.with({
+            client: inputs.client,
+            message: inputs.messageData,
+          });
 
-          let {text: htmlForced} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlForcedRaw);
-
-          let forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
+          const forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
             chatId: inputs.client.chat_id,
             html: htmlForced,
           });
 
-          // sails.log.debug('forcedRes: ', forcedRes);
-          // sails.log.debug('forcedRes payload: ', forcedRes.payload);
-
-          block.message_id = forcedRes.payload.message_id;
-
-          block.shown = true;
+          sendMessageResult = forcedRes;
 
           /**
            * Save the sent message
@@ -203,7 +187,7 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: forcedRes.payload.message_id || 0,
             message: htmlForced,
-            message_format: 'forced',
+            message_format: 'push forced',
             messenger: inputs.client.messenger,
             message_originator: 'bot',
             client_id: inputs.client.id,
@@ -218,27 +202,23 @@ module.exports = {
            * Send inline keyboard message
            */
 
-          let htmlInlineRaw = parseMessageStyle(inputs.client, clientName, block.message, inputs.client.lang);
-
-          let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(inputs.client, block, inputs.msg || null, htmlInlineRaw);
-
-          let objAfter = mapDeep(inputs.client, clientName, inputs.client.lang, keyboardInline);
-
-          // sails.log.debug('objAfter: ');
-          // console.dir(objAfter);
-
-          let inlineRes = await sails.helpers.mgw[inputs.client.messenger]['inlineKeyboardMessage'].with({
-            chatId: inputs.client.chat_id,
-            html: htmlInline,
-            inlineKeyboard: objAfter,
+          const htmlInline = await sails.helpers.messageProcessor.parseMessageStyle.with({
+            client: inputs.client,
+            message: inputs.messageData,
           });
 
-          // sails.log.debug('inlineRes: ', inlineRes);
-          // sails.log.debug('inlineRes payload: ', inlineRes.payload);
+          const inlineKeyboard = await sails.helpers.messageProcessor.mapDeep.with({
+            client: inputs.client,
+            data: htmlInline.inline_keyboard,
+          });
 
-          block.message_id = inlineRes.payload.message_id;
+          const inlineRes = await sails.helpers.mgw[inputs.client.messenger]['inlineKeyboardMessage'].with({
+            chatId: inputs.client.chat_id,
+            html: htmlInline,
+            inlineKeyboard: inlineKeyboard,
+          });
 
-          block.shown = true;
+          sendMessageResult = inlineRes;
 
           /**
            * Save the sent message
@@ -247,12 +227,12 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: inlineRes.payload.message_id || 0,
             message: htmlInline,
-            message_format: 'callback',
+            message_format: 'push callback',
             messenger: inputs.client.messenger,
             message_originator: 'bot',
             client_id: inputs.client.id,
             client_guid: inputs.client.guid,
-            message_buttons: objAfter
+            message_buttons: inlineKeyboard,
           });
 
           break;
@@ -260,11 +240,7 @@ module.exports = {
 
       }
 
-      return exits.success({
-        status: 'ok',
-        message: '**************',
-        payload: {},
-      })
+      return exits.success(sendMessageResult);
 
     } catch (e) {
 
