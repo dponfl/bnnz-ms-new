@@ -28,13 +28,27 @@ module.exports = {
 
     try {
 
+      /**
+       * Load global config data
+       */
+
       let confRec = await Config.findOne({
         active: true
       });
 
       sails.config.custom.config = confRec.config_data;
 
-      // sails.log.warn('sails.config.custom.config: ', sails.config.custom.config);
+      /**
+       * Load push messages data
+       */
+
+      const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
+
+      if (pushMessagesRaw.status === 'ok') {
+        sails.config.custom.pushMessages = pushMessagesRaw.payload;
+      } else {
+        throw new Error('Critical error: Cannot get push messages data');
+      }
 
       if (sails.config.custom.config == null) {
         throw new Error('Critical error: Cannot get config');

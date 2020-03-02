@@ -1,5 +1,5 @@
 {
-  "test": {
+  "test_to_paid": {
     "description": "Пуш-нотификации для конвертации из тестового аккаунта в платный",
     "messages": [
       {
@@ -12,6 +12,11 @@
         "show_time": "1 hour",
         "next": "dayOne",
         "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
         "message": {
           "html": [
             {
@@ -46,6 +51,11 @@
         "show_time": "1 day",
         "next": null,
         "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
         "message": {
           "html": [
             {
@@ -71,6 +81,101 @@
         }
       }
     ]
+  },
+  "tasks": {
+    "likes": {
+      "description": "Задача поставить лайк",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задача поставить лайк",
+          "actionType": "inline_keyboard",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": "tasks::callbackLikes",
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK_POST_LINK",
+                "style": "b",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
+                  "callback_data": "start_upload"
+                }
+              ],
+              [
+                {
+                  "text": "MSG_GENERAL_BTN_GET_HELP",
+                  "callback_data": "start_get_help"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "comments_likes": {
+      "description": "Задача оставить комментарий и поставить лайк",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Первое сообщение через 1 час после регистрации аккаунта",
+          "actionType": "inline_keyboard",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "1 hour",
+          "next": "dayOne",
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": "tasks::callbackLikesComments",
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_GENERAL_START",
+                "style": "b",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
+                  "callback_data": "start_upload"
+                }
+              ],
+              [
+                {
+                  "text": "MSG_GENERAL_BTN_GET_HELP",
+                  "callback_data": "start_get_help"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
   }
 }
 

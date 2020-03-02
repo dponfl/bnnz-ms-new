@@ -18,7 +18,7 @@ module.exports = {
     },
     block: {
       friendlyName: 'block',
-      description: 'Current funnel block',
+      description: 'Current message block',
       type: 'ref',
       required: true,
     },

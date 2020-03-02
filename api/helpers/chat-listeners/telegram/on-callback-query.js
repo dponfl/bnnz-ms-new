@@ -58,9 +58,26 @@ module.exports = {
          * Call the respective Supervisor helper
          */
 
-        // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+        /**
+         * По данным callback_query проверяем к какой категории он относиться
+         */
 
-        await sails.helpers.funnel.supervisorCallback(getClientResponse.payload, query);
+        if (/^push_msg_/i.test(query.data)) {
+
+          /**
+           * Полученный callback_query относиться к push messages
+           */
+
+          await sails.helpers.pushMessages.supervisorCallback(getClientResponse.payload, query);
+
+
+        } else {
+
+          // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
+
+          await sails.helpers.funnel.supervisorCallback(getClientResponse.payload, query);
+
+        }
 
       } catch (e) {
 
