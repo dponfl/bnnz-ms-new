@@ -151,10 +151,10 @@ module.exports = {
         const taskType = await sails.helpers.tasks.generateTaskType().payload;
 
         const taskRecRaw = await sails.helpers.storage.tasksCreate.with({
-          clientGuid: inputs.client.guid,
+          clientGuid: acc.client.guid,
           accountGuid: acc.guid,
           postGuid: postRec.guid,
-          messenger: inputs.client.messenger,
+          messenger: acc.client.messenger,
           makeLike: true,
           makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
         });
@@ -168,6 +168,27 @@ module.exports = {
               : postRec.requested_comments,
           }
         });
+
+        /**
+         * Отправляем пуш-сообщение в соответствии с типом задания
+         */
+
+        switch (taskType) {
+          case sails.config.custom.config.tasks.task_types.LIKE:
+            const msgRes = await sails.helpers.messageProcessor.sendMessage.with({
+              client: acc.client,
+              messageData: sails.config.custom.pushMessages.tasks.likes.messages[0],
+              additionalTokens: [
+                {
+                  token: '$PostLink$',
+                  value: inputs.postLink,
+                },
+              ],
+            });
+            break;
+          default:
+            throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
+        }
 
 
 

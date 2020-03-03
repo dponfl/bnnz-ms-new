@@ -31,6 +31,12 @@ module.exports = {
       required: true,
     },
 
+    additionalTokens: {
+      friendlyName: 'array of pairs token-value',
+      description: 'array of pairs token-value',
+      type: 'ref',
+    },
+
   },
 
 
@@ -94,6 +100,16 @@ module.exports = {
 
       const numberOfMessagesSentToday = currentAccount.posts_made_day;
       resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
+
+      if (inputs.additionalTokens != null) {
+
+        _.forEach(inputs.additionalTokens, (elem) => {
+
+          resultStr = _.replace(resultStr, elem.token, elem.value);
+
+        });
+
+      }
 
       resultStr = emoji.emojify(resultStr, () => '');
 

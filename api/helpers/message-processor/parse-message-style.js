@@ -30,6 +30,12 @@ module.exports = {
       required: true,
     },
 
+    additionalTokens: {
+      friendlyName: 'array of pairs token-value',
+      description: 'array of pairs token-value',
+      type: 'ref',
+    },
+
   },
 
 
@@ -71,6 +77,7 @@ module.exports = {
       resultHtml = await sails.helpers.messageProcessor.parseSpecialTokens.with({
         client: inputs.client,
         message: inputs.message,
+        additionalTokens: inputs.additionalTokens,
       });
 
       return exits.success(resultHtml);

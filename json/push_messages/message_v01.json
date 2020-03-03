@@ -106,27 +106,20 @@
               {
                 "text": "MSG_TASK_LIKE",
                 "style": "",
-                "cr": "DCR"
+                "cr": "SCR"
               },
               {
                 "text": "MSG_TASK_POST_LINK",
                 "style": "b",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "bi",
                 "cr": ""
               }
             ],
             "inline_keyboard": [
-              [
-                {
-                  "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
-                  "callback_data": "start_upload"
-                }
-              ],
-              [
-                {
-                  "text": "MSG_GENERAL_BTN_GET_HELP",
-                  "callback_data": "start_get_help"
-                }
-              ]
             ]
           }
         }
@@ -153,24 +146,22 @@
           "message": {
             "html": [
               {
-                "text": "MSG_GENERAL_START",
+                "text": "MSG_TASK_LIKE_COMMENT",
+                "style": "",
+                "cr": "SCR"
+              },
+              {
+                "text": "MSG_TASK_POST_LINK",
                 "style": "b",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "bi",
                 "cr": ""
               }
             ],
             "inline_keyboard": [
-              [
-                {
-                  "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
-                  "callback_data": "start_upload"
-                }
-              ],
-              [
-                {
-                  "text": "MSG_GENERAL_BTN_GET_HELP",
-                  "callback_data": "start_get_help"
-                }
-              ]
             ]
           }
         }

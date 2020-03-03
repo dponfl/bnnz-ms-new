@@ -45,8 +45,15 @@ module.exports = {
           where: {
             subscription_active: true,
             deleted: false,
+            banned: false,
           }
         })
+          .populate('client', {
+            where: {
+              deleted: false,
+              banned: false,
+            }
+          })
           .populate('service')
           .populate('room', {
             where: {
@@ -61,6 +68,7 @@ module.exports = {
             accountsList.push(_.pick(acc, [
               'id',
               'guid',
+              'client',
               'inst_profile',
               'posts_received_day',
               'posts_received_total',

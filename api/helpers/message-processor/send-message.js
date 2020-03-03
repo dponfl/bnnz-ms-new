@@ -28,6 +28,12 @@ module.exports = {
       required: true,
     },
 
+    additionalTokens: {
+      friendlyName: 'array of pairs token-value',
+      description: 'array of pairs token-value',
+      type: 'ref',
+    },
+
   },
 
 
@@ -61,6 +67,7 @@ module.exports = {
           const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: inputs.client,
             message: inputs.messageData,
+            additionalTokens: inputs.additionalTokens,
           });
 
           const simpleRes = await sails.helpers.mgw[inputs.client.messenger]['simpleMessage'].with({
@@ -95,6 +102,7 @@ module.exports = {
           const htmlImg = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: inputs.client,
             message: inputs.messageData,
+            additionalTokens: inputs.additionalTokens,
           });
 
           const imgRes = await sails.helpers.mgw[inputs.client.messenger]['imgMessage'].with({
@@ -133,6 +141,7 @@ module.exports = {
           const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: inputs.client,
             message: inputs.messageData,
+            additionalTokens: inputs.additionalTokens,
           });
 
           const videoRes = await sails.helpers.mgw[inputs.client.messenger]['videoMessage'].with({
@@ -171,6 +180,7 @@ module.exports = {
           const htmlForced = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: inputs.client,
             message: inputs.messageData,
+            additionalTokens: inputs.additionalTokens,
           });
 
           const forcedRes = await sails.helpers.mgw[inputs.client.messenger]['forcedMessage'].with({
@@ -205,6 +215,7 @@ module.exports = {
           const htmlInline = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: inputs.client,
             message: inputs.messageData,
+            additionalTokens: inputs.additionalTokens,
           });
 
           const inlineKeyboard = await sails.helpers.messageProcessor.mapDeep.with({

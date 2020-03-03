@@ -1051,7 +1051,13 @@
         "MSG_HELP_SEND_POST_VIDEO": "Здесь будет видео о том, как отправлять пост",
         "MSG_HELP_NEXT_ACTION_HELP": "Чтобы воспользоваться помощью по другим разделам нажми кнопку  ПОМОЩЬ",
         "MSG_HELP_BTN_HELP": "ПОМОЩЬ",
-        "MSG_GENERAL_ENTER_POST_LINK": "Введи ссылку на свой пост в Инстаграм :point_down:"
+        "MSG_GENERAL_ENTER_POST_LINK": "Введи ссылку на свой пост в Инстаграм :point_down:",
+        "$$$$$$$$$$$$$$$$$$$$$_000001": "*** ТОКЕНЫ ДЛЯ ЗАДАЧ ***",
+        "MSG_TASK_LIKE": "Поставь лайк :thumbsup:",
+        "MSG_TASK_LIKE_COMMENT": "Поставь лайк :thumbsup: и оставь комментарий (не меньше 4 слов) :memo:",
+        "MSG_TASK_POST_LINK": "Ссылка на пост :point_right: $PostLink$",
+        "MSG_TASK": "Когда выполнишь задание - нажми кнопку \"ЗАДАНИЕ ВЫПОЛНЕНО\" :point_down:",
+        "MSG_TASK_PERFORM_BTN": "ЗАДАНИЕ ВЫПОЛНЕНО :white_check_mark:"
       }
     }
   }
