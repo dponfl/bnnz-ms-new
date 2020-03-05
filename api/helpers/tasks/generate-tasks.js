@@ -146,6 +146,8 @@ module.exports = {
        * нужно сформировать задание и отправить соответствующее сообщение
        */
 
+      let accountUpdateRes;
+
       for (const acc of accountsList) {
 
         const taskType = await sails.helpers.tasks.generateTaskType().payload;
@@ -173,11 +175,25 @@ module.exports = {
          * Отправляем пуш-сообщение в соответствии с типом задания
          */
 
+        let msgRes;
+
         switch (taskType) {
           case sails.config.custom.config.tasks.task_types.LIKE:
-            const msgRes = await sails.helpers.messageProcessor.sendMessage.with({
+            msgRes = await sails.helpers.messageProcessor.sendMessage.with({
               client: acc.client,
               messageData: sails.config.custom.pushMessages.tasks.likes.messages[0],
+              additionalTokens: [
+                {
+                  token: '$PostLink$',
+                  value: inputs.postLink,
+                },
+              ],
+            });
+            break;
+          case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
+            msgRes = await sails.helpers.messageProcessor.sendMessage.with({
+              client: acc.client,
+              messageData: sails.config.custom.pushMessages.tasks.comments_likes.messages[0],
               additionalTokens: [
                 {
                   token: '$PostLink$',
@@ -190,12 +206,23 @@ module.exports = {
             throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
         }
 
-
-
+        await sails.helpers.storage.accountUpdate.with({
+          criteria: {guid: acc.guid},
+          data: {
+            posts_received_day: ++acc.posts_received_day,
+            posts_received_total: ++acc.posts_received_total,
+          }
+        });
 
       }
 
-
+      await sails.helpers.storage.accountUpdate.with({
+        criteria: {guid: account.guid},
+        data: {
+          posts_made_day: ++account.posts_made_day,
+          posts_made_total: ++account.posts_made_total,
+        }
+      });
 
       return exits.success({
         status: 'ok',

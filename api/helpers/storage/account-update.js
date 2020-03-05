@@ -97,7 +97,7 @@ module.exports = {
         message: 'Account record updated',
         payload: {
           criteria: inputs.criteria,
-          client: inputs.data
+          data: inputs.data
         },
       })
 
