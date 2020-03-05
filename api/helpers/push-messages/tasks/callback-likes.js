@@ -60,6 +60,16 @@ module.exports = {
        * Получаем информацию по заданию
        */
 
+      const taskRecRaw = await sails.helpers.storage.tasksGet.with({
+        taskGuid: taskGuid,
+      });
+
+      const taskRec = taskRecRaw.payload;
+
+      /**
+       * Проверка выполнения задания с использванием парсера
+       */
+
 
 
       return exits.success({

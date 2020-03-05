@@ -215,6 +215,9 @@
       }
     }
   },
+  "parsers": {
+    "inst": "ninja"
+  },
   "analytics": {
     "events_schedule": [
       {
