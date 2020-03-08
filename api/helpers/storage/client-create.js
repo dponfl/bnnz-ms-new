@@ -40,10 +40,12 @@ module.exports = {
 
     try {
 
+      const uuidApiKey = uuid.create();
+
       inputs.client = _.assignIn(inputs.client,
         {
-          guid: uuid.create().uuid,
-          key: uuid.create().apiKey
+          guid: uuidApiKey.uuid,
+          key: uuidApiKey.apiKey
         });
 
       const service_id = _.get(inputs.client, 'service_id');

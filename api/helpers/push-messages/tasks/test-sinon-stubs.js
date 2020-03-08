@@ -1,31 +1,19 @@
 "use strict";
 
-const moduleName = 'push-messages:proceed-push-message';
+const moduleName = 'push-messages:tasks:test-sinon-stubs';
 
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:proceed-push-message',
+  friendlyName: 'push-messages:tasks:test-sinon-stubs',
 
 
-  description: 'Выполняет предварительную обработку и отправку push-сообщений',
+  description: 'push-messages:tasks:test-sinon-stubs',
 
 
   inputs: {
 
-    client: {
-      friendlyName: 'client',
-      description: 'Client record',
-      type: 'ref',
-      required: true,
-    },
-    block: {
-      friendlyName: 'block',
-      description: 'Current message block',
-      type: 'ref',
-      required: true,
-    },
 
   },
 
@@ -51,7 +39,7 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: '**************',
+        message: 'testSinonStubs helper performed',
         payload: {},
       })
 
