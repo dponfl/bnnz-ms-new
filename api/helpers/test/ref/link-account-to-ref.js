@@ -50,7 +50,7 @@ module.exports = {
           first_name: 'Test-name-00',
           last_name: 'Test-surname-00',
           chat_id: 100,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test00',
         }).fetch();
 
@@ -93,7 +93,7 @@ module.exports = {
           first_name: 'Test-name-01',
           last_name: 'Test-surname-01',
           chat_id: 101,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test01',
         }).fetch();
 
@@ -136,7 +136,7 @@ module.exports = {
           first_name: 'Test-name-02',
           last_name: 'Test-surname-02',
           chat_id: 102,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test02',
         }).fetch();
 
@@ -175,7 +175,7 @@ module.exports = {
           first_name: 'Test-name-03',
           last_name: 'Test-surname-03',
           chat_id: 103,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test03',
         }).fetch();
 
@@ -218,7 +218,7 @@ module.exports = {
           first_name: 'Test-name-04',
           last_name: 'Test-surname-04',
           chat_id: 104,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test04',
         }).fetch();
 
@@ -262,7 +262,7 @@ module.exports = {
           first_name: 'Test-name-05',
           last_name: 'Test-surname-05',
           chat_id: 105,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           login: 'test05',
         }).fetch();
 

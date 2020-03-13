@@ -56,9 +56,9 @@ module.exports = {
         await sails.helpers.storage.messageSave.with({
           message_id: inputs.msg.message_id || 0,
           message: inputs.msg.text,
-          message_format: 'forced',
+          message_format: sails.config.custom.enums.messageFormat.FORCED,
           messenger: inputs.client.messenger,
-          message_originator: 'client',
+          message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
           client_id: inputs.client.id,
           client_guid: inputs.client.guid
         });
@@ -149,9 +149,9 @@ module.exports = {
         await sails.helpers.storage.messageSave.with({
           message_id: inputs.msg.message_id || 0,
           message: inputs.msg.text,
-          message_format: 'simple',
+          message_format: sails.config.custom.enums.messageFormat.SIMPLE,
           messenger: inputs.client.messenger,
-          message_originator: 'client',
+          message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
           client_id: inputs.client.id,
           client_guid: inputs.client.guid
         });

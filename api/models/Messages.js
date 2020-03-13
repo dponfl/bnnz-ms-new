@@ -17,8 +17,12 @@ module.exports = {
     message_id: {
       type: 'number',
     },
-    message: {
+    message_guid: {
       type: 'string',
+      unique: true,
+    },
+    message: {
+      type: 'ref',
       columnType: 'text CHARACTER SET utf8mb4',
     },
     message_format: {

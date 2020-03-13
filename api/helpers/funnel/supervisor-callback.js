@@ -56,9 +56,9 @@ module.exports = {
         message_id: inputs.query.message.message_id || 0,
         callback_query_id: inputs.query.id || 0,
         message: inputs.query.data,
-        message_format: 'callback',
+        message_format: sails.config.custom.enums.messageFormat.CALLBACK,
         messenger: inputs.client.messenger,
-        message_originator: 'client',
+        message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
         client_id: inputs.client.id,
         client_guid: inputs.client.guid
       });

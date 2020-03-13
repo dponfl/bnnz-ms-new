@@ -47,7 +47,7 @@ module.exports = {
          */
 
         let getClientResponse = await sails.helpers.storage.clientGet.with({
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           msg: query,
         });
 
@@ -94,7 +94,7 @@ module.exports = {
             error_message: sails.config.custom.ON_CALLBACK_QUERY_ERROR,
             level: 'critical',
             payload: {
-              messenger: 'telegram',
+              messenger: sails.config.custom.enums.messenger.TELEGRAM,
               query: query,
               error: e,
             }

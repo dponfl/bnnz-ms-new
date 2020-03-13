@@ -132,9 +132,9 @@ module.exports = {
             await sails.helpers.storage.messageSave.with({
               message_id: simpleRes.payload.message_id || 0,
               message: htmlSimple,
-              message_format: 'simple',
+              message_format: sails.config.custom.enums.messageFormat.SIMPLE,
               messenger: inputs.client.messenger,
-              message_originator: 'bot',
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: inputs.client.id,
               client_guid: inputs.client.guid
             });
@@ -174,9 +174,9 @@ module.exports = {
                 img: sails.config.custom.cloudinaryImgUrl + block.message.img,
                 html: htmlImg,
               }),
-              message_format: 'img',
+              message_format: sails.config.custom.enums.messageFormat.IMG,
               messenger: inputs.client.messenger,
-              message_originator: 'bot',
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: inputs.client.id,
               client_guid: inputs.client.guid
             });
@@ -216,9 +216,9 @@ module.exports = {
                 video: sails.config.custom.cloudinaryVideoUrl + block.message.video,
                 html: htmlVideo,
               }),
-              message_format: 'video',
+              message_format: sails.config.custom.enums.messageFormat.VIDEO,
               messenger: inputs.client.messenger,
-              message_originator: 'bot',
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: inputs.client.id,
               client_guid: inputs.client.guid
             });
@@ -254,9 +254,9 @@ module.exports = {
             await sails.helpers.storage.messageSave.with({
               message_id: forcedRes.payload.message_id || 0,
               message: htmlForced,
-              message_format: 'forced',
+              message_format: sails.config.custom.enums.messageFormat.FORCED,
               messenger: inputs.client.messenger,
-              message_originator: 'bot',
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: inputs.client.id,
               client_guid: inputs.client.guid
             });
@@ -298,9 +298,9 @@ module.exports = {
             await sails.helpers.storage.messageSave.with({
               message_id: inlineRes.payload.message_id || 0,
               message: htmlInline,
-              message_format: 'callback',
+              message_format: sails.config.custom.enums.messageFormat.CALLBACK,
               messenger: inputs.client.messenger,
-              message_originator: 'bot',
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: inputs.client.id,
               client_guid: inputs.client.guid,
               message_buttons: objAfter

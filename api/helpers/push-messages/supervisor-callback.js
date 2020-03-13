@@ -1,5 +1,7 @@
 "use strict";
 
+const utils = require('../../services/utils');
+
 const moduleName = 'push-messages:supervisor-callback';
 
 
@@ -51,16 +53,16 @@ module.exports = {
        * Save the received callback query message
        */
 
-      await sails.helpers.storage.messageSave.with({
+      utils.stubWrap(await sails.helpers.storage.messageSaveJoi.with({
         message_id: inputs.query.message.message_id || 0,
         callback_query_id: inputs.query.id || 0,
         message: inputs.query.data,
-        message_format: 'callback',
+        message_format: sails.config.custom.enums.messageFormat.CALLBACK,
         messenger: inputs.client.messenger,
-        message_originator: 'client',
+        message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
         client_id: inputs.client.id,
         client_guid: inputs.client.guid
-      });
+      }));
 
 
       /**
@@ -182,6 +184,8 @@ module.exports = {
           throw new Error(`${moduleName}: unknown task category, query.data: ${inputs.query.data}`);
         }
 
+      } else {
+        throw new Error(`${moduleName}: unknown callback prefix, query.data: ${inputs.query.data}`);
       }
 
       return exits.success({

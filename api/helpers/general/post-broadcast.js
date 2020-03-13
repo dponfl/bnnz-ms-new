@@ -183,9 +183,9 @@ module.exports = {
           await sails.helpers.storage.messageSave.with({
             message_id: simpleRes.payload.message_id || 0,
             message: htmlPost,
-            message_format: 'post broadcast',
+            message_format: sails.config.custom.enums.messageFormat.POSTBROADCAST,
             messenger: inputs.client.messenger,
-            message_originator: 'client',
+            message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
             client_id: inputs.client.id,
             client_guid: inputs.client.guid,
           });

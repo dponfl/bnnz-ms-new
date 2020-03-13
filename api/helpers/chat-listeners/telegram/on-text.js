@@ -64,7 +64,7 @@ module.exports = {
          */
 
         getClientResponse = await sails.helpers.storage.clientGet.with({
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           msg: msg
         });
 
@@ -116,7 +116,7 @@ module.exports = {
           useLang = getLangRes.payload.lang;
 
           params = {
-            messenger: 'telegram',
+            messenger: sails.config.custom.enums.messenger.TELEGRAM,
             chat_id: msg.chat.id,
             first_name: msg.chat.first_name || '',
             last_name: msg.chat.last_name || '',
@@ -229,7 +229,7 @@ module.exports = {
             error_message: sails.config.custom.ON_MESSAGE_ERROR,
             level: 'critical',
             payload: {
-              messenger: 'telegram',
+              messenger: sails.config.custom.enums.messenger.TELEGRAM,
               msg: msg,
               error: e,
             }

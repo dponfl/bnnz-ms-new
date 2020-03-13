@@ -42,7 +42,7 @@ module.exports = {
       try {
 
         const getClientRaw = await sails.helpers.storage.clientGet.with({
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           msg: msg
         });
 

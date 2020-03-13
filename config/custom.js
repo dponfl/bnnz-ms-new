@@ -162,7 +162,26 @@ module.exports.custom = {
 
     messenger: {
       TELEGRAM: 'telegram',
-    }
+    },
+
+    messageFormat: {
+      SIMPLE: 'simple',
+      CALLBACK: 'callback',
+      FORCED: 'forced',
+      IMG: 'img',
+      VIDEO: 'video',
+      POSTBROADCAST: 'postBroadcast',
+      PUSHSIMPLE: 'pushSimple',
+      PUSHCALLBACK: 'pushCallback',
+      PUSHFORCED: 'pushForced',
+      PUSHIMG: 'pushImg',
+      PUSHVIDEO: 'pushVideo',
+    },
+
+    messageOriginator: {
+      CLIENT: 'client',
+      BOT: 'bot',
+    },
 
   },
 

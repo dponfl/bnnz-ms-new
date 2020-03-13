@@ -54,7 +54,7 @@ module.exports = {
         chatId = _.random(1, 5000000);
         checkClientRec = await Client.findOne({
           chat_id: chatId,
-          messenger: 'telegram',
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
         });
         if (checkClientRec == null) {
           generateNewChatId = false;
@@ -66,7 +66,7 @@ module.exports = {
         first_name: 'Test-name-00',
         last_name: 'Test-surname-00',
         chat_id: chatId,
-        messenger: 'telegram',
+        messenger: sails.config.custom.enums.messenger.TELEGRAM,
         deleted: false,
         banned: false,
       }).fetch();
