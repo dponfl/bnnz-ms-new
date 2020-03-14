@@ -21,6 +21,9 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    callback_query_id: {
+      type: 'string',
+    },
     message: {
       type: 'ref',
       columnType: 'text CHARACTER SET utf8mb4',

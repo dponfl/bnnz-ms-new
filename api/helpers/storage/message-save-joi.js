@@ -15,8 +15,8 @@ module.exports = {
   inputs: {
 
     params: {
-      friendlyName: 'params',
-      description: 'params',
+      friendlyName: 'input params',
+      description: 'input params',
       type: 'ref',
       required: true,
     },
@@ -44,6 +44,10 @@ module.exports = {
     const schema = Joi.object({
       message: Joi
         .string()
+        .required(),
+      callback_query_id: Joi
+        .string()
+        .max(255)
         .required(),
       message_id: Joi
         .number()
@@ -99,6 +103,7 @@ module.exports = {
         message_guid: uuidApiKey.uuid,
         client_id: input.client_id,
         client_guid: input.client_guid,
+        callback_query_id: input.callback_query_id,
         message: input.message,
         message_format: input.message_format,
         message_buttons: input.message_buttons || {},
