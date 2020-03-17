@@ -7,59 +7,21 @@ const casual = require('casual');
 const clientSdk = require('../../../sdk/client.js');
 const messagesSdk = require('../../../sdk/messages.js');
 
-describe('pushMessages.supervisorCallback test', () => {
+describe('pushMessages.supervisorCallback test', function () {
 
   let messageSaveJoiStub;
 
-  // const stubRes = [
-  //   {
-  //     helper: 'checkStubOne',
-  //     data: {
-  //       order: 1,
-  //       message: 'prop-1 stub response',
-  //     }
-  //   },
-  //   {
-  //     helper: 'checkStubTwo',
-  //     data: {
-  //       order: 2,
-  //       message: 'prop-2 stub response',
-  //     }
-  //   },
-  // ];
-
-  // sinon.addBehavior('with', (fake, obj) => {
-  //   fake.onCall(0).returns(stubRes[0]);
-  //   fake.onCall(1).returns(stubRes[1]);
-  //   fake.onCall(2).returns(stubRes[2]);
-  // });
-
-  // beforeEach(() => {
-  //   checkStubOneStub = sinon.addBehavior('with', (fake, obj) => {
-  //     fake.returns(stubRes[0]);
-  //   }).stub(sails.helpers.storage, 'checkStubOne');
-  //
-  //   checkStubTwoStub = sinon.addBehavior('with', (fake, obj) => {
-  //     fake.returns(stubRes[1]);
-  //   }).stub(sails.helpers.storage, 'checkStubTwo');
-  // });
-
-  // afterEach(() => {
-  //   checkStubOneStub.restore();
-  //   checkStubTwoStub.restore();
-  // });
-
-  beforeEach(() => {
+  beforeEach(function () {
     messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
   });
 
-  afterEach(() => {
+  afterEach(function () {
     messageSaveJoiStub.restore();
   });
 
-  describe('Callback prefix analysis', () => {
+  describe('Callback prefix analysis', function () {
 
-    it('should throw error for unknown callback prefix', async () => {
+    it('should throw error for unknown callback prefix', async function () {
 
       const client = await clientSdk.generateClient();
       const query = {
@@ -75,6 +37,8 @@ describe('pushMessages.supervisorCallback test', () => {
           query: query,
         });
 
+        expect.fail('Unexpected success');
+
       } catch (e) {
         expect(e.raw.payload.error).to.be.an.instanceof(Error);
         expect(e.raw.payload.error).to.has.property('message');
@@ -83,7 +47,7 @@ describe('pushMessages.supervisorCallback test', () => {
 
     });
 
-    it('should throw error for unknown task type', async () => {
+    it('should throw error for unknown task type', async function () {
 
       const client = await clientSdk.generateClient();
       const query = {
@@ -99,6 +63,8 @@ describe('pushMessages.supervisorCallback test', () => {
           query: query,
         });
 
+        expect.fail('Unexpected success');
+
       } catch (e) {
         expect(e.raw.payload.error).to.be.an.instanceof(Error);
         expect(e.raw.payload.error).to.has.property('message');
@@ -107,53 +73,196 @@ describe('pushMessages.supervisorCallback test', () => {
 
     });
 
+  });
 
-    // it ('Likes task', async () => {
-    //
-    //   // mlog.log('This is .log()');
-    //   // mlog.pending('This is .pending()');
-    //   // mlog.success('This is .success()');
-    //   // mlog.error('This is .error()');
-    //
-    //   const client  = await clientSdk.createClient();
-    //   const query = {
-    //     id: casual.integer(1000, 1000000),
-    //     message: {
-    //       message_id: casual.integer(1000, 1000000),
-    //     },
-    //     data: `push_msg_tsk_l_${casual.uuid}`,
-    //   };
-    //
-    //   // messageSaveStub.returns(Promise.resolve({
-    //   //   status: 'ok',
-    //   //   message: 'Message record created',
-    //   //   payload: {},
-    //   // }));
-    //
-    //   const messageSave = messageSaveStub.with({
-    //     status: 'ok',
-    //     message: 'Some message',
-    //   });
-    //
-    //   const callbackLikes = sinon.stub(sails.helpers.pushMessages.tasks, 'callbackLikes')
-    //     .returns({
-    //       status: 'ok',
-    //       message: 'callbackLikes performed',
-    //       payload: {},
-    //     });
-    //
-    //   const supervisorCallbackRes = await sails.helpers.pushMessages.supervisorCallback.with({
-    //     client: client,
-    //     query: query,
-    //   });
-    //
-    //   // expect(messageSave()).to.be.equal('aaa');
-    //   expect(messageSaveStub.calledOnce).to.be.true;
-    //   expect(callbackLikes.calledOnce).to.be.true;
-    //   expect(supervisorCallbackRes).to.have.property('status', 'ok');
-    //   expect(supervisorCallbackRes).to.have.property('message', 'PushMessages SupervisorCallback performed');
-    //
-    // });
+  describe('Wrong config for tasks.likes', function () {
+
+    let config, pushMessages;
+
+    before(async function () {
+      const configRaw =   await sails.helpers.general.getConfig();
+      config = configRaw.payload;
+      pushMessages = config.pushMessages;
+    });
+
+
+    afterEach(async function () {
+      config.pushMessages = pushMessages;
+      const configUpdatedRaw = await sails.helpers.general.setConfig(config);
+    });
+
+    it('should throw error for missing config for tasks.likes', async function () {
+
+      config = _.omit(config, 'pushMessages.tasks.likes');
+      await sails.helpers.general.setConfig(config);
+
+      const client = await clientSdk.generateClient();
+      const query = {
+        id: casual.uuid,
+        data: `push_msg_tsk_l_${casual.uuid}`,
+        message: await messagesSdk.generateMessage(),
+      };
+
+      try {
+
+        await sails.helpers.pushMessages.supervisorCallbackJoi({
+          client: client,
+          query: query,
+        });
+
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.be.an.instanceof(Error);
+        expect(e.raw.payload.error).to.has.property('message');
+        expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.likes property`);
+      }
+
+    });
+
+    it('should throw error for missing config for tasks.likes.messages', async function () {
+
+      config = _.omit(config, 'pushMessages.tasks.likes.messages');
+      await sails.helpers.general.setConfig(config);
+
+      const client = await clientSdk.generateClient();
+      const query = {
+        id: casual.uuid,
+        data: `push_msg_tsk_l_${casual.uuid}`,
+        message: await messagesSdk.generateMessage(),
+      };
+
+      try {
+
+        await sails.helpers.pushMessages.supervisorCallbackJoi({
+          client: client,
+          query: query,
+        });
+
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.be.an.instanceof(Error);
+        expect(e.raw.payload.error).to.has.property('message');
+        expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.likes.messages property`);
+      }
+
+    });
+
+    it('should throw error for missing tasks.likes.messages[0].callbackHelper', async function () {
+
+      config.pushMessages.tasks.likes.messages[0].callbackHelper = null;
+      await sails.helpers.general.setConfig(config);
+
+      const client = await clientSdk.generateClient();
+      const query = {
+        id: casual.uuid,
+        data: `push_msg_tsk_l_${casual.uuid}`,
+        message: await messagesSdk.generateMessage(),
+      };
+
+      try {
+
+        await sails.helpers.pushMessages.supervisorCallbackJoi({
+          client: client,
+          query: query,
+        });
+
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.be.an.instanceof(Error);
+        expect(e.raw.payload.error).to.has.property('message');
+        expect(e.raw.payload.error.message).to.include(`critical error: push messages config tasks.likes has no callbackHelper`);
+      }
+
+    });
+
+    it('should throw error for wrong format of tasks.likes.messages[0].callbackHelper', async function () {
+
+      config.pushMessages.tasks.likes.messages[0].callbackHelper = "tasks:callbackLikes";
+      await sails.helpers.general.setConfig(config);
+
+      const client = await clientSdk.generateClient();
+      const query = {
+        id: casual.uuid,
+        data: `push_msg_tsk_l_${casual.uuid}`,
+        message: await messagesSdk.generateMessage(),
+      };
+
+      try {
+
+        await sails.helpers.pushMessages.supervisorCallbackJoi({
+          client: client,
+          query: query,
+        });
+
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.be.an.instanceof(Error);
+        expect(e.raw.payload.error).to.has.property('message');
+        expect(e.raw.payload.error.message).to.include(`critical error: could not parse callback helper name`);
+      }
+
+    });
 
   });
+
+  describe('Check pushMessages.tasks.likes.messages[0].callbackHelper call', function () {
+
+    let config, pushMessages;
+
+    before(async function () {
+      const configRaw =   await sails.helpers.general.getConfig();
+      config = configRaw.payload;
+      pushMessages = config.pushMessages;
+    });
+
+    afterEach(async function () {
+      config.pushMessages = pushMessages;
+      const configUpdatedRaw = await sails.helpers.general.setConfig(config);
+    });
+
+
+    it('should successfully call pushMessages.tasks.likes.messages[0].callbackHelper', async function () {
+
+      let callbackHelperStub;
+
+      const client = await clientSdk.generateClient();
+      const query = {
+        id: casual.uuid,
+        data: `push_msg_tsk_l_${casual.uuid}`,
+        message: await messagesSdk.generateMessage(),
+      };
+
+      try {
+
+        let splitCallbackHelperRes = _.split(pushMessages.tasks.likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
+        let callbackHelperBlock = splitCallbackHelperRes[0];
+        let callbackHelperName = splitCallbackHelperRes[1];
+
+        if (callbackHelperBlock && callbackHelperName) {
+
+          callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
+
+          await sails.helpers.pushMessages.supervisorCallbackJoi({
+            client: client,
+            query: query,
+          });
+
+          expect(callbackHelperStub.calledOnce).to.be.true;
+
+        } else {
+          expect.fail(`could not parse callback helper name from: ${pushMessages.tasks.likes.messages[0].callbackHelper}`);
+        }
+
+      } catch (e) {
+        expect.fail(`Unexpected error: ${JSON.stringify(e, null, 3)}`);
+      }
+
+    });
+
+  });
+
 });

@@ -1,17 +1,21 @@
 "use strict";
 
-const moduleName = 'general:getConfig';
+const moduleName = 'general:setConfig';
 
 
 module.exports = {
 
 
-  friendlyName: 'Get platform config',
+  friendlyName: 'Set platform config',
 
-  description: 'Get platform config',
+  description: 'Set platform config',
 
   inputs: {
-
+    data: {
+      friendlyName: 'input data',
+      description: 'input data',
+      type: 'ref',
+    },
   },
 
   exits: {
@@ -50,19 +54,14 @@ module.exports = {
         throw new Error('Critical error: Cannot get push messages data');
       }
 
-      if (sails.config.custom.config == null) {
-        throw new Error('Critical error: Cannot get config');
-      } else {
-
-        await sails.helpers.analytics.buildEventsSchedule();
-
-        sails.log.info('Platform configuration loaded successfully');
+      if (inputs.data != null) {
+        sails.config.custom = _.assign(sails.config.custom, inputs.data);
       }
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/general/get-config';
-      const errorMsg = 'api/helpers/general/get-config: general error';
+      const errorLocation = moduleName;
+      const errorMsg = `${moduleName}: General error`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
@@ -70,7 +69,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

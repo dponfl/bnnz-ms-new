@@ -23,8 +23,10 @@ before(function(done) {
       }
     }
 
-  }, function(err) {
-    if (err) { return done(err); }
+  }, async function(err) {
+    if (err) {
+      return done(err);
+    }
 
     // here you can load fixtures, etc.
     // (for example, you might want to create some records in the database)
@@ -40,5 +42,6 @@ after(function(done) {
   // (e.g. you might want to destroy the records you created above)
 
   sails.lower(done);
+  process.exit(0);
 
 });
