@@ -3,7 +3,7 @@
 const {expect} = require('chai');
 const casual = require('casual');
 
-describe('First test', () => {
+describe.skip('First test', () => {
   it('Check value', async () => {
     // const res = await sails.helpers.test.general.test();
     // const val = res.payload.val || null;

@@ -1,9 +1,6 @@
 "use strict";
 
 const {expect} = require('chai');
-const sinon = require('sinon');
-const mlog = require('mocha-logger');
-const casual = require('casual');
 
 describe('tasks.generateTaskType test', function () {
 
@@ -21,7 +18,7 @@ describe('tasks.generateTaskType test', function () {
     const customConfigUpdatedRaw = await sails.helpers.general.setConfig(customConfig);
   });
 
-  it ('should have correct config for tasks.task_types', async function () {
+  it ('should have correct config for tasks.task_types and tasks.comments_ratio', async function () {
 
     expect(customConfigTasks).to.have.property('task_types');
     expect(customConfigTasks.task_types).to.have.property('LIKE', 'like');

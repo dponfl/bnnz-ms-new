@@ -1,17 +1,16 @@
 "use strict";
 
 const {expect} = require('chai');
-const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client.js');
 
-describe('messageSaveJoi', () => {
+describe('storage.messageSaveJoi test', () => {
 
     it ('should fail for wrong "messenger" param', async () => {
       try {
         const paramsObj = {
           message: 'Some message...',
+          callback_query_id: casual.uuid,
           message_format: sails.config.custom.enums.messageFormat.SIMPLE,
           messenger: 'Facebook Messenger',
           message_originator: sails.config.custom.enums.messageOriginator.BOT,
@@ -29,6 +28,7 @@ describe('messageSaveJoi', () => {
       try {
         const paramsObj = {
           message: 'Some message...',
+          callback_query_id: casual.uuid,
           message_format: sails.config.custom.enums.messageFormat.SIMPLE,
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           message_originator: sails.config.custom.enums.messageOriginator.BOT,
@@ -45,6 +45,7 @@ describe('messageSaveJoi', () => {
       try {
         const paramsObj = {
           message: 'Some message...',
+          callback_query_id: casual.uuid,
           message_format: sails.config.custom.enums.messageFormat.SIMPLE,
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           message_originator: sails.config.custom.enums.messageOriginator.BOT,
