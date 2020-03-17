@@ -6,8 +6,8 @@ const mlog = require('mocha-logger');
 const casual = require('casual');
 const clientSdk = require('./sdk/client.js');
 
-describe('Test group title', () => {
-  it ('Test title', async () => {
+describe('Test group title', function () {
+  it ('Test title', async function () {
 
     // mlog.log('This is .log()');
     // mlog.pending('This is .pending()');
