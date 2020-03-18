@@ -83,7 +83,7 @@ module.exports = {
            * Entered post looks ok
            */
 
-          let generateTasksResult = await sails.helpers.tasks.generateTasks.with({
+          let generateTasksResult = await sails.helpers.tasks.generateTasksJoi({
             client: inputs.client,
             postLink: enteredPost,
           });

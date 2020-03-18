@@ -3,7 +3,7 @@
 const {expect} = require('chai');
 const casual = require('casual');
 
-describe.skip('First test', () => {
+describe('First test', () => {
   it('Check value', async () => {
     // const res = await sails.helpers.test.general.test();
     // const val = res.payload.val || null;
@@ -24,20 +24,20 @@ describe.skip('First test', () => {
 //     const taskRecResRaw = await sails.sendNativeQuery(sql);
 
 
-    const taskRecResRaw = await Tasks.find({
-      or: [
-        {
-          make_like: true,
-          make_like_performed: false,
-        },
-        {
-          make_comment: true,
-          make_comment_performed: false,
-        },
-      ]
-    });
-    const taskGrouped = _.groupBy(taskRecResRaw, 'account_guid');
-
-    expect(taskGrouped).eq('ttt');
+    // const taskRecResRaw = await Tasks.find({
+    //   or: [
+    //     {
+    //       make_like: true,
+    //       make_like_performed: false,
+    //     },
+    //     {
+    //       make_comment: true,
+    //       make_comment_performed: false,
+    //     },
+    //   ]
+    // });
+    // const taskGrouped = _.groupBy(taskRecResRaw, 'account_guid');
+    //
+    // expect(taskGrouped).eq('ttt');
   });
 });
