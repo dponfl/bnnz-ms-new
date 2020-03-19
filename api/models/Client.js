@@ -32,10 +32,6 @@ module.exports = {
     category: {
       type: 'string',
     },
-    ref_key: {
-      type: 'string',
-      allowNull: true,
-    },
     tos_accepted: {
       type: 'boolean',
     },

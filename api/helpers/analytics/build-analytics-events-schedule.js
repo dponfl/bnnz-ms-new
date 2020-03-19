@@ -1,14 +1,14 @@
 "use strict";
 
-const moduleName = 'analytics:buildEventsSchedule';
+const moduleName = 'analytics:buildAnalyticsEventsSchedule';
 
 
 module.exports = {
 
 
-  friendlyName: 'Build events schedule',
+  friendlyName: 'Build analytics events schedule',
 
-  description: 'Build events schedule',
+  description: 'Build analytics events schedule',
 
   inputs: {
 
@@ -79,7 +79,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

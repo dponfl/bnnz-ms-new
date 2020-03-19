@@ -50,11 +50,10 @@ module.exports = {
 
     const schema = Joi.object({
       client: Joi.any().required(),
-      postLink: Joi.string().uri({
-        scheme: [
-          sails.config.custom.config.general.instagram_post_prefix
-        ],
-      }).required(),
+      // postLink: Joi.string().uri({
+      //   scheme: sails.config.custom.config.general.instagram_post_prefix,
+      // }).required(),
+      postLink: Joi.string().pattern(RegExp(sails.config.custom.config.general.instagram_post_prefix)).required(),
     });
 
     let accountsList = [];
@@ -62,13 +61,6 @@ module.exports = {
     try {
 
       const input = await schema.validateAsync(inputs.params);
-
-      return exits.success({
-        status: 'ok',
-        message: 'Escape helper',
-        payload: {},
-      });
-
 
       /**
        * Получаем текущий аккаунт клиенгта
@@ -113,7 +105,7 @@ module.exports = {
 
       const postRecRaw = await sails.helpers.storage.postsCreate.with({
         clientGuid: input.client.guid,
-        accountGuid: input.account.guid,
+        accountGuid: account.guid,
         postLink: input.postLink,
       });
 

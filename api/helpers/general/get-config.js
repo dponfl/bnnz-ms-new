@@ -54,7 +54,7 @@ module.exports = {
         throw new Error('Critical error: Cannot get config');
       } else {
 
-        await sails.helpers.analytics.buildEventsSchedule();
+        await sails.helpers.analytics.buildAnalyticsEventsSchedule();
 
         sails.log.info('Platform configuration loaded successfully');
       }
@@ -70,7 +70,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 
