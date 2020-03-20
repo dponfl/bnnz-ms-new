@@ -90,20 +90,20 @@ module.exports = {
        * Проверяем, что аккаунт на превысил суточные лимиты отправки постов
        */
 
-      if (account.posts_made_day >= account.service.max_outgoing_posts_per_day) {
-        sails.log.error(`${moduleName}, error: Max amount of outgoing posts reached
+      if (account.posts_made_day >= account.service.max_outgoing_posts_day) {
+        sails.log.error(`${moduleName}, error: Max amount of outgoing posts reached:
           posts_made_day: ${account.posts_made_day},
-          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_per_day}`);
-        throw new Error(`${moduleName}, error: Max amount of outgoing posts reached
+          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
+        throw new Error(`${moduleName}, error: Max amount of outgoing posts reached:
           posts_made_day: ${account.posts_made_day},
-          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_per_day}`);
+          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
       }
 
       /**
        * Создаём запись в таблице Posts
        */
 
-      const postRecRaw = await sails.helpers.storage.postsCreate.with({
+      const postRecRaw = await sails.helpers.storage.postsCreateJoi({
         clientGuid: input.client.guid,
         accountGuid: account.guid,
         postLink: input.postLink,

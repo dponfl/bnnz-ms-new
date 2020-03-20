@@ -106,7 +106,7 @@ module.exports = {
        * Создаём запись в таблице Posts
        */
 
-      const postRecRaw = await sails.helpers.storage.postsCreate.with({
+      const postRecRaw = await sails.helpers.storage.postsCreateJoi({
         clientGuid: inputs.client.guid,
         accountGuid: inputs.account.guid,
         postLink: inputs.postLink,

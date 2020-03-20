@@ -16,61 +16,61 @@ module.exports = {
       type: 'string',
       unique: true,
     },
-    client_guid: {
+    clientGuid: {
       type: 'string',
     },
-    account_guid: {
+    accountGuid: {
       type: 'string',
     },
-    link: {
+    postLink: {
       type: 'string',
     },
     /**
      * количество внутренних лайков
      */
-    total_likes: {
+    totalLikes: {
       type: 'number',
     },
     /**
      * количество внутренних дизлайков
      */
-    total_dislikes: {
+    totalDislikes: {
       type: 'number',
     },
     /**
      * количество созданных заданий на лайки
      */
-    requested_likes: {
+    requestedLikes: {
       type: 'number',
     },
     /**
      * количество созданных заданий на комментарии
      */
-    requested_comments: {
+    requestedComments: {
       type: 'number',
     },
     /**
      * количество полученных лайков
      */
-    received_likes: {
+    receivedLikes: {
       type: 'number',
     },
     /**
      * количество оставленных комментариев
      */
-    received_comments: {
+    receivedComments: {
       type: 'number',
     },
     /**
      * true если каждый аккаунт, кому было поручено поставил лайк
      */
-    all_likes_done: {
+    allLikesDone: {
       type: 'boolean',
     },
     /**
      * true если каждый аккаунт, кому было поручено оставил комментарий
      */
-    all_comments_done: {
+    allCommentsDone: {
       type: 'boolean',
     },
 

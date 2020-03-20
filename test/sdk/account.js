@@ -4,6 +4,7 @@ const casual = require('casual');
 const mlog = require('mocha-logger');
 const uuid = require('uuid-apikey');
 const moment = require('moment');
+const serviceSdk = require('./service');
 
 
 module.exports = {
@@ -64,7 +65,7 @@ module.exports = {
 
 };
 
-function generateAccount(account = null) {
+async function generateAccount(account = null) {
   const funcName = 'account:generateAccount';
 
   let accountRec;
@@ -81,7 +82,7 @@ function generateAccount(account = null) {
       subscription_active: true,
       subscription_from: moment().format(),
       subscription_until: moment().add(1, 'months').format(),
-      service: 30,
+      service: await serviceSdk.generateService('gold_personal'),
       payment_plan: 'gold_personal',
       payment_made: true,
       deleted: false,
@@ -111,6 +112,6 @@ function generateAccount(account = null) {
     return accountRec;
 
   } catch (e) {
-    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(clientRec)}`);
+    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(accountRec)}`);
   }
 }

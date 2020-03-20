@@ -110,17 +110,17 @@ module.exports = {
 
       const postRec = {
         guid: uuidApiKey.uuid,
-        client_guid: inputs.clientGuid,
-        account_guid: inputs.accountGuid,
-        link: inputs.postLink,
-        total_likes: inputs.totalLikes || 0,
-        total_dislikes: inputs.totalDislikes || 0,
-        requested_likes: inputs.requestedLikes || 0,
-        requested_comments: inputs.requestedComments || 0,
-        received_likes: inputs.receivedLikes || 0,
-        received_comments: inputs.receivedComments || 0,
-        all_likes_done: inputs.allLikesDone || false,
-        all_comments_done: inputs.allCommentsDone || false,
+        clientGuid: inputs.clientGuid,
+        accountGuid: inputs.accountGuid,
+        postLink: inputs.postLink,
+        totalLikes: inputs.totalLikes || 0,
+        totalDislikes: inputs.totalDislikes || 0,
+        requestedLikes: inputs.requestedLikes || 0,
+        requestedComments: inputs.requestedComments || 0,
+        receivedLikes: inputs.receivedLikes || 0,
+        receivedComments: inputs.receivedComments || 0,
+        allLikesDone: inputs.allLikesDone || false,
+        allCommentsDone: inputs.allCommentsDone || false,
       };
 
       const postRecRaw = await Posts.create(postRec).fetch();

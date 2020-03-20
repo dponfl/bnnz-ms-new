@@ -158,6 +158,26 @@ describe('tasks.generateTasksJoi test', function () {
 
     });
 
+    it('should throw error on max daily posts reached', async function () {
+
+      try {
+
+        client.accounts[0].posts_made_day = client.accounts[0].service.max_outgoing_posts_day;
+
+        const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
+          client: client,
+          postLink: postLink,
+        });
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.be.an.instanceof(Error);
+        expect(e.raw.payload.error).to.has.property('message');
+        expect(e.raw.payload.error.message).to.include(`error: Max amount of outgoing posts reached`);
+      }
+
+    });
+
   });
 
 });
