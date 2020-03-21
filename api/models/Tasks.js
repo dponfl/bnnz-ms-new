@@ -14,37 +14,37 @@ module.exports = {
       type: 'string',
       unique: true,
     },
-    post_guid: {
+    postGuid: {
       type: 'string',
     },
-    client_guid: {
+    clientGuid: {
       type: 'string',
     },
-    account_guid: {
+    accountGuid: {
       type: 'string',
     },
     messenger: {
       type: 'string',
     },
     /**
-     * message_id - уникальный идентификатор сообщения внутри мессенджера
+     * messageId - уникальный идентификатор сообщения внутри мессенджера
      */
-    message_id: {
+    messageId: {
       type: 'string',
     },
-    make_like: {
+    makeLike: {
       type: 'boolean',
     },
-    make_comment: {
+    makeComment: {
       type: 'boolean',
     },
-    make_like_performed: {
+    makeLikePerformed: {
       type: 'boolean',
     },
-    make_comment_performed: {
+    q: {
       type: 'boolean',
     },
-    comment_text: {
+    commentText: {
       type: 'string',
     },
 

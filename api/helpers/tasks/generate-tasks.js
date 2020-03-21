@@ -161,13 +161,13 @@ module.exports = {
           makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
         });
 
-        await sails.helpers.storage.postsUpdate.with({
+        await sails.helpers.storage.postsUpdateJoi({
           criteria: {guid: postRec.guid},
           data: {
-            requested_likes: ++postRec.requested_likes,
-            requested_comments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
-              ? ++postRec.requested_comments
-              : postRec.requested_comments,
+            requestedLikes: ++postRec.requestedLikes,
+            requestedComments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+              ? ++postRec.requestedComments
+              : postRec.requestedComments,
           }
         });
 
@@ -241,7 +241,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

@@ -1,6 +1,5 @@
 "use strict";
 
-const uuid = require('uuid-apikey');
 const Joi = require('@hapi/joi');
 
 const moduleName = 'tasks:generate-tasks-joi';
@@ -129,11 +128,12 @@ module.exports = {
 
       if (accountsListRaw.status === 'ok') {
 
-        /**
+        /**+++++
          * Удаляем из списка аккаунт, отправивший пост
          */
 
         accountsList = _.filter(accountsListRaw.payload, (acc) => {
+          let ttt = acc;
           return acc.guid !== account.guid;
         });
       }
@@ -147,9 +147,10 @@ module.exports = {
 
       for (const acc of accountsList) {
 
-        const taskType = await sails.helpers.tasks.generateTaskType().payload;
+        const taskTypeRaw = await sails.helpers.tasks.generateTaskType();
+        const taskType = taskTypeRaw.payload;
 
-        const taskRecRaw = await sails.helpers.storage.tasksCreate.with({
+        const taskRecRaw = await sails.helpers.storage.tasksCreateJoi({
           clientGuid: acc.client.guid,
           accountGuid: acc.guid,
           postGuid: postRec.guid,
@@ -158,7 +159,7 @@ module.exports = {
           makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
         });
 
-        await sails.helpers.storage.postsUpdate.with({
+        await sails.helpers.storage.postsUpdateJoi({
           criteria: {guid: postRec.guid},
           data: {
             requested_likes: ++postRec.requested_likes,
@@ -176,7 +177,7 @@ module.exports = {
 
         switch (taskType) {
           case sails.config.custom.config.tasks.task_types.LIKE:
-            msgRes = await sails.helpers.messageProcessor.sendMessage.with({
+            msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: acc.client,
               messageData: sails.config.custom.pushMessages.tasks.likes.messages[0],
               additionalTokens: [
@@ -188,7 +189,7 @@ module.exports = {
             });
             break;
           case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
-            msgRes = await sails.helpers.messageProcessor.sendMessage.with({
+            msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: acc.client,
               messageData: sails.config.custom.pushMessages.tasks.comments_likes.messages[0],
               additionalTokens: [
@@ -203,7 +204,7 @@ module.exports = {
             throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
         }
 
-        await sails.helpers.storage.accountUpdate.with({
+        await sails.helpers.storage.accountUpdateJoi({
           criteria: {guid: acc.guid},
           data: {
             posts_received_day: ++acc.posts_received_day,
@@ -213,7 +214,7 @@ module.exports = {
 
       }
 
-      await sails.helpers.storage.accountUpdate.with({
+      await sails.helpers.storage.accountUpdateJoi({
         criteria: {guid: account.guid},
         data: {
           posts_made_day: ++account.posts_made_day,

@@ -113,7 +113,7 @@ module.exports = {
     },
 
     /**
-     * флаг, что аккаунт забанен
+     * флаг, что аккаунт забаненposts_received_day
      */
     banned: {
       type: 'boolean',
