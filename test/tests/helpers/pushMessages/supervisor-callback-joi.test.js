@@ -7,7 +7,7 @@ const casual = require('casual');
 const clientSdk = require('../../../sdk/client.js');
 const messagesSdk = require('../../../sdk/messages.js');
 
-describe('pushMessages.supervisorCallback test', function () {
+describe('pushMessages.supervisorCallbackJoi test', function () {
 
   let messageSaveJoiStub;
 
@@ -90,7 +90,7 @@ describe('pushMessages.supervisorCallback test', function () {
 
       afterEach(async function () {
         config.pushMessages = pushMessages;
-        const configUpdatedRaw = await sails.helpers.general.setConfig(config);
+        await sails.helpers.general.setConfig(config);
       });
 
       it('should throw error for missing config for tasks.likes', async function () {
@@ -153,6 +153,7 @@ describe('pushMessages.supervisorCallback test', function () {
 
       it('should throw error for missing tasks.likes.messages[0].callbackHelper', async function () {
 
+        const callbackHelper = config.pushMessages.tasks.likes.messages[0].callbackHelper;
         config.pushMessages.tasks.likes.messages[0].callbackHelper = null;
         await sails.helpers.general.setConfig(config);
 
@@ -173,6 +174,7 @@ describe('pushMessages.supervisorCallback test', function () {
           expect.fail('Unexpected success');
 
         } catch (e) {
+          config.pushMessages.tasks.likes.messages[0].callbackHelper = callbackHelper;
           expect(e.raw.payload.error).to.be.an.instanceof(Error);
           expect(e.raw.payload.error).to.has.property('message');
           expect(e.raw.payload.error.message).to.include(`critical error: push messages config tasks.likes has no callbackHelper`);
@@ -180,9 +182,10 @@ describe('pushMessages.supervisorCallback test', function () {
 
       });
 
-      it('should throw error for wrong format of tasks.likes.messages[0].callbackHelper', async function () {
+      it('should throw error for missing initial block', async function () {
 
-        config.pushMessages.tasks.likes.messages[0].callbackHelper = "tasks:callbackLikes";
+        const initial = config.pushMessages.tasks.likes.messages[0].initial;
+        config.pushMessages.tasks.likes.messages[0].initial = false;
         await sails.helpers.general.setConfig(config);
 
         const client = await clientSdk.generateClient();
@@ -202,9 +205,10 @@ describe('pushMessages.supervisorCallback test', function () {
           expect.fail('Unexpected success');
 
         } catch (e) {
+          config.pushMessages.tasks.likes.messages[0].initial = initial;
           expect(e.raw.payload.error).to.be.an.instanceof(Error);
           expect(e.raw.payload.error).to.has.property('message');
-          expect(e.raw.payload.error.message).to.include(`critical error: could not parse callback helper name`);
+          expect(e.raw.payload.error.message).to.include(`critical error: initial block not found`);
         }
 
       });
@@ -253,7 +257,7 @@ describe('pushMessages.supervisorCallback test', function () {
               query: query,
             });
 
-            expect(callbackHelperStub.calledOnce).to.be.true;
+            expect(callbackHelperStub.callCount).to.be.eq(1);
 
           } else {
             expect.fail(`could not parse callback helper name from: ${pushMessages.tasks.likes.messages[0].callbackHelper}`);
@@ -447,7 +451,7 @@ describe('pushMessages.supervisorCallback test', function () {
               query: query,
             });
 
-            expect(callbackHelperStub.calledOnce).to.be.true;
+            expect(callbackHelperStub.callCount).to.be.eq(1);
 
           } else {
             expect.fail(`could not parse callback helper name from: ${pushMessages.tasks.comments_likes.messages[0].callbackHelper}`);

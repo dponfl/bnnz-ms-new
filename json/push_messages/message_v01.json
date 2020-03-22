@@ -100,7 +100,7 @@
           "afterHelper": null,
           "forcedHelper": null,
           "callbackHelper": "tasks::callbackLikes",
-          "blockModifyHelper": null,
+          "blockModifyHelper": "tasks::blockModifyLikes",
           "message": {
             "html": [
               {
@@ -142,7 +142,7 @@
           "afterHelper": null,
           "forcedHelper": null,
           "callbackHelper": "tasks::callbackLikesComments",
-          "blockModifyHelper": null,
+          "blockModifyHelper": "tasks::blockModifyLikesComments",
           "message": {
             "html": [
               {
