@@ -243,7 +243,7 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
     });
 
 
-    it('should successfully call pushMessages.tasks.likes.messages[0].callbackHelper', async function () {
+    it('should successfully call callbackHelper', async function () {
 
       let callbackHelperStub;
 

@@ -142,27 +142,27 @@ module.exports = {
           }
 
           /**
-           * Сюда нужно добавить проверку наличия и запуск хелперов:
-           *    - beforeHelper
-           *    - blockModifyHelper
+           * Находим стартовый блок в групе блоков
            */
 
-          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.comments_likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
-          let callbackHelperBlock = splitCallbackHelperRes[0];
-          let callbackHelperName = splitCallbackHelperRes[1];
+          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.comments_likes.messages,
+            {initial: true});
 
-          if (callbackHelperBlock && callbackHelperName) {
+          /**
+           * Проверяем, что стартовый блок был успешно найден
+           */
 
-            /**
-             * We managed to parse the specified callbackHelper and can perform it
-             */
+          if (initialBlock != null && initialBlock.id != null) {
 
-            await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](input.client, sails.config.custom.pushMessages.tasks.likes.messages[0], input.query);
+            await sails.helpers.pushMessages.proceedPushMessageJoi({
+              client: input.client,
+              query: input.query,
+              group: sails.config.custom.pushMessages.tasks.comments_likes.messages,
+              startBlockName: initialBlock.id,
+            });
 
           } else {
-            throw new Error(`${moduleName}, critical error: could not parse callback helper name: 
-            callbackHelperBlock: ${callbackHelperBlock}
-            callbackHelperName: ${callbackHelperName}`);
+            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.comments_likes.messages, null, 3)}`);
           }
 
 
