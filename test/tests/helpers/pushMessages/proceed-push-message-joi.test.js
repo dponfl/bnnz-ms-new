@@ -227,7 +227,7 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
   });
 
-  describe.skip('Check pushMessages.tasks.likes.messages[0].callbackHelper call', function () {
+  describe('Check callbackHelper call', function () {
 
     let config, pushMessages;
 
@@ -253,6 +253,12 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
         data: `push_msg_tsk_l_${casual.uuid}`,
         message: await messagesSdk.generateMessage(),
       };
+      const params = {
+        client: client,
+        query: query,
+        group: pushMessages.tasks.likes.messages,
+        startBlockName: 'start',
+      };
 
       try {
 
@@ -264,12 +270,11 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
           callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
 
-          await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
-          });
+          const proceedPushMessageJoiRes = await sails.helpers.pushMessages.proceedPushMessageJoi(params);
 
           expect(callbackHelperStub.callCount).to.be.eq(1);
+          expect(proceedPushMessageJoiRes).to.have.property('status', 'ok');
+          expect(proceedPushMessageJoiRes).to.have.property('message', 'proceedPushMessageJoi performed');
 
         } else {
           expect.fail(`could not parse callback helper name from: ${pushMessages.tasks.likes.messages[0].callbackHelper}`);

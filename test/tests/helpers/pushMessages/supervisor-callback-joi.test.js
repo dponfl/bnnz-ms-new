@@ -215,62 +215,6 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
 
     });
 
-    describe('Check pushMessages.tasks.likes.messages[0].callbackHelper call', function () {
-
-      let config, pushMessages;
-
-      before(async function () {
-        const configRaw =   await sails.helpers.general.getConfig();
-        config = configRaw.payload;
-        pushMessages = config.pushMessages;
-      });
-
-      afterEach(async function () {
-        config.pushMessages = pushMessages;
-        const configUpdatedRaw = await sails.helpers.general.setConfig(config);
-      });
-
-
-      it('should successfully call pushMessages.tasks.likes.messages[0].callbackHelper', async function () {
-
-        let callbackHelperStub;
-
-        const client = await clientSdk.generateClient();
-        const query = {
-          id: casual.uuid,
-          data: `push_msg_tsk_l_${casual.uuid}`,
-          message: await messagesSdk.generateMessage(),
-        };
-
-        try {
-
-          let splitCallbackHelperRes = _.split(pushMessages.tasks.likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
-          let callbackHelperBlock = splitCallbackHelperRes[0];
-          let callbackHelperName = splitCallbackHelperRes[1];
-
-          if (callbackHelperBlock && callbackHelperName) {
-
-            callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
-
-            await sails.helpers.pushMessages.supervisorCallbackJoi({
-              client: client,
-              query: query,
-            });
-
-            expect(callbackHelperStub.callCount).to.be.eq(1);
-
-          } else {
-            expect.fail(`could not parse callback helper name from: ${pushMessages.tasks.likes.messages[0].callbackHelper}`);
-          }
-
-        } catch (e) {
-          expect.fail(`Unexpected error: ${JSON.stringify(e, null, 3)}`);
-        }
-
-      });
-
-    });
-
   });
 
   describe('Tasks:Likes & Comments', function () {
