@@ -78,7 +78,7 @@ module.exports = {
            * Save the sent message
            */
 
-          await sails.helpers.storage.messageSave.with({
+          await sails.helpers.storage.messageSaveJoi({
             message_id: simpleRes.payload.message_id || 0,
             message: htmlSimple,
             message_format: sails.config.custom.enums.messageFormat.PUSHSIMPLE,

@@ -11,11 +11,11 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
 
   let messageSaveJoiStub;
 
-  beforeEach(function () {
+  before(function () {
     messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
   });
 
-  afterEach(function () {
+  after(function () {
     messageSaveJoiStub.restore();
   });
 
