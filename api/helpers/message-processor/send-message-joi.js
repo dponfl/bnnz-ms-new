@@ -23,15 +23,6 @@ module.exports = {
       required: true,
     },
 
-
-
-
-    additionalTokens: {
-      friendlyName: 'array of pairs token-value',
-      description: 'array of pairs token-value',
-      type: 'ref',
-    },
-
   },
 
 
@@ -70,9 +61,9 @@ module.exports = {
            * Send simple text message
            */
 
-          const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyle.with({
+          const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
-            message: input.messageData,
+            message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
@@ -107,7 +98,7 @@ module.exports = {
 
           const htmlImg = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: input.client,
-            message: input.messageData,
+            message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
@@ -146,7 +137,7 @@ module.exports = {
 
           const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: input.client,
-            message: input.messageData,
+            message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
@@ -185,7 +176,7 @@ module.exports = {
 
           const htmlForced = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: input.client,
-            message: input.messageData,
+            message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
@@ -220,7 +211,7 @@ module.exports = {
 
           const htmlInline = await sails.helpers.messageProcessor.parseMessageStyle.with({
             client: input.client,
-            message: input.messageData,
+            message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 

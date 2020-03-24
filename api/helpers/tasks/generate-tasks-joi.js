@@ -128,7 +128,7 @@ module.exports = {
 
       if (accountsListRaw.status === 'ok') {
 
-        /**+++++
+        /**
          * Удаляем из списка аккаунт, отправивший пост
          */
 

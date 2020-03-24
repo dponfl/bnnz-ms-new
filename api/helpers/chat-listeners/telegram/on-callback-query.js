@@ -68,8 +68,10 @@ module.exports = {
            * Полученный callback_query относиться к push messages
            */
 
-          await sails.helpers.pushMessages.supervisorCallback(getClientResponse.payload, query);
-
+          await sails.helpers.pushMessages.supervisorCallbackJoi({
+            client: getClientResponse.payload,
+            query: query,
+          });
 
         } else {
 
