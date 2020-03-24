@@ -67,7 +67,7 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
-          const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessage'].with({
+          const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
             chatId: input.client.chat_id,
             html: htmlSimple,
           });
