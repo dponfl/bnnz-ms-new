@@ -105,7 +105,9 @@ describe('messageProcessor:sendMessageJoi test', function () {
             });
 
           const client = await clientSdk.generateClient();
-          const messageData = await pushMessagesSdk.generateMessageData('likes');
+          const messageData = await pushMessagesSdk.generateMessageData('likes', {
+            actionType: 'text',
+          });
           const params = {
             client,
             messageData,

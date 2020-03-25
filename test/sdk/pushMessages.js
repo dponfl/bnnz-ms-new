@@ -36,7 +36,7 @@ function generateMessageData(messageType = null, data = null) {
         messageData = {
           id: "start",
           description: "Задача: поставить лайк",
-          actionType: "text",
+          actionType: "inline_keyboard",
           initial: true,
           enabled: true,
           previous: null,
@@ -75,7 +75,7 @@ function generateMessageData(messageType = null, data = null) {
         messageData = {
           id: "start",
           description: "Задача: оставить комментарий и поставить лайк",
-          actionType: "text",
+          actionType: "inline_keyboard",
           initial: true,
           enabled: true,
           previous: null,
@@ -114,7 +114,7 @@ function generateMessageData(messageType = null, data = null) {
         messageData = {
           id: "start",
           description: "Задача: поставить лайк",
-          actionType: "text",
+          actionType: "inline_keyboard",
           initial: true,
           enabled: true,
           previous: null,
