@@ -53,6 +53,12 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      /**
+       * Call blockModifyHelper to update block if needed
+       */
+
+      // put "blockModifyHelper" call here...
+
       switch (input.messageData.actionType) {
 
         case 'text':
@@ -66,6 +72,14 @@ module.exports = {
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
+
+          /**
+           * Call beforeHelper to update block if needed
+           */
+
+            // put "beforeHelper" call here...
+
+
 
           const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
             chatId: input.client.chat_id,
@@ -96,7 +110,7 @@ module.exports = {
            * Send img message
            */
 
-          const htmlImg = await sails.helpers.messageProcessor.parseMessageStyle.with({
+          const htmlImg = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -135,7 +149,7 @@ module.exports = {
            * Send video message
            */
 
-          const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyle.with({
+          const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -174,7 +188,7 @@ module.exports = {
            * Send forced reply message
            */
 
-          const htmlForced = await sails.helpers.messageProcessor.parseMessageStyle.with({
+          const htmlForced = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -209,7 +223,7 @@ module.exports = {
            * Send inline keyboard message
            */
 
-          const htmlInline = await sails.helpers.messageProcessor.parseMessageStyle.with({
+          const htmlInline = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -247,6 +261,14 @@ module.exports = {
 
 
       }
+
+      /**
+       * Call afterHelper to update block if needed
+       */
+
+      // put "afterHelper" call here...
+
+
 
       return exits.success(sendMessageResult);
 

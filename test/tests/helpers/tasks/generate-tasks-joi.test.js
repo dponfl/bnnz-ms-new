@@ -30,7 +30,7 @@ describe('tasks.generateTasksJoi test', function () {
 
       try {
 
-        const generateTasksRes = await sails.helpers.tasks.generateTasksJoi({
+        await sails.helpers.tasks.generateTasksJoi({
           postLink: sails.config.custom.config.general.instagram_post_prefix + casual.uuid,
         });
 
@@ -48,8 +48,8 @@ describe('tasks.generateTasksJoi test', function () {
 
       try {
 
-        const generateTasksRes = await sails.helpers.tasks.generateTasksJoi({
-          client: client,
+        await sails.helpers.tasks.generateTasksJoi({
+          client,
         });
 
         expect.fail('Unexpected success');
@@ -67,9 +67,9 @@ describe('tasks.generateTasksJoi test', function () {
 
       try {
 
-        const generateTasksRes = await sails.helpers.tasks.generateTasksJoi({
-          client: client,
-          postLink: postLink,
+        await sails.helpers.tasks.generateTasksJoi({
+          client,
+          postLink,
         });
 
         expect.fail('Unexpected success');
@@ -125,9 +125,9 @@ describe('tasks.generateTasksJoi test', function () {
 
         client.account_use = casual.uuid;
 
-        const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
-          client: client,
-          postLink: postLink,
+        await sails.helpers.tasks.generateTasksJoi({
+          client,
+          postLink,
         });
         expect.fail('Unexpected success');
 
@@ -145,9 +145,9 @@ describe('tasks.generateTasksJoi test', function () {
 
         accounts[0].subscription_active = false;
 
-        const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
-          client: client,
-          postLink: postLink,
+        await sails.helpers.tasks.generateTasksJoi({
+          client,
+          postLink,
         });
         expect.fail('Unexpected success');
 
@@ -165,9 +165,9 @@ describe('tasks.generateTasksJoi test', function () {
 
         client.accounts[0].posts_made_day = client.accounts[0].service.max_outgoing_posts_day;
 
-        const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
-          client: client,
-          postLink: postLink,
+        await sails.helpers.tasks.generateTasksJoi({
+          client,
+          postLink,
         });
         expect.fail('Unexpected success');
 
@@ -292,7 +292,7 @@ describe('tasks.generateTasksJoi test', function () {
         .withArgs({
         clientGuid: client.guid,
         accountGuid: client.account_use,
-        postLink: postLink,
+        postLink,
       })
         .returns({
           status: 'ok',
@@ -300,7 +300,7 @@ describe('tasks.generateTasksJoi test', function () {
           payload: {
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            postLink: postLink,
+            postLink,
             totalLikes: casual.integer(0, 100),
             totalDislikes: casual.integer(0, 100),
             requestedLikes: casual.integer(0, 100),
@@ -334,8 +334,8 @@ describe('tasks.generateTasksJoi test', function () {
         });
 
       const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
-        client: client,
-        postLink: postLink,
+        client,
+        postLink,
       });
 
       expect(tasksCreateJoiStub.callCount).to.be.eq(3);

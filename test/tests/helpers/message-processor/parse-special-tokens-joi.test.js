@@ -4,7 +4,8 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client.js');
+const clientSdk = require('../../../sdk/client');
+const pushMessagesSdk = require('../../../sdk/pushMessages');
 
 describe('messageProcessor:parseSpecialTokensJoi test', function () {
 
@@ -22,8 +23,10 @@ describe('messageProcessor:parseSpecialTokensJoi test', function () {
 
       try {
 
+        const messageData = await pushMessagesSdk.generateMessageData('likes');
+
         const params = {
-          message: pushMessages.tasks.likes.messages[0].message,
+          message: messageData.message,
           additionalTokens: [
             {
               token: '$PostLink$',
@@ -32,7 +35,7 @@ describe('messageProcessor:parseSpecialTokensJoi test', function () {
           ],
         };
 
-        const res = await sails.helpers.messageProcessor.parseMessageStyleJoi(params);
+        await sails.helpers.messageProcessor.parseMessageStyleJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -57,7 +60,7 @@ describe('messageProcessor:parseSpecialTokensJoi test', function () {
           ],
         };
 
-        const res = await sails.helpers.messageProcessor.parseMessageStyleJoi(params);
+        await sails.helpers.messageProcessor.parseMessageStyleJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {

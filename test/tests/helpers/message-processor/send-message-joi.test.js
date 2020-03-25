@@ -4,7 +4,8 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client.js');
+const clientSdk = require('../../../sdk/client');
+const pushMessagesSdk = require('../../../sdk/pushMessages');
 
 describe('messageProcessor:sendMessageJoi test', function () {
 
@@ -22,8 +23,10 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
       try {
 
+        const messageData = await pushMessagesSdk.generateMessageData('likes');
+
         const params = {
-          messageData: pushMessages.tasks.likes.messages[0],
+          messageData,
           additionalTokens: [
             {
               token: '$PostLink$',
@@ -32,7 +35,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
           ],
         };
 
-        const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
+        await sails.helpers.messageProcessor.sendMessageJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -57,7 +60,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
           ],
         };
 
-        const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
+        await sails.helpers.messageProcessor.sendMessageJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -102,41 +105,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
             });
 
           const client = await clientSdk.generateClient();
-          const messageData = {
-            "id": "start",
-            "description": "Задача поставить лайк",
-            "actionType": "text",
-            "initial": true,
-            "enabled": true,
-            "previous": null,
-            "show_time": "now",
-            "next": null,
-            "shown": false,
-            "beforeHelper": null,
-            "afterHelper": null,
-            "forcedHelper": null,
-            "callbackHelper": "tasks::callbackLikes",
-            "blockModifyHelper": "tasks::blockModifyLikes",
-            "message": {
-              "html": [
-                {
-                  "text": "MSG_TASK_LIKE",
-                  "style": "",
-                  "cr": "SCR"
-                },
-                {
-                  "text": "MSG_TASK_POST_LINK",
-                  "style": "b",
-                  "cr": "DCR"
-                },
-                {
-                  "text": "MSG_TASK",
-                  "style": "bi",
-                  "cr": ""
-                }
-              ]
-            }
-          };
+          const messageData = await pushMessagesSdk.generateMessageData('likes');
           const params = {
             client,
             messageData,

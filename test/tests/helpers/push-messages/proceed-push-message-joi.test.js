@@ -4,8 +4,9 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client.js');
-const messagesSdk = require('../../../sdk/messages.js');
+const clientSdk = require('../../../sdk/client');
+const messagesSdk = require('../../../sdk/messages');
+const pushMessagesSdk = require('../../../sdk/pushMessages');
 
 describe('pushMessages.proceedPushMessageJoi test', function () {
 
@@ -35,10 +36,10 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
       try {
 
+        const messageData = await pushMessagesSdk.generateMessageData('likes');
         const params = {
-          query: query,
-          group: pushMessages.tasks.likes.messages,
-          startBlockName: 'start',
+          query,
+          messageData,
         };
 
         await sails.helpers.pushMessages.proceedPushMessageJoi(params);
@@ -56,10 +57,10 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
       try {
 
+        const messageData = await pushMessagesSdk.generateMessageData('likes');
         const params = {
-          client: client,
-          group: pushMessages.tasks.likes.messages,
-          startBlockName: 'start',
+          client,
+          messageData,
         };
 
         await sails.helpers.pushMessages.proceedPushMessageJoi(params);
@@ -71,7 +72,7 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
     });
 
-    it ('should fail for missing "group" param', async () => {
+    it ('should fail for missing "messageData" param', async () => {
 
       const client = await clientSdk.generateClient();
       const query = {
@@ -83,42 +84,15 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
       try {
 
         const params = {
-          client: client,
-          query: query,
-          startBlockName: 'start',
+          client,
+          query,
         };
 
         await sails.helpers.pushMessages.proceedPushMessageJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"group" is required');
-      }
-
-    });
-
-    it ('should fail for missing "startBlockName" param', async () => {
-
-      const client = await clientSdk.generateClient();
-      const query = {
-        id: casual.uuid,
-        data: `push_msg_tsk_l_${casual.uuid}`,
-        message: await messagesSdk.generateMessage(),
-      };
-
-      try {
-
-        const params = {
-          client: client,
-          query: query,
-          group: pushMessages.tasks.likes.messages,
-        };
-
-        await sails.helpers.pushMessages.proceedPushMessageJoi(params);
-        expect.fail('Unexpected success');
-
-      } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"startBlockName" is required');
+        expect(e.raw.payload.error.details[0]).to.have.property('message', '"messageData" is required');
       }
 
     });
@@ -127,76 +101,8 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
   describe('Wrong config', function () {
 
-    it('should throw error for missing initial block', async function () {
-
-      const client = await clientSdk.generateClient();
-      const query = {
-        id: casual.uuid,
-        data: `push_msg_tsk_l_${casual.uuid}`,
-        message: await messagesSdk.generateMessage(),
-      };
-      const params = {
-        client: client,
-        query: query,
-        group: pushMessages.tasks.likes.messages,
-        startBlockName: 'some',
-      };
-
-      try {
-
-        await sails.helpers.pushMessages.proceedPushMessageJoi(params);
-        expect.fails('Unexpected success');
-
-      } catch (e) {
-        expect(e.raw.payload.error).to.be.an.instanceof(Error);
-        expect(e.raw.payload.error).to.has.property('message');
-        expect(e.raw.payload.error.message).to.include(`critical error: initial block with id=${params.startBlockName} not found in the group`);
-      }
-
-    });
-
     it('should throw error for wrong format of callbackHelper', async function () {
 
-      const group = [
-        {
-          "id": "start",
-          "description": "Задача поставить лайк",
-          "actionType": "inline_keyboard",
-          "initial": true,
-          "enabled": true,
-          "previous": null,
-          "show_time": "now",
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": "tasks:callbackLikes",
-          "blockModifyHelper": "tasks::blockModifyLikes",
-          "message": {
-            "html": [
-              {
-                "text": "MSG_TASK_LIKE",
-                "style": "",
-                "cr": "SCR"
-              },
-              {
-                "text": "MSG_TASK_POST_LINK",
-                "style": "b",
-                "cr": "DCR"
-              },
-              {
-                "text": "MSG_TASK",
-                "style": "bi",
-                "cr": ""
-              }
-            ],
-            "inline_keyboard": [
-            ]
-          }
-        }
-      ];
-
       const client = await clientSdk.generateClient();
       const query = {
         id: casual.uuid,
@@ -206,11 +112,13 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
 
       try {
 
+        const messageData = await pushMessagesSdk.generateMessageData('likes', {
+          callbackHelper: "tasks:callbackLikes",
+        });
         const params = {
-          client: client,
-          query: query,
-          group: group,
-          startBlockName: 'start',
+          client,
+          query,
+          messageData,
         };
 
         await sails.helpers.pushMessages.proceedPushMessageJoi(params);
@@ -253,22 +161,23 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
         data: `push_msg_tsk_l_${casual.uuid}`,
         message: await messagesSdk.generateMessage(),
       };
+      const messageData = await pushMessagesSdk.generateMessageData('likes');
       const params = {
-        client: client,
-        query: query,
-        group: pushMessages.tasks.likes.messages,
-        startBlockName: 'start',
+        client,
+        query,
+        messageData,
       };
 
       try {
 
-        let splitCallbackHelperRes = _.split(pushMessages.tasks.likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
+        let splitCallbackHelperRes = _.split(messageData.callbackHelper, sails.config.custom.JUNCTION, 2);
         let callbackHelperBlock = splitCallbackHelperRes[0];
         let callbackHelperName = splitCallbackHelperRes[1];
 
         if (callbackHelperBlock && callbackHelperName) {
 
           callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
+          // callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
 
           const proceedPushMessageJoiRes = await sails.helpers.pushMessages.proceedPushMessageJoi(params);
 

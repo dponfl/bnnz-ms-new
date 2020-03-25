@@ -114,8 +114,7 @@ module.exports = {
             await sails.helpers.pushMessages.proceedPushMessageJoi({
               client: input.client,
               query: input.query,
-              group: sails.config.custom.pushMessages.tasks.likes.messages,
-              startBlockName: initialBlock.id,
+              messageData: initialBlock,
             });
 
           } else {
@@ -157,21 +156,12 @@ module.exports = {
             await sails.helpers.pushMessages.proceedPushMessageJoi({
               client: input.client,
               query: input.query,
-              group: sails.config.custom.pushMessages.tasks.comments_likes.messages,
-              startBlockName: initialBlock.id,
+              messageData: initialBlock,
             });
 
           } else {
             throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.comments_likes.messages, null, 3)}`);
           }
-
-
-
-          /**
-           * Сюда нужно добавить проверку наличия и запуск хелперов:
-           *    - afterHelper
-           */
-
 
         } else {
           throw new Error(`${moduleName}: unknown task category, query.data: ${input.query.data}`);

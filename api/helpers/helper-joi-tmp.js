@@ -1,5 +1,7 @@
 "use strict";
 
+const Joi = require('@hapi/joi');
+
 const moduleName = 'module:helper';
 
 
@@ -14,9 +16,9 @@ module.exports = {
 
   inputs: {
 
-    account: {
-      friendlyName: '*****',
-      description: '*****',
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
       type: 'ref',
       required: true,
     },
@@ -39,9 +41,15 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const schema = Joi.object({
+      someOne: Joi.any().required(),
+      someTwo: Joi.any().required(),
+      someThree: Joi.any(),
+    });
+
     try {
 
-
+      const input = await schema.validateAsync(inputs.params);
 
       return exits.success({
         status: 'ok',

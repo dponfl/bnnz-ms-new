@@ -33,8 +33,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
       try {
 
         await sails.helpers.pushMessages.supervisorCallbackJoi({
-          client: client,
-          query: query,
+          client,
+          query,
         });
 
         expect.fail('Unexpected success');
@@ -59,8 +59,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
       try {
 
         await sails.helpers.pushMessages.supervisorCallbackJoi({
-          client: client,
-          query: query,
+          client,
+          query,
         });
 
         expect.fail('Unexpected success');
@@ -108,8 +108,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -137,8 +137,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -167,8 +167,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -198,8 +198,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -250,8 +250,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -279,8 +279,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -308,8 +308,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');
@@ -337,8 +337,8 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         try {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
-            client: client,
-            query: query,
+            client,
+            query,
           });
 
           expect.fail('Unexpected success');

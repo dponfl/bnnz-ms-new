@@ -44,32 +44,14 @@ module.exports = {
     const schema = Joi.object({
       client: Joi.any().required(),
       query: Joi.any().required(),
-      group: Joi.any().required(),
-      startBlockName: Joi.string().required(),
+      messageData: Joi.any().required(),
     });
-
-    let block = null;
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
-      block = _.find(input.group, {id: input.startBlockName});
-
-      if (block == null) {
-        throw new Error(`${moduleName}, critical error: initial block with id=${input.startBlockName} not found in the group: \n${JSON.stringify(input.group, null, 3)}`);
-      }
-
-
-      /**
-       * Сюда нужно добавить проверку наличия и запуск хелперов:
-       *    - beforeHelper
-       *    - blockModifyHelper
-       */
-
-
-
-      let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 2);
+      let splitCallbackHelperRes = _.split(input.messageData.callbackHelper, sails.config.custom.JUNCTION, 2);
       let callbackHelperBlock = splitCallbackHelperRes[0];
       let callbackHelperName = splitCallbackHelperRes[1];
 
@@ -80,19 +62,13 @@ module.exports = {
          */
 
         await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](input.client, sails.config.custom.pushMessages.tasks.likes.messages[0], input.query);
+        // await sails.helpers[callbackHelperBlock][callbackHelperName](input.client, sails.config.custom.pushMessages.tasks.likes.messages[0], input.query);
 
       } else {
         throw new Error(`${moduleName}, critical error: could not parse callback helper name: 
             callbackHelperBlock: ${callbackHelperBlock}
             callbackHelperName: ${callbackHelperName}`);
       }
-
-
-
-      /**
-       * Сюда нужно добавить проверку наличия и запуск хелперов:
-       *    - afterHelper
-       */
 
       return exits.success({
         status: 'ok',

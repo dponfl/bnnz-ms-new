@@ -84,11 +84,11 @@
   },
   "tasks": {
     "likes": {
-      "description": "Задача поставить лайк",
+      "description": "Задача: поставить лайк",
       "messages": [
         {
           "id": "start",
-          "description": "Задача поставить лайк",
+          "description": "Задача: поставить лайк",
           "actionType": "inline_keyboard",
           "initial": true,
           "enabled": true,
@@ -126,17 +126,17 @@
       ]
     },
     "comments_likes": {
-      "description": "Задача оставить комментарий и поставить лайк",
+      "description": "Задача: оставить комментарий и поставить лайк",
       "messages": [
         {
           "id": "start",
-          "description": "Первое сообщение через 1 час после регистрации аккаунта",
+          "description": "Задача: оставить комментарий и поставить лайк",
           "actionType": "inline_keyboard",
           "initial": true,
           "enabled": true,
           "previous": null,
-          "show_time": "1 hour",
-          "next": "dayOne",
+          "show_time": "now",
+          "next": null,
           "shown": false,
           "beforeHelper": null,
           "afterHelper": null,
