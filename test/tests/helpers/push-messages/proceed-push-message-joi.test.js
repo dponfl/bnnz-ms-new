@@ -177,7 +177,6 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
         if (callbackHelperBlock && callbackHelperName) {
 
           callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
-          // callbackHelperStub = sinon.stub(sails.helpers.pushMessages[callbackHelperBlock], callbackHelperName);
 
           const proceedPushMessageJoiRes = await sails.helpers.pushMessages.proceedPushMessageJoi(params);
 

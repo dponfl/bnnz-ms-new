@@ -62,7 +62,6 @@ module.exports = {
          */
 
         await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](input.client, sails.config.custom.pushMessages.tasks.likes.messages[0], input.query);
-        // await sails.helpers[callbackHelperBlock][callbackHelperName](input.client, sails.config.custom.pushMessages.tasks.likes.messages[0], input.query);
 
       } else {
         throw new Error(`${moduleName}, critical error: could not parse callback helper name: 
