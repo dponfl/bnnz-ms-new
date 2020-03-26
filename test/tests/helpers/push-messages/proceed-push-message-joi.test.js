@@ -161,7 +161,9 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
         data: `push_msg_tsk_l_${casual.uuid}`,
         message: await messagesSdk.generateMessage(),
       };
-      const messageData = await pushMessagesSdk.generateMessageData('likes');
+      const messageData = await pushMessagesSdk.generateMessageData('likes', {
+        actionType: 'text',
+      });
       const params = {
         client,
         query,

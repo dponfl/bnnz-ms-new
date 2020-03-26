@@ -47,7 +47,7 @@ function generateMessageData(messageType = null, data = null) {
           afterHelper: null,
           forcedHelper: null,
           callbackHelper: "tasks::callbackLikes",
-          blockModifyHelper: "tasks::blockModifyLikes",
+          blockModifyHelper: "tasks::blockModifyLikesJoi",
           message: {
             html: [
               {
@@ -125,7 +125,7 @@ function generateMessageData(messageType = null, data = null) {
           afterHelper: null,
           forcedHelper: null,
           callbackHelper: "tasks::callbackLikes",
-          blockModifyHelper: "tasks::blockModifyLikes",
+          blockModifyHelper: "tasks::blockModifyLikesJoi",
           message: {
             html: [
               {

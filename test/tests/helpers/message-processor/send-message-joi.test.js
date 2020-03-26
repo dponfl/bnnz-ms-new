@@ -90,7 +90,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
       messageSaveJoiStub.restore();
     });
 
-    describe('simpleMessage', function () {
+    describe('Perform "simpleMessage"', function () {
 
       it('should successfully perform simple text message', async function () {
 
@@ -130,6 +130,21 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
 
       });
+
+      // Добавить проверку вызова blockModifyHelper
+
+      // Добавить проверку вызова beforeHelper
+
+      // Добавить проверку вызова afterHelper
+
+      // В тесты по остальным типам сообщений добавить только beforeHelper
+      // потому что остальные хелперы вызываются вне зависимости от типа сообщения
+
+    });
+
+    describe.skip('Perform "xxx"', function () {
+
+
 
     });
 

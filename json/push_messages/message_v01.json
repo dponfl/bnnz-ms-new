@@ -99,8 +99,8 @@
           "beforeHelper": null,
           "afterHelper": null,
           "forcedHelper": null,
-          "callbackHelper": "tasks::callbackLikes",
-          "blockModifyHelper": "tasks::blockModifyLikes",
+          "callbackHelper": "tasks::callbackLikesJoi",
+          "blockModifyHelper": "tasks::blockModifyLikesJoi",
           "message": {
             "html": [
               {
@@ -141,8 +141,8 @@
           "beforeHelper": null,
           "afterHelper": null,
           "forcedHelper": null,
-          "callbackHelper": "tasks::callbackLikesComments",
-          "blockModifyHelper": "tasks::blockModifyLikesComments",
+          "callbackHelper": "tasks::callbackLikesCommentsJoi",
+          "blockModifyHelper": "tasks::blockModifyLikesCommentsJoi",
           "message": {
             "html": [
               {

@@ -14,5 +14,13 @@ describe('Test group title', function () {
     // mlog.success('This is .success()');
     // mlog.error('This is .error()');
 
+    try {
+
+      expect(postsRecFromDB).to.be.deep.include(paramsObj);
+
+    } catch (e) {
+      expect.fail(`Expect failed:\n${JSON.stringify(e, null, 3)}`);
+    }
+
   });
 });

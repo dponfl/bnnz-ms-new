@@ -1,5 +1,7 @@
 "use strict";
 
+const Joi = require('@hapi/joi');
+
 const uuid = require('uuid-apikey');
 
 const moduleName = 'push-messages:tasks:block-modify-likes';
@@ -14,24 +16,14 @@ module.exports = {
 
 
   inputs: {
-    client: {
-      friendlyName: 'client',
-      description: 'Client record',
+
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
       type: 'ref',
       required: true,
     },
-    block: {
-      friendlyName: 'block',
-      description: 'Current message block',
-      type: 'ref',
-      required: true,
-    },
-    taskGuid: {
-      friendlyName: 'task guid',
-      description: 'task guid',
-      type: 'string',
-      required: true,
-    },
+
   },
 
 
@@ -51,19 +43,32 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    let resBlock = inputs.block;
-    let messageInlineKeyboard = [];
+    const schema = Joi.object({
+      client: Joi.any().required(),
+      messageData: Joi.any().required(),
+      additionalParams: Joi.object({
+        taskGuid: Joi
+                  .string()
+                  .guid()
+                  .required(),
+      }).required(),
+    });
 
     try {
 
-      if (!uuid.isUUID(inputs.taskGuid)) {
-        throw new Error(`Received inputs.taskGuid is not a valid UUID: ${inputs.taskGuid}`);
+      const input = await schema.validateAsync(inputs.params);
+
+      let resBlock = input.messageData;
+      let messageInlineKeyboard = [];
+
+      if (!uuid.isUUID(input.additionalParams.taskGuid)) {
+        throw new Error(`Received input.taskGuid is not a valid UUID: ${input.additionalParams.taskGuid}`);
       }
 
       messageInlineKeyboard = _.concat(messageInlineKeyboard, [[
         {
           "text": "MSG_TASK_PERFORM_BTN",
-          "callback_data": "push_msg_tsk_l_" + inputs.taskGuid
+          "callback_data": "push_msg_tsk_l_" + input.additionalParams.taskGuid
         }
       ]]);
 
@@ -82,7 +87,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
     }
