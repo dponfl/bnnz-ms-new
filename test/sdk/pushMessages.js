@@ -86,7 +86,7 @@ function generateMessageData(messageType = null, data = null) {
           afterHelper: null,
           forcedHelper: null,
           callbackHelper: "tasks::callbackLikesComments",
-          blockModifyHelper: "tasks::blockModifyLikesComments",
+          blockModifyHelper: "tasks::blockModifyLikesCommentsJoi",
           message: {
             html: [
               {

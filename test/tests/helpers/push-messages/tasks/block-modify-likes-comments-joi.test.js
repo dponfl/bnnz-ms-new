@@ -5,7 +5,7 @@ const casual = require('casual');
 const clientSdk = require('../../../../sdk/client');
 const pushMessagesSdk = require('../../../../sdk/pushMessages');
 
-describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
+describe.only('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
 
   describe('Check input params', function () {
 
@@ -25,7 +25,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -48,7 +48,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -71,7 +71,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
           messageData,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -99,7 +99,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -110,9 +110,9 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
 
   });
 
-  describe('Perform blockModifyLikesJoi', function () {
+  describe('Perform blockModifyLikesCommentsJoi', function () {
 
-    it('should successfully call blockModifyLikesJoi', async function () {
+    it('should successfully call blockModifyLikesCommentsJoi', async function () {
 
       try {
 
@@ -131,10 +131,10 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
           additionalParams,
         };
 
-        const res = await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
+        const res = await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
         expect(res).to.deep.nested.include({'message.inline_keyboard[0][0]': {
           "text": "MSG_TASK_PERFORM_BTN",
-          "callback_data": `push_msg_tsk_l_${taskGuid}`
+          "callback_data": `push_msg_tsk_lc_${taskGuid}`
         }});
 
       } catch (e) {

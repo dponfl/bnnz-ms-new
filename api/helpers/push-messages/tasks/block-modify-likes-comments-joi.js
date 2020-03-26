@@ -4,15 +4,15 @@ const Joi = require('@hapi/joi');
 
 const uuid = require('uuid-apikey');
 
-const moduleName = 'push-messages:tasks:block-modify-likes';
+const moduleName = 'push-messages:tasks:block-modify-likes-comments-joi';
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:tasks:block-modify-likes',
+  friendlyName: 'push-messages:tasks:block-modify-likes-comments-joi',
 
 
-  description: 'push-messages:tasks:block-modify-likes',
+  description: 'push-messages:tasks:block-modify-likes-comments-joi',
 
 
   inputs: {
@@ -48,11 +48,12 @@ module.exports = {
       messageData: Joi.any().required(),
       additionalParams: Joi.object({
         taskGuid: Joi
-                  .string()
-                  .guid()
-                  .required(),
+          .string()
+          .guid()
+          .required(),
       }).required(),
     });
+
 
     try {
 
@@ -68,7 +69,7 @@ module.exports = {
       messageInlineKeyboard = _.concat(messageInlineKeyboard, [[
         {
           "text": "MSG_TASK_PERFORM_BTN",
-          "callback_data": "push_msg_tsk_l_" + input.additionalParams.taskGuid
+          "callback_data": "push_msg_tsk_lc_" + input.additionalParams.taskGuid
         }
       ]]);
 
