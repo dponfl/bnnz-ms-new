@@ -200,7 +200,12 @@ describe('tasks.generateTasksJoi test', function () {
     before(function () {
       postsCreateJoiStub = sinon.stub(sails.helpers.storage, 'postsCreateJoi');
       getAccountsByRoomsStub = sinon.stub(sails.helpers.storage, 'getAccountsByRooms');
-      tasksCreateJoiStub = sinon.stub(sails.helpers.storage, 'tasksCreateJoi');
+      tasksCreateJoiStub = sinon.stub(sails.helpers.storage, 'tasksCreateJoi')
+        .returns({
+          payload: {
+            guid: casual.uuid,
+          }
+        });
       postsUpdateJoiStub = sinon.stub(sails.helpers.storage, 'postsUpdateJoi');
       sendMessageJoiStub = sinon.stub(sails.helpers.messageProcessor, 'sendMessageJoi');
       accountUpdateJoiStub = sinon.stub(sails.helpers.storage, 'accountUpdateJoi');

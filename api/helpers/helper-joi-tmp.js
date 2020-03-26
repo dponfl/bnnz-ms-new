@@ -51,6 +51,8 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client)}`);
+
       return exits.success({
         status: 'ok',
         message: '**************',

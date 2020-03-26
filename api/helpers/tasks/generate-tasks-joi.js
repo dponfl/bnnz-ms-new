@@ -186,6 +186,9 @@ module.exports = {
                   value: input.postLink,
                 },
               ],
+              blockModifyHelperParams: {
+                taskGuid: taskRecRaw.payload.guid || null,
+              },
             });
             break;
           case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
@@ -198,6 +201,9 @@ module.exports = {
                   value: input.postLink,
                 },
               ],
+              blockModifyHelperParams: {
+                taskGuid: taskRecRaw.payload.guid || null,
+              },
             });
             break;
           default:

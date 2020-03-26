@@ -2,13 +2,13 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'message-processor:send-message';
+const moduleName = 'message-processor:send-message-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'message-processor:send-message',
+  friendlyName: 'message-processor:send-message-joi',
 
 
   description: 'Send message',
@@ -45,21 +45,49 @@ module.exports = {
       client: Joi.any().required(),
       messageData: Joi.any().required(),
       additionalTokens: Joi.any(),
+      blockModifyHelperParams: Joi.any(),
+      beforeHelperParams: Joi.any(),
+      afterHelperParams: Joi.any(),
     });
 
     let sendMessageResult = null;
+    let messageData = null;
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
+      messageData = input.messageData;
+
       /**
        * Call blockModifyHelper to update block if needed
        */
 
-      // put "blockModifyHelper" call here...
+      if (messageData.blockModifyHelper != null) {
 
-      switch (input.messageData.actionType) {
+        let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 2);
+        let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
+        let blockModifyHelperName = splitBlockModifyHelperRes[1];
+
+        if (blockModifyHelperBlock && blockModifyHelperName) {
+
+          const blockModifyHelperParams = {
+            client: input.client,
+            messageData,
+            additionalParams: input.blockModifyHelperParams,
+          };
+
+          messageData = await sails.helpers.pushMessages[blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
+
+        } else {
+          throw new Error(`${moduleName}, critical error: could not parse blockModifyHelper: 
+            blockModifyHelperBlock: ${blockModifyHelperBlock}
+            blockModifyHelperName: ${blockModifyHelperName}`);
+        }
+
+      }
+
+      switch (messageData.actionType) {
 
         case 'text':
 
@@ -69,7 +97,7 @@ module.exports = {
 
           const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyleJoi({
             client: input.client,
-            message: input.messageData.message,
+            message: messageData.message,
             additionalTokens: input.additionalTokens,
           });
 

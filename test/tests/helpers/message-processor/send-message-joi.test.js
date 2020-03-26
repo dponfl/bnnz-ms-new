@@ -9,12 +9,12 @@ const pushMessagesSdk = require('../../../sdk/pushMessages');
 
 describe('messageProcessor:sendMessageJoi test', function () {
 
-  let config, pushMessages;
+  let customConfig, customConfigGeneral;
 
   before(async function () {
-    const configRaw =   await sails.helpers.general.getConfig();
-    config = configRaw.payload;
-    pushMessages = config.pushMessages;
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+    customConfigGeneral = customConfig.config.general;
   });
 
   describe('Check input params', function () {
@@ -30,7 +30,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
           additionalTokens: [
             {
               token: '$PostLink$',
-              value: config.config.general.instagram_post_prefix + casual.uuid,
+              value: customConfig.config.general.instagram_post_prefix + casual.uuid,
             },
           ],
         };
@@ -55,7 +55,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
           additionalTokens: [
             {
               token: '$PostLink$',
-              value: config.config.general.instagram_post_prefix + casual.uuid,
+              value: customConfig.config.general.instagram_post_prefix + casual.uuid,
             },
           ],
         };
@@ -92,6 +92,12 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
     describe('Perform "simpleMessage"', function () {
 
+      let blockModifyHelperStub;
+
+      afterEach(function () {
+        blockModifyHelperStub.restore();
+      });
+
       it('should successfully perform simple text message', async function () {
 
         try {
@@ -108,13 +114,39 @@ describe('messageProcessor:sendMessageJoi test', function () {
           const messageData = await pushMessagesSdk.generateMessageData('likes', {
             actionType: 'text',
           });
+          const additionalTokens = [
+            {
+              token: '$PostLink$',
+              value: customConfig.config.general.instagram_post_prefix + casual.uuid,
+            },
+          ];
+          const blockModifyHelperParams = {
+            taskGuid: casual.uuid,
+          };
+
           const params = {
             client,
             messageData,
+            additionalTokens,
+            blockModifyHelperParams,
           };
+
+          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
+          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
+          let blockModifyHelperName = splitBlockModifyHelperRes[1];
+
+          if (blockModifyHelperBlock && blockModifyHelperName) {
+
+            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
+              .returns(messageData);
+
+          } else {
+            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
+          }
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
+          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(simpleMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -125,9 +157,8 @@ describe('messageProcessor:sendMessageJoi test', function () {
           });
 
         } catch (e) {
-          expect.fail('Unexpected error');
+          expect.fail(`Unexpected error: \n${JSON.stringify(e, null, 3)}`);
         }
-
 
       });
 

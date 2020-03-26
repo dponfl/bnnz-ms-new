@@ -9,7 +9,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
 
   describe('Check input params', function () {
 
-    it ('should fail for missing "client" param', async () => {
+    it('should fail for missing "client" param', async () => {
 
       try {
 
@@ -29,7 +29,8 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"client" is required');
+        // expect(e.raw.payload.error).to.have.property('message', '"client" is required');
+        expect(e.raw.payload.error).to.deep.include({message: '"client" is required'});
       }
 
     });
@@ -52,7 +53,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"messageData" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"messageData" is required');
       }
 
     });
@@ -75,7 +76,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"additionalParams" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"additionalParams" is required');
       }
 
     });
@@ -103,7 +104,7 @@ describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"additionalParams.taskGuid" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"additionalParams.taskGuid" is required');
       }
 
     });
