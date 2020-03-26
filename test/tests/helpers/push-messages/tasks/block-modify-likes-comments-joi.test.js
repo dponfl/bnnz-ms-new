@@ -5,7 +5,7 @@ const casual = require('casual');
 const clientSdk = require('../../../../sdk/client');
 const pushMessagesSdk = require('../../../../sdk/pushMessages');
 
-describe.only('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
+describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
 
   describe('Check input params', function () {
 
