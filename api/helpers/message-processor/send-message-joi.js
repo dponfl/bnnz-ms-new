@@ -144,7 +144,7 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
-          const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessage'].with({
+          const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
             chatId: input.client.chat_id,
             imgPath: sails.config.custom.cloudinaryImgUrl + input.messageData.message.img,
             html: htmlImg,
@@ -156,7 +156,7 @@ module.exports = {
            * Save the sent message
            */
 
-          await sails.helpers.storage.messageSave.with({
+          await sails.helpers.storage.messageSaveJoi({
             message_id: imgRes.payload.message_id || 0,
             message: JSON.stringify({
               img: sails.config.custom.cloudinaryImgUrl + input.messageData.message.img,
