@@ -162,8 +162,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
       });
 
-      // Добавить проверку вызова blockModifyHelper
-
       // Добавить проверку вызова beforeHelper
 
       // Добавить проверку вызова afterHelper
