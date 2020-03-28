@@ -2,14 +2,14 @@
 
 const {expect} = require('chai');
 const casual = require('casual');
-const clientSdk = require('../../../../sdk/client');
-const pushMessagesSdk = require('../../../../sdk/pushMessages');
+const clientSdk = require('../../../../../sdk/client');
+const pushMessagesSdk = require('../../../../../sdk/pushMessages');
 
-describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
+describe('pushMessages:tasks:blockModifyLikesJoi test', function () {
 
   describe('Check input params', function () {
 
-    it ('should fail for missing "client" param', async () => {
+    it('should fail for missing "client" param', async () => {
 
       try {
 
@@ -25,11 +25,12 @@ describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"client" is required');
+        // expect(e.raw.payload.error).to.have.property('message', '"client" is required');
+        expect(e.raw.payload.error).to.deep.include({message: '"client" is required'});
       }
 
     });
@@ -48,11 +49,11 @@ describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"messageData" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"messageData" is required');
       }
 
     });
@@ -71,11 +72,11 @@ describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
           messageData,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"additionalParams" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"additionalParams" is required');
       }
 
     });
@@ -99,20 +100,20 @@ describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
           additionalParams,
         };
 
-        await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
+        await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.details[0]).to.have.property('message', '"additionalParams.taskGuid" is required');
+        expect(e.raw.payload.error).to.have.property('message', '"additionalParams.taskGuid" is required');
       }
 
     });
 
   });
 
-  describe('Perform blockModifyLikesCommentsJoi', function () {
+  describe('Perform blockModifyLikesJoi', function () {
 
-    it('should successfully call blockModifyLikesCommentsJoi', async function () {
+    it('should successfully call blockModifyLikesJoi', async function () {
 
       try {
 
@@ -131,10 +132,10 @@ describe('pushMessages:tasks:blockModifyLikesCommentsJoi test', function () {
           additionalParams,
         };
 
-        const res = await sails.helpers.pushMessages.tasks.blockModifyLikesCommentsJoi(params);
+        const res = await sails.helpers.pushMessages.tasks.blockModifyLikesJoi(params);
         expect(res).to.deep.nested.include({'message.inline_keyboard[0][0]': {
           "text": "MSG_TASK_PERFORM_BTN",
-          "callback_data": `push_msg_tsk_lc_${taskGuid}`
+          "callback_data": `push_msg_tsk_l_${taskGuid}`
         }});
 
       } catch (e) {

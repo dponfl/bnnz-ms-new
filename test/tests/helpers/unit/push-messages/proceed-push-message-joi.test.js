@@ -4,9 +4,9 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client');
-const messagesSdk = require('../../../sdk/messages');
-const pushMessagesSdk = require('../../../sdk/pushMessages');
+const clientSdk = require('../../../../sdk/client');
+const messagesSdk = require('../../../../sdk/messages');
+const pushMessagesSdk = require('../../../../sdk/pushMessages');
 
 describe('pushMessages.proceedPushMessageJoi test', function () {
 

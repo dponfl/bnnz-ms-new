@@ -5,9 +5,9 @@ const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
 
-const clientSdk = require('../../../sdk/client.js');
-const accountSdk = require('../../../sdk/account.js');
-const roomSdk = require('../../../sdk/room');
+const clientSdk = require('../../../../sdk/client.js');
+const accountSdk = require('../../../../sdk/account.js');
+const roomSdk = require('../../../../sdk/room');
 
 describe('tasks.generateTasksJoi test', function () {
 

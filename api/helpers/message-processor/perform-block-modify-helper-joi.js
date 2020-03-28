@@ -27,15 +27,12 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
     err: {
       description: 'Error',
     }
-
   },
 
 
@@ -112,7 +109,7 @@ module.exports = {
         };
 
 
-        await sails.helpers.pushMessages[blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
+        res = await sails.helpers.pushMessages[blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
 
       } else {
         throw new Error(`${moduleName}, critical error: could not parse callback helper name: 

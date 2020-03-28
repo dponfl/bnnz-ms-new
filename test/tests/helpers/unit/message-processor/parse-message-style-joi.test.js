@@ -4,12 +4,13 @@ const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
-const clientSdk = require('../../../sdk/client');
-const pushMessagesSdk = require('../../../sdk/pushMessages');
+const clientSdk = require('../../../../sdk/client.js');
+const pushMessagesSdk = require('../../../../sdk/pushMessages');
 
-describe('messageProcessor:parseSpecialTokensJoi test', function () {
+describe('messageProcessor:parseMessageStyleJoi test', function () {
 
   let config, pushMessages;
+
 
   before(async function () {
     const configRaw =   await sails.helpers.general.getConfig();
@@ -66,6 +67,39 @@ describe('messageProcessor:parseSpecialTokensJoi test', function () {
       } catch (e) {
         expect(e.raw.payload.error.details[0]).to.have.property('message', '"message" is required');
       }
+
+    });
+
+  });
+
+  describe('Performed successfully', function () {
+
+    it('should successfully call parseSpecialTokensJoi', async function () {
+
+      const parseSpecialTokensJoiStubRes = 'resultHtml string';
+
+      const parseSpecialTokensJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseSpecialTokensJoi')
+        .returns(parseSpecialTokensJoiStubRes);
+
+      const client = await clientSdk.generateClient();
+
+      const messageData = await pushMessagesSdk.generateMessageData('likes');
+
+      const params = {
+        client: client,
+        message: messageData.message,
+        additionalTokens: [
+          {
+            token: '$PostLink$',
+            value: config.config.general.instagram_post_prefix + casual.uuid,
+          },
+        ],
+      };
+
+      const parseMessageStyleJoiRes = await sails.helpers.messageProcessor.parseMessageStyleJoi(params);
+
+      expect(parseSpecialTokensJoiStub.callCount).to.be.eq(1);
+      expect(parseMessageStyleJoiRes).to.be.eq(parseSpecialTokensJoiStubRes);
 
     });
 
