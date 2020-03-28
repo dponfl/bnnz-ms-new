@@ -257,12 +257,12 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
-          const inlineKeyboard = await sails.helpers.messageProcessor.mapDeep.with({
+          const inlineKeyboard = await sails.helpers.messageProcessor.mapDeepJoi({
             client: input.client,
             data: htmlInline.inline_keyboard,
           });
 
-          const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessage'].with({
+          const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
             chatId: input.client.chat_id,
             html: htmlInline,
             inlineKeyboard: inlineKeyboard,
@@ -274,7 +274,7 @@ module.exports = {
            * Save the sent message
            */
 
-          await sails.helpers.storage.messageSave.with({
+          await sails.helpers.storage.messageSaveJoi({
             message_id: inlineRes.payload.message_id || 0,
             message: htmlInline,
             message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,

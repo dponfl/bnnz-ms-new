@@ -10,11 +10,28 @@ const pushMessagesSdk = require('../../../sdk/pushMessages');
 describe('messageProcessor:sendMessageJoi test', function () {
 
   let customConfig, customConfigGeneral;
+  let inlineKeyboard;
 
   before(async function () {
     const customConfigRaw =   await sails.helpers.general.getConfig();
     customConfig = customConfigRaw.payload;
     customConfigGeneral = customConfig.config.general;
+
+    inlineKeyboard = [
+      [
+        {
+          "text": "MSG_OPTIN_GENERAL_INFO_BTN_YES",
+          "callback_data": "general_info_yes"
+        }
+      ],
+      [
+        {
+          "text": "MSG_OPTIN_GENERAL_INFO_BTN_NO",
+          "callback_data": "general_info_no"
+        }
+      ]
+    ];
+
   });
 
   describe('Check input params', function () {
@@ -74,28 +91,34 @@ describe('messageProcessor:sendMessageJoi test', function () {
   describe('Perform messageProcessor:sendMessageJoi', function () {
 
     let parseMessageStyleJoiStub;
+    let mapDeepJoiStub;
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
     let videoMessageJoiStub;
     let forcedMessageJoiStub;
+    let inlineKeyboardMessageJoiStub;
     let messageSaveJoiStub;
 
 
     beforeEach(function () {
       parseMessageStyleJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseMessageStyleJoi');
+      mapDeepJoiStub = sinon.stub(sails.helpers.messageProcessor, 'mapDeepJoi');
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
       videoMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'videoMessageJoi');
       forcedMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'forcedMessageJoi');
+      inlineKeyboardMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'inlineKeyboardMessageJoi');
       messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
     });
 
     afterEach(function () {
+      mapDeepJoiStub.restore();
       parseMessageStyleJoiStub.restore();
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
       videoMessageJoiStub.restore();
       forcedMessageJoiStub.restore();
+      inlineKeyboardMessageJoiStub.restore();
       messageSaveJoiStub.restore();
     });
 
@@ -371,6 +394,74 @@ describe('messageProcessor:sendMessageJoi test', function () {
             status: 'ok',
             message: 'Telegram forced message was sent',
             payload: 'some payload of forcedMessageJoiStub',
+          });
+
+        } catch (e) {
+          expect.fail(`Unexpected error: \n${JSON.stringify(e, null, 3)}`);
+        }
+
+      });
+
+    });
+
+    describe('Perform "inlineKeyboardMessageJoi"', function () {
+
+      let blockModifyHelperStub;
+
+      afterEach(function () {
+        blockModifyHelperStub.restore();
+      });
+
+      it('should successfully perform forced message', async function () {
+
+        try {
+
+          parseMessageStyleJoiStub.returns('htmlInline string');
+          mapDeepJoiStub.returns(inlineKeyboard);
+          inlineKeyboardMessageJoiStub
+            .returns({
+              status: 'ok',
+              message: 'Telegram inline keyboard message was sent',
+              payload: 'some payload of inlineKeyboardMessageJoiStub',
+            });
+
+          const client = await clientSdk.generateClient();
+          const messageData = await pushMessagesSdk.generateMessageData('likes', {
+            actionType: 'inline_keyboard',
+          });
+          const blockModifyHelperParams = {
+            taskGuid: casual.uuid,
+          };
+
+          const params = {
+            client,
+            messageData,
+            blockModifyHelperParams,
+          };
+
+          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
+          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
+          let blockModifyHelperName = splitBlockModifyHelperRes[1];
+
+          if (blockModifyHelperBlock && blockModifyHelperName) {
+
+            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
+              .returns(messageData);
+
+          } else {
+            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
+          }
+
+          const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
+
+          expect(blockModifyHelperStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(inlineKeyboardMessageJoiStub.callCount).to.be.eq(1);
+          expect(messageSaveJoiStub.callCount).to.be.eq(1);
+          expect(sendMessageJoiRes).to.deep.include({
+            status: 'ok',
+            message: 'Telegram inline keyboard message was sent',
+            payload: 'some payload of inlineKeyboardMessageJoiStub',
           });
 
         } catch (e) {
