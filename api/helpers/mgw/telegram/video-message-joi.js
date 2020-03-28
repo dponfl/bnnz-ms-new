@@ -2,15 +2,15 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'mgw:telegram:img-message-joi';
+const moduleName = 'mgw:telegram:video-message-joi';
 
 module.exports = {
 
 
-  friendlyName: 'Image message Telegram',
+  friendlyName: 'Video message Telegram',
 
 
-  description: 'Send image message on Telegram messenger',
+  description: 'Send video message on Telegram messenger',
 
 
   inputs: {
@@ -40,16 +40,16 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // sails.log.info('Telegram img message: ', inputs);
+    // sails.log.info('Telegram video message: ', inputs);
 
     const schema = Joi.object({
       chatId: Joi
         .string()
         .description('client chat id we use to send message')
         .required(),
-      imgPath: Joi
+      videoPath: Joi
         .string()
-        .description('image url')
+        .description('video url')
         .uri()
         .required(),
       html: Joi
@@ -70,28 +70,28 @@ module.exports = {
         messageObj.caption = input.html;
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(
+      let sendMessageRes = await sails.config.custom.telegramBot.sendVideo(
         input.chatId,
-        input.imgPath,
+        input.videoPath,
         messageObj
       );
 
       return exits.success({
         status: 'ok',
-        message: 'Telegram img message was sent',
+        message: 'Telegram video message was sent',
         payload: sendMessageRes,
       })
 
     } catch (e) {
 
-
       const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.IMG_MESSAGE_SEND_ERROR}`;
+      const errorMsg = `${moduleName}: ${sails.config.custom.VIDEO_MESSAGE_SEND_ERROR}`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
 
-      throw {err: {
+      throw {
+        err: {
           module: errorLocation,
           message: errorMsg,
           payload: {

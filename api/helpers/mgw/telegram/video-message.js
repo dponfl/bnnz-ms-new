@@ -72,7 +72,7 @@ module.exports = {
     } catch (e) {
 
       const errorLocation = 'api/helpers/mgw/telegram/video-message';
-      const errorMsg = sails.config.custom.IMG_MESSAGE_SEND_ERROR;
+      const errorMsg = sails.config.custom.VIDEO_MESSAGE_SEND_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);

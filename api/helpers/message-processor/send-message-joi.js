@@ -183,7 +183,7 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
-          const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessage'].with({
+          const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
             chatId: input.client.chat_id,
             videoPath: sails.config.custom.cloudinaryVideoUrl + input.messageData.message.video,
             html: htmlVideo,
@@ -195,7 +195,7 @@ module.exports = {
            * Save the sent message
            */
 
-          await sails.helpers.storage.messageSave.with({
+          await sails.helpers.storage.messageSaveJoi({
             message_id: videoRes.payload.message_id || 0,
             message: JSON.stringify({
               video: sails.config.custom.cloudinaryVideoUrl + input.messageData.message.video,

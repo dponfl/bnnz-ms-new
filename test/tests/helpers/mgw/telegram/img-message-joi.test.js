@@ -28,7 +28,7 @@ describe('mgw:telegram:imgMessageJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.err.payload.error).to.deep.include({message: '"chatId" is required'});
+        expect(e.raw.payload.error).to.deep.include({message: '"chatId" is required'});
       }
 
     });
@@ -45,7 +45,7 @@ describe('mgw:telegram:imgMessageJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.err.payload.error).to.deep.include({message: '"imgPath" is required'});
+        expect(e.raw.payload.error).to.deep.include({message: '"imgPath" is required'});
       }
 
     });
@@ -64,7 +64,7 @@ describe('mgw:telegram:imgMessageJoi test', function () {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.err.payload.error).to.deep.include({message: '"imgPath" must be a valid uri'});
+        expect(e.raw.payload.error).to.deep.include({message: '"imgPath" must be a valid uri'});
       }
 
     });

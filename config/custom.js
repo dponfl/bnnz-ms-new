@@ -458,6 +458,7 @@ module.exports.custom = {
   INLINE_KEYBOARD_MESSAGE_SEND_ERROR: 'Inline keyboard message send error',
   KEYBOARD_MESSAGE_SEND_ERROR: 'Keyboard message send error',
   IMG_MESSAGE_SEND_ERROR: 'Img message send error',
+  VIDEO_MESSAGE_SEND_ERROR: 'Video message send error',
 
   /**
    * ----------------------------

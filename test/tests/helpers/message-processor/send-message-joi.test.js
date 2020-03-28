@@ -76,6 +76,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
     let parseMessageStyleJoiStub;
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
+    let videoMessageJoiStub;
     let messageSaveJoiStub;
 
 
@@ -83,6 +84,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
       parseMessageStyleJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseMessageStyleJoi');
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
+      videoMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'videoMessageJoi');
       messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
     });
 
@@ -90,6 +92,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
       parseMessageStyleJoiStub.restore();
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
+      videoMessageJoiStub.restore();
       messageSaveJoiStub.restore();
     });
 
@@ -198,12 +201,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
           const messageData = await pushMessagesSdk.generateMessageData('likes', {
             actionType: 'img',
           });
-          // const additionalTokens = [
-          //   {
-          //     token: '$PostLink$',
-          //     value: customConfig.config.general.instagram_post_prefix + casual.uuid,
-          //   },
-          // ];
           const blockModifyHelperParams = {
             taskGuid: casual.uuid,
           };
@@ -211,7 +208,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
           const params = {
             client,
             messageData,
-            // additionalTokens,
             blockModifyHelperParams,
           };
 
@@ -238,6 +234,73 @@ describe('messageProcessor:sendMessageJoi test', function () {
             status: 'ok',
             message: 'Telegram img message was sent',
             payload: 'some payload of imgMessageJoiStub',
+          });
+
+        } catch (e) {
+          expect.fail(`Unexpected error: \n${JSON.stringify(e, null, 3)}`);
+        }
+
+      });
+
+    });
+
+    describe('Perform "videoMessage"', function () {
+
+      let blockModifyHelperStub;
+
+      afterEach(function () {
+        blockModifyHelperStub.restore();
+      });
+
+      it('should successfully perform img message', async function () {
+
+        try {
+
+          parseMessageStyleJoiStub.returns('htmlVideo string');
+          videoMessageJoiStub
+            .returns({
+              status: 'ok',
+              message: 'Telegram video message was sent',
+              payload: 'some payload of videoMessageJoiStub',
+            });
+
+          const client = await clientSdk.generateClient();
+          const messageData = await pushMessagesSdk.generateMessageData('likes', {
+            actionType: 'video',
+          });
+          const blockModifyHelperParams = {
+            taskGuid: casual.uuid,
+          };
+
+          const params = {
+            client,
+            messageData,
+            blockModifyHelperParams,
+          };
+
+          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
+          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
+          let blockModifyHelperName = splitBlockModifyHelperRes[1];
+
+          if (blockModifyHelperBlock && blockModifyHelperName) {
+
+            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
+              .returns(messageData);
+
+          } else {
+            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
+          }
+
+          const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
+
+          expect(blockModifyHelperStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(videoMessageJoiStub.callCount).to.be.eq(1);
+          expect(messageSaveJoiStub.callCount).to.be.eq(1);
+          expect(sendMessageJoiRes).to.deep.include({
+            status: 'ok',
+            message: 'Telegram video message was sent',
+            payload: 'some payload of videoMessageJoiStub',
           });
 
         } catch (e) {
