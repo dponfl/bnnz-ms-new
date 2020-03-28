@@ -2,21 +2,20 @@
 
 const {expect} = require('chai');
 const sinon = require('sinon');
-const mlog = require('mocha-logger');
 const casual = require('casual');
 
-describe('mgw:telegram:simpleMessageJoi test', function () {
+describe('mgw:telegram:forcedMessageJoi test', function () {
 
-  let config;
+  let customConfig;
 
   before(async function () {
-    const configRaw =   await sails.helpers.general.getConfig();
-    config = configRaw.payload;
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
   });
 
   describe('Check input params', function () {
 
-    it ('should fail for missing "chatId" param', async () => {
+    it('should fail for missing "chatId" param', async () => {
 
       try {
 
@@ -24,11 +23,11 @@ describe('mgw:telegram:simpleMessageJoi test', function () {
           html: casual.word,
         };
 
-        await sails.helpers.mgw.telegram.simpleMessageJoi(params);
+        await sails.helpers.mgw.telegram.forcedMessageJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.err.payload.error.details[0]).to.have.property('message', '"chatId" is required');
+        expect(e.raw.payload.error).to.deep.include({message: '"chatId" is required'});
       }
 
     });
@@ -41,30 +40,30 @@ describe('mgw:telegram:simpleMessageJoi test', function () {
           chatId: casual.word,
         };
 
-        await sails.helpers.mgw.telegram.simpleMessageJoi(params);
+        await sails.helpers.mgw.telegram.forcedMessageJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.err.payload.error.details[0]).to.have.property('message', '"html" is required');
+        expect(e.raw.payload.error).to.deep.include({message: '"html" is required'});
       }
 
     });
 
   });
 
-  describe('Call Telegram API sendMessage', function () {
+  describe('Call Telegram API forcedMessage', function () {
 
     let sendMessageStub;
 
     before(function () {
-      sendMessageStub = sinon.stub(config.telegramBot, 'sendMessage');
+      sendMessageStub = sinon.stub(customConfig.telegramBot, 'sendMessage');
     });
 
     after(function () {
       sendMessageStub.restore();
     });
 
-    it('should successfully call sendMessage', async function () {
+    it('should successfully call videoMessage', async function () {
 
       sendMessageStub.returns('sendMessageStub result');
 
@@ -75,21 +74,20 @@ describe('mgw:telegram:simpleMessageJoi test', function () {
           html: casual.word,
         };
 
-        const simpleMessageJoiRes = await sails.helpers.mgw.telegram.simpleMessageJoi(params);
+        const forcedMessageJoiRes = await sails.helpers.mgw.telegram.forcedMessageJoi(params);
 
         expect(sendMessageStub.callCount).to.be.eq(1);
-        expect(simpleMessageJoiRes).to.deep.include({
+        expect(forcedMessageJoiRes).to.deep.include({
           status: 'ok',
-          message: 'Telegram simple message was sent',
+          message: 'Telegram forced message was sent',
           payload: 'sendMessageStub result',
         });
 
       } catch (e) {
-        expect.fail('Unexpected error');
+        expect.fail(`Unexpected error: \n${JSON.stringify(e, null, 3)}`);
       }
 
     });
-
 
   });
 

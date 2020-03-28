@@ -80,7 +80,7 @@ describe('mgw:telegram:imgMessageJoi test', function () {
     });
 
     after(function () {
-      imgMessageStub.reset();
+      imgMessageStub.restore();
     });
 
     it('should successfully call imgMessage', async function () {

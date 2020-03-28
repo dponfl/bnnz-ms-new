@@ -222,7 +222,7 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
-          const forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessage'].with({
+          const forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
             chatId: input.client.chat_id,
             html: htmlForced,
           });
@@ -233,7 +233,7 @@ module.exports = {
            * Save the sent message
            */
 
-          await sails.helpers.storage.messageSave.with({
+          await sails.helpers.storage.messageSaveJoi({
             message_id: forcedRes.payload.message_id || 0,
             message: htmlForced,
             message_format: sails.config.custom.enums.messageFormat.PUSHFORCED,

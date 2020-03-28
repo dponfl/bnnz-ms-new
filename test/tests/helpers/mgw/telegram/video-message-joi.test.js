@@ -80,7 +80,7 @@ describe('mgw:telegram:videoMessageJoi test', function () {
     });
 
     after(function () {
-      videoMessageStub.reset();
+      videoMessageStub.restore();
     });
 
     it('should successfully call videoMessage', async function () {

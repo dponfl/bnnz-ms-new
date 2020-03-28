@@ -212,11 +212,11 @@ describe('tasks.generateTasksJoi test', function () {
     });
 
     after(function () {
-      postsCreateJoiStub.reset();
-      getAccountsByRoomsStub.reset();
-      tasksCreateJoiStub.reset();
-      postsUpdateJoiStub.reset();
-      accountUpdateJoiStub.reset();
+      postsCreateJoiStub.restore();
+      getAccountsByRoomsStub.restore();
+      tasksCreateJoiStub.restore();
+      postsUpdateJoiStub.restore();
+      accountUpdateJoiStub.restore();
     });
 
     beforeEach(async function () {
