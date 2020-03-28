@@ -63,29 +63,13 @@ module.exports = {
        * Call blockModifyHelper to update block if needed
        */
 
-      if (messageData.blockModifyHelper != null) {
+      const performBlockModifyHelperJoiParams = {
+        client: input.client,
+        messageData,
+        additionalParams: input.blockModifyHelperParams,
+      };
 
-        let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 2);
-        let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-        let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-        if (blockModifyHelperBlock && blockModifyHelperName) {
-
-          const blockModifyHelperParams = {
-            client: input.client,
-            messageData,
-            additionalParams: input.blockModifyHelperParams,
-          };
-
-          messageData = await sails.helpers.pushMessages[blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
-
-        } else {
-          throw new Error(`${moduleName}, critical error: could not parse blockModifyHelper: 
-            blockModifyHelperBlock: ${blockModifyHelperBlock}
-            blockModifyHelperName: ${blockModifyHelperName}`);
-        }
-
-      }
+      messageData = await sails.helpers.messageProcessor.performBlockModifyHelperJoi(performBlockModifyHelperJoiParams);
 
       switch (messageData.actionType) {
 

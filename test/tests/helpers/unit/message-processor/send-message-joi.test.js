@@ -91,6 +91,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
   describe('Perform messageProcessor:sendMessageJoi', function () {
 
     let parseMessageStyleJoiStub;
+    let performBlockModifyHelperStub;
     let mapDeepJoiStub;
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
@@ -102,6 +103,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
     beforeEach(function () {
       parseMessageStyleJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseMessageStyleJoi');
+      performBlockModifyHelperStub = sinon.stub(sails.helpers.messageProcessor, 'performBlockModifyHelperJoi');
       mapDeepJoiStub = sinon.stub(sails.helpers.messageProcessor, 'mapDeepJoi');
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
@@ -114,6 +116,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
     afterEach(function () {
       mapDeepJoiStub.restore();
       parseMessageStyleJoiStub.restore();
+      performBlockModifyHelperStub.restore();
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
       videoMessageJoiStub.restore();
@@ -123,12 +126,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
     });
 
     describe('Perform "simpleMessageJoi"', function () {
-
-      let blockModifyHelperStub;
-
-      afterEach(function () {
-        blockModifyHelperStub.restore();
-      });
 
       it('should successfully perform simple text message', async function () {
 
@@ -156,6 +153,8 @@ describe('messageProcessor:sendMessageJoi test', function () {
             taskGuid: casual.uuid,
           };
 
+          performBlockModifyHelperStub.returns(messageData);
+
           const params = {
             client,
             messageData,
@@ -163,22 +162,8 @@ describe('messageProcessor:sendMessageJoi test', function () {
             blockModifyHelperParams,
           };
 
-          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
-          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-          let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-          if (blockModifyHelperBlock && blockModifyHelperName) {
-
-            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
-              .returns(messageData);
-
-          } else {
-            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
-          }
-
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(simpleMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -205,12 +190,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
     describe('Perform "imgMessageJoi"', function () {
 
-      let blockModifyHelperStub;
-
-      afterEach(function () {
-        blockModifyHelperStub.restore();
-      });
-
       it('should successfully perform img message', async function () {
 
         try {
@@ -231,28 +210,16 @@ describe('messageProcessor:sendMessageJoi test', function () {
             taskGuid: casual.uuid,
           };
 
+          performBlockModifyHelperStub.returns(messageData);
+
           const params = {
             client,
             messageData,
             blockModifyHelperParams,
           };
 
-          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
-          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-          let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-          if (blockModifyHelperBlock && blockModifyHelperName) {
-
-            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
-              .returns(messageData);
-
-          } else {
-            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
-          }
-
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(imgMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -271,12 +238,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
     });
 
     describe('Perform "videoMessageJoi"', function () {
-
-      let blockModifyHelperStub;
-
-      afterEach(function () {
-        blockModifyHelperStub.restore();
-      });
 
       it('should successfully perform img message', async function () {
 
@@ -298,28 +259,16 @@ describe('messageProcessor:sendMessageJoi test', function () {
             taskGuid: casual.uuid,
           };
 
+          performBlockModifyHelperStub.returns(messageData);
+
           const params = {
             client,
             messageData,
             blockModifyHelperParams,
           };
 
-          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
-          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-          let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-          if (blockModifyHelperBlock && blockModifyHelperName) {
-
-            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
-              .returns(messageData);
-
-          } else {
-            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
-          }
-
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(videoMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -338,12 +287,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
     });
 
     describe('Perform "forcedMessageJoi"', function () {
-
-      let blockModifyHelperStub;
-
-      afterEach(function () {
-        blockModifyHelperStub.restore();
-      });
 
       it('should successfully perform forced message', async function () {
 
@@ -365,28 +308,16 @@ describe('messageProcessor:sendMessageJoi test', function () {
             taskGuid: casual.uuid,
           };
 
+          performBlockModifyHelperStub.returns(messageData);
+
           const params = {
             client,
             messageData,
             blockModifyHelperParams,
           };
 
-          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
-          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-          let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-          if (blockModifyHelperBlock && blockModifyHelperName) {
-
-            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
-              .returns(messageData);
-
-          } else {
-            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
-          }
-
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(forcedMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -405,12 +336,6 @@ describe('messageProcessor:sendMessageJoi test', function () {
     });
 
     describe('Perform "inlineKeyboardMessageJoi"', function () {
-
-      let blockModifyHelperStub;
-
-      afterEach(function () {
-        blockModifyHelperStub.restore();
-      });
 
       it('should successfully perform forced message', async function () {
 
@@ -433,28 +358,16 @@ describe('messageProcessor:sendMessageJoi test', function () {
             taskGuid: casual.uuid,
           };
 
+          performBlockModifyHelperStub.returns(messageData);
+
           const params = {
             client,
             messageData,
             blockModifyHelperParams,
           };
 
-          let splitBlockModifyHelperRes = _.split(messageData.blockModifyHelper, customConfig.JUNCTION, 2);
-          let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-          let blockModifyHelperName = splitBlockModifyHelperRes[1];
-
-          if (blockModifyHelperBlock && blockModifyHelperName) {
-
-            blockModifyHelperStub = sinon.stub(sails.helpers.pushMessages[blockModifyHelperBlock], blockModifyHelperName)
-              .returns(messageData);
-
-          } else {
-            expect.fail(`could not parse blockModifyHelper from: ${messageData.blockModifyHelper}`);
-          }
-
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(blockModifyHelperStub.callCount).to.be.eq(1);
           expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
           expect(inlineKeyboardMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);

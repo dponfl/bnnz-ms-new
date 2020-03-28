@@ -44,11 +44,13 @@ module.exports = {
       additionalParams: Joi.any(),
     });
 
-    let res = input.messageData;
+    let res;
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      res = input.messageData;
 
       // if (input.messageData != null) {
       //
