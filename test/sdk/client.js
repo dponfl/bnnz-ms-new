@@ -2,6 +2,7 @@
 
 const casual = require('casual');
 const mlog = require('mocha-logger');
+const moment = require('moment');
 
 module.exports = {
 

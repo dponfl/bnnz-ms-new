@@ -37,7 +37,23 @@ describe('storage.tasksGetJoi test (unit)', () => {
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error).to.deep.include({message: '"value" must contain at least one of [taskGuid, clientGuid, accountGuid, postGuid, messageId, makeLike, makeComment, makeLikePerformed, makeCommentPerformed]'});
+        expect(e.raw.payload.error).to.deep.include({message: '"value" must contain at least one of [guid, clientGuid, accountGuid, postGuid, messageId, makeLike, makeComment, makeLikePerformed, makeCommentPerformed]'});
+      }
+    });
+
+  it ('should fail for unknown param', async () => {
+      try {
+
+        const paramsObj = {
+          someParameter: casual.uuid,
+        };
+
+        await sails.helpers.storage.tasksGetJoi(paramsObj);
+
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.deep.include({message: '"someParameter" is not allowed'});
       }
     });
 
