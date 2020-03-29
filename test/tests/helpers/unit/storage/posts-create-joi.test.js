@@ -3,16 +3,23 @@
 const {expect} = require('chai');
 const mlog = require('mocha-logger');
 const casual = require('casual');
+const sinon = require('sinon');
 
-describe('storage.postsCreateJoi test', () => {
+describe('storage.postsCreateJoi test (unit)', () => {
 
   let customConfig;
+  let postsCreateStub;
 
   beforeEach(async function () {
 
     const customConfigRaw = await sails.helpers.general.getConfig();
     customConfig = customConfigRaw.payload;
 
+    postsCreateStub = sinon.stub(Posts, 'create');
+  });
+
+  afterEach(async function () {
+    postsCreateStub.restore();
   });
 
   it ('should fail for missing "clientGuid" param', async () => {
@@ -66,59 +73,56 @@ describe('storage.postsCreateJoi test', () => {
       }
     });
 
-    it('should throw error on wrong postLink value', async function () {
+  it('should throw error on wrong postLink value', async function () {
 
-      const postLink = 'https://www.instagram.dom/' + casual.uuid;
+    const postLink = 'https://www.instagram.dom/' + casual.uuid;
 
-      try {
+    try {
 
-        const paramsObj = {
-          clientGuid: casual.uuid,
-          accountGuid: casual.uuid,
-          postLink: postLink,
-        };
+      const paramsObj = {
+        clientGuid: casual.uuid,
+        accountGuid: casual.uuid,
+        postLink: postLink,
+      };
 
-        await sails.helpers.storage.postsCreateJoi(paramsObj);
+      await sails.helpers.storage.postsCreateJoi(paramsObj);
 
-        expect.fail('Unexpected success');
+      expect.fail('Unexpected success');
 
-      } catch (e) {
-        expect(e.raw.payload.error.details[0])
-          .to.have.property('message')
-          .to.include(`"postLink" with value "${postLink}" fails to match the required pattern`);
-      }
+    } catch (e) {
+      expect(e.raw.payload.error.details[0])
+        .to.have.property('message')
+        .to.include(`"postLink" with value "${postLink}" fails to match the required pattern`);
+    }
 
-    });
+  });
 
-    it ('should create Posts record', async () => {
-      try {
+  it ('should create Posts record', async () => {
+    try {
 
-        const paramsObj = {
-          clientGuid: casual.uuid,
-          accountGuid: casual.uuid,
-          postLink: customConfig.config.general.instagram_post_prefix + casual.uuid,
-          totalLikes: casual.integer(0, 100),
-          totalDislikes: casual.integer(0, 100),
-          requestedLikes: casual.integer(0, 100),
-          requestedComments: casual.integer(0, 100),
-          receivedLikes: casual.integer(0, 100),
-          receivedComments: casual.integer(0, 100),
-          allLikesDone: casual.boolean,
-          allCommentsDone: casual.boolean,
-        };
+      const paramsObj = {
+        clientGuid: casual.uuid,
+        accountGuid: casual.uuid,
+        postLink: customConfig.config.general.instagram_post_prefix + casual.uuid,
+        totalLikes: casual.integer(0, 100),
+        totalDislikes: casual.integer(0, 100),
+        requestedLikes: casual.integer(0, 100),
+        requestedComments: casual.integer(0, 100),
+        receivedLikes: casual.integer(0, 100),
+        receivedComments: casual.integer(0, 100),
+        allLikesDone: casual.boolean,
+        allCommentsDone: casual.boolean,
+      };
 
-        const postsRecRaw = await sails.helpers.storage.postsCreateJoi(paramsObj);
+      postsCreateStub.returns(paramsObj);
 
-        expect(postsRecRaw.payload).to.be.deep.include(paramsObj);
+      const postsRecRaw = await sails.helpers.storage.postsCreateJoi(paramsObj);
 
-        const postsRecFromDB = await Posts.findOne({
-          guid: postsRecRaw.payload.guid,
-        });
+      expect(postsRecRaw.payload).to.be.deep.include(paramsObj);
 
-        expect(postsRecFromDB).to.be.deep.include(paramsObj);
-      } catch (e) {
-        expect.fail(`Expect failed:\n${JSON.stringify(e, null, 3)}`);
-      }
-    });
+    } catch (e) {
+      expect.fail(`Expect failed:\n${JSON.stringify(e, null, 3)}`);
+    }
+  });
 
 });

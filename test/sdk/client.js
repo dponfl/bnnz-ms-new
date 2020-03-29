@@ -30,9 +30,10 @@ module.exports = {
 
     try {
 
-      clientRec = generateClient(client);
+      clientRec = await generateClient(client);
+      clientRec = _.omit(clientRec, ['id', 'createdAt', 'updatedAt']);
 
-      // await Client.create(clientRec);
+      clientRec = await Client.create(clientRec).fetch();
 
       return clientRec;
 
@@ -49,7 +50,7 @@ module.exports = {
 
     try {
 
-      clientRec = generateClient(client);
+      clientRec = await generateClient(client);
 
       return clientRec;
 
@@ -61,7 +62,7 @@ module.exports = {
 
 };
 
-function generateClient(client = null) {
+async function generateClient(client = null) {
   const funcName = 'client:generateClient';
 
   let clientRec;
@@ -82,6 +83,8 @@ function generateClient(client = null) {
       lang: 'ru',
       funnel_name: 'general',
       account_use: casual.uuid,
+      createdAt: moment().format(),
+      updatedAt: moment().add(1, 'minutes').format(),
     };
 
     if (client != null) {

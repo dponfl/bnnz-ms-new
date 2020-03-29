@@ -12,19 +12,19 @@ module.exports = {
 
     try {
 
-      messageData = generateMessageData(messageType, data);
+      messageData = await generateMessageData(messageType, data);
 
       return messageData;
 
     } catch (e) {
-      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(messageData)}`);
+      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nmessageData: ${JSON.stringify(messageData)}`);
     }
 
   },
 
 };
 
-function generateMessageData(messageType = null, data = null) {
+async function generateMessageData(messageType = null, data = null) {
   const funcName = 'pushMessages:generateMessageData';
 
   let messageData;
@@ -157,6 +157,6 @@ function generateMessageData(messageType = null, data = null) {
     return messageData;
 
   } catch (e) {
-    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(messageData)}`);
+    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nmessageData: ${JSON.stringify(messageData)}`);
   }
 }

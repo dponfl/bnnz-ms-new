@@ -12,19 +12,19 @@ module.exports = {
 
     try {
 
-      serviceRec = generateService(serviceName, service);
+      serviceRec = await generateService(serviceName, service);
 
       return serviceRec;
 
     } catch (e) {
-      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(serviceRec)}`);
+      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nserviceRec: ${JSON.stringify(serviceRec)}`);
     }
 
   },
 
 };
 
-function generateService(serviceName = null, service = null) {
+async function generateService(serviceName = null, service = null) {
   const funcName = 'service:generateService';
 
   let serviceRec;
@@ -46,6 +46,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 33,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'test_personal_initial':
@@ -62,6 +64,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 33,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'bronze_personal':
@@ -78,6 +82,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 25,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'silver_personal':
@@ -94,6 +100,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 20,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'gold_personal':
@@ -110,6 +118,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 10,
           make_comments_min_day: 15,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'platinum_personal':
@@ -126,6 +136,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 5,
           make_comments_min_day: 0,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'star054':
@@ -142,6 +154,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 5,
           make_comments_min_day: 5,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       case 'friend':
@@ -158,6 +172,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 25,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
       default:
@@ -174,6 +190,8 @@ function generateService(serviceName = null, service = null) {
           make_likes_min_day: 35,
           make_comments_min_day: 28,
           deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
         };
     }
 
@@ -184,6 +202,6 @@ function generateService(serviceName = null, service = null) {
     return serviceRec;
 
   } catch (e) {
-    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(serviceRec)}`);
+    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nserviceRec: ${JSON.stringify(serviceRec)}`);
   }
 }

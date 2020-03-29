@@ -27,15 +27,12 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
     err: {
       description: 'Error',
     }
-
   },
 
 

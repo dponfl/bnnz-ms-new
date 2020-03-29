@@ -1,12 +1,15 @@
 "use strict";
 
-const moduleName = 'push-messages:tasks:callback-likes';
+const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
+
+const moduleName = 'push-messages:tasks:callback-likes-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:tasks:callback-likes',
+  friendlyName: 'push-messages:tasks:callback-likes-joi',
 
 
   description: 'Обработка callback сообщения, полученного при нажатии кнопки в задании на лайки',
@@ -14,21 +17,9 @@ module.exports = {
 
   inputs: {
 
-    client: {
-      friendlyName: 'client',
-      description: 'Client record',
-      type: 'ref',
-      required: true,
-    },
-    block: {
-      friendlyName: 'block',
-      description: 'Current funnel block',
-      type: 'ref',
-      required: true,
-    },
-    query: {
-      friendlyName: 'query',
-      description: 'Callback query received',
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
       type: 'ref',
       required: true,
     },
@@ -37,24 +28,43 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
     err: {
       description: 'Error',
     }
-
   },
 
 
   fn: async function (inputs, exits) {
 
+    const schema = Joi.object({
+      client: Joi
+        .any()
+        .description('Client record')
+        .required(),
+      messageData: Joi
+        .any()
+        .description('Message data object')
+        .required(),
+      query: Joi
+        .any()
+        .description('Callback query received')
+        .required(),
+    });
+
+
     try {
 
-      const taskRaw = _.split(inputs.query.data,'push_msg_tsk_l_', 2);
+      const input = await schema.validateAsync(inputs.params);
+
+      const taskRaw = _.split(input.query.data,'push_msg_tsk_l_', 2);
       const taskGuid = taskRaw[1];
+
+      if (!uuid.isUUID(taskGuid)) {
+        throw new Error(`${moduleName}, Error: query.data has no task guid: ${input.query.data}`);
+      }
 
       /**
        * Получаем информацию по заданию
@@ -89,7 +99,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

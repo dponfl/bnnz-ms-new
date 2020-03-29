@@ -41,7 +41,7 @@ module.exports = {
     makeLikePerformed: {
       type: 'boolean',
     },
-    q: {
+    makeCommentPerformed: {
       type: 'boolean',
     },
     commentText: {

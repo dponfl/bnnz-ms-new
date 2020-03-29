@@ -12,19 +12,19 @@ module.exports = {
 
     try {
 
-      roomRec = generateRoom(room);
+      roomRec = await generateRoom(room);
 
       return roomRec;
 
     } catch (e) {
-      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(roomRec)}`);
+      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nroomRec: ${JSON.stringify(roomRec)}`);
     }
 
   },
 
 };
 
-function generateRoom(room = null) {
+async function generateRoom(room = null) {
   const funcName = 'room:generateRoom';
 
   let roomRec;
@@ -50,6 +50,6 @@ function generateRoom(room = null) {
     return roomRec;
 
   } catch (e) {
-    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(roomRec)}`);
+    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nroomRec: ${JSON.stringify(roomRec)}`);
   }
 }

@@ -34,14 +34,16 @@ module.exports = {
 
     try {
 
-      accountRec = generateAccount(account);
+      accountRec = await generateAccount(account);
+      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt']);
 
-      // await Account.create(accountRec);
+
+      await Account.create(accountRec).fetch();
 
       return accountRec;
 
     } catch (e) {
-      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(accountRec)}`);
+      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\naccountRec: ${JSON.stringify(accountRec)}`);
     }
 
   },
@@ -53,12 +55,12 @@ module.exports = {
 
     try {
 
-      accountRec = generateAccount(account);
+      accountRec = await generateAccount(account);
 
       return accountRec;
 
     } catch (e) {
-      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(accountRec)}`);
+      mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\naccountRec: ${JSON.stringify(accountRec)}`);
     }
 
   },
@@ -103,6 +105,8 @@ async function generateAccount(account = null) {
       subscription_made: true,
       service_subscription_finalized: true,
       client: casual.integer(1, 1000),
+      createdAt: moment().format(),
+      updatedAt: moment().add(1, 'minutes').format(),
     };
 
     if (account != null) {
@@ -112,6 +116,6 @@ async function generateAccount(account = null) {
     return accountRec;
 
   } catch (e) {
-    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\nclientRec: ${JSON.stringify(accountRec)}`);
+    mlog.error(`${funcName} Error: \ncode: ${e.code}\nmessage: ${e.message}\naccountRec: ${JSON.stringify(accountRec)}`);
   }
 }
