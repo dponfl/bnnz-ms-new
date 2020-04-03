@@ -1,6 +1,6 @@
 {
   "general": {
-    "instagram_post_prefix": "https://www.instagram.com/"
+    "instagram_post_prefix": "https://www.instagram.com/p/"
   },
   "payments": {
     "telegram": {

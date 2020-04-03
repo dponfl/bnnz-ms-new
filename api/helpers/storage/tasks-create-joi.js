@@ -56,7 +56,7 @@ module.exports = {
       makeComment: Joi.boolean(),
       makeLikePerformed: Joi.boolean(),
       makeCommentPerformed: Joi.boolean(),
-      commentText: Joi.string().length(8000),
+      commentText: Joi.string().max(8000),
     });
 
     try {
@@ -76,7 +76,7 @@ module.exports = {
         makeComment: input.makeComment || false,
         makeLikePerformed: input.makeLikePerformed || false,
         makeCommentPerformed: input.makeCommentPerformed || false,
-        commentText: input.commentText || '',
+        commentText: input.commentText || null,
       };
 
       // const taskRecRaw = await Tasks.create(taskRec).fetch();

@@ -3,7 +3,7 @@
 const {expect} = require('chai');
 const casual = require('casual');
 
-describe('storage.postsCreateJoi test (integration)', () => {
+describe('storage.postsCreateJoi test (integration)', function () {
 
   let customConfig;
 
@@ -14,7 +14,7 @@ describe('storage.postsCreateJoi test (integration)', () => {
 
   });
 
-  it ('should create Posts record', async () => {
+  it ('should create Posts record', async function() {
     try {
 
       const paramsObj = {
@@ -33,7 +33,11 @@ describe('storage.postsCreateJoi test (integration)', () => {
 
       const postsRecRaw = await sails.helpers.storage.postsCreateJoi(paramsObj);
 
-      expect(postsRecRaw.payload).to.be.deep.include(paramsObj);
+      expect(postsRecRaw).to.deep.include({
+        status: 'ok',
+        message: 'Posts record created',
+      });
+      expect(postsRecRaw.payload).to.deep.include(paramsObj);
 
       const postsRecFromDB = await Posts.findOne({
         guid: postsRecRaw.payload.guid,

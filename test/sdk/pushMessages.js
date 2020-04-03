@@ -46,7 +46,7 @@ async function generateMessageData(messageType = null, data = null) {
           beforeHelper: null,
           afterHelper: null,
           forcedHelper: null,
-          callbackHelper: "tasks::callbackLikes",
+          callbackHelper: "tasks::callbackLikesJoi",
           blockModifyHelper: "tasks::blockModifyLikesJoi",
           message: {
             html: [
@@ -124,7 +124,7 @@ async function generateMessageData(messageType = null, data = null) {
           beforeHelper: null,
           afterHelper: null,
           forcedHelper: null,
-          callbackHelper: "tasks::callbackLikes",
+          callbackHelper: "tasks::callbackLikesJoi",
           blockModifyHelper: "tasks::blockModifyLikesJoi",
           message: {
             html: [

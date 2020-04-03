@@ -28,33 +28,69 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
     err: {
       description: 'Error',
     }
-
   },
 
 
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      clientGuid: Joi.string().guid().required(),
-      accountGuid: Joi.string().guid().required(),
-      postLink: Joi.string()
-        .pattern(RegExp(sails.config.custom.config.general.instagram_post_prefix)).required(),
-      totalLikes: Joi.number().integer().min(0),
-      totalDislikes: Joi.number().integer().min(0),
-      requestedLikes: Joi.number().integer().min(0),
-      requestedComments: Joi.number().integer().min(0),
-      receivedLikes: Joi.number().integer().min(0),
-      receivedComments: Joi.number().integer().min(0),
-      allLikesDone: Joi.boolean(),
-      allCommentsDone: Joi.boolean(),
+      clientGuid: Joi
+        .string()
+        .description('client guid')
+        .guid()
+        .required(),
+      accountGuid: Joi
+        .string()
+        .description('account guid')
+        .guid()
+        .required(),
+      postLink: Joi
+        .string()
+        .description('link to the post')
+        .pattern(RegExp(sails.config.custom.postRegExp))
+        .required(),
+      totalLikes: Joi
+        .number()
+        .description('количество внутренних лайков')
+        .integer()
+        .min(0),
+      totalDislikes: Joi
+        .number()
+        .description('количество внутренних дизлайков')
+        .integer()
+        .min(0),
+      requestedLikes: Joi
+        .number()
+        .description('количество созданных заданий на лайки')
+        .integer()
+        .min(0),
+      requestedComments: Joi
+        .number()
+        .description('количество созданных заданий на комментарии')
+        .integer()
+        .min(0),
+      receivedLikes: Joi
+        .number()
+        .description('количество полученных лайков')
+        .integer()
+        .min(0),
+      receivedComments: Joi
+        .number()
+        .description('количество оставленных комментариев')
+        .integer()
+        .min(0),
+      allLikesDone: Joi
+        .boolean()
+        .description('true если каждый аккаунт, кому было поручено поставил лайк'),
+      allCommentsDone: Joi
+        .boolean()
+        .description('true если каждый аккаунт, кому было поручено оставил комментарий'),
     });
 
     try {
@@ -84,8 +120,9 @@ module.exports = {
       return exits.success({
         status: 'ok',
         message: 'Posts record created',
+        // payload: postRecRaw,
         payload: postRec,
-      })
+    })
 
     } catch (e) {
 

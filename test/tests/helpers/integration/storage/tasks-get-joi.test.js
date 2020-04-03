@@ -1,23 +1,9 @@
 "use strict";
 
 const {expect} = require('chai');
-const mlog = require('mocha-logger');
-const casual = require('casual');
-const sinon = require('sinon');
 const tasksSdk = require('../../../../sdk/tasks');
 
 describe('storage.tasksGetJoi test (integration)', () => {
-
-  let customConfig;
-  let tasksFindStub;
-
-  beforeEach(async function () {
-
-    const customConfigRaw = await sails.helpers.general.getConfig();
-    customConfig = customConfigRaw.payload;
-
-  });
-
 
   it ('should get Tasks record', async () => {
     try {
@@ -28,6 +14,10 @@ describe('storage.tasksGetJoi test (integration)', () => {
 
       await tasksSdk.deleteTaskByGuidDB(tasksRec.guid);
 
+      expect(tasksRecRaw).to.deep.include({
+        status: 'ok',
+        message: 'Tasks record(s) found',
+      });
       expect(tasksRecRaw.payload).to.be.deep.include(tasksRec);
 
     } catch (e) {

@@ -29,6 +29,8 @@ module.exports.custom = {
 
   apiUuid: process.env.API_UUID || '',
 
+  postRegExp: process.env.POST_REGEXP || '\^\(http\|https\):\\/\\/www\\.instagram\\.com\\/p\\/(\\S+)',
+
   tokens: {},
 
   enums: {

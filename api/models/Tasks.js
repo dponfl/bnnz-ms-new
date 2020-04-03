@@ -31,6 +31,7 @@ module.exports = {
      */
     messageId: {
       type: 'string',
+      allowNull: true,
     },
     makeLike: {
       type: 'boolean',
@@ -46,6 +47,7 @@ module.exports = {
     },
     commentText: {
       type: 'string',
+      allowNull: true,
     },
 
 
