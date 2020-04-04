@@ -65,12 +65,15 @@ module.exports = {
         throw new Error(`Received input.additionalParams.taskGuid is not a valid UUID: ${input.additionalParams.taskGuid}`);
       }
 
-      messageInlineKeyboard = _.concat(messageInlineKeyboard, [[
-        {
-          "text": "MSG_TASK_PERFORM_BTN",
-          "callback_data": "push_msg_tsk_l_" + input.additionalParams.taskGuid
-        }
-      ]]);
+      messageInlineKeyboard = _.concat(messageInlineKeyboard,
+        [
+          [
+            {
+              "text": "MSG_TASK_PERFORM_BTN",
+              "callback_data": "push_msg_tsk_l_" + input.additionalParams.taskGuid
+            }
+          ]
+        ]);
 
       resBlock.message.inline_keyboard = messageInlineKeyboard;
 

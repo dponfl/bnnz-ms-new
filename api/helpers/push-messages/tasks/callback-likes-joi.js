@@ -57,6 +57,8 @@ module.exports = {
 
     try {
 
+      let taskPerformRes;
+
       const input = await schema.validateAsync(inputs.params);
 
       const queryDataRegExp = /push_msg_tsk_l_(\S+)/;
@@ -162,10 +164,28 @@ module.exports = {
         });
 
         /**
-         * Удаляем требование выполнить задание из чата
+         * Трансформируем в чате аккаунта сообщение с требованием выполнить задание
+         * в сообщение, что задание успешно выполнено
          */
 
+        if (taskRec.messageId != null) {
 
+          taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+            client: input.client,
+            messageData: sails.config.custom.pushMessages.tasks.likes_done.messages[0],
+            additionalTokens: [
+              {
+                token: '$PostLink$',
+                value: postRec.postLink,
+              },
+            ],
+            additionalParams: {
+              chat_id: input.client.chat_id,
+              message_id: taskRec.messageId,
+            },
+          });
+
+        }
 
       } else {
 
@@ -173,12 +193,36 @@ module.exports = {
          * Выполняем необходимые действия в случае невыполнения задания
          */
 
+        const messageData = sails.config.custom.pushMessages.tasks.likes_not_done.messages[0].message;
+
+        messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
+          [
+            [
+              {
+                "text": "MSG_TASK_PERFORM_BTN",
+                "callback_data": "push_msg_tsk_l_" + taskRec.guid
+              }
+            ]
+          ]
+        );
+
+        taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+          client: input.client,
+          messageData,
+          additionalTokens: [
+            {
+              token: '$PostLink$',
+              value: postRec.postLink,
+            },
+          ],
+          additionalParams: {
+            chat_id: input.client.chat_id,
+            message_id: taskRec.messageId,
+          },
+        });
 
 
       }
-
-
-
 
       return exits.success({
         status: 'ok',

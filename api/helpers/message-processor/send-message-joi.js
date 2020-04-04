@@ -293,8 +293,22 @@ module.exports = {
             additionalTokens: input.additionalTokens,
           });
 
+          const editMessageInlineKeyboard = mapDeep({
+            client: input.client,
+            data: input.messageData.message.inline_keyboard,
+            additionalTokens: input.additionalTokens,
+          });
+
           const editMessageTextRes = await sails.helpers.mgw[input.client.messenger]['editMessageTextJoi']({
             html: htmlEditMessageText,
+            optionalParams: input.additionalParams,
+          });
+
+          const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+            // replyMarkup: input.messageData.message.inline_keyboard,
+            replyMarkup: {
+              inline_keyboard: editMessageInlineKeyboard
+            },
             optionalParams: input.additionalParams,
           });
 

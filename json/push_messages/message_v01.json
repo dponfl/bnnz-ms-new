@@ -106,20 +106,21 @@
               {
                 "text": "MSG_TASK_LIKE",
                 "style": "",
-                "cr": "SCR"
-              },
-              {
-                "text": "MSG_TASK_POST_LINK",
-                "style": "b",
                 "cr": "DCR"
               },
               {
                 "text": "MSG_TASK",
-                "style": "bi",
+                "style": "",
                 "cr": ""
               }
             ],
             "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
             ]
           }
         }
@@ -162,6 +163,87 @@
               }
             ],
             "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "likes_done": {
+      "description": "Задание поставить лайк выполнено",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк выполнено",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_DONE",
+                "style": "",
+                "cr": "DCR"
+              }
+            ],
+            "inline_keyboard": [
+            ]
+          }
+        }
+      ]
+    },
+    "likes_not_done": {
+      "description": "Задание поставить лайк не выполнено",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк не выполнено",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_NOT_DONE",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
             ]
           }
         }
