@@ -47,8 +47,7 @@ module.exports = {
         .required(),
       callback_query_id: Joi
         .string()
-        .max(255)
-        .required(),
+        .max(255),
       message_id: Joi
         .number()
         .integer()
@@ -105,6 +104,7 @@ module.exports = {
         client_guid: input.client_guid,
         callback_query_id: input.callback_query_id,
         message: input.message,
+        message_id: input.message_id,
         message_format: input.message_format,
         message_buttons: input.message_buttons || {},
         messenger: input.messenger,

@@ -2,6 +2,10 @@
 
 const Joi = require('@hapi/joi');
 
+const confObj = require('../../services/translate').getConfigObj;
+const emoji = require('node-emoji');
+const t = require('../../services/translate').t;
+
 const moduleName = 'message-processor:send-message-joi';
 
 
@@ -45,6 +49,7 @@ module.exports = {
       client: Joi.any().required(),
       messageData: Joi.any().required(),
       additionalTokens: Joi.any(),
+      additionalParams: Joi.any(),
       blockModifyHelperParams: Joi.any(),
       beforeHelperParams: Joi.any(),
       afterHelperParams: Joi.any(),
@@ -63,13 +68,17 @@ module.exports = {
        * Call blockModifyHelper to update block if needed
        */
 
-      const performBlockModifyHelperJoiParams = {
-        client: input.client,
-        messageData,
-        additionalParams: input.blockModifyHelperParams,
-      };
+      if (input.blockModifyHelperParams != null) {
 
-      messageData = await sails.helpers.messageProcessor.performBlockModifyHelperJoi(performBlockModifyHelperJoiParams);
+        const performBlockModifyHelperJoiParams = {
+          client: input.client,
+          messageData,
+          additionalParams: input.blockModifyHelperParams,
+        };
+
+        messageData = await sails.helpers.messageProcessor.performBlockModifyHelperJoi(performBlockModifyHelperJoiParams);
+
+      }
 
       switch (messageData.actionType) {
 
@@ -79,7 +88,7 @@ module.exports = {
            * Send simple text message
            */
 
-          const htmlSimple = await sails.helpers.messageProcessor.parseMessageStyleJoi({
+          const htmlSimple = parseMessageStyle({
             client: input.client,
             message: messageData.message,
             additionalTokens: input.additionalTokens,
@@ -122,7 +131,7 @@ module.exports = {
            * Send img message
            */
 
-          const htmlImg = await sails.helpers.messageProcessor.parseMessageStyleJoi({
+          const htmlImg = parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -161,7 +170,7 @@ module.exports = {
            * Send video message
            */
 
-          const htmlVideo = await sails.helpers.messageProcessor.parseMessageStyleJoi({
+          const htmlVideo = parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -200,7 +209,7 @@ module.exports = {
            * Send forced reply message
            */
 
-          const htmlForced = await sails.helpers.messageProcessor.parseMessageStyleJoi({
+          const htmlForced = parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -235,15 +244,16 @@ module.exports = {
            * Send inline keyboard message
            */
 
-          const htmlInline = await sails.helpers.messageProcessor.parseMessageStyleJoi({
+          const htmlInline = parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
-          const inlineKeyboard = await sails.helpers.messageProcessor.mapDeepJoi({
+          const inlineKeyboard = mapDeep({
             client: input.client,
-            data: htmlInline.inline_keyboard,
+            data: input.messageData.message.inline_keyboard,
+            additionalTokens: input.additionalTokens,
           });
 
           const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
@@ -267,6 +277,41 @@ module.exports = {
             client_id: input.client.id,
             client_guid: input.client.guid,
             message_buttons: inlineKeyboard,
+          });
+
+          break;
+
+        case 'edit_message_text':
+
+          /**
+           * Edit message text
+           */
+
+          const htmlEditMessageText = parseMessageStyle({
+            client: input.client,
+            message: input.messageData.message,
+            additionalTokens: input.additionalTokens,
+          });
+
+          const editMessageTextRes = await sails.helpers.mgw[input.client.messenger]['editMessageTextJoi']({
+            html: htmlEditMessageText,
+            optionalParams: input.additionalParams,
+          });
+
+          sendMessageResult = editMessageTextRes;
+
+          /**
+           * Save the sent message
+           */
+
+          await sails.helpers.storage.messageSaveJoi({
+            message_id: editMessageTextRes.payload.message_id || 0,
+            message: htmlEditMessageText,
+            message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,
+            messenger: input.client.messenger,
+            message_originator: sails.config.custom.enums.messageOriginator.BOT,
+            client_id: input.client.id,
+            client_guid: input.client.guid,
           });
 
           break;
@@ -307,3 +352,159 @@ module.exports = {
 
 };
 
+function parseMessageStyle(params) {
+
+  const schema = Joi.object({
+    client: Joi.any().required(),
+    message: Joi.any().required(),
+    additionalTokens: Joi.any(),
+  });
+
+  const inputRaw = schema.validate(params);
+  const input = inputRaw.value;
+
+  let resultHtml = '';
+
+  for (let i = 0; i < input.message.html.length; i++) {
+    resultHtml = resultHtml +
+      (/b/i.test(input.message.html[i].style) ? '<b>' : '') +
+      (/i/i.test(input.message.html[i].style) ? '<i>' : '') +
+      (/url/i.test(input.message.html[i].style) ? `<a href="${input.message.html[i].url}">` : '') +
+      t(input.client.lang, input.message.html[i].text) +
+      (/i/i.test(input.message.html[i].style) ? '</i>' : '') +
+      (/b/i.test(input.message.html[i].style) ? '</b>' : '') +
+      (/url/i.test(input.message.html[i].style) ? '</a>' : '') +
+      (input.message.html.length > 1
+        ? (input.message.html[i].cr
+          ? sails.config.custom[input.message.html[i].cr]
+          : '')
+        : '');
+  }
+
+  resultHtml = parseSpecialTokens({
+    client: input.client,
+    message: resultHtml,
+    additionalTokens: input.additionalTokens,
+  });
+
+  return resultHtml;
+
+}
+
+function parseSpecialTokens(params) {
+
+  const schema = Joi.object({
+    client: Joi
+      .any()
+      .required(),
+    message: Joi
+      .string()
+      .required(),
+    additionalTokens: Joi
+      .any(),
+  });
+
+  const inputRaw = schema.validate(params);
+  const input = inputRaw.value;
+
+  let resultStr = input.message;
+
+  const firstName = input.client.first_name || '';
+  const lastName = input.client.last_name || '';
+
+  const configPricePlatinum = confObj(input.client.lang).price.platinum;
+  const configPriceGold = confObj(input.client.lang).price.gold;
+  const configPriceBronze = confObj(input.client.lang).price.bronze;
+
+  let mandatoryProfileList = '';
+
+  for (let i = 0; i < confObj(input.client.lang).profiles.length; i++) {
+
+    mandatoryProfileList = mandatoryProfileList + `<a href="${confObj(input.client.lang).profiles[i].url}">${confObj(input.client.lang).profiles[i].text}</a>` + sails.config.custom.SCR;
+
+  }
+
+  mandatoryProfileList = mandatoryProfileList + sails.config.custom.DCR;
+
+
+  resultStr = _.replace(resultStr, '$FirstName$', firstName);
+  resultStr = _.replace(resultStr, '$LastName$', lastName);
+
+  resultStr = _.replace(resultStr, '$PricePlatinum$', `${configPricePlatinum.text}: ${configPricePlatinum.value_text} ${configPricePlatinum.currency_text}/${configPricePlatinum.period_text}`);
+  resultStr = _.replace(resultStr, '$PriceGold$', `${configPriceGold.text}: ${configPriceGold.value_text} ${configPriceGold.currency_text}/${configPriceGold.period_text}`);
+  resultStr = _.replace(resultStr, '$PriceBronze$', `${configPriceBronze.text}: ${configPriceBronze.value_text} ${configPriceBronze.currency_text}/${configPriceBronze.period_text}`);
+
+  resultStr = _.replace(resultStr, '$NamePlatinum$', `${configPricePlatinum.text}`);
+  resultStr = _.replace(resultStr, '$NameGold$', `${configPriceGold.text}`);
+  resultStr = _.replace(resultStr, '$NameBronze$', `${configPriceBronze.text}`);
+
+  resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
+
+  const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+  const profileOfCurrentAccount = currentAccount.inst_profile;
+  resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
+
+  /**
+   * Кол-во сообщений, отправленных с текущего аккаунта за сутки
+   */
+
+  const numberOfMessagesSentToday = currentAccount.posts_made_day;
+  resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
+
+  if (input.additionalTokens != null) {
+
+    _.forEach(input.additionalTokens, (elem) => {
+
+      resultStr = _.replace(resultStr, elem.token, elem.value);
+
+    });
+
+  }
+
+  resultStr = emoji.emojify(resultStr, () => '');
+
+  return resultStr;
+
+}
+
+function mapDeep(params) {
+
+  const schema = Joi.object({
+    client: Joi
+      .any()
+      .required(),
+    data: Joi
+      .any()
+      .required(),
+    additionalTokens: Joi
+      .any(),
+  });
+
+  const inputRaw = schema.validate(params);
+  const input = inputRaw.value;
+
+  if (_.isArray(input.data)) {
+    const arr = input.data.map((innerObj) => mapDeep({
+      client: input.client,
+      data: innerObj,
+      additionalTokens: input.additionalTokens,
+    }));
+
+    return arr;
+
+  } else if (_.isObject(input.data)) {
+    let ob = _.forEach(input.data, (val, key, o) => {
+      if (key === 'text' || key === 'url') {
+        o[key] = parseSpecialTokens({
+          client: input.client,
+          message: t(input.client.lang, val),
+          additionalTokens: input.additionalTokens,
+        });
+      }
+    });
+
+    return ob;
+
+  }
+
+}

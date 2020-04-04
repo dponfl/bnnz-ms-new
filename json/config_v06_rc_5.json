@@ -1056,11 +1056,13 @@
         "MSG_HELP_BTN_HELP": "ПОМОЩЬ",
         "MSG_GENERAL_ENTER_POST_LINK": "Введи ссылку на свой пост в Инстаграм :point_down:",
         "$$$$$$$$$$$$$$$$$$$$$_000001": "*** ТОКЕНЫ ДЛЯ ЗАДАЧ ***",
-        "MSG_TASK_LIKE": "Поставь лайк :thumbsup:",
+        "MSG_TASK_LIKE": "Поставь лайк :thumbsup: на пост (для перехода на пост - нажми кнопку \"Открыть пост :eyes:\") :point_down:",
         "MSG_TASK_LIKE_COMMENT": "Поставь лайк :thumbsup: и оставь комментарий (не меньше 4 слов) :memo:",
         "MSG_TASK_POST_LINK": "Ссылка на пост :point_right: $PostLink$",
         "MSG_TASK": "Когда выполнишь задание - нажми кнопку \"ЗАДАНИЕ ВЫПОЛНЕНО\" :point_down:",
-        "MSG_TASK_PERFORM_BTN": "ЗАДАНИЕ ВЫПОЛНЕНО :white_check_mark:"
+        "MSG_TASK_PERFORM_BTN": "ЗАДАНИЕ ВЫПОЛНЕНО",
+        "MSG_TASK_LIKE_DONE": "Задание поставить лайк для поста $PostLink$ выполнено :white_check_mark: Спасибо :wink:",
+        "MSG_TASK_POST_LINK_BTN": "Открыть пост :eyes:"
       }
     }
   }

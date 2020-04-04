@@ -101,11 +101,20 @@ module.exports = {
 
       const instProfile = account.inst_profile;
 
-      const postRec = Posts.findOne({guid: taskRec.postGuid});
+      const postRecRaw = await sails.helpers.storage.postsGetJoi({guid: taskRec.postGuid});
 
-      if (postRec == null) {
-        throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}`);
+      if (
+        postRecRaw.payload == null
+        || !_.isArray(postRecRaw.payload)
+      ) {
+        throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
       }
+
+      if (postRecRaw.payload.length !== 1) {
+        throw new Error(`${moduleName}, Error: More than one record for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
+      }
+
+      const postRec = postRecRaw.payload[0];
 
       const postLink = postRec.postLink;
 
@@ -135,7 +144,28 @@ module.exports = {
           }
         });
 
-        // const receivedLikes =
+        const receivedLikes = postRec.receivedLikes + 1;
+
+        let data = {
+          receivedLikes,
+        };
+
+        const allLikesDone = receivedLikes >= postRec.requestedLikes;
+
+        if (allLikesDone) {
+          data = _.assign(data, allLikesDone);
+        }
+
+        await sails.helpers.storage.postsUpdateJoi({
+          criteria: {guid: postRec.guid},
+          data,
+        });
+
+        /**
+         * Удаляем требование выполнить задание из чата
+         */
+
+
 
       } else {
 

@@ -40,6 +40,7 @@ module.exports = {
     },
     login: {
       type: 'string',
+      allowNull: true,
     },
     password_hash: {
       type: 'string',

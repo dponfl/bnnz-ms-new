@@ -143,8 +143,6 @@ module.exports = {
        * нужно сформировать задание и отправить соответствующее сообщение
        */
 
-      let accountUpdateRes;
-
       for (const acc of accountsList) {
 
         const taskTypeRaw = await sails.helpers.tasks.generateTaskType();
@@ -187,7 +185,7 @@ module.exports = {
                 },
               ],
               blockModifyHelperParams: {
-                taskGuid: taskRecRaw.payload.guid || null,
+                taskGuid: taskRecRaw.payload.guid || '',
               },
             });
             break;
@@ -202,13 +200,22 @@ module.exports = {
                 },
               ],
               blockModifyHelperParams: {
-                taskGuid: taskRecRaw.payload.guid || null,
+                taskGuid: taskRecRaw.payload.guid || '',
               },
             });
             break;
           default:
             throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
         }
+
+        await sails.helpers.storage.tasksUpdateJoi({
+          criteria: {
+            guid: taskRecRaw.payload.guid,
+          },
+          data: {
+            messageId: msgRes.payload.message_id || null,
+          }
+        });
 
         await sails.helpers.storage.accountUpdateJoi({
           criteria: {guid: acc.guid},
