@@ -196,6 +196,7 @@ describe('tasks.generateTasksJoi test', function () {
     let postsUpdateJoiStub;
     let sendMessageJoiStub;
     let accountUpdateJoiStub;
+    let generateTaskTypeStub;
 
     before(function () {
       postsCreateJoiStub = sinon.stub(sails.helpers.storage, 'postsCreateJoi');
@@ -209,6 +210,7 @@ describe('tasks.generateTasksJoi test', function () {
       postsUpdateJoiStub = sinon.stub(sails.helpers.storage, 'postsUpdateJoi');
       sendMessageJoiStub = sinon.stub(sails.helpers.messageProcessor, 'sendMessageJoi');
       accountUpdateJoiStub = sinon.stub(sails.helpers.storage, 'accountUpdateJoi');
+      generateTaskTypeStub = sinon.stub(sails.helpers.tasks, 'generateTaskType');
     });
 
     after(function () {
@@ -217,6 +219,7 @@ describe('tasks.generateTasksJoi test', function () {
       tasksCreateJoiStub.restore();
       postsUpdateJoiStub.restore();
       accountUpdateJoiStub.restore();
+      generateTaskTypeStub.restore();
     });
 
     beforeEach(async function () {
@@ -337,6 +340,20 @@ describe('tasks.generateTasksJoi test', function () {
           message: 'List of clients',
           payload: accountsList,
         });
+
+      generateTaskTypeStub.returns({
+        status: 'ok',
+        message: 'Task type generated',
+        payload: customConfig.config.tasks.task_types.LIKE,
+      });
+
+      sendMessageJoiStub.returns({
+        status: 'ok',
+        message: 'Some text here...',
+        payload: {
+          message_id: casual.integer(1000, 10000),
+        },
+      });
 
       const generateTasksJoiRes = await sails.helpers.tasks.generateTasksJoi({
         client,

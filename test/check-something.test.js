@@ -13,7 +13,7 @@ describe('Test sending and updating Telegram message', function () {
     customConfig = customConfigRaw.payload;
   });
 
-  it.skip('should perform task message and its transformation to done message with delay between them', async function () {
+  it('should perform task message and its transformation to done message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
@@ -152,7 +152,7 @@ describe('Test sending and updating Telegram message', function () {
 
   });
 
-  it('should perform task message and its transformation to not done message with delay between them', async function () {
+  it.only('should perform task message and its transformation to not done message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 

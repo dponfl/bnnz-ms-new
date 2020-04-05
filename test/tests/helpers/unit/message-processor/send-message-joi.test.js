@@ -1,5 +1,7 @@
 "use strict";
 
+const sails = require('sails');
+
 const {expect} = require('chai');
 const sinon = require('sinon');
 const mlog = require('mocha-logger');
@@ -90,9 +92,9 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
   describe('Perform messageProcessor:sendMessageJoi', function () {
 
-    let parseMessageStyleJoiStub;
+    let parseMessageStyleStub;
     let performBlockModifyHelperStub;
-    let mapDeepJoiStub;
+    let mapDeepStub;
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
     let videoMessageJoiStub;
@@ -102,9 +104,9 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
 
     beforeEach(function () {
-      parseMessageStyleJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseMessageStyleJoi');
+      parseMessageStyleStub = sinon.stub(sails.services.messageprocessor, 'parseMessageStyle');
       performBlockModifyHelperStub = sinon.stub(sails.helpers.messageProcessor, 'performBlockModifyHelperJoi');
-      mapDeepJoiStub = sinon.stub(sails.helpers.messageProcessor, 'mapDeepJoi');
+      mapDeepStub = sinon.stub(sails.services.messageprocessor, 'mapDeep');
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
       videoMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'videoMessageJoi');
@@ -114,8 +116,8 @@ describe('messageProcessor:sendMessageJoi test', function () {
     });
 
     afterEach(function () {
-      mapDeepJoiStub.restore();
-      parseMessageStyleJoiStub.restore();
+      mapDeepStub.restore();
+      parseMessageStyleStub.restore();
       performBlockModifyHelperStub.restore();
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
@@ -131,7 +133,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlSimple string');
+          parseMessageStyleStub.returns('htmlSimple string');
           simpleMessageJoiStub
             .returns({
               status: 'ok',
@@ -164,7 +166,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
           expect(simpleMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
           expect(sendMessageJoiRes).to.deep.include({
@@ -194,7 +196,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlImg string');
+          parseMessageStyleStub.returns('htmlImg string');
           imgMessageJoiStub
             .returns({
               status: 'ok',
@@ -220,7 +222,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
           expect(imgMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
           expect(sendMessageJoiRes).to.deep.include({
@@ -243,7 +245,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlVideo string');
+          parseMessageStyleStub.returns('htmlVideo string');
           videoMessageJoiStub
             .returns({
               status: 'ok',
@@ -269,7 +271,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
           expect(videoMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
           expect(sendMessageJoiRes).to.deep.include({
@@ -292,7 +294,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlVideo string');
+          parseMessageStyleStub.returns('htmlVideo string');
           forcedMessageJoiStub
             .returns({
               status: 'ok',
@@ -318,7 +320,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
           expect(forcedMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
           expect(sendMessageJoiRes).to.deep.include({
@@ -341,8 +343,8 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlInline string');
-          mapDeepJoiStub.returns(inlineKeyboard);
+          parseMessageStyleStub.returns('htmlInline string');
+          mapDeepStub.returns(inlineKeyboard);
           inlineKeyboardMessageJoiStub
             .returns({
               status: 'ok',
@@ -368,7 +370,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
           const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
 
-          expect(parseMessageStyleJoiStub.callCount).to.be.eq(1);
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
           expect(inlineKeyboardMessageJoiStub.callCount).to.be.eq(1);
           expect(messageSaveJoiStub.callCount).to.be.eq(1);
           expect(sendMessageJoiRes).to.deep.include({

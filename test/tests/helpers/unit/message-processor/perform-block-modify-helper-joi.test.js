@@ -61,8 +61,6 @@ describe('messageProcessor:performBlockModifyHelperJoi test', function () {
 
   describe('Perform messageProcessor:performBlockModifyHelperJoi', function () {
 
-    let parseMessageStyleJoiStub;
-    let mapDeepJoiStub;
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
     let videoMessageJoiStub;
@@ -72,8 +70,6 @@ describe('messageProcessor:performBlockModifyHelperJoi test', function () {
 
 
     beforeEach(function () {
-      parseMessageStyleJoiStub = sinon.stub(sails.helpers.messageProcessor, 'parseMessageStyleJoi');
-      mapDeepJoiStub = sinon.stub(sails.helpers.messageProcessor, 'mapDeepJoi');
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
       videoMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'videoMessageJoi');
@@ -83,8 +79,6 @@ describe('messageProcessor:performBlockModifyHelperJoi test', function () {
     });
 
     afterEach(function () {
-      mapDeepJoiStub.restore();
-      parseMessageStyleJoiStub.restore();
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
       videoMessageJoiStub.restore();
@@ -105,7 +99,6 @@ describe('messageProcessor:performBlockModifyHelperJoi test', function () {
 
         try {
 
-          parseMessageStyleJoiStub.returns('htmlVideo string');
           forcedMessageJoiStub
             .returns({
               status: 'ok',
