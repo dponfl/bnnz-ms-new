@@ -25,51 +25,6 @@ describe('Test sending and updating Telegram message', function () {
 
       client.accounts = await Account.find({client: client.id});
 
-      // const messageData = {
-      //   id: "start",
-      //   description: "Задача: поставить лайк",
-      //   actionType: "inline_keyboard",
-      //   initial: true,
-      //   enabled: true,
-      //   previous: null,
-      //   show_time: "now",
-      //   next: null,
-      //   shown: false,
-      //   beforeHelper: null,
-      //   afterHelper: null,
-      //   forcedHelper: null,
-      //   callbackHelper: null,
-      //   blockModifyHelper: null,
-      //   message: {
-      //     html: [
-      //       {
-      //         text: "MSG_TASK_LIKE",
-      //         style: "",
-      //         cr: "DCR"
-      //       },
-      //       {
-      //         text: "MSG_TASK",
-      //         style: "",
-      //         cr: ""
-      //       }
-      //     ],
-      //     inline_keyboard: [
-      //       [
-      //         {
-      //           text: "MSG_TASK_POST_LINK_BTN",
-      //           url: "$PostLink$"
-      //         }
-      //       ],
-      //       [
-      //         {
-      //           text: "MSG_TASK_PERFORM_BTN",
-      //           callback_data: "push_msg_tsk_l_" + casual.uuid
-      //         }
-      //       ]
-      //     ]
-      //   }
-      // };
-
       const messageData = customConfig.pushMessages.tasks.likes.messages[0];
 
       messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
@@ -82,35 +37,6 @@ describe('Test sending and updating Telegram message', function () {
           ]
         ]
       );
-
-
-      // const editMessageData = {
-      //   id: "start",
-      //   description: "Задание поставить лайк выполнено",
-      //   actionType: "edit_message_text",
-      //   initial: true,
-      //   enabled: true,
-      //   previous: null,
-      //   show_time: "now",
-      //   next: null,
-      //   shown: false,
-      //   beforeHelper: null,
-      //   afterHelper: null,
-      //   forcedHelper: null,
-      //   callbackHelper: null,
-      //   blockModifyHelper: null,
-      //   message: {
-      //     html: [
-      //       {
-      //         text: "MSG_TASK_LIKE_DONE",
-      //         style: "",
-      //         cr: "DCR"
-      //       }
-      //     ],
-      //     inline_keyboard: [
-      //     ]
-      //   }
-      // };
 
       const editMessageData = customConfig.pushMessages.tasks.likes_done.messages[0];
 
