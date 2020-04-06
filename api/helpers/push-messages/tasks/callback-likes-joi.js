@@ -65,11 +65,11 @@ module.exports = {
 
       const queryData = queryDataRegExp.exec(input.query.data);
 
-      if (queryData.length !== 3) {
+      if (queryData == null || queryData.length !== 2) {
         throw new Error(`${moduleName}, Error: query.data has wrong format: ${input.query.data}`);
       }
 
-      const taskGuid = queryData[2];
+      const taskGuid = queryData[1];
 
       if (!uuid.isUUID(taskGuid)) {
         throw new Error(`${moduleName}, Error: query.data task code is not a guid: ${taskGuid}`);
@@ -83,13 +83,13 @@ module.exports = {
         guid: taskGuid,
       });
 
-      if (taskRecRaw.payload.length() > 1) {
+      if (taskRecRaw.payload.length > 1) {
         throw new Error(`${moduleName}, Error: Several tasks with the same guid: 
         guid: ${taskGuid}
         tasks: ${JSON.stringify(taskRecRaw.payload, null, 3)}`);
       }
 
-      if (taskRecRaw.payload.length() === 1) {
+      if (taskRecRaw.payload.length === 0) {
         throw new Error(`${moduleName}, Error: No tasks for this guid: ${taskGuid}`);
       }
 
@@ -106,8 +106,8 @@ module.exports = {
       const postRecRaw = await sails.helpers.storage.postsGetJoi({guid: taskRec.postGuid});
 
       if (
-        postRecRaw.payload == null
-        || !_.isArray(postRecRaw.payload)
+        _.isArray(postRecRaw.payload)
+        && postRecRaw.payload.length === 0
       ) {
         throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
       }
@@ -227,7 +227,9 @@ module.exports = {
       return exits.success({
         status: 'ok',
         message: 'callbackLikes performed',
-        payload: {},
+        payload: {
+          res: taskPerformRes,
+        },
       })
 
     } catch (e) {

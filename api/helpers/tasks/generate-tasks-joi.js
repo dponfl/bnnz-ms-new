@@ -183,6 +183,10 @@ module.exports = {
                   token: '$PostLink$',
                   value: input.postLink,
                 },
+                {
+                  token: '$CurrentAccount$',
+                  value: acc.inst_profile,
+                },
               ],
               blockModifyHelperParams: {
                 taskGuid: taskRecRaw.payload.guid || '',
@@ -197,6 +201,10 @@ module.exports = {
                 {
                   token: '$PostLink$',
                   value: input.postLink,
+                },
+                {
+                  token: '$CurrentAccount$',
+                  value: acc.inst_profile,
                 },
               ],
               blockModifyHelperParams: {

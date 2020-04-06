@@ -104,6 +104,11 @@
           "message": {
             "html": [
               {
+                "text": "MSG_TASK_ACCOUNT",
+                "style": "b",
+                "cr": "DCR"
+              },
+              {
                 "text": "MSG_TASK_LIKE",
                 "style": "",
                 "cr": "DCR"
@@ -146,6 +151,11 @@
           "blockModifyHelper": "tasks::blockModifyLikesCommentsJoi",
           "message": {
             "html": [
+              {
+                "text": "MSG_TASK_ACCOUNT",
+                "style": "b",
+                "cr": "DCR"
+              },
               {
                 "text": "MSG_TASK_LIKE_COMMENT",
                 "style": "",
