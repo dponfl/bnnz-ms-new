@@ -138,6 +138,7 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
   describe('Check callbackHelper call', function () {
 
     let config, pushMessages;
+    let callbackHelperStub;
 
     before(async function () {
       const configRaw =   await sails.helpers.general.getConfig();
@@ -148,12 +149,12 @@ describe('pushMessages.proceedPushMessageJoi test', function () {
     afterEach(async function () {
       config.pushMessages = pushMessages;
       const configUpdatedRaw = await sails.helpers.general.setConfig(config);
+
+      callbackHelperStub.restore();
     });
 
 
     it('should successfully call callbackHelper', async function () {
-
-      let callbackHelperStub;
 
       const client = await clientSdk.generateClient();
       const query = {
