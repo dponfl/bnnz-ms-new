@@ -71,7 +71,7 @@ async function generateMessageData(messageType = null, data = null) {
           }
         };
         break;
-      case 'comments_likes':
+      case 'likes_comments':
         messageData = {
           id: "start",
           description: "Задача: оставить комментарий и поставить лайк",

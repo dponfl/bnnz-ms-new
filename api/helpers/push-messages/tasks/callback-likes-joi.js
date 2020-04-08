@@ -140,7 +140,9 @@ module.exports = {
         const makeLikePerformed = true;
 
         await sails.helpers.storage.tasksUpdateJoi({
-          criteria: taskRec.guid,
+          criteria: {
+            guid: taskRec.guid,
+          },
           data: {
             makeLikePerformed,
           }
@@ -159,7 +161,9 @@ module.exports = {
         }
 
         await sails.helpers.storage.postsUpdateJoi({
-          criteria: {guid: postRec.guid},
+          criteria: {
+            guid: postRec.guid,
+          },
           data,
         });
 

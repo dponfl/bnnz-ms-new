@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const casual = require('casual');
 const sinon = require('sinon');
 
-describe('parsers:inst:ninja:checkLikesJoi test', function () {
+describe('parsers:inst:ninja:checkLikesCommentsJoi test', function () {
 
   let customConfig;
 
@@ -55,9 +55,9 @@ describe('parsers:inst:ninja:checkLikesJoi test', function () {
 
   });
 
-  describe('Performs checkLikesJoi successfully', function () {
+  describe('Performs checkLikesCommentsJoi successfully', function () {
 
-    it('should perform checkLikesJoi successfully', async function () {
+    it('should perform checkLikesCommentsJoi successfully', async function () {
 
       try {
 
@@ -69,9 +69,13 @@ describe('parsers:inst:ninja:checkLikesJoi test', function () {
           instPostCode,
         };
 
-        const checkLikesJoiRes = await sails.helpers.parsers.inst.ninja.checkLikesJoi(params);
+        const checkLikesJoiRes = await sails.helpers.parsers.inst.ninja.checkLikesCommentsJoi(params);
 
-        expect(checkLikesJoiRes).to.be.eq(true);
+        expect(checkLikesJoiRes).to.include({
+          likeMade: true,
+          commentMade: true,
+          commentText: 'Пример комментария на пост',
+        });
 
       } catch (e) {
         expect.fail(`Unexpected error: ${JSON.stringify(e, null, 3)}`);

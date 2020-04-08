@@ -131,7 +131,7 @@
         }
       ]
     },
-    "comments_likes": {
+    "likes_comments": {
       "description": "Задача: оставить комментарий и поставить лайк",
       "messages": [
         {
@@ -160,11 +160,6 @@
                 "text": "MSG_TASK_LIKE_COMMENT",
                 "style": "",
                 "cr": "SCR"
-              },
-              {
-                "text": "MSG_TASK_POST_LINK",
-                "style": "b",
-                "cr": "DCR"
               },
               {
                 "text": "MSG_TASK",
@@ -238,6 +233,167 @@
             "html": [
               {
                 "text": "MSG_TASK_LIKE_NOT_DONE",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "likes_comments_done": {
+      "description": "Задание поставить лайк и оставить комментарий выполнено",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк и оставить комментарий выполнено",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_COMMENT_DONE",
+                "style": "",
+                "cr": "DCR"
+              }
+            ],
+            "inline_keyboard": [
+            ]
+          }
+        }
+      ]
+    },
+    "likes_comments_not_done": {
+      "description": "Задание поставить лайк и оставить комментарий не выполнено",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк и оставить комментарий не выполнено",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_COMMENT_NOT_DONE",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "likes_comments_no_like": {
+      "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет лайка",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет лайка",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "MSG_TASK",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "MSG_TASK_POST_LINK_BTN",
+                  "url": "$PostLink$"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "likes_comments_no_comment": {
+      "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет комментария",
+      "messages": [
+        {
+          "id": "start",
+          "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет комментария",
+          "actionType": "edit_message_text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT",
                 "style": "",
                 "cr": "DCR"
               },

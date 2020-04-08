@@ -136,16 +136,16 @@ module.exports = {
            * Задание на постановку лайков и оставление комментов
            */
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.comments_likes')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.comments_likes property`);
+          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments')) {
+            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
           }
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.comments_likes.messages')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.comments_likes.messages property`);
+          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments.messages')) {
+            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments.messages property`);
           }
 
-          if (sails.config.custom.pushMessages.tasks.comments_likes.messages[0].callbackHelper == null) {
-            throw new Error(`${moduleName}, critical error: push messages config tasks.comments_likes has no callbackHelper`);
+          if (sails.config.custom.pushMessages.tasks.likes_comments.messages[0].callbackHelper == null) {
+            throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
           }
 
           /**
@@ -154,7 +154,7 @@ module.exports = {
            *    - blockModifyHelper
            */
 
-          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.comments_likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
+          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.likes_comments.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
           let callbackHelperBlock = splitCallbackHelperRes[0];
           let callbackHelperName = splitCallbackHelperRes[1];
 

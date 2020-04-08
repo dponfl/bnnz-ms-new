@@ -219,7 +219,7 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
 
   describe('Tasks:Likes & Comments', function () {
 
-    describe('Wrong config for tasks.comments_likes', function () {
+    describe('Wrong config for tasks.likes_comments', function () {
 
       let config, pushMessages;
 
@@ -235,9 +235,9 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         const configUpdatedRaw = await sails.helpers.general.setConfig(config);
       });
 
-      it('should throw error for missing config for tasks.comments_likes', async function () {
+      it('should throw error for missing config for tasks.likes_comments', async function () {
 
-        config = _.omit(config, 'pushMessages.tasks.comments_likes');
+        config = _.omit(config, 'pushMessages.tasks.likes_comments');
         await sails.helpers.general.setConfig(config);
 
         const client = await clientSdk.generateClient();
@@ -259,14 +259,14 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         } catch (e) {
           expect(e.raw.payload.error).to.be.an.instanceof(Error);
           expect(e.raw.payload.error).to.has.property('message');
-          expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.comments_likes property`);
+          expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.likes_comments property`);
         }
 
       });
 
-      it('should throw error for missing config for tasks.comments_likes.messages', async function () {
+      it('should throw error for missing config for tasks.likes_comments.messages', async function () {
 
-        config = _.omit(config, 'pushMessages.tasks.comments_likes.messages');
+        config = _.omit(config, 'pushMessages.tasks.likes_comments.messages');
         await sails.helpers.general.setConfig(config);
 
         const client = await clientSdk.generateClient();
@@ -288,14 +288,14 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         } catch (e) {
           expect(e.raw.payload.error).to.be.an.instanceof(Error);
           expect(e.raw.payload.error).to.has.property('message');
-          expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.comments_likes.messages property`);
+          expect(e.raw.payload.error.message).to.include(`critical error: push messages config has no tasks.likes_comments.messages property`);
         }
 
       });
 
-      it('should throw error for missing tasks.comments_likes.messages[0].callbackHelper', async function () {
+      it('should throw error for missing tasks.likes_comments.messages[0].callbackHelper', async function () {
 
-        config.pushMessages.tasks.comments_likes.messages[0].callbackHelper = null;
+        config.pushMessages.tasks.likes_comments.messages[0].callbackHelper = null;
         await sails.helpers.general.setConfig(config);
 
         const client = await clientSdk.generateClient();
@@ -317,14 +317,14 @@ describe('pushMessages.supervisorCallbackJoi test', function () {
         } catch (e) {
           expect(e.raw.payload.error).to.be.an.instanceof(Error);
           expect(e.raw.payload.error).to.has.property('message');
-          expect(e.raw.payload.error.message).to.include(`critical error: push messages config tasks.comments_likes has no callbackHelper`);
+          expect(e.raw.payload.error.message).to.include(`critical error: push messages config tasks.likes_comments has no callbackHelper`);
         }
 
       });
 
-      it('should throw error for wrong format of tasks.comments_likes.messages[0].callbackHelper', async function () {
+      it('should throw error for wrong format of tasks.likes_comments.messages[0].callbackHelper', async function () {
 
-        config.pushMessages.tasks.comments_likes.messages[0].callbackHelper = "tasks:callbackLikes";
+        config.pushMessages.tasks.likes_comments.messages[0].callbackHelper = "tasks:callbackLikes";
         await sails.helpers.general.setConfig(config);
 
         const client = await clientSdk.generateClient();
