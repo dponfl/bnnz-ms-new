@@ -84,6 +84,8 @@ module.exports = {
 
     try {
 
+      //TODO: Наверное есть смысл включить в логику этого хелпера inputs.block.done = true
+
       /**
        * Update at client record the block specified at input.block
        */

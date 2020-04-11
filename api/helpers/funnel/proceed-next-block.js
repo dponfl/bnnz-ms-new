@@ -350,6 +350,8 @@ module.exports = {
          * we perform next actions based on the information provided by client
          */
 
+        // TODO: Добавить сюда другие типы сообщений: video, doc
+
         if (_.includes(['text', 'img'], block.actionType)) {
 
           await sails.helpers.funnel.afterHelperGeneric.with({
