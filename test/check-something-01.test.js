@@ -3,6 +3,7 @@
 const sleep = require('util').promisify(setTimeout);
 const mlog = require('mocha-logger');
 const moment = require('moment');
+const sinon = require('sinon');
 
 describe.skip('Test sleep function', function () {
 
@@ -51,10 +52,17 @@ describe.skip('Test sendDocument', function () {
 describe('Test send few test text messages', function () {
 
   let customConfig;
+  let messageSaveJoiStub;
 
   before(async function () {
     const customConfigRaw =   await sails.helpers.general.getConfig();
     customConfig = customConfigRaw.payload;
+
+    messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
+  });
+
+  after(function () {
+    messageSaveJoiStub.restore();
   });
 
   it('should send few test messages', async function () {

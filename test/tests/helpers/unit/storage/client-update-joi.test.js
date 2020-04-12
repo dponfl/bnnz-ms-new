@@ -3,7 +3,7 @@
 const {expect} = require('chai');
 const casual = require('casual');
 
-describe('storage.tasksUpdateJoi test (unit)', function () {
+describe('storage.clientUpdateJoi test (unit)', function () {
 
   describe('check input parameters validation', function () {
 
@@ -12,12 +12,11 @@ describe('storage.tasksUpdateJoi test (unit)', function () {
 
         const paramsObj = {
           data: {
-            makeLikePerformed: casual.boolean,
-            makeCommentPerformed: casual.boolean,
+            last_name: casual.name,
           },
         };
 
-        await sails.helpers.storage.tasksUpdateJoi(paramsObj);
+        await sails.helpers.storage.clientUpdateJoi(paramsObj);
 
         expect.fail('Unexpected success');
 
@@ -35,7 +34,7 @@ describe('storage.tasksUpdateJoi test (unit)', function () {
           },
         };
 
-        await sails.helpers.storage.tasksUpdateJoi(paramsObj);
+        await sails.helpers.storage.clientUpdateJoi(paramsObj);
 
         expect.fail('Unexpected success');
 

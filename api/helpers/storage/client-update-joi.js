@@ -2,15 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'storage:account-update-joi';
+const moduleName = 'storage:client-update-joi';
+
 
 module.exports = {
 
 
-  friendlyName: 'Account update',
+  friendlyName: 'Client update',
 
 
-  description: 'Update record for the existing account',
+  description: 'Update record for the existing client',
 
 
   inputs: {
@@ -39,13 +40,13 @@ module.exports = {
 
     const schema = Joi.object({
       criteria: Joi
-                .any()
-                .required()
-                .description('Criteria to update only one account record'),
+        .any()
+        .description('Criteria to update client record')
+        .required(),
       data: Joi
-            .any()
-            .required()
-            .description('Data to update to the account record'),
+        .any()
+        .description('Data to update to the client record')
+        .required(),
     });
 
     let input;
@@ -54,37 +55,35 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const accountRec = _.omit(input.data, ['service', 'room', 'next_service']);
-      const serviceData = _.get(input.data, 'service');
-      const nextServiceData = _.get(input.data, 'next_service');
+      const accounts = _.get(input.data, 'accounts');
 
-      if (serviceData) {
-        accountRec.service = serviceData.id;
-      }
+      _.forEach(accounts, async (acc) => {
 
-      if (nextServiceData) {
-        accountRec.next_service = nextServiceData.id;
-      }
+        await sails.helpers.storage.accountUpdate.with({
+          criteria: {id: acc.id},
+          data: acc,
+        })
+      });
 
-      const accountRecord = await Account.findOne({
+      const clientRec = await Client.findOne({
         where: input.criteria,
       });
 
-      if (accountRecord != null) {
-        await sails.helpers.storage.accountFieldsPut.with({
-          accountGuid: accountRecord.guid,
+      if (clientRec != null) {
+        await sails.helpers.storage.clientFieldsPut.with({
+          clientGuid: clientRec.guid,
           data: input.data,
         })
       }
 
-      await Account.update(input.criteria).set(accountRec);
+      await Client.update(input.criteria).set(_.omit(input.data, 'accounts'));
 
       return exits.success({
         status: 'ok',
-        message: 'Account record updated',
+        message: 'Client updated',
         payload: {
           criteria: input.criteria,
-          data: input.data
+          client: input.data
         },
       })
 
@@ -108,6 +107,7 @@ module.exports = {
     }
 
   }
+
 
 };
 

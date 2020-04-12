@@ -144,15 +144,15 @@ module.exports = {
              * Save the sent message
              */
 
-            // await sails.helpers.storage.messageSave.with({
-            //   message_id: simpleRes.payload.message_id || 0,
-            //   message: htmlSimple,
-            //   message_format: sails.config.custom.enums.messageFormat.SIMPLE,
-            //   messenger: input.client.messenger,
-            //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            //   client_id: input.client.id,
-            //   client_guid: input.client.guid
-            // });
+            await sails.helpers.storage.messageSaveJoi({
+              message_id: simpleRes.payload.message_id || 0,
+              message: htmlSimple,
+              message_format: sails.config.custom.enums.messageFormat.SIMPLE,
+              messenger: input.client.messenger,
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
+              client_id: input.client.id,
+              client_guid: input.client.guid
+            });
 
             break;
 
