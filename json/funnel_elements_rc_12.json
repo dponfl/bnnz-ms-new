@@ -6,6 +6,7 @@
       "actionType": "text",
       "initial": false,
       "enabled": false,
+      "show_time": 0,
       "previous": null,
       "next": "optin::general_info",
       "switchToFunnel": null,
@@ -32,6 +33,7 @@
       "actionType": "inline_keyboard",
       "initial": false,
       "enabled": false,
+      "show_time": 0,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -81,6 +83,7 @@
       "actionType": "forced",
       "initial": false,
       "enabled": false,
+      "show_time": 0,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -117,6 +120,7 @@
       "actionType": "img",
       "initial": false,
       "enabled": false,
+      "show_time": 0,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -144,6 +148,7 @@
       "actionType": "video",
       "initial": false,
       "enabled": false,
+      "show_time": 0,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
@@ -156,6 +161,34 @@
       "done": false,
       "message": {
         "video": "sample.mp4",
+        "html": [
+          {
+            "text": "NEW_SUBS_WELCOME_02",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "document",
+      "description": "",
+      "actionType": "doc",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "doc": "sample.pdf",
         "html": [
           {
             "text": "NEW_SUBS_WELCOME_02",

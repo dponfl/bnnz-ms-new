@@ -17,7 +17,7 @@ describe.skip('Test sleep function', function () {
 
 });
 
-describe('Test sendDocument', function () {
+describe.skip('Test sendDocument', function () {
 
   let customConfig;
 
@@ -47,3 +47,122 @@ describe('Test sendDocument', function () {
   });
 
 });
+
+describe('Test send few test text messages', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send few test messages', async function () {
+
+    this.timeout(30000);
+
+    const client = await Client.findOne({
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    client.funnels = {
+      optin: [
+        {
+          "id": "step01",
+          "description": "",
+          "actionType": "text",
+          "initial": true,
+          "enabled": true,
+          "show_time": 0,
+          "previous": null,
+          "next": "optin::step02",
+          "switchToFunnel": null,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_STEP01",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "step02",
+          "description": "",
+          "actionType": "text",
+          "initial": false,
+          "enabled": false,
+          "show_time": 2000,
+          "previous": "optin::step01",
+          "next": "optin::step03",
+          "switchToFunnel": null,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_STEP02",
+                "style": "b",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "step03",
+          "description": "",
+          "actionType": "text",
+          "initial": false,
+          "enabled": false,
+          "show_time": 5000,
+          "previous": "optin::step02",
+          "next": null,
+          "switchToFunnel": null,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_STEP03",
+                "style": "i",
+                "cr": ""
+              }
+            ]
+          }
+        },
+      ]
+    };
+
+    const funnelName = 'optin';
+    const blockId = 'step01';
+
+    const res = await sails.helpers.funnel.proceedNextBlockJoi({
+      client,
+      funnelName,
+      blockId,
+    });
+
+  });
+
+});
+
