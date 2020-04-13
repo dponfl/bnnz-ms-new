@@ -85,11 +85,6 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      // sails.log.info('/*************** api/helpers/funnel/proceed-next-block ***************/');
-      // sails.log.debug('input.funnelName: ', input.funnelName);
-      // sails.log.debug('input.blockId: ', input.blockId);
-
-
       let clientName = {
         firstName: input.client.first_name || null,
         lastName: input.client.last_name || null,
@@ -126,15 +121,10 @@ module.exports = {
 
             let {text: htmlSimple} = await activateBeforeHelper(input.client, block, input.msg || null, htmlSimpleRaw);
 
-            // sails.log.debug('htmlSimple: ', htmlSimple);
-
-            let simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessage'].with({
+            let simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlSimple,
             });
-
-            // sails.log.debug('simpleRes: ', simpleRes);
-            // sails.log.debug('simpleRes payload: ', simpleRes.payload);
 
             block.message_id = simpleRes.payload.message_id;
 
@@ -166,14 +156,11 @@ module.exports = {
 
             let {text: htmlImg} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgRaw);
 
-            let imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessage'].with({
+            let imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
               chatId: input.client.chat_id,
               imgPath: sails.config.custom.cloudinaryImgUrl + block.message.img,
               html: htmlImg,
             });
-
-            // sails.log.debug('imgRes: ', imgRes);
-            // sails.log.debug('imgRes payload: ', imgRes.payload);
 
             block.message_id = imgRes.payload.message_id;
 
@@ -183,7 +170,7 @@ module.exports = {
              * Save the sent message
              */
 
-            await sails.helpers.storage.messageSave.with({
+            await sails.helpers.storage.messageSaveJoi({
               message_id: imgRes.payload.message_id || 0,
               message: JSON.stringify({
                 img: sails.config.custom.cloudinaryImgUrl + block.message.img,
@@ -208,14 +195,11 @@ module.exports = {
 
             let {text: htmlVideo} = await activateBeforeHelper(input.client, block, input.msg || null, htmlVideoRaw);
 
-            let videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessage'].with({
+            let videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
               chatId: input.client.chat_id,
               videoPath: sails.config.custom.cloudinaryVideoUrl + block.message.video,
               html: htmlVideo,
             });
-
-            // sails.log.debug('videoRes: ', videoRes);
-            // sails.log.debug('videoRes payload: ', videoRes.payload);
 
             block.message_id = videoRes.payload.message_id;
 
@@ -225,13 +209,52 @@ module.exports = {
              * Save the sent message
              */
 
-            await sails.helpers.storage.messageSave.with({
+            await sails.helpers.storage.messageSaveJoi({
               message_id: videoRes.payload.message_id || 0,
               message: JSON.stringify({
                 video: sails.config.custom.cloudinaryVideoUrl + block.message.video,
                 html: htmlVideo,
               }),
               message_format: sails.config.custom.enums.messageFormat.VIDEO,
+              messenger: input.client.messenger,
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
+              client_id: input.client.id,
+              client_guid: input.client.guid
+            });
+
+            break;
+
+          case 'doc':
+
+            /**
+             * Send document message
+             */
+
+            let htmlDocRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+
+            let {text: htmlDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocRaw);
+
+            let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
+              chatId: input.client.chat_id,
+              docPath: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+              html: htmlDoc,
+            });
+
+            block.message_id = docRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSaveJoi({
+              message_id: docRes.payload.message_id || 0,
+              message: JSON.stringify({
+                video: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                html: htmlDoc,
+              }),
+              message_format: sails.config.custom.enums.messageFormat.DOC,
               messenger: input.client.messenger,
               message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: input.client.id,
@@ -250,13 +273,10 @@ module.exports = {
 
             let {text: htmlForced} = await activateBeforeHelper(input.client, block, input.msg || null, htmlForcedRaw);
 
-            let forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessage'].with({
+            let forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlForced,
             });
-
-            // sails.log.debug('forcedRes: ', forcedRes);
-            // sails.log.debug('forcedRes payload: ', forcedRes.payload);
 
             block.message_id = forcedRes.payload.message_id;
 
@@ -266,7 +286,7 @@ module.exports = {
              * Save the sent message
              */
 
-            await sails.helpers.storage.messageSave.with({
+            await sails.helpers.storage.messageSaveJoi({
               message_id: forcedRes.payload.message_id || 0,
               message: htmlForced,
               message_format: sails.config.custom.enums.messageFormat.FORCED,
@@ -290,17 +310,11 @@ module.exports = {
 
             let objAfter = mapDeep(input.client, clientName, input.client.lang, keyboardInline);
 
-            // sails.log.debug('objAfter: ');
-            // console.dir(objAfter);
-
-            let inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessage'].with({
+            let inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlInline,
               inlineKeyboard: objAfter,
             });
-
-            // sails.log.debug('inlineRes: ', inlineRes);
-            // sails.log.debug('inlineRes payload: ', inlineRes.payload);
 
             block.message_id = inlineRes.payload.message_id;
 
@@ -310,7 +324,7 @@ module.exports = {
              * Save the sent message
              */
 
-            await sails.helpers.storage.messageSave.with({
+            await sails.helpers.storage.messageSaveJoi({
               message_id: inlineRes.payload.message_id || 0,
               message: htmlInline,
               message_format: sails.config.custom.enums.messageFormat.CALLBACK,
@@ -323,17 +337,16 @@ module.exports = {
 
             break;
 
-
         }
 
-        // await sails.helpers.storage.clientUpdate.with({
-        //   criteria: {guid: input.client.guid},
-        //   data: {
-        //     current_funnel: input.client.current_funnel,
-        //     funnels: input.client.funnels,
-        //     accounts: input.client.accounts,
-        //   }
-        // });
+        await sails.helpers.storage.clientUpdateJoi({
+          criteria: {guid: input.client.guid},
+          data: {
+            current_funnel: input.client.current_funnel,
+            funnels: input.client.funnels,
+            accounts: input.client.accounts,
+          }
+        });
 
 
       }
@@ -345,14 +358,12 @@ module.exports = {
       if (_.isNil(block.afterHelper)) {
 
         /**
-         * Only for simple text or img messages we perform afterHelperGeneric
+         * Only for simple messages (like text, img, video & doc) we perform afterHelperGeneric
          * because for both forced and inline_keyboard messages
          * we perform next actions based on the information provided by client
          */
 
-        // TODO: Добавить сюда другие типы сообщений: video, doc
-
-        if (_.includes(['text', 'img'], block.actionType)) {
+        if (_.includes(['text', 'img', 'video', 'doc'], block.actionType)) {
 
           await sails.helpers.funnel.afterHelperGeneric.with({
             client: input.client,
@@ -412,9 +423,6 @@ module.exports = {
         let nextFunnel = splitRes[0];
         let nextId = splitRes[1];
 
-        // sails.log.debug('nextFunnel: ', nextFunnel);
-        // sails.log.debug('nextId: ', nextId);
-
         if (
           nextFunnel
           && nextId
@@ -458,7 +466,7 @@ module.exports = {
     } catch (e) {
 
       const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.PROCEED_NEXT_BLOCK_ERROR}`;
+      const errorMsg = `${moduleName}: ${sails.config.custom.PROCEED_NEXT_BLOCK_JOI_ERROR}`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);

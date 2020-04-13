@@ -37,7 +37,7 @@ describe.skip('Test sendDocument', function () {
 
     const chatId = client.chat_id;
     const html = 'Документ';
-    const docPath = customConfig.cloudinaryImgUrl + 'v1586616265/CY_Tax_2019.pdf';
+    const docPath = customConfig.cloudinaryDocUrl + 'v1586616265/CY_Tax_2019.pdf';
 
     const res = await sails.helpers.mgw.telegram.docMessageJoi({
       chatId,
@@ -53,19 +53,22 @@ describe('Test send few test text messages', function () {
 
   let customConfig;
   let messageSaveJoiStub;
+  let clientUpdateJoiStub;
 
   before(async function () {
     const customConfigRaw =   await sails.helpers.general.getConfig();
     customConfig = customConfigRaw.payload;
 
     messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
+    clientUpdateJoiStub = sinon.stub(sails.helpers.storage, 'clientUpdateJoi');
   });
 
   after(function () {
     messageSaveJoiStub.restore();
+    clientUpdateJoiStub.restore();
   });
 
-  it('should send few test messages', async function () {
+  it('should send few test messages (different types with delays between them)', async function () {
 
     this.timeout(30000);
 
@@ -139,7 +142,7 @@ describe('Test send few test text messages', function () {
           "enabled": false,
           "show_time": 5000,
           "previous": "optin::step02",
-          "next": null,
+          "next": "optin::step04",
           "switchToFunnel": null,
           "beforeHelper": null,
           "afterHelper": null,
@@ -153,6 +156,61 @@ describe('Test send few test text messages', function () {
               {
                 "text": "MSG_STEP03",
                 "style": "i",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "step04",
+          "description": "",
+          "actionType": "doc",
+          "initial": false,
+          "enabled": false,
+          "show_time": 3000,
+          "previous": "optin::step03",
+          "next": "optin::step05",
+          "switchToFunnel": null,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
+          "message": {
+            "doc": "v1586616265/CY_Tax_2019.pdf",
+            "html": [
+              {
+                "text": "MSG_STEP04",
+                "style": "b",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        {
+          "id": "step05",
+          "description": "",
+          "actionType": "text",
+          "initial": false,
+          "enabled": false,
+          "show_time": 3000,
+          "previous": "optin::step04",
+          "next": null,
+          "switchToFunnel": null,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
+          "message": {
+            "html": [
+              {
+                "text": "MSG_STEP05",
+                "style": "",
                 "cr": ""
               }
             ]

@@ -26,6 +26,7 @@ module.exports.custom = {
 
   cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
   cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
+  cloudinaryDocUrl: process.env.CLOUDINARY_DOC_URL || '',
 
   apiUuid: process.env.API_UUID || '',
 
@@ -172,6 +173,7 @@ module.exports.custom = {
       FORCED: 'forced',
       IMG: 'img',
       VIDEO: 'video',
+      DOC: 'doc',
       POSTBROADCAST: 'postBroadcast',
       PUSHSIMPLE: 'pushSimple',
       PUSHCALLBACK: 'pushCallback',
@@ -470,6 +472,7 @@ module.exports.custom = {
    */
 
   PROCEED_NEXT_BLOCK_ERROR: 'proceedNextBlock error',
+  PROCEED_NEXT_BLOCK_JOI_ERROR: 'proceedNextBlockJoi error',
   PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR: 'Cannot parse afterHelper error',
   PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR: 'Cannot parse beforeHelper error',
   PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR: 'Cannot parse blockModifyHelper error',
