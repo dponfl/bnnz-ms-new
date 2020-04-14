@@ -5,10 +5,8 @@ const sinon = require('sinon');
 const mlog = require('mocha-logger');
 const casual = require('casual');
 const clientSdk = require('../../../../sdk/client');
-const messagesSdk = require('../../../../sdk/messages');
-const pushMessagesSdk = require('../../../../sdk/pushMessages');
 
-describe('funnel.proceedNextBlockJoi test', function () {
+describe.only('funnel.afterHelperGenericJoi test', function () {
 
   let customConfig, customConfigGeneral;
 
@@ -24,14 +22,21 @@ describe('funnel.proceedNextBlockJoi test', function () {
 
       try {
 
-        const funnelName = casual.word;
-        const blockId = casual.word;
+        const block = {
+          key: 'value',
+        };
+        const next = casual.boolean;
+        const previous = casual.boolean;
+        const switchFunnel = casual.boolean;
+
         const params = {
-          funnelName,
-          blockId,
+          block,
+          next,
+          previous,
+          switchFunnel,
         };
 
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
@@ -40,42 +45,108 @@ describe('funnel.proceedNextBlockJoi test', function () {
 
     });
 
-    it ('should fail for missing "funnelName" param', async () => {
+    it ('should fail for missing "block" param', async () => {
 
       try {
 
         const client = await clientSdk.generateClient();
-        const blockId = casual.word;
+        const next = casual.boolean;
+        const previous = casual.boolean;
+        const switchFunnel = casual.boolean;
+
         const params = {
           client,
-          blockId,
+          next,
+          previous,
+          switchFunnel,
         };
 
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error).to.deep.include({message: '"funnelName" is required'});
+        expect(e.raw.payload.error).to.deep.include({message: '"block" is required'});
       }
 
     });
 
-    it ('should fail for missing "blockId" param', async () => {
+    it ('should fail for missing "next" param', async () => {
 
       try {
 
         const client = await clientSdk.generateClient();
-        const funnelName = casual.word;
+        const block = {
+          key: 'value',
+        };
+        const previous = casual.boolean;
+        const switchFunnel = casual.boolean;
+
         const params = {
           client,
-          funnelName,
+          block,
+          previous,
+          switchFunnel,
         };
 
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error).to.deep.include({message: '"blockId" is required'});
+        expect(e.raw.payload.error).to.deep.include({message: '"next" is required'});
+      }
+
+    });
+
+    it ('should fail for missing "previous" param', async () => {
+
+      try {
+
+        const client = await clientSdk.generateClient();
+        const block = {
+          key: 'value',
+        };
+        const next = casual.boolean;
+        const switchFunnel = casual.boolean;
+
+        const params = {
+          client,
+          block,
+          next,
+          switchFunnel,
+        };
+
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.deep.include({message: '"previous" is required'});
+      }
+
+    });
+
+    it ('should fail for missing "switchFunnel" param', async () => {
+
+      try {
+
+        const client = await clientSdk.generateClient();
+        const block = {
+          key: 'value',
+        };
+        const next = casual.boolean;
+        const previous = casual.boolean;
+
+        const params = {
+          client,
+          block,
+          next,
+          previous,
+        };
+
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error).to.deep.include({message: '"switchFunnel" is required'});
       }
 
     });
@@ -236,99 +307,87 @@ describe('funnel.proceedNextBlockJoi test', function () {
       client = null;
     });
 
-    it('should fail for wrong funnel name', async function () {
-
-      const funnelName = 'abc';
-      const blockId = 'step01';
-
-      const params = {
-        client,
-        funnelName,
-        blockId,
-      };
-
-      try {
-
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
-        expect.fail('Unexpected success');
-
-      } catch (e) {
-        expect(e.raw.payload.error.message).to.include('funnel not found');
-        expect(e.raw.payload.error.message).to.include(`funnelName : ${funnelName}`);
-      }
-
-    });
-
-    it('should fail for wrong block id', async function () {
-
-      const funnelName = 'optin';
-      const blockId = 'step10';
-
-      const params = {
-        client,
-        funnelName,
-        blockId,
-      };
-
-      try {
-
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
-        expect.fail('Unexpected success');
-
-      } catch (e) {
-        expect(e.raw.payload.error.message).to.include('block not found');
-        expect(e.raw.payload.error.message).to.include(`blockId : ${blockId}`);
-      }
-
-    });
-
     it('should fail for wrong next funnel name', async function () {
 
-      const funnelName = 'abc';
-      const blockId = 'step01';
+      const funnel = 'optin';
+      const blockId = 'step02';
+      const block = _.find(client.funnels[funnel], {id: blockId});
+      if (_.isNil(block)) {
+        expect.fail(`funnel block for id: ${blockId} not found`);
+      }
+      const nextFunnel = 'abc';
+      block.next = `${nextFunnel}::step03`;
+      const next = true;
+      const previous = false;
+      const switchFunnel = false;
 
       const params = {
         client,
-        funnelName,
-        blockId,
+        block,
+        next,
+        previous,
+        switchFunnel,
       };
 
       try {
 
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
         expect(e.raw.payload.error.message).to.include('funnel not found');
-        expect(e.raw.payload.error.message).to.include(`funnelName : ${funnelName}`);
+        expect(e.raw.payload.error.message).to.include(`nextFunnel : ${nextFunnel}`);
       }
 
     });
 
-    it('should fail for wrong block id', async function () {
+    it('should fail for wrong next blockId name', async function () {
 
-      const funnelName = 'optin';
-      const blockId = 'step10';
+      const funnel = 'optin';
+      const blockId = 'step02';
+      const block = _.find(client.funnels[funnel], {id: blockId});
+      if (_.isNil(block)) {
+        expect.fail(`funnel block for id: ${blockId} not found`);
+      }
+      const nextId = 'abc';
+      block.next = `optin::${nextId}`;
+      const next = true;
+      const previous = false;
+      const switchFunnel = false;
 
       const params = {
         client,
-        funnelName,
-        blockId,
+        block,
+        next,
+        previous,
+        switchFunnel,
       };
 
       try {
 
-        await sails.helpers.funnel.proceedNextBlockJoi(params);
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
         expect.fail('Unexpected success');
 
       } catch (e) {
-        expect(e.raw.payload.error.message).to.include('block not found');
-        expect(e.raw.payload.error.message).to.include(`blockId : ${blockId}`);
+        expect(e.raw.payload.error.message).to.include('nextBlock not found');
+        expect(e.raw.payload.error.message).to.include(`nextId : ${nextId}`);
       }
 
     });
 
   });
+
+  // describe('Check helper call', function () {
+  //
+  //   beforeEach(function () {
+  //
+  //   });
+  //
+  //   afterEach(function () {
+  //
+  //   });
+  //
+  // });
 
 });
 

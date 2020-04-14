@@ -29,17 +29,6 @@ module.exports = {
       required: true,
     },
 
-
-
-
-
-
-    msg: {
-      friendlyName: 'message',
-      description: 'Message received',
-      type: 'ref',
-      // required: true,
-    },
   },
 
 
@@ -72,6 +61,8 @@ module.exports = {
         .string()
         .description('Funnel block id')
         .required(),
+      additionalTokens: Joi
+        .any(),
       msg: Joi
         .any()
         .description('Message received'),
@@ -79,21 +70,23 @@ module.exports = {
 
 
     let block = null;
+    let funnel = null;
     let input;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      let clientName = {
-        firstName: input.client.first_name || null,
-        lastName: input.client.last_name || null,
-      };
+      if (!_.has(input.client.funnels, input.funnelName)) {
+        throw new Error(`funnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nfunnelName : ${input.funnelName}`);
+      }
 
-      block = _.find(input.client.funnels[input.funnelName], {id: input.blockId});
+      funnel = input.client.funnels[input.funnelName];
+
+      block = _.find(funnel, {id: input.blockId});
 
       if (_.isNil(block)) {
-        throw new Error(`block was not found, \nfunnelName: ${input.funnelName} \nblockId : ${input.blockId}`);
+        throw new Error(`block not found, \nfunnelName: ${input.funnelName} \nblockId : ${input.blockId}`);
       }
 
       if (
@@ -117,7 +110,12 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimpleRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlSimpleRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlSimpleRaw = MessageProcessor.parseMessageStyle({
+                client: input.client,
+                message: block.message,
+                additionalTokens: input.additionalTokens,
+              });
 
             let {text: htmlSimple} = await activateBeforeHelper(input.client, block, input.msg || null, htmlSimpleRaw);
 
@@ -152,7 +150,12 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImgRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlImgRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlImgRaw = MessageProcessor.parseMessageStyle({
+              client: input.client,
+              message: block.message,
+              additionalTokens: input.additionalTokens,
+            });
 
             let {text: htmlImg} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgRaw);
 
@@ -191,7 +194,12 @@ module.exports = {
              * Send video message
              */
 
-            let htmlVideoRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlVideoRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlVideoRaw = MessageProcessor.parseMessageStyle({
+              client: input.client,
+              message: block.message,
+              additionalTokens: input.additionalTokens,
+            });
 
             let {text: htmlVideo} = await activateBeforeHelper(input.client, block, input.msg || null, htmlVideoRaw);
 
@@ -230,7 +238,12 @@ module.exports = {
              * Send document message
              */
 
-            let htmlDocRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlDocRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlDocRaw = MessageProcessor.parseMessageStyle({
+                client: input.client,
+                message: block.message,
+                additionalTokens: input.additionalTokens,
+              });
 
             let {text: htmlDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocRaw);
 
@@ -269,7 +282,12 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForcedRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlForcedRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlForcedRaw = MessageProcessor.parseMessageStyle({
+              client: input.client,
+              message: block.message,
+              additionalTokens: input.additionalTokens,
+            });
 
             let {text: htmlForced} = await activateBeforeHelper(input.client, block, input.msg || null, htmlForcedRaw);
 
@@ -304,16 +322,27 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInlineRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            // let htmlInlineRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
+            let htmlInlineRaw = MessageProcessor.parseMessageStyle({
+              client: input.client,
+              message: block.message,
+              additionalTokens: input.additionalTokens,
+              });
 
             let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(input.client, block, input.msg || null, htmlInlineRaw);
 
-            let objAfter = mapDeep(input.client, clientName, input.client.lang, keyboardInline);
+            // let objAfter = MessageProcessor.mapDeep(input.client, clientName, input.client.lang, keyboardInline);
+            const inlineKeyboard = MessageProcessor.mapDeep({
+              client: input.client,
+              data: keyboardInline,
+              additionalTokens: input.additionalTokens,
+            });
+
 
             let inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlInline,
-              inlineKeyboard: objAfter,
+              inlineKeyboard,
             });
 
             block.message_id = inlineRes.payload.message_id;
@@ -343,7 +372,7 @@ module.exports = {
           criteria: {guid: input.client.guid},
           data: {
             current_funnel: input.client.current_funnel,
-            funnels: input.client.funnels,
+            funnels: funnel,
             accounts: input.client.accounts,
           }
         });
@@ -365,7 +394,7 @@ module.exports = {
 
         if (_.includes(['text', 'img', 'video', 'doc'], block.actionType)) {
 
-          await sails.helpers.funnel.afterHelperGeneric.with({
+          await sails.helpers.funnel.afterHelperGenericJoi({
             client: input.client,
             block: block,
             msg: input.msg || 'no message',
@@ -420,23 +449,29 @@ module.exports = {
       if (block.next) {
 
         let splitRes = _.split(block.next, sails.config.custom.JUNCTION, 2);
-        let nextFunnel = splitRes[0];
+        let nextFunnelName = splitRes[0];
         let nextId = splitRes[1];
 
         if (
-          nextFunnel
+          nextFunnelName
           && nextId
         ) {
 
-          const nextBlock = _.find(input.client.funnels[nextFunnel], {id: nextId});
+          if (!_.has(input.client.funnels, nextFunnelName)) {
+            throw new Error(`nextFunnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nnextFunnel : ${input.nextFunnel}`);
+          }
+
+          const nextFunnel = input.client.funnels[nextFunnelName];
+
+          const nextBlock = _.find(nextFunnel, {id: nextId});
 
           if (_.isNil(nextBlock)) {
-            throw new Error(`next block not found, \nnextFunnel: ${nextFunnel} \nnextId : ${nextId}`);
+            throw new Error(`next block not found, \nnextFunnelName: ${nextFunnelName} \nnextId : ${nextId}`);
           }
 
           let proceedNextBlockParams = {
             client: input.client,
-            funnelName: nextFunnel,
+            funnelName: nextFunnelName,
             blockId: nextId,
           };
 
@@ -492,122 +527,12 @@ module.exports = {
 
 };
 
-function mapDeep(clientRec, clientName, lang, obj) {
-  if (_.isArray(obj)) {
-    let arr = obj.map(innerObj => mapDeep(clientRec, clientName, lang, innerObj));
-
-    // sails.log.info('mapDeep, arr: ', arr);
-
-    return arr;
-  } else if (_.isObject(obj)) {
-    let ob = _.forEach(obj, (val, key, o) => {
-      if (key == 'text') {
-        // o[key] = t(lang, val);
-        o[key] = parseSpecialTokens(clientRec, clientName, t(lang, val), lang) ;
-      }
-      // return o;
-    });
-
-    // sails.log.info('mapDeep, ob: ', ob);
-
-    return ob;
-  }
-}
-
-function parseSpecialTokens(clientRec, clientName, msg, lang) {
-
-  let resultStr = msg;
-
-  const firstName = clientName.firstName || '';
-  const lastName = clientName.lastName || '';
-
-  const configPricePlatinum = confObj(lang).price.platinum;
-  const configPriceGold = confObj(lang).price.gold;
-  const configPriceBronze = confObj(lang).price.bronze;
-
-  let mandatoryProfileList = '';
-
-  for (let i = 0; i < confObj(lang).profiles.length; i++) {
-
-    mandatoryProfileList = mandatoryProfileList + `<a href="${confObj(lang).profiles[i].url}">${confObj(lang).profiles[i].text}</a>` + sails.config.custom.SCR;
-
-  }
-
-  mandatoryProfileList = mandatoryProfileList + sails.config.custom.DCR;
-
-
-  resultStr = _.replace(resultStr, '$FirstName$', firstName);
-  resultStr = _.replace(resultStr, '$LastName$', lastName);
-
-  resultStr = _.replace(resultStr, '$PricePlatinum$', `${configPricePlatinum.text}: ${configPricePlatinum.value_text} ${configPricePlatinum.currency_text}/${configPricePlatinum.period_text}`);
-  resultStr = _.replace(resultStr, '$PriceGold$', `${configPriceGold.text}: ${configPriceGold.value_text} ${configPriceGold.currency_text}/${configPriceGold.period_text}`);
-  resultStr = _.replace(resultStr, '$PriceBronze$', `${configPriceBronze.text}: ${configPriceBronze.value_text} ${configPriceBronze.currency_text}/${configPriceBronze.period_text}`);
-
-  resultStr = _.replace(resultStr, '$NamePlatinum$', `${configPricePlatinum.text}`);
-  resultStr = _.replace(resultStr, '$NameGold$', `${configPriceGold.text}`);
-  resultStr = _.replace(resultStr, '$NameBronze$', `${configPriceBronze.text}`);
-
-  resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
-
-  // sails.log.warn('clientRec.accounts: ', clientRec.accounts);
-  const currentAccount = _.find(clientRec.accounts, {guid: clientRec.account_use});
-  // sails.log.warn('currentAccount: ', currentAccount);
-  const profileOfCurrentAccount = currentAccount.inst_profile;
-  // sails.log.warn('profileOfCurrentAccount: ', profileOfCurrentAccount);
-  resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
-
-  /**
-   * Кол-во сообщений, отправленных с текущего аккаунта за сутки
-   */
-
-  const numberOfMessagesSentToday = currentAccount.posts_made_day;
-  resultStr = _.replace(resultStr, '$PostsSent$', numberOfMessagesSentToday);
-
-  resultStr = emoji.emojify(resultStr, () => '');
-
-  return resultStr;
-}
-
-function parseMessageStyle(clientRec, clientName, msg, lang) {
-  let resultHtml = '';
-
-  for (let i = 0; i < msg.html.length; i++) {
-    resultHtml = resultHtml +
-      (/b/i.test(msg.html[i].style) ? '<b>' : '') +
-      (/i/i.test(msg.html[i].style) ? '<i>' : '') +
-      (/url/i.test(msg.html[i].style) ? `<a href="${msg.html[i].url}">` : '') +
-      t(lang, msg.html[i].text) +
-      (/i/i.test(msg.html[i].style) ? '</i>' : '') +
-      (/b/i.test(msg.html[i].style) ? '</b>' : '') +
-      (/url/i.test(msg.html[i].style) ? '</a>' : '') +
-      (msg.html.length > 1
-        ? (msg.html[i].cr
-          ? sails.config.custom[msg.html[i].cr]
-          : '')
-        : '');
-  }
-
-  // sails.log.warn('resultHtml, before:', resultHtml);
-
-  resultHtml = parseSpecialTokens(clientRec, clientName, resultHtml, lang);
-
-  // sails.log.warn('resultHtml, after:', resultHtml);
-
-
-  return resultHtml;
-}
-
 async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
   let res = {
     text: htmlMsg,
     inline_keyboard: block.message.inline_keyboard,
   };
-
-  // sails.log.warn('client:', client);
-  // sails.log.warn('block:', block);
-  // sails.log.warn('msg:', msg);
-  // sails.log.warn('htmlMsg:', htmlMsg);
 
   if (!_.isNil(block.beforeHelper)) {
 
@@ -641,17 +566,8 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
        * Throw error: we could not parse the specified beforeHelper
        */
 
-      const errorLocation = 'api/helpers/funnel/proceed-next-block';
-      const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR;
+      throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR);
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
     }
 
   }
@@ -663,11 +579,6 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 async function activateBlockModifyHelper(client, block) {
 
   let res = block;
-
-  // sails.log.warn('client:', client);
-  // sails.log.warn('block:', block);
-  // sails.log.warn('msg:', msg);
-  // sails.log.warn('htmlMsg:', htmlMsg);
 
   if (!_.isNil(block.blockModifyHelper)) {
 
@@ -694,17 +605,8 @@ async function activateBlockModifyHelper(client, block) {
        * Throw error: we could not parse the specified blockModifyHelper
        */
 
-      const errorLocation = 'api/helpers/funnel/proceed-next-block';
-      const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR;
+      throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR);
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
     }
 
   }

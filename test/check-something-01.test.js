@@ -142,7 +142,7 @@ describe('Test send few test text messages', function () {
           "enabled": false,
           "show_time": 5000,
           "previous": "optin::step02",
-          "next": "optin::step04",
+          "next": "general::step04",
           "switchToFunnel": null,
           "beforeHelper": null,
           "afterHelper": null,
@@ -161,6 +161,8 @@ describe('Test send few test text messages', function () {
             ]
           }
         },
+      ],
+      general: [
         {
           "id": "step04",
           "description": "",
@@ -169,7 +171,7 @@ describe('Test send few test text messages', function () {
           "enabled": false,
           "show_time": 3000,
           "previous": "optin::step03",
-          "next": "optin::step05",
+          "next": "general::step05",
           "switchToFunnel": null,
           "beforeHelper": null,
           "afterHelper": null,
@@ -196,7 +198,7 @@ describe('Test send few test text messages', function () {
           "initial": false,
           "enabled": false,
           "show_time": 3000,
-          "previous": "optin::step04",
+          "previous": "general::step04",
           "next": null,
           "switchToFunnel": null,
           "beforeHelper": null,
