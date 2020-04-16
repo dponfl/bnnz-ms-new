@@ -375,7 +375,111 @@ describe.only('funnel.afterHelperGenericJoi test', function () {
 
     });
 
+    it('should fail for wrong previous funnel name', async function () {
+
+      const funnel = 'optin';
+      const blockId = 'step02';
+      const block = _.find(client.funnels[funnel], {id: blockId});
+      if (_.isNil(block)) {
+        expect.fail(`funnel block for id: ${blockId} not found`);
+      }
+      const previousFunnel = 'abc';
+      block.previous = `${previousFunnel}::step03`;
+      const next = false;
+      const previous = true;
+      const switchFunnel = false;
+
+      const params = {
+        client,
+        block,
+        next,
+        previous,
+        switchFunnel,
+      };
+
+      try {
+
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error.message).to.include('funnel not found');
+        expect(e.raw.payload.error.message).to.include(`previousFunnel : ${previousFunnel}`);
+      }
+
+    });
+
+    it('should fail for wrong previous blockId name', async function () {
+
+      const funnel = 'optin';
+      const blockId = 'step02';
+      const block = _.find(client.funnels[funnel], {id: blockId});
+      if (_.isNil(block)) {
+        expect.fail(`funnel block for id: ${blockId} not found`);
+      }
+      const previousId = 'abc';
+      block.previous = `optin::${previousId}`;
+      const next = false;
+      const previous = true;
+      const switchFunnel = false;
+
+      const params = {
+        client,
+        block,
+        next,
+        previous,
+        switchFunnel,
+      };
+
+      try {
+
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error.message).to.include('previousBlock not found');
+        expect(e.raw.payload.error.message).to.include(`previousId : ${previousId}`);
+      }
+
+    });
+
+    it('should fail for wrong switchFunnel name', async function () {
+
+      const funnel = 'optin';
+      const blockId = 'step02';
+      const block = _.find(client.funnels[funnel], {id: blockId});
+      if (_.isNil(block)) {
+        expect.fail(`funnel block for id: ${blockId} not found`);
+      }
+      const switchFunnelName = 'abc';
+      block.switchToFunnel = switchFunnelName;
+      const next = false;
+      const previous = false;
+      const switchFunnel = true;
+
+      const params = {
+        client,
+        block,
+        next,
+        previous,
+        switchFunnel,
+      };
+
+      try {
+
+        await sails.helpers.funnel.afterHelperGenericJoi(params);
+        expect.fail('Unexpected success');
+
+      } catch (e) {
+        expect(e.raw.payload.error.message).to.include('funnel not found');
+        expect(e.raw.payload.error.message).to.include(`input.block.switchToFunnel : ${switchFunnelName}`);
+      }
+
+    });
+
   });
+
+  // TODO: Использовать sinon-chai для проверки вызова хелпера с определёнными параметрами
 
   // describe('Check helper call', function () {
   //
