@@ -516,12 +516,14 @@ module.exports = {
       };
     }
 
-    return exits.success({status: 'ok',
+    return exits.success({
+      status: 'ok',
       message: 'Success',
       payload: {
         client: input.client,
         block: block
-      }});
+      }
+    });
 
   }
 
