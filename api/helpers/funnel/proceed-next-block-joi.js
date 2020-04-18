@@ -110,7 +110,6 @@ module.exports = {
              * Send simple text message
              */
 
-            // let htmlSimpleRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlSimpleRaw = MessageProcessor.parseMessageStyle({
                 client: input.client,
                 message: block.message,
@@ -150,7 +149,6 @@ module.exports = {
              * Send img message
              */
 
-            // let htmlImgRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlImgRaw = MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
@@ -194,7 +192,6 @@ module.exports = {
              * Send video message
              */
 
-            // let htmlVideoRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlVideoRaw = MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
@@ -238,7 +235,6 @@ module.exports = {
              * Send document message
              */
 
-            // let htmlDocRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlDocRaw = MessageProcessor.parseMessageStyle({
                 client: input.client,
                 message: block.message,
@@ -282,7 +278,6 @@ module.exports = {
              * Send forced reply message
              */
 
-            // let htmlForcedRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlForcedRaw = MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
@@ -322,7 +317,6 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            // let htmlInlineRaw = parseMessageStyle(input.client, clientName, block.message, input.client.lang);
             let htmlInlineRaw = MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
@@ -331,7 +325,6 @@ module.exports = {
 
             let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(input.client, block, input.msg || null, htmlInlineRaw);
 
-            // let objAfter = MessageProcessor.mapDeep(input.client, clientName, input.client.lang, keyboardInline);
             const inlineKeyboard = MessageProcessor.mapDeep({
               client: input.client,
               data: keyboardInline,
@@ -361,7 +354,7 @@ module.exports = {
               message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: input.client.id,
               client_guid: input.client.guid,
-              message_buttons: objAfter
+              message_buttons: inlineKeyboard
             });
 
             break;
@@ -428,7 +421,7 @@ module.exports = {
 
           }
 
-          await sails.helpers.funnel[input.client.funnel_name][afterHelperBlock][afterHelperName].with(afterHelperParams);
+          await sails.helpers.funnel[input.client.funnel_name][afterHelperBlock][afterHelperName](afterHelperParams);
 
 
         } else {
@@ -533,7 +526,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
   let res = {
     text: htmlMsg,
-    inline_keyboard: block.message.inline_keyboard,
+    inline_keyboard: block.message.inline_keyboard || null,
   };
 
   if (!_.isNil(block.beforeHelper)) {
@@ -560,7 +553,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
       }
 
-      res = await sails.helpers.funnel[client.funnel_name][beforeHelperBlock][beforeHelperName].with(beforeHelperParams);
+      res = await sails.helpers.funnel[client.funnel_name][beforeHelperBlock][beforeHelperName](beforeHelperParams);
 
     } else {
 
@@ -599,7 +592,7 @@ async function activateBlockModifyHelper(client, block) {
         block: block,
       };
 
-      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName].with(beforeHelperParams);
+      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
 
     } else {
 
