@@ -48,7 +48,7 @@ module.exports = {
           key: uuidApiKey.apiKey
         });
 
-      const service_id = _.get(inputs.client, 'service_id');
+      const service_id = _.get(inputs.client, 'service_id', null);
 
       let client = await Client.create(_.omit(inputs.client, ['accounts', 'service_id'])).fetch();
 
@@ -58,6 +58,7 @@ module.exports = {
         account: {
           client: client.id,
           service: service_id,
+          payment_plan_selected: (service_id != null),
         }
       });
 

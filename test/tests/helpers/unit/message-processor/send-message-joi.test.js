@@ -98,6 +98,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
     let simpleMessageJoiStub;
     let imgMessageJoiStub;
     let videoMessageJoiStub;
+    let docMessageJoiStub;
     let forcedMessageJoiStub;
     let inlineKeyboardMessageJoiStub;
     let messageSaveJoiStub;
@@ -110,6 +111,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
       simpleMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'simpleMessageJoi');
       imgMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'imgMessageJoi');
       videoMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'videoMessageJoi');
+      docMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'docMessageJoi');
       forcedMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'forcedMessageJoi');
       inlineKeyboardMessageJoiStub = sinon.stub(sails.helpers.mgw.telegram, 'inlineKeyboardMessageJoi');
       messageSaveJoiStub = sinon.stub(sails.helpers.storage, 'messageSaveJoi');
@@ -122,6 +124,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
       simpleMessageJoiStub.restore();
       imgMessageJoiStub.restore();
       videoMessageJoiStub.restore();
+      docMessageJoiStub.restore();
       forcedMessageJoiStub.restore();
       inlineKeyboardMessageJoiStub.restore();
       messageSaveJoiStub.restore();
@@ -241,7 +244,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
     describe('Perform "videoMessageJoi"', function () {
 
-      it('should successfully perform img message', async function () {
+      it('should successfully perform video message', async function () {
 
         try {
 
@@ -278,6 +281,55 @@ describe('messageProcessor:sendMessageJoi test', function () {
             status: 'ok',
             message: 'Telegram video message was sent',
             payload: 'some payload of videoMessageJoiStub',
+          });
+
+        } catch (e) {
+          expect.fail(`Unexpected error: \n${JSON.stringify(e, null, 3)}`);
+        }
+
+      });
+
+    });
+
+    describe('Perform "docMessageJoi"', function () {
+
+      it('should successfully perform doc message', async function () {
+
+        try {
+
+          parseMessageStyleStub.returns('htmlDoc string');
+          docMessageJoiStub
+            .returns({
+              status: 'ok',
+              message: 'Telegram doc message was sent',
+              payload: 'some payload of docMessageJoiStub',
+            });
+
+          const client = await clientSdk.generateClient();
+          const messageData = await pushMessagesSdk.generateMessageData('likes', {
+            actionType: 'doc',
+          });
+          const blockModifyHelperParams = {
+            taskGuid: casual.uuid,
+          };
+
+          performBlockModifyHelperStub.returns(messageData);
+
+          const params = {
+            client,
+            messageData,
+            blockModifyHelperParams,
+          };
+
+          const sendMessageJoiRes = await sails.helpers.messageProcessor.sendMessageJoi(params);
+
+          expect(parseMessageStyleStub.callCount).to.be.eq(1);
+          expect(docMessageJoiStub.callCount).to.be.eq(1);
+          expect(messageSaveJoiStub.callCount).to.be.eq(1);
+          expect(sendMessageJoiRes).to.deep.include({
+            status: 'ok',
+            message: 'Telegram doc message was sent',
+            payload: 'some payload of docMessageJoiStub',
           });
 
         } catch (e) {
@@ -339,7 +391,7 @@ describe('messageProcessor:sendMessageJoi test', function () {
 
     describe('Perform "inlineKeyboardMessageJoi"', function () {
 
-      it('should successfully perform forced message', async function () {
+      it('should successfully perform inlineKeyboard message', async function () {
 
         try {
 

@@ -32,10 +32,10 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
 
       try {
 
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
         const params = {
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -53,10 +53,10 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
 
       try {
 
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
         const params = {
           client,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -68,30 +68,30 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
 
     });
 
-    it ('should fail for missing "messageData" param', async function() {
-
-      const client = await clientSdk.generateClient();
-      const query = {
-        id: casual.uuid,
-        data: `push_msg_tsk_l_${casual.uuid}`,
-        message: await messagesSdk.generateMessage(),
-      };
-
-      try {
-
-        const params = {
-          client,
-          query,
-        };
-
-        await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
-        expect.fail('Unexpected success');
-
-      } catch (e) {
-        expect(e.raw.payload.error).to.deep.include({message: '"messageData" is required'});
-      }
-
-    });
+    // it ('should fail for missing "messageData" param', async function() {
+    //
+    //   const client = await clientSdk.generateClient();
+    //   const query = {
+    //     id: casual.uuid,
+    //     data: `push_msg_tsk_l_${casual.uuid}`,
+    //     message: await messagesSdk.generateMessage(),
+    //   };
+    //
+    //   try {
+    //
+    //     const params = {
+    //       client,
+    //       query,
+    //     };
+    //
+    //     await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
+    //     expect.fail('Unexpected success');
+    //
+    //   } catch (e) {
+    //     expect(e.raw.payload.error).to.deep.include({message: '"messageData" is required'});
+    //   }
+    //
+    // });
 
     it ('should fail for wrong query.data format', async function () {
 
@@ -101,14 +101,14 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
         data: `push_msg_tsk_l_`,
         message: await messagesSdk.generateMessage(),
       };
-      const messageData = await pushMessagesSdk.generateMessageData('likes');
+      // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
       try {
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -128,14 +128,14 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
         data: `push_msg_tsk_l_ABC`,
         message: await messagesSdk.generateMessage(),
       };
-      const messageData = await pushMessagesSdk.generateMessageData('likes');
+      // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
       try {
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -211,12 +211,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -254,12 +254,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${taskGuid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -296,12 +296,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -340,12 +340,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -397,12 +397,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -458,12 +458,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -634,12 +634,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         const callbackLikesJoiRes = await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);
@@ -751,12 +751,12 @@ describe('pushMessages:tasks:callbackLikesJoi test', function () {
           data: `push_msg_tsk_l_${tasks[0].guid}`,
           message: await messagesSdk.generateMessage(),
         };
-        const messageData = await pushMessagesSdk.generateMessageData('likes');
+        // const messageData = await pushMessagesSdk.generateMessageData('likes');
 
         const params = {
           client,
           query,
-          messageData,
+          // messageData,
         };
 
         const callbackLikesJoiRes = await sails.helpers.pushMessages.tasks.callbackLikesJoi(params);

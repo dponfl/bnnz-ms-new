@@ -202,6 +202,45 @@ module.exports = {
 
           break;
 
+        case 'doc':
+
+          /**
+           * Send document message
+           */
+
+          let htmlDoc = MessageProcessor.parseMessageStyle({
+            client: input.client,
+            message: input.messageData.message,
+            additionalTokens: input.additionalTokens,
+          });
+
+          let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
+            chatId: input.client.chat_id,
+            docPath: sails.config.custom.cloudinaryDocUrl + input.messageData.message.doc,
+            html: htmlDoc,
+          });
+
+          sendMessageResult = docRes;
+
+          /**
+           * Save the sent message
+           */
+
+          await sails.helpers.storage.messageSaveJoi({
+            message_id: docRes.payload.message_id || 0,
+            message: JSON.stringify({
+              doc: sails.config.custom.cloudinaryDocUrl + input.messageData.message.doc,
+              html: htmlDoc,
+            }),
+            message_format: sails.config.custom.enums.messageFormat.DOC,
+            messenger: input.client.messenger,
+            message_originator: sails.config.custom.enums.messageOriginator.BOT,
+            client_id: input.client.id,
+            client_guid: input.client.guid
+          });
+
+          break;
+
         case 'forced':
 
           /**

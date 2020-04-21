@@ -61,6 +61,7 @@ module.exports = {
           sails.config.custom.enums.messageFormat.FORCED,
           sails.config.custom.enums.messageFormat.IMG,
           sails.config.custom.enums.messageFormat.VIDEO,
+          sails.config.custom.enums.messageFormat.DOC,
           sails.config.custom.enums.messageFormat.POSTBROADCAST,
           sails.config.custom.enums.messageFormat.PUSHSIMPLE,
           sails.config.custom.enums.messageFormat.PUSHCALLBACK,

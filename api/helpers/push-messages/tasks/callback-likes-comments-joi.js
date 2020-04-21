@@ -44,10 +44,10 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      messageData: Joi
-        .any()
-        .description('Message data object')
-        .required(),
+      // messageData: Joi
+      //   .any()
+      //   .description('Message data object')
+      //   .required(),
       query: Joi
         .any()
         .description('Callback query received')

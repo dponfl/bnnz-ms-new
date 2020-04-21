@@ -1,7 +1,7 @@
 "use strict";
 
-const _ = require('lodash');
-// const uuid = require('uuid-apikey');
+
+const moduleName = 'chat-listeners:telegram:on-text';
 
 
 module.exports = {
@@ -37,8 +37,6 @@ module.exports = {
 
     sails.config.custom.telegramBot.on('text', async (msg) => {
 
-      // sails.log.debug('Message received: ', msg);
-
       let getClientResponse = null;
       let getServiceRes = null;
       let funnels = null;
@@ -53,7 +51,7 @@ module.exports = {
       let params = {};
       let getServiceRefResRaw = null;
       let getCategoryRefResRaw = null;
-      let serviceName = 'generic';
+      let serviceName = null;
       let categoryName = 'user';
 
 
@@ -79,8 +77,8 @@ module.exports = {
           if (_.trim(msg.text).match(/\/start/i)) {
 
             /**
-             * If we got start command - try to parse it and get referral key (ref)
-             * and service reference key (srf)
+             * If we got start command - try to parse it and get referral key (ref),
+             * service reference key (srf) and category key (cat)
              */
 
             parseRefResult = _.trim(msg.text).match(/ref(\S{31})/);
@@ -88,6 +86,8 @@ module.exports = {
             parseCategoryResult = _.trim(msg.text).match(/cat(\S{31})/);
 
           }
+
+          // TODO: Добавить ниже проверку валидности полученных ключей
 
           if (parseRefResult) {
 
@@ -123,7 +123,6 @@ module.exports = {
             username: msg.chat.username,
             lang: useLang,
             ref_key: useRefKey,
-            category: category,
           };
 
 
@@ -146,12 +145,17 @@ module.exports = {
             serviceName = getServiceRefResRaw.payload.service;
           }
 
-          /**
-           * Get info about the respective service
-           */
+          if (serviceName) {
 
-          getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
-          params.service_id = getServiceRes.payload.id;
+            /**
+             * Get info about the respective service
+             */
+
+            getServiceRes = await sails.helpers.storage.getService.with({serviceName: serviceName});
+            params.service_id = getServiceRes.payload.id;
+
+          }
+
 
           /**
            * Get info about client's category
@@ -202,44 +206,34 @@ module.exports = {
          * Check that funnels do not have big errors
          */
 
-        await sails.helpers.general.checkFunnels(getClientResponse.payload);
+        // TODO: Убрать отсюда проверку воронок. Проверку воронок нужно делать один раз
+        // при старте системы и реализовать возможность инициировать эту проверку через API
+        // (это нужно для запуска проверки после загрузки обновления воронок)
 
-        /**
-         * Call the respective supervisorText helper
-         */
+        // await sails.helpers.general.checkFunnels(getClientResponse.payload);
 
-        // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorText'](getClientResponse.payload, msg);
-
-        await sails.helpers.funnel.supervisorText(getClientResponse.payload, msg);
-
+        await sails.helpers.funnel.supervisorTextJoi({
+          client: getClientResponse.payload,
+          msg,
+        });
 
       } catch (e) {
 
+        const errorLocation = moduleName;
+        const errorMsg = `${moduleName}: ${sails.config.custom.ON_MESSAGE_ERROR}`;
 
-        /**
-         * Make error log and return
-         */
+        sails.log.error(errorLocation + ', error: ' + errorMsg);
+        sails.log.error(errorLocation + ', error details: ', e);
 
-        sails.log.error('on-message, error: ', e);
-
-        try {
-
-          await sails.helpers.general.logError.with({
-            client_guid: 'none',
-            error_message: sails.config.custom.ON_MESSAGE_ERROR,
-            level: 'critical',
+        throw {err: {
+            module: errorLocation,
+            message: errorMsg,
             payload: {
-              messenger: sails.config.custom.enums.messenger.TELEGRAM,
-              msg: msg,
               error: e,
-            }
-          });
+            },
+          }
+        };
 
-        } catch (err) {
-
-          sails.log.error(sails.config.custom.ON_MESSAGE_ERROR + ', Error log create error: ', err);
-
-        }
       }
 
     });

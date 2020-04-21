@@ -49,7 +49,7 @@ describe.skip('Test sendDocument', function () {
 
 });
 
-describe('Test send few test text messages', function () {
+describe.skip('Test send few test text messages', function () {
 
   let customConfig;
   let messageSaveJoiStub;
@@ -229,6 +229,22 @@ describe('Test send few test text messages', function () {
       funnelName,
       blockId,
     });
+
+  });
+
+});
+
+describe.skip('Get account with null service', function () {
+
+  it('should get account', async function () {
+
+    const accountWithNotNullService = await Account.findOne({
+      guid: '8e38e7c8-d57d-4356-b413-9c5b6983be11'
+    }).populate('service');
+
+    const accountWithNullService = await Account.findOne({
+      guid: '71f87d7a-6fef-48ad-9ee9-f2fa4824e788'
+    }).populate('service');
 
   });
 

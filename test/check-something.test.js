@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const mlog = require('mocha-logger');
 const casual = require('casual');
 
-describe('Test sending and updating Telegram message', function () {
+describe.skip('Test sending and updating Telegram message', function () {
 
   let customConfig;
   const timeout = 3000;
@@ -448,6 +448,54 @@ describe('Test sending and updating Telegram message', function () {
 
       }, timeout);
 
+    });
+
+  });
+
+});
+
+describe('Test doc push message', function () {
+
+  it('should send doc push message', async function () {
+
+    this.timeout(100000);
+
+    const client = await Client.findOne({
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    const messageData = {
+      "id": "show_terms",
+      "description": "Отправить условия предоставления услуг (документ)",
+      "actionType": "doc",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "show_time": "now",
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "doc": "v1586616265/CY_Tax_2019.pdf",
+        "html": [
+          {
+            "text": "MSG_STEP04",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    };
+
+    const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+      client,
+      messageData,
     });
 
   });

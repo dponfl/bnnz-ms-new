@@ -260,7 +260,7 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: docRes.payload.message_id || 0,
               message: JSON.stringify({
-                video: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
                 html: htmlDoc,
               }),
               message_format: sails.config.custom.enums.messageFormat.DOC,
