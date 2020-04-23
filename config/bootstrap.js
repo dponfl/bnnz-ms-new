@@ -46,10 +46,10 @@ module.exports.bootstrap = async function() {
 
   // await sails.helpers.chatListeners.telegram.test();
 
-  // await sails.helpers.chatListeners.telegram.onText();
-  // await sails.helpers.chatListeners.telegram.onCallbackQuery();
-  // await sails.helpers.chatListeners.telegram.onPreCheckoutQuery();
-  // await sails.helpers.chatListeners.telegram.onSuccessfulPayment();
+  await sails.helpers.chatListeners.telegram.onText();
+  await sails.helpers.chatListeners.telegram.onCallbackQuery();
+  await sails.helpers.chatListeners.telegram.onPreCheckoutQuery();
+  await sails.helpers.chatListeners.telegram.onSuccessfulPayment();
 
   // await sails.helpers.general.schedule.analyticsHourly();
   // await sails.helpers.general.schedule.analyticsDaily();

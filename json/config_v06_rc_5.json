@@ -914,50 +914,59 @@
   "lang": {
     "ru": {
       "price": {
-        "platinum": {
-          "text": "Платиновый",
-          "value": 5000,
-          "value_text": "5 000",
-          "currency": "RUB",
-          "currency_text": "руб",
-          "period": "1 month",
-          "period_text": "мес"
-        },
-        "gold": {
-          "text": "Золотой",
-          "value": 3500,
-          "value_text": "3 500",
-          "currency": "RUB",
-          "currency_text": "руб",
-          "period": "1 month",
-          "period_text": "мес"
-        },
-        "bronze": {
-          "text": "Бронзовый",
-          "value": 2000,
-          "value_text": "2 000",
-          "currency": "RUB",
-          "currency_text": "руб",
-          "period": "1 month",
-          "period_text": "мес"
+        "silver_personal": {
+          "title": "BeHero",
+          "period_01": {
+            "period": "1 month",
+            "period_text": "мес",
+            "RUB": {
+              "list_price": {
+                "value": 4620,
+                "value_text": "4 620",
+                "currency": "RUB",
+                "currency_text": "руб"
+              },
+              "current_price": {
+                "value": 3780,
+                "value_text": "3 780",
+                "currency": "RUB",
+                "currency_text": "руб"
+              }
+            }
+          },
+          "period_02": {
+            "period": "3 months",
+            "period_text": "3 мес",
+            "RUB": {
+              "list_price": {
+                "value": 10000,
+                "value_text": "10 000",
+                "currency": "RUB",
+                "currency_text": "руб"
+              },
+              "current_price": {
+                "value": 9000,
+                "value_text": "9 000",
+                "currency": "RUB",
+                "currency_text": "руб"
+              }
+            }
+          }
         }
       },
-      "profiles": [
-        {
-          "text": "Dima",
-          "url": "https://www.instagram.com/dima_ponomarev1"
-        },
-        {
-          "text": "WebStudioPro",
-          "url": "https://www.instagram.com/webstudiopro"
-        }
-      ],
       "token": {
+        "$$$$$$$$$$$$$$$$$$$$$_TEST": "*** ТОКЕНЫ ДЛЯ ТЕСТОВ ***",
         "MSG_STEP01": "Первое тестовое сообщение",
         "MSG_STEP02": "Второе тестовое сообщение (через 2 сек. после первого)",
         "MSG_STEP03": "Третье тестовое сообщение (через 5 сек. после второго)",
         "MSG_STEP04": "Документ (отправлен через 3 сек. после третьего сообщения)",
         "MSG_STEP05": "Четвёртое тестовое сообщение (через 3 сек. после документа)",
+        "$$$$$$$$$$$$$$$$$$$$$_BeHero_Optin": "*** ТОКЕНЫ ДЛЯ BeHero Optin ***",
+        "BEHERO_START_01": "Привет, $FirstName$",
+        "BEHERO_START_02": "Меня зовут Робби - я искусственный интеллект BeFame.",
+        "BEHERO_START_03": "Поздравляю! Пакет продвижения  \"$BeHeroTitle$\" - это отличный выбор!",
+        "BEHERO_START_04": "Давай начнем продвигать твой аккаунт!",
+        "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",
         "MSG_OPTIN_GENERAL_INFO": "Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?",
         "MSG_OPTIN_GENERAL_INFO_01": "Тебе это интересно?",
@@ -1060,7 +1069,7 @@
         "MSG_HELP_NEXT_ACTION_HELP": "Чтобы воспользоваться помощью по другим разделам нажми кнопку  ПОМОЩЬ",
         "MSG_HELP_BTN_HELP": "ПОМОЩЬ",
         "MSG_GENERAL_ENTER_POST_LINK": "Введи ссылку на свой пост в Инстаграм :point_down:",
-        "$$$$$$$$$$$$$$$$$$$$$_000001": "*** ТОКЕНЫ ДЛЯ ЗАДАЧ ***",
+        "$$$$$$$$$$$$$$$$$$$$$_100001": "*** ТОКЕНЫ ДЛЯ ЗАДАЧ ***",
         "MSG_TASK_ACCOUNT": "Задание для профиля \"$CurrentAccount$\"",
         "MSG_TASK_LIKE": "Поставь лайк :thumbsup: на пост (для перехода на пост - нажми кнопку \"Открыть пост :eyes:\") :point_down:",
         "MSG_TASK_LIKE_COMMENT": "Поставь лайк :thumbsup: и оставь комментарий (не меньше 4 слов) :memo: на пост (для перехода на пост - нажми кнопку \"Открыть пост :eyes:\") :point_down:",

@@ -72,33 +72,15 @@ module.exports = {
     const firstName = input.client.first_name || '';
     const lastName = input.client.last_name || '';
 
-    const configPricePlatinum = confObj(input.client.lang).price.platinum;
-    const configPriceGold = confObj(input.client.lang).price.gold;
-    const configPriceBronze = confObj(input.client.lang).price.bronze;
-
-    let mandatoryProfileList = '';
-
-    for (let i = 0; i < confObj(input.client.lang).profiles.length; i++) {
-
-      mandatoryProfileList = mandatoryProfileList + `<a href="${confObj(input.client.lang).profiles[i].url}">${confObj(input.client.lang).profiles[i].text}</a>` + sails.config.custom.SCR;
-
-    }
-
-    mandatoryProfileList = mandatoryProfileList + sails.config.custom.DCR;
-
+    const configPriceBeHero = confObj(input.client.lang).price.silver_personal;
 
     resultStr = _.replace(resultStr, '$FirstName$', firstName);
     resultStr = _.replace(resultStr, '$LastName$', lastName);
 
-    resultStr = _.replace(resultStr, '$PricePlatinum$', `${configPricePlatinum.text}: ${configPricePlatinum.value_text} ${configPricePlatinum.currency_text}/${configPricePlatinum.period_text}`);
-    resultStr = _.replace(resultStr, '$PriceGold$', `${configPriceGold.text}: ${configPriceGold.value_text} ${configPriceGold.currency_text}/${configPriceGold.period_text}`);
-    resultStr = _.replace(resultStr, '$PriceBronze$', `${configPriceBronze.text}: ${configPriceBronze.value_text} ${configPriceBronze.currency_text}/${configPriceBronze.period_text}`);
+    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubCurrent$', `${configPriceBeHero.period_01.RUB.value_text} ${configPriceBeHero.period_01.RUB.currency_text}`);
+    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubList$', `${configPriceBeHero.period_01.RUB.value_text} ${configPriceBeHero.period_01.RUB.currency_text}`);
 
-    resultStr = _.replace(resultStr, '$NamePlatinum$', `${configPricePlatinum.text}`);
-    resultStr = _.replace(resultStr, '$NameGold$', `${configPriceGold.text}`);
-    resultStr = _.replace(resultStr, '$NameBronze$', `${configPriceBronze.text}`);
-
-    resultStr = _.replace(resultStr, '$MandatoryProfiles$', mandatoryProfileList);
+    resultStr = _.replace(resultStr, '$BeHeroTitle$', `${configPriceBeHero.title}`);
 
     const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
     const profileOfCurrentAccount = currentAccount.inst_profile;
