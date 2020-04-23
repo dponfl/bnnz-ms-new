@@ -35,6 +35,10 @@ module.exports = {
     tos_accepted: {
       type: 'boolean',
     },
+    ref_key: {
+      type: 'string',
+      allowNull: true,
+    },
     messenger: {
       type: 'string',
     },

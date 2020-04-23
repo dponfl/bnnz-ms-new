@@ -62,8 +62,6 @@ module.exports = {
         }
       });
 
-      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> accountCreate response: ', accountRaw);
-
       let acc = [];
       acc.push(accountRaw.payload);
 
@@ -72,14 +70,10 @@ module.exports = {
         account_use: accountRaw.payload.guid
       });
 
-      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client data to update client record: ', client);
-
       client = await sails.helpers.storage.clientUpdate.with({
         criteria: {guid: client.guid},
         data: client,
       });
-
-      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> updated client data: ', client);
 
       return exits.success({
         status: 'ok',

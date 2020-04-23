@@ -43,7 +43,7 @@ module.exports = {
       let parseRefResult = null;
       let parseServiceResult = null;
       let parseCategoryResult = null;
-      let useRefKey = '';
+      let useRefKey = null;
       let useServiceRefKey = '';
       let useCategoryRefKey = '';
       let getLangRes;
