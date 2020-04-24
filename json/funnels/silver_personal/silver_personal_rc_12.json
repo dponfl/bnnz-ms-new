@@ -95,6 +95,33 @@
           }
         ]
       }
+    },
+    {
+      "id": "wrong_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::get_profile",
+      "next": "optin::get_profile",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterWrongProfile",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_WRONG_PROFILE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
