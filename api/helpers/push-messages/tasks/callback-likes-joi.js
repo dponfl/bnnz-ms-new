@@ -126,7 +126,9 @@ module.exports = {
        * Проверка выполнения задания с использванием парсера
        */
 
-      const likeDone = await sails.helpers.parsers.inst.ninja.checkLikesJoi({
+      const activeParser = sails.config.custom.config.parsers.inst;
+
+      const likeDone = await sails.helpers.parsers.inst[activeParser].checkLikesJoi({
         instProfile,
         instPostCode,
       });

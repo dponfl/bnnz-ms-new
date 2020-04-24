@@ -92,7 +92,11 @@ module.exports = {
              * We managed to parse the specified forcedHelper and can perform it
              */
 
-            await sails.helpers.funnel[input.client.funnel_name][forcedHelperBlock][forcedHelperName](input.client, forcedReplyBlock, input.msg);
+            await sails.helpers.funnel[input.client.funnel_name][forcedHelperBlock][forcedHelperName]({
+              client: input.client,
+              block: forcedReplyBlock,
+              msg: input.msg,
+            });
 
             /**
              * Update content of funnels field of client record

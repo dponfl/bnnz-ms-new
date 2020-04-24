@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'parsers:inst:ninja:check-profile-exists-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'parsers:inst:ninja:check-profile-exists-joi',
 
 
-  description: '***********************',
+  description: 'Проверка, что профиль существует в Instagram',
 
 
   inputs: {
@@ -27,44 +27,42 @@ module.exports = {
 
 
   exits: {
+
     success: {
       description: 'All done.',
     },
+
     err: {
       description: 'Error',
     }
+
   },
 
 
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      someOne: Joi
-        .any()
-        .description('XXX')
+      instProfile: Joi
+        .string()
+        .description('Instagram profile')
         .required(),
-      someTwo: Joi
-        .any()
-        .description('XXX')
-        .required(),
-      someThree: Joi
-        .any()
-        .description('XXX'),
     });
 
-    let input;
+
+    let profileExists = false;
 
     try {
 
-      input = await schema.validateAsync(inputs.params);
+      const input = await schema.validateAsync(inputs.params);
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
+      /**
+       * Заглушка (должна быть заменена на обращение к API парсера
+       */
 
-      return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: {},
-      })
+      profileExists = true;
+
+
+      return exits.success(profileExists);
 
     } catch (e) {
 
