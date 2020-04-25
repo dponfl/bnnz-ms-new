@@ -919,7 +919,7 @@
           "title": "BeHero",
           "period_01": {
             "period": "1 month",
-            "period_text": "мес",
+            "period_text": "1 мес",
             "RUB": {
               "list_price": {
                 "value": 4620,
@@ -970,6 +970,13 @@
         "BEHERO_CONFIRM_PROFILE_BTN_YES": ":white_check_mark: ДА",
         "BEHERO_CONFIRM_PROFILE_BTN_NO": ":x: НЕТ",
         "BEHERO_NEXT_TRY": "Хорошо, давай попробуем снова :)",
+        "BEHERO_MAKE_PAYMENT_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе и теперь можно перейти к оплате пакета.",
+        "BEHERO_MAKE_PAYMENT_02": "Нажми кнопку ОПЛАТИТЬ ниже. Так, ты соглашаешься с \"Условиями предоставления услуг\" и переходишь в платежную систему.",
+        "BEHERO_MAKE_PAYMENT_BTN_01": ":point_right: ОПЛАТИТЬ :point_left:",
+        "BEHERO_MAKE_PAYMENT_BTN_02": "Подробнее о пакете \"$BeHeroTitle$\"",
+        "BEHERO_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
+        "BEHERO_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения \"$BeHeroTitle$\"",
+        "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения \"$BeHeroTitle$\" на $paymentPeriod$",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",
         "MSG_OPTIN_GENERAL_INFO": "Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?",

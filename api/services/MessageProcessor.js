@@ -51,6 +51,34 @@ module.exports = {
 
   },
 
+  parseStr: function(params) {
+
+    const schema = Joi.object({
+      client: Joi
+        .any()
+        .required(),
+      token: Joi
+        .any()
+        .required(),
+      additionalTokens: Joi
+        .any(),
+    });
+
+    const inputRaw = schema.validate(params);
+    const input = inputRaw.value;
+
+    let resStr = t(input.client.lang, input.token);
+
+    resStr = MessageProcessor.parseSpecialTokens({
+      client: input.client,
+      message: resStr,
+      additionalTokens: input.additionalTokens,
+    });
+
+    return resStr;
+
+  },
+
   parseSpecialTokens: function (params) {
 
     const schema = Joi.object({
