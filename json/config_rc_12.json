@@ -1,5 +1,6 @@
 {
   "general": {
+    "instagram_prefix": "https://www.instagram.com/",
     "instagram_post_prefix": "https://www.instagram.com/p/"
   },
   "payments": {
@@ -963,6 +964,11 @@
         "BEHERO_INTRO": "Для регистрации и начала продвижения мне нужно узнать имя твоего профиля в Instagram.",
         "BEHERO_GET_PROFILE": "Напиши свой ник в Instagram ниже.",
         "BEHERO_WRONG_PROFILE": "Этот аккаунт не найден. Возможно, тут есть ошибка. Давай попробуем снова.",
+        "BEHERO_CONFIRM_PROFILE_01": "Это твой профиль в Instagram?",
+        "BEHERO_CONFIRM_PROFILE_02": "$instagramProfile$",
+        "BEHERO_CONFIRM_PROFILE_03": "Ответь с помощью кнопок.",
+        "BEHERO_CONFIRM_PROFILE_BTN_YES": ":white_check_mark: ДА",
+        "BEHERO_CONFIRM_PROFILE_BTN_NO": ":x: НЕТ",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",
         "MSG_OPTIN_GENERAL_INFO": "Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?",

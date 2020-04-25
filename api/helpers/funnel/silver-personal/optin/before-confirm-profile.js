@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'funnel:silver-personal:optin:block-modify-confirm-profile';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'funnel:silver-personal:optin:block-modify-confirm-profile',
 
 
-  description: 'module:helper',
+  description: 'funnel:silver-personal:optin:block-modify-confirm-profile',
 
 
   inputs: {
@@ -39,17 +39,21 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      someOne: Joi
+      client: Joi
         .any()
-        .description('XXX')
+        .description('Client record')
         .required(),
-      someTwo: Joi
+      block: Joi
         .any()
-        .description('XXX')
+        .description('Current funnel block')
         .required(),
-      someThree: Joi
+      msg: Joi
         .any()
-        .description('XXX'),
+        .description('Message received'),
+      payload: Joi
+        .any()
+        .description('{text, inline_keyboard} object')
+        .required(),
     });
 
     let input;
@@ -58,13 +62,14 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
+      const instProfile = sails.config.custom.config.general.instagram_prefix + _.trim(input.client.inst_profile_tmp);
+
+      const resHtml = _.replace(input.payload.text, '$instagramProfile$', instProfile);
 
       return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: {},
-      })
+        text: resHtml,
+        inline_keyboard: input.payload.inline_keyboard,
+      });
 
     } catch (e) {
 

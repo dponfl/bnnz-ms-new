@@ -587,12 +587,12 @@ async function activateBlockModifyHelper(client, block) {
        * We managed to parse the specified blockModifyHelper and can perform it
        */
 
-      let beforeHelperParams = {
+      let blockModifyHelperParams = {
         client: client,
         block: block,
       };
 
-      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
+      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
 
     } else {
 
