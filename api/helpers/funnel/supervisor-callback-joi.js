@@ -102,7 +102,11 @@ module.exports = {
              * We managed to parse the specified callbackHelper and can perform it
              */
 
-            await sails.helpers.funnel[input.client.funnel_name][callbackHelperBlock][callbackHelperName](input.client, block, input.query);
+            await sails.helpers.funnel[input.client.funnel_name][callbackHelperBlock][callbackHelperName]({
+              client: input.client,
+              block,
+              query: input.query,
+            });
 
             /**
              * We need to start processing funnel again because if callback enabled some new

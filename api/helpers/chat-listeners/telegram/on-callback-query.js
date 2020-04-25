@@ -70,14 +70,15 @@ module.exports = {
 
           await sails.helpers.pushMessages.supervisorCallbackJoi({
             client: getClientResponse.payload,
-            query: query,
+            query,
           });
 
         } else {
 
-          // await sails.helpers.funnel[getClientResponse.payload.current_funnel]['supervisorCallback'](getClientResponse.payload, query);
-
-          await sails.helpers.funnel.supervisorCallback(getClientResponse.payload, query);
+          await sails.helpers.funnel.supervisorCallbackJoi({
+            client: getClientResponse.payload,
+            query,
+          });
 
         }
 

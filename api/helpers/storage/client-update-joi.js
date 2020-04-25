@@ -59,7 +59,7 @@ module.exports = {
 
       _.forEach(accounts, async (acc) => {
 
-        await sails.helpers.storage.accountUpdate.with({
+        await sails.helpers.storage.accountUpdateJoi({
           criteria: {id: acc.id},
           data: acc,
         })

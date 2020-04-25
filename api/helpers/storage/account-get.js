@@ -97,6 +97,7 @@ module.exports = {
 
       let account = await Account.find({where: searchConditions})
         .populate('service')
+        .populate('next_service')
         .populate('room');
 
       // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> account data object: ', account);

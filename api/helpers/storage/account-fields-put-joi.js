@@ -84,6 +84,9 @@ module.exports = {
         'client',
       ]);
 
+      accountFieldsData.service = (accountFieldsData.service ? accountFieldsData.service.id : null);
+      accountFieldsData.next_service = (accountFieldsData.next_service ? accountFieldsData.next_service.id : null);
+
       const accountRec = await Account.findOne({
         guid: input.accountGuid
       });

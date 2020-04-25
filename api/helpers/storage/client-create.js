@@ -70,7 +70,7 @@ module.exports = {
         account_use: accountRaw.payload.guid
       });
 
-      client = await sails.helpers.storage.clientUpdate.with({
+      client = await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: client.guid},
         data: client,
       });
