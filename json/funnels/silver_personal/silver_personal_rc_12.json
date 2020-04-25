@@ -171,6 +171,33 @@
           ]
         ]
       }
+    },
+    {
+      "id": "try_again",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::confirm_profile",
+      "next": "optin::get_profile",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterTryAgain",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_NEXT_TRY",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
