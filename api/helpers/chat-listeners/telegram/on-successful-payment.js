@@ -1,5 +1,8 @@
 "use strict";
 
+const moduleName = 'chat-listeners:telegram:on-successful-payment.js';
+
+
 module.exports = {
 
   friendlyName: 'On successful_payment message',
@@ -83,6 +86,49 @@ module.exports = {
             currency: msg.successful_payment.currency || 'XXX',
           });
 
+          const accountRecRaw = await sails.helpers.storage.accountGetJoi({
+            accountGuids: [client.account_use],
+          });
+
+          if (accountRecRaw.status !== 'ok') {
+            throw new Error(`${moduleName}, error: account record not found for account guid: ${client.account_use}`);
+          }
+
+          const accountRec = accountRecRaw.payload;
+
+          if (
+            accountRec.payment_amount != msg.successful_payment.total_amount
+            || accountRec.payment_currency.toUpperCase() != msg.successful_payment.currency.toUpperCase()
+          ) {
+            throw new Error(`${moduleName}, error: wrong payment_amount or payment_currency:
+            account record:
+              payment_amount: ${accountRec.payment_amount}
+              payment_currency: ${accountRec.payment_currency.toUpperCase()}
+            payment provider response:
+              payment_amount: ${msg.successful_payment.total_amount}
+              payment_currency: ${msg.successful_payment.currency.toUpperCase()}`);
+          }
+
+          await sails.helpers.storage.accountUpdateJoi({
+            criteria: {guid: accountRec.guid},
+            data: {
+              payment_amount: null,
+              payment_currency: null,
+            }
+          });
+
+          /**
+           * Информируем процесс, что получено подтверждение успешного платежа
+           */
+
+          const confirmPaymentRes = await sails.helpers.general.confirmPaymentNewJoi({
+
+          });
+
+          if (confirmPaymentRes.status !== 'ok') {
+            throw new Error(`${moduleName}, error: confirmPaymentNewJoi error`);
+          }
+
         }
 
       } catch (e) {
@@ -96,7 +142,9 @@ module.exports = {
         throw {err: {
             module: errorLocation,
             message: errorMsg,
-            payload: {},
+            payload: {
+              error: e,
+            },
           }
         };
 

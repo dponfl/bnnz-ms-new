@@ -117,7 +117,7 @@ module.exports = {
 
         // sails.log(moduleName + ', client was FOUND: ', clientRecord);
 
-        const accountRecordRaw = await sails.helpers.storage.accountGet.with({
+        const accountRecordRaw = await sails.helpers.storage.accountGetJoi({
           clientId: clientRecord.id,
         });
 

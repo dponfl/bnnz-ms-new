@@ -72,22 +72,44 @@ module.exports = {
             throw new Error(`${moduleName}, error: No payment provider config for messenger: ${input.client.messenger}`);
           }
 
+          const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+
+          const priceConfig = sails.config.custom.config.lang[useLang].price.silver_personal;
+
+          if (priceConfig == null) {
+            throw new Error(`${moduleName}, error: No price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price.silver_personal, null, 3)}`);
+          }
+
+
           const title = MessageProcessor.parseStr({
             client: input.client,
             token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
           });
 
+          const description = MessageProcessor.parseStr({
+            client: input.client,
+            token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+            additionalTokens: [
+              {
+                token: "$paymentPeriod$",
+                value: priceConfig.period_01.period_text,
+              }
+            ]
+          });
+
+          const currency = 'RUB';
+
           const paymentResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoice'].with({
             messenger: input.client.messenger,
             chatId: input.client.chat_id,
             title,
-            description: 'Подписка на сервис SocialGrowth "Супер-дупер пакет" на 1 месяц',
+            description,
             startParameter: 'start',
-            currency: 'RUB',
+            currency,
             prices: [
               {
-                label: '"Супер-дупер пакет" на 1 месяц',
-                amount: '100.77',
+                label: description,
+                amount: _.toString(priceConfig.period_01[currency].current_price.value),
               }
             ],
             clientId: input.client.id,
@@ -95,19 +117,26 @@ module.exports = {
             accountGuid: input.client.account_use,
           });
 
-          const paymentResult = paymentResultRaw;
+          // TODO: Добавить в табл accounts поля: payment_amount и payment_currency
+          // Записать в эти поля соответствующие данные
+          // Позже при успешном платеже сравнивать данные полученные в ответе с этимы данными
+
+          await sails.helpers.storage.accountUpdateJoi({
+            criteria: {guid: input.client.account_use},
+            data: {
+              payment_amount: priceConfig.period_01[currency].current_price.value_cents,
+              payment_currency: currency,
+            }
+          });
 
 
-
-
-          input.client.accounts[currentAccountInd].profile_confirmed = true;
-          input.block.next = 'optin::make_payment';
+          // input.block.next = 'optin::make_payment';
           break;
         case 'more_info':
-          input.block.next = 'optin::try_again';
+          // input.block.next = 'optin::try_again';
           break;
         case 'get_terms':
-          input.block.next = 'optin::try_again';
+          // input.block.next = 'optin::try_again';
           break;
         default:
           throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
@@ -128,7 +157,6 @@ module.exports = {
 
 
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
 
       return exits.success({
         status: 'ok',

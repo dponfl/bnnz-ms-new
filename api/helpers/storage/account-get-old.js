@@ -111,7 +111,7 @@ module.exports = {
     } catch (e) {
 
       const errorLocation = 'api/helpers/storage/account-get';
-      const errorMsg = sails.config.custom.ACCOUNTGET_ERROR;
+      const errorMsg = sails.config.custom.ACCOUNTGETJOI_ERROR;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);

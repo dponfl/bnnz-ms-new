@@ -923,12 +923,14 @@
             "RUB": {
               "list_price": {
                 "value": 4620,
+                "value_cents": 462000,
                 "value_text": "4 620",
                 "currency": "RUB",
                 "currency_text": "руб"
               },
               "current_price": {
                 "value": 3780,
+                "value_cents": 378000,
                 "value_text": "3 780",
                 "currency": "RUB",
                 "currency_text": "руб"
@@ -941,12 +943,14 @@
             "RUB": {
               "list_price": {
                 "value": 10000,
+                "value_cents": 1000000,
                 "value_text": "10 000",
                 "currency": "RUB",
                 "currency_text": "руб"
               },
               "current_price": {
                 "value": 9000,
+                "value_cents": 900000,
                 "value_text": "9 000",
                 "currency": "RUB",
                 "currency_text": "руб"

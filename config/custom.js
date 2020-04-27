@@ -54,7 +54,15 @@ module.exports.custom = {
       ERROR_COMMISSION: 'error_commission',
     },
 
-    paymentType: {
+    paymentGroupStatus: {
+      PENDING: 'pending',
+      PROCESSING: 'processing',
+      SUCCESS: 'success',
+      ERROR: 'error',
+      REJECTED: 'rejected',
+    },
+
+    paymentGroupType: {
       DEPOSIT: 'deposit',
       WITHDRAWAL: 'withdrawal',
       REFUND: 'refund',
@@ -283,11 +291,11 @@ module.exports.custom = {
 
   /**
    * ----------------------------
-   * accountGet
+   * accountGetJoi
    * ----------------------------
    */
 
-  ACCOUNTGET_ERROR: 'Account record get error',
+  ACCOUNTGETJOI_ERROR: 'Account record get error',
 
   /**
    * ----------------------------
@@ -393,6 +401,14 @@ module.exports.custom = {
    */
 
   PAYMENT_CREATE_ERROR: 'Payment record create error',
+
+  /**
+   * ----------------------------
+   * paymentGroupCreate
+   * ----------------------------
+   */
+
+  PAYMENTGROUP_CREATE_ERROR: 'Payment group record create error',
 
   /**
    * ----------------------------

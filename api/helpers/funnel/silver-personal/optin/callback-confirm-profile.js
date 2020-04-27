@@ -70,6 +70,7 @@ module.exports = {
           input.block.next = 'optin::make_payment';
           break;
         case 'profile_confirm_no':
+          input.client.accounts[currentAccountInd].profile_confirmed = false;
           input.block.next = 'optin::try_again';
           break;
         default:

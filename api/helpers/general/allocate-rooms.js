@@ -53,7 +53,7 @@ module.exports = {
 
     try {
 
-      const accountRaw = await sails.helpers.storage.accountGet.with({
+      const accountRaw = await sails.helpers.storage.accountGetJoi({
         accountGuids: [inputs.accountGuid],
       });
 

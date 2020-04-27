@@ -57,6 +57,22 @@ module.exports = {
     },
 
     /**
+     * Сумма у оплате при выставлении инвойса в мин единицах (копейки, центы и т.п.)
+     */
+    payment_amount: {
+      type: 'number',
+      allowNull: true,
+    },
+
+    /**
+     * Валюта инвойса
+     */
+    payment_currency: {
+      type: 'string',
+      allowNull: true,
+    },
+
+    /**
      * флаг того, что клиент произвёл оплату выбранного уровня сервиса
      */
     payment_made: {

@@ -1,5 +1,9 @@
 "use strict";
 
+const Joi = require('@hapi/joi');
+
+const moduleName = 'general:confirm-payment-new-joi';
+
 const moment = require('moment');
 
 module.exports = {
@@ -12,38 +16,43 @@ module.exports = {
 
 
   inputs: {
-    cid: {
-      friendlyName: 'client guid',
-      description: 'client guid',
-      type: 'string',
+
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
+      type: 'ref',
       required: true,
     },
-    aid: {
-      friendlyName: 'account guid',
-      description: 'account guid',
-      type: 'string',
-      required: true,
-    },
-    sl: {
-      friendlyName: 'service level',
-      description: 'service level',
-      type: 'string',
-      required: true,
-    },
+
   },
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
+    err: {
+      description: 'Error',
+    }
   },
 
 
   fn: async function (inputs, exits) {
-    sails.log.info('************** confirmPayment helper **************');
+
+    const schema = Joi.object({
+      clientGuid: Joi
+        .string()
+        .description('client guid')
+        .guid()
+        .required(),
+      accountGuid: Joi
+        .string()
+        .description('account guid')
+        .guid()
+        .required(),
+    });
+
+    let input;
 
     let client;
     let account;
@@ -57,33 +66,15 @@ module.exports = {
 
     try {
 
+      input = await schema.validateAsync(inputs.params);
+
       client = await Client.findOne({
-        guid: inputs.cid,
+        guid: input.clientGuid,
       });
 
-      if (!client) {
-
-        /**
-         * Reply that the client was not found
-         */
-
-        // sails.log('client was NOT FOUND');
-
-        return exits.success({
-          status: 'not_found',
-          message: sails.config.custom.CONFIRM_PAYMENT_CLIENT_NOT_FOUND,
-          payload: {
-            cid: inputs.cid,
-          },
-        });
-
+      if (client == null) {
+        throw new Error(`${moduleName}, error: ${sails.config.custom.CONFIRM_PAYMENT_CLIENT_NOT_FOUND} for clientGuid: ${input.clientGuid}`);
       }
-
-      /**
-       * found record for the specified criteria
-       */
-
-      // sails.log('client was FOUND');
 
       const accountRecordsRaw = await sails.helpers.storage.accountGetJoi({
         clientId: client.id,
@@ -117,15 +108,15 @@ module.exports = {
 
       client = _.assignIn(client, {accounts: accountRecords});
 
-      account = _.find(accountRecords, {guid: inputs.aid});
+      account = _.find(accountRecords, {guid: input.accountGuid});
 
       if (_.isNil(account)) {
 
-        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by input.accountGuid=' + input.accountGuid);
 
         throw {err: {
             module: 'api/helpers/general/confirm-payment',
-            message: 'Cannot find account by inputs.aid=' + inputs.aid,
+            message: 'Cannot find account by input.accountGuid=' + input.accountGuid,
             payload: {},
           }
         };
@@ -141,15 +132,15 @@ module.exports = {
        * Check received service level corresponds to the one selected by the client
        */
 
-      if (inputs.sl !== account.payment_plan) {
+      if (input.sl !== account.payment_plan) {
 
         return exits.success({
           status: 'wrong_sl',
           message: sails.config.custom.CONFIRM_PAYMENT_WRONG_SL,
           payload: {
-            cid: inputs.cid,
+            clientGuid: input.clientGuid,
             account_sl: account.payment_plan,
-            inputs_sl: inputs.sl,
+            input_sl: input.sl,
           },
         });
 
@@ -161,9 +152,9 @@ module.exports = {
           status: 'payment_was_done',
           message: sails.config.custom.CONFIRM_PAYMENT_PAYMENT_WAS_MADE,
           payload: {
-            cid: inputs.cid,
+            clientGuid: input.clientGuid,
             account_sl: account.payment_plan,
-            inputs_sl: inputs.sl,
+            input_sl: input.sl,
           },
         });
 
