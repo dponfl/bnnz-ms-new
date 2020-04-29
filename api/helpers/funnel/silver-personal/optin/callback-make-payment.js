@@ -74,12 +74,16 @@ module.exports = {
 
           const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
 
-          const priceConfig = sails.config.custom.config.lang[useLang].price.silver_personal;
+          const priceConfigText = sails.config.custom.config.lang[useLang].price;
+          const priceConfigGeneral = sails.config.custom.config.price;
 
-          if (priceConfig == null) {
-            throw new Error(`${moduleName}, error: No price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price.silver_personal, null, 3)}`);
+          if (priceConfigText == null) {
+            throw new Error(`${moduleName}, error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
           }
 
+          if (priceConfigGeneral == null) {
+            throw new Error(`${moduleName}, error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
+          }
 
           const title = MessageProcessor.parseStr({
             client: input.client,
@@ -92,16 +96,15 @@ module.exports = {
             additionalTokens: [
               {
                 token: "$paymentPeriod$",
-                value: priceConfig.period_01.period_text,
+                value: priceConfigText.payment_periods.period_01,
               }
             ]
           });
 
           const currency = 'RUB';
 
-          const paymentResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoice'].with({
-            messenger: input.client.messenger,
-            chatId: input.client.chat_id,
+          const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
+            client: input.client,
             title,
             description,
             startParameter: 'start',
@@ -109,25 +112,41 @@ module.exports = {
             prices: [
               {
                 label: description,
-                amount: _.toString(priceConfig.period_01[currency].current_price.value),
+                amount: priceConfigGeneral[currency].silver_personal.period_01.current_price,
+                transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
               }
             ],
-            clientId: input.client.id,
-            clientGuid: input.client.guid,
-            accountGuid: input.client.account_use,
           });
 
           // TODO: Добавить в табл accounts поля: payment_amount и payment_currency
           // Записать в эти поля соответствующие данные
           // Позже при успешном платеже сравнивать данные полученные в ответе с этимы данными
 
-          await sails.helpers.storage.accountUpdateJoi({
-            criteria: {guid: input.client.account_use},
-            data: {
-              payment_amount: priceConfig.period_01[currency].current_price.value_cents,
-              payment_currency: currency,
-            }
-          });
+          if (sendInvoiceResultRaw.status !== 'ok') {
+            throw new Error(`${moduleName}, error: sendInvoice error response:
+            ${JSON.stringify(sendInvoiceResultRaw, null, 3)}`);
+          }
+
+          // await sails.helpers.storage.accountUpdateJoi({
+          //   criteria: {guid: input.client.account_use},
+          //   data: {
+          //     payment_amount: priceConfigGeneral[currency].silver_personal.period_01.current_price * priceConfigGeneral[currency].transform_to_min_price_unit,
+          //     payment_currency: currency,
+          //   }
+          // });
+
+          const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
+
+          if (accountIndex < 0) {
+            throw new Error(`${moduleName}, error: account not found:
+            client.account_use: ${input.client.account_use}
+            client.accounts: ${JSON.stringify(input.client.accounts, null, 3)}`);
+          }
+
+          // input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price * priceConfigGeneral[currency].transform_to_min_price_unit;
+          input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
+          input.client.accounts[accountIndex].payment_currency = currency;
+
 
 
           // input.block.next = 'optin::make_payment';

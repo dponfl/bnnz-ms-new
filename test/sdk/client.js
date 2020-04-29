@@ -24,6 +24,17 @@ module.exports = {
     }
   },
 
+  updateClientDB: async (criteria, data) => {
+    const funcName = 'test:sdk:client:updateClientDB';
+    try {
+
+      await Client.update(criteria).set(_.omit(data, 'accounts'));
+
+    } catch (e) {
+      mlog.error(`${funcName} Error: code: ${e.code}, message: ${e.message}`);
+    }
+  },
+
   createClientDB: async (client = null) => {
     const funcName = 'test:sdk:client:createClientDB';
 

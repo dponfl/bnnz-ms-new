@@ -137,7 +137,7 @@ module.exports = {
         }
       });
 
-      const paymentRecsNum = paymentRecs.length();
+      const paymentRecsNum = paymentRecs.length;
 
       await Payments.create({
         guid,

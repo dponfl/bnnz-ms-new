@@ -43,7 +43,7 @@ module.exports = {
     let elapsedTimeEnd;
     let elapsedTime;
     let sum;
-    const paymentType = sails.config.custom.enums.paymentType.REFUND;
+    const paymentType = sails.config.custom.enums.paymentGroupType.REFUND;
     const paymentCurrency = sails.config.custom.enums.paymentCurrency.RUB;
     const paymentStatus = sails.config.custom.enums.paymentStatus.SUCCESS;
 
@@ -52,7 +52,7 @@ module.exports = {
       elapsedTimeStart = moment();
 
 
-      sum = await Payments.sum('amount', {
+      sum = await PaymentGroups.sum('amount', {
         where: {
           createdAt: {
             '>=': moment(inputs.start).format(),
@@ -60,7 +60,7 @@ module.exports = {
           },
           type: paymentType,
           currency: paymentCurrency,
-          payment_status: paymentStatus,
+          status: paymentStatus,
         },
       });
 

@@ -36,6 +36,32 @@ module.exports = {
 
       try {
 
+        // sails.log.warn('successful_payment...');
+
+
+        if (_.isNil(msg.successful_payment.invoice_payload)) {
+          throw new Error(`${moduleName}, error: no msg.successful_payment.invoice_payload:
+          ${JSON.stringify(msg, null, 3)}`);
+        }
+
+        // const paymentId = msg.successful_payment.invoice_payload;
+        //
+        //
+        // //TODO: Заменить на метод storage.paymentGetJoi (нужно его создать)
+        // const invoiceRec = await Payments.findOne({
+        //   payment_id: paymentId,
+        //   payment_status: sails.config.custom.enums.paymentStatus.INVOICE,
+        // });
+        //
+        // if (invoiceRec == null) {
+        //   throw new Error(`${moduleName}, error: no invoice payment record found for ${paymentId}`);
+        // }
+        //
+        // const paymentGroupGuid = invoiceRec.paymentGroupGuid;
+
+
+        const paymentGroupGuid = msg.successful_payment.invoice_payload;
+
         const paymentProviderAndEnv = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
           '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
 
@@ -46,19 +72,19 @@ module.exports = {
 
         if (clientRaw == null || clientRaw.status !== 'found') {
 
-          await sails.helpers.storage.paymentCreate.with({
-            paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS_ERROR,
-            paymentData: {
-            },
-            paymentResponse: msg,
-            paymentProvider: paymentProviderAndEnv,
-            messenger: sails.config.custom.enums.messenger.TELEGRAM,
-            comments: `Client record not found for chatId: ${msg.chat.id}`,
-            clientId: 'client not found',
-            clientGuid: 'client not found',
-          });
+          // await sails.helpers.storage.paymentCreateJoi({
+          //   paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS_ERROR,
+          //   paymentData: {
+          //   },
+          //   paymentResponse: msg,
+          //   comments: `Client record not found for chatId: ${msg.chat.id}`,
+          //   clientId: 'client not found',
+          //   clientGuid: 'client not found',
+          // });
 
-          throw new Error(`Client record not found, msg: ${msg} Messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
+          throw new Error(`${moduleName}, error: client record not found:
+          msg: ${JSON.stringify(msg, null, 3)} 
+          messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
         }
 
         const client = clientRaw.payload;
@@ -70,21 +96,22 @@ module.exports = {
 
         if (checkSuccessfulPaymentResult.status === 'ok') {
 
-          await sails.helpers.storage.paymentCreate.with({
+          await sails.helpers.storage.paymentCreateJoi({
+            paymentGroupGuid,
             paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS,
             paymentData: {
               successfulPayment: msg.successful_payment,
             },
             paymentResponse: msg,
-            paymentProvider: paymentProviderAndEnv,
-            messenger: sails.config.custom.enums.messenger.TELEGRAM,
             clientId: client.id,
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            type: sails.config.custom.enums.paymentType.DEPOSIT,
             amount: msg.successful_payment.total_amount/100 || 0,
             currency: msg.successful_payment.currency || 'XXX',
           });
+
+          // TODO: Заменить на метод storage.paymentGroupUpdateJoi
+          await PaymentGroups.update({guid: paymentGroupGuid}).set({status: sails.config.custom.enums.paymentGroupStatus.SUCCESS})
 
           const accountRecRaw = await sails.helpers.storage.accountGetJoi({
             accountGuids: [client.account_use],
@@ -94,12 +121,19 @@ module.exports = {
             throw new Error(`${moduleName}, error: account record not found for account guid: ${client.account_use}`);
           }
 
-          const accountRec = accountRecRaw.payload;
+          const accountRec = accountRecRaw.payload[0];
 
           if (
-            accountRec.payment_amount != msg.successful_payment.total_amount
+            accountRec.payment_amount * sails.config.custom.config.price[accountRec.payment_currency.toUpperCase()].transform_to_min_price_unit != msg.successful_payment.total_amount
             || accountRec.payment_currency.toUpperCase() != msg.successful_payment.currency.toUpperCase()
           ) {
+            sails.log.error(`${moduleName}, error: wrong payment_amount or payment_currency:
+            account record:
+              payment_amount: ${accountRec.payment_amount}
+              payment_currency: ${accountRec.payment_currency.toUpperCase()}
+            payment provider response:
+              payment_amount: ${msg.successful_payment.total_amount}
+              payment_currency: ${msg.successful_payment.currency.toUpperCase()}`);
             throw new Error(`${moduleName}, error: wrong payment_amount or payment_currency:
             account record:
               payment_amount: ${accountRec.payment_amount}
@@ -117,17 +151,29 @@ module.exports = {
             }
           });
 
+          // const accountIndex = _.findIndex(client.accounts, {guid: client.account_use});
+          //
+          // if (accountIndex < 0) {
+          //   throw new Error(`${moduleName}, error: account not found:
+          //   client.account_use: ${client.account_use}
+          //   client.accounts: ${JSON.stringify(client.accounts, null, 3)}`);
+          // }
+          //
+          // client.accounts[accountIndex].payment_amount = null;
+          // client.accounts[accountIndex].payment_currency = null;
+
+
           /**
            * Информируем процесс, что получено подтверждение успешного платежа
            */
 
-          const confirmPaymentRes = await sails.helpers.general.confirmPaymentNewJoi({
-
-          });
-
-          if (confirmPaymentRes.status !== 'ok') {
-            throw new Error(`${moduleName}, error: confirmPaymentNewJoi error`);
-          }
+          // const confirmPaymentRes = await sails.helpers.general.confirmPaymentNewJoi({
+          //
+          // });
+          //
+          // if (confirmPaymentRes.status !== 'ok') {
+          //   throw new Error(`${moduleName}, error: confirmPaymentNewJoi error`);
+          // }
 
         }
 

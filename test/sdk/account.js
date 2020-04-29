@@ -27,6 +27,29 @@ module.exports = {
     }
   },
 
+  updateAccountDB: async (criteria, data) => {
+    const funcName = 'test:sdk:account:updateAccountDB';
+    try {
+
+      const accountRec = _.omit(data, ['service', 'room', 'next_service']);
+      const serviceData = _.get(data, 'service');
+      const nextServiceData = _.get(data, 'next_service');
+
+      if (serviceData) {
+        accountRec.service = serviceData.id;
+      }
+
+      if (nextServiceData) {
+        accountRec.next_service = nextServiceData.id;
+      }
+
+      await Account.update(criteria).set(accountRec);
+
+    } catch (e) {
+      mlog.error(`${funcName} Error: code: ${e.code}, message: ${e.message}`);
+    }
+  },
+
   createAccountDB: async (account = null) => {
     const funcName = 'test:sdk:account:createAccountDB';
 
@@ -35,8 +58,18 @@ module.exports = {
     try {
 
       accountRec = await generateAccount(account);
-      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt']);
+      const serviceData = _.get(accountRec, 'service');
+      const nextServiceData = _.get(accountRec, 'next_service');
 
+      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt', 'service', 'room', 'next_service']);
+
+      if (serviceData) {
+        accountRec.service = serviceData.id;
+      }
+
+      if (nextServiceData) {
+        accountRec.next_service = nextServiceData.id;
+      }
 
       await Account.create(accountRec).fetch();
 

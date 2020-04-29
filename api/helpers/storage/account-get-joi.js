@@ -39,8 +39,10 @@ module.exports = {
 
     const schema = Joi.object({
       clientId: Joi
-        .string()
-        .description('clientId'),
+        .number()
+        .description('clientId')
+        .integer()
+        .positive(),
       accountIds: Joi
         .any()
         .description('Account ids array'),

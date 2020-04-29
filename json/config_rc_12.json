@@ -5,7 +5,7 @@
   },
   "payments": {
     "telegram": {
-      "provider": "YANDEX",
+      "provider": "TRANZZO",
       "env": "TEST"
     }
   },
@@ -912,50 +912,42 @@
       "action": "helperFive"
     }
   ],
+  "price": {
+    "payment_periods": {
+      "period_01": {
+        "value": "1 month"
+      },
+      "period_03": {
+        "value": "3 months"
+      }
+    },
+    "RUB": {
+      "transform_to_min_price_unit": 100,
+      "silver_personal": {
+        "period_01": {
+          "list_price": 4620,
+          "current_price": 3780
+        },
+        "period_03": {
+          "list_price": 10000,
+          "current_price": 9000
+        }
+      }
+    }
+  },
   "lang": {
     "ru": {
       "price": {
-        "silver_personal": {
-          "title": "BeHero",
-          "period_01": {
-            "period": "1 month",
-            "period_text": "1 мес",
-            "RUB": {
-              "list_price": {
-                "value": 4620,
-                "value_cents": 462000,
-                "value_text": "4 620",
-                "currency": "RUB",
-                "currency_text": "руб"
-              },
-              "current_price": {
-                "value": 3780,
-                "value_cents": 378000,
-                "value_text": "3 780",
-                "currency": "RUB",
-                "currency_text": "руб"
-              }
-            }
-          },
-          "period_02": {
-            "period": "3 months",
-            "period_text": "3 мес",
-            "RUB": {
-              "list_price": {
-                "value": 10000,
-                "value_cents": 1000000,
-                "value_text": "10 000",
-                "currency": "RUB",
-                "currency_text": "руб"
-              },
-              "current_price": {
-                "value": 9000,
-                "value_cents": 900000,
-                "value_text": "9 000",
-                "currency": "RUB",
-                "currency_text": "руб"
-              }
-            }
+        "payment_periods": {
+          "period_01": "1 мес",
+          "period_03": "3 мес"
+        },
+        "currency": {
+          "RUB": "руб"
+        },
+        "service_title": {
+          "silver_personal": {
+            "title": "BeHero"
           }
         }
       },
@@ -981,6 +973,7 @@
         "BEHERO_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
         "BEHERO_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения \"$BeHeroTitle$\"",
         "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения \"$BeHeroTitle$\" на $paymentPeriod$",
+        "BEHERO_MAKE_PAYMENT_INVOICE_BTN": "Оплатить: $itemInvoicePrice$ руб.",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",
         "MSG_OPTIN_GENERAL_INFO": "Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?",

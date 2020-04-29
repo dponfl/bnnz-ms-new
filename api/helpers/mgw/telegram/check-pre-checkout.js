@@ -31,7 +31,11 @@ module.exports = {
 
     try {
 
+      // sails.log.warn('checkPreCheckout...');
+
+
       if (inputs.paymentResponse.invoice_payload == null) {
+        sails.log.error(`checkPreCheckout, No invoice_payload: ${inputs.paymentResponse}`);
         throw new Error(`checkPreCheckout, No invoice_payload: ${inputs.paymentResponse}`);
       }
 
@@ -43,6 +47,7 @@ module.exports = {
       });
 
       if (invoiceRaw.status !== 'ok') {
+        sails.log.error(`checkPreCheckout, No invoice found: ${invoiceRaw}`);
         throw new Error(`checkPreCheckout, No invoice found: ${invoiceRaw}`);
       }
 
@@ -54,6 +59,7 @@ module.exports = {
         || invoice.payment_response.invoice.total_amount !== inputs.paymentResponse.total_amount
         || invoice.payment_response.invoice.currency !== inputs.paymentResponse.currency
       ) {
+        sails.log.error(`checkPreCheckout, Pre_checkout response does not corresponds invoice, invoice: ${invoice} Pre_checkout: ${inputs.paymentResponse}`);
         throw new Error(`checkPreCheckout, Pre_checkout response does not corresponds invoice, invoice: ${invoice} Pre_checkout: ${inputs.paymentResponse}`);
       }
 
@@ -77,7 +83,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

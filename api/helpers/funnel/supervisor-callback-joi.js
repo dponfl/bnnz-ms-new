@@ -161,7 +161,10 @@ module.exports = {
           }
 
         } else {
-          throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR}`);
+          throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR}
+          message_id: ${input.query.message.message_id}
+          current_funnel: ${input.client.current_funnel}
+          funnels: ${JSON.stringify(input.client.funnels, null, 3)}`);
         }
 
       }

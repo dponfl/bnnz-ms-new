@@ -51,6 +51,8 @@ module.exports = {
 
     try {
 
+      // sails.log.warn('answerPreCheckoutQuery...');
+
       const answerPreCheckoutQueryResult = await sails.config.custom.telegramBot.answerPreCheckoutQuery(
         inputs.preCheckoutQuery.id || '',
         inputs.isOk,
@@ -59,12 +61,40 @@ module.exports = {
         }
         );
 
+      // sails.log.warn(`answerPreCheckoutQueryResult:
+      // ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
+
       const paymentProviderAndEnv = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
         '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
 
+      if (_.isNil(inputs.preCheckoutQuery.invoice_payload)) {
+        sails.log.error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
+          ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
+        throw new Error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
+          ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
+      }
+
+      // const paymentId = inputs.preCheckoutQuery.invoice_payload;
+      //
+      //
+      // //TODO: Заменить на метод storage.paymentGetJoi (нужно его создать)
+      // const invoiceRec = await Payments.findOne({
+      //   payment_id: paymentId,
+      //   payment_status: sails.config.custom.enums.paymentStatus.INVOICE,
+      // });
+      //
+      // if (invoiceRec == null) {
+      //   sails.log.error(`${moduleName}, error: no invoice payment record found for ${paymentId}`);
+      //   throw new Error(`${moduleName}, error: no invoice payment record found for ${paymentId}`);
+      // }
+
+      // const paymentGroupGuid = invoiceRec.paymentGroupGuid;
+      const paymentGroupGuid = inputs.preCheckoutQuery.invoice_payload;
+
       if (answerPreCheckoutQueryResult) {
 
-        await sails.helpers.storage.paymentCreate.with({
+        await sails.helpers.storage.paymentCreateJoi({
+          paymentGroupGuid,
           paymentStatus: sails.config.custom.enums.paymentStatus.CHECKOUT,
           paymentData: {
             preCheckoutQuery: inputs.preCheckoutQuery,
@@ -72,12 +102,9 @@ module.exports = {
             errorMessage: inputs.errorMessage || '',
           },
           paymentResponse: answerPreCheckoutQueryResult,
-          paymentProvider: paymentProviderAndEnv,
-          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           clientId: inputs.client.id,
           clientGuid: inputs.client.guid,
           accountGuid: inputs.client.account_use,
-          type: sails.config.custom.enums.paymentType.DEPOSIT,
           amount: inputs.preCheckoutQuery.total_amount/100 || 0,
           currency: inputs.preCheckoutQuery.currency || 'XXX',
         });
@@ -89,7 +116,8 @@ module.exports = {
         });
       } else {
 
-        await sails.helpers.storage.paymentCreate.with({
+        await sails.helpers.storage.paymentCreateJoi({
+          paymentGroupGuid,
           paymentStatus: sails.config.custom.enums.paymentStatus.CHECKOUT_ERROR,
           paymentData: {
             preCheckoutQuery: inputs.preCheckoutQuery,
@@ -97,8 +125,6 @@ module.exports = {
             errorMessage: inputs.errorMessage || '',
           },
           paymentResponse: answerPreCheckoutQueryResult,
-          paymentProvider: paymentProviderAndEnv,
-          messenger: sails.config.custom.enums.messenger.TELEGRAM,
           comments: 'answerPreCheckoutQueryResult return False',
           clientId: inputs.client.id,
           clientGuid: inputs.client.guid,
@@ -116,8 +142,8 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/mgw/telegram/answer-pre-checkout-query';
-      const errorMsg = sails.config.custom.ANSWER_PRE_CHECKOUT_QUERY_ERROR;
+      const errorLocation = moduleName;
+      const errorMsg = `${moduleName}, error: ${sails.config.custom.ANSWER_PRE_CHECKOUT_QUERY_ERROR}`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
@@ -125,7 +151,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

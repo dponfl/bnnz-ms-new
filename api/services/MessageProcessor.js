@@ -100,15 +100,19 @@ module.exports = {
     const firstName = input.client.first_name || '';
     const lastName = input.client.last_name || '';
 
-    const configPriceBeHero = confObj(input.client.lang).price.silver_personal;
+    const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+
+    const priceConfigText = sails.config.custom.config.lang[useLang].price;
+    const priceConfigGeneral = sails.config.custom.config.price;
+
 
     resultStr = _.replace(resultStr, '$FirstName$', firstName);
     resultStr = _.replace(resultStr, '$LastName$', lastName);
 
-    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubCurrent$', `${configPriceBeHero.period_01.RUB.value_text} ${configPriceBeHero.period_01.RUB.currency_text}`);
-    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubList$', `${configPriceBeHero.period_01.RUB.value_text} ${configPriceBeHero.period_01.RUB.currency_text}`);
+    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubCurrent$', `${priceConfigGeneral.RUB.silver_personal.period_01.current_price} ${priceConfigText.currency.RUB}`);
+    resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubList$', `${priceConfigGeneral.RUB.silver_personal.period_01.list_price} ${priceConfigText.currency.RUB}`);
 
-    resultStr = _.replace(resultStr, '$BeHeroTitle$', `${configPriceBeHero.title}`);
+    resultStr = _.replace(resultStr, '$BeHeroTitle$', `${priceConfigText.service_title.silver_personal.title}`);
 
     const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
     const profileOfCurrentAccount = currentAccount.inst_profile;

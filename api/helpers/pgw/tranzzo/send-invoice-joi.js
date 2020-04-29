@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'pgw:yandex:send-invoice-joi';
+const moduleName = 'pgw:tranzzo:send-invoice-joi';
 
 
 module.exports = {

@@ -5,6 +5,10 @@ const mlog = require('mocha-logger');
 const moment = require('moment');
 const sinon = require('sinon');
 
+const clientSdk = require('./sdk/client');
+const accountSdk = require('./sdk/account');
+
+
 describe.skip('Test sleep function', function () {
 
   it('should make two logs with 3 sec delay', async function () {
@@ -245,6 +249,105 @@ describe.skip('Get account with null service', function () {
     const accountWithNullService = await Account.findOne({
       guid: '71f87d7a-6fef-48ad-9ee9-f2fa4824e788'
     }).populate('service');
+
+  });
+
+});
+
+describe('Test sendInvoce', function () {
+
+  let customConfig;
+  let account;
+  let client;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    client = await Client.findOne({
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
+    });
+
+    if (client == null) {
+      client = await clientSdk.createClientDB({
+        chat_id: '372204823'
+      });
+    }
+
+    account = await Account.findOne({
+      guid: client.account_use
+    });
+
+    if (account == null) {
+      account = await accountSdk.createAccountDB({
+        client: client.id,
+        guid: client.account_use,
+      })
+    }
+
+    client.accounts = await Account.find({client: client.id});
+
+  });
+
+  it('should send invoice', async function () {
+
+    try {
+
+      const paymentProvider = customConfig.config.payments[client.messenger]['provider'].toLowerCase();
+
+      const useLang = (_.has(customConfig.config.lang, client.lang) ? client.lang : 'ru');
+
+      const priceConfigText = customConfig.config.lang[useLang].price;
+      const priceConfigGeneral = customConfig.config.price;
+
+      if (priceConfigText == null) {
+        throw new Error(`Error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
+      }
+
+      if (priceConfigGeneral == null) {
+        throw new Error(`Error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
+      }
+
+      const title = MessageProcessor.parseStr({
+        client,
+        token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+      });
+
+      const description = MessageProcessor.parseStr({
+        client,
+        token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+        additionalTokens: [
+          {
+            token: "$paymentPeriod$",
+            value: priceConfigText.payment_periods.period_01,
+          }
+        ]
+      });
+
+      const currency = 'RUB';
+
+      const paymentResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
+        messenger: client.messenger,
+        chatId: client.chat_id,
+        title,
+        description,
+        startParameter: 'start',
+        currency,
+        prices: [
+          {
+            label: description,
+            amount: _.toString(priceConfigGeneral[currency].silver_personal.period_01.current_price),
+          }
+        ],
+        clientId: client.id,
+        clientGuid: client.guid,
+        accountGuid: client.account_use,
+      });
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
 
   });
 

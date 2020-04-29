@@ -70,7 +70,7 @@ module.exports = {
         .required(),
       type: Joi
         .string()
-        .description('status')
+        .description('transaction type')
         .required(),
       status: Joi
         .string()

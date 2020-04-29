@@ -162,7 +162,7 @@ module.exports = {
           clientId: inputs.clientId,
           clientGuid: inputs.clientGuid,
           accountGuid: inputs.accountGuid,
-          type: sails.config.custom.enums.paymentType.DEPOSIT,
+          type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
           amount: inputs.prices[0].amount/100 || 0,
           currency: inputs.currency,
         });
