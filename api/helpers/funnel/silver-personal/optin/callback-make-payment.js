@@ -88,6 +88,12 @@ module.exports = {
           const title = MessageProcessor.parseStr({
             client: input.client,
             token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+            additionalTokens: [
+              {
+                token: "$paymentPeriod$",
+                value: priceConfigText.payment_periods.period_01,
+              }
+            ]
           });
 
           const description = MessageProcessor.parseStr({
@@ -103,37 +109,53 @@ module.exports = {
 
           const currency = 'RUB';
 
+          const item01Description = MessageProcessor.parseStr({
+          client: input.client,
+          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+            additionalTokens: [
+              {
+                token: "$paymentPeriod$",
+                value: priceConfigText.payment_periods.period_01,
+              }
+            ]
+          });
+
+          const item02Description = MessageProcessor.parseStr({
+          client: input.client,
+          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
+          });
+
+
+          const invoiceItems = [
+            {
+              description: item01Description,
+              quantity: '1.0',
+              price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
+              currency,
+              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
+            },
+            {
+              description: item02Description,
+              quantity: '1.0',
+              price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
+              currency,
+              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
+            },
+          ];
+
           const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
             client: input.client,
             title,
             description,
             startParameter: 'start',
             currency,
-            prices: [
-              {
-                label: description,
-                amount: priceConfigGeneral[currency].silver_personal.period_01.current_price,
-                transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-              }
-            ],
+            invoiceItems,
           });
-
-          // TODO: Добавить в табл accounts поля: payment_amount и payment_currency
-          // Записать в эти поля соответствующие данные
-          // Позже при успешном платеже сравнивать данные полученные в ответе с этимы данными
 
           if (sendInvoiceResultRaw.status !== 'ok') {
             throw new Error(`${moduleName}, error: sendInvoice error response:
             ${JSON.stringify(sendInvoiceResultRaw, null, 3)}`);
           }
-
-          // await sails.helpers.storage.accountUpdateJoi({
-          //   criteria: {guid: input.client.account_use},
-          //   data: {
-          //     payment_amount: priceConfigGeneral[currency].silver_personal.period_01.current_price * priceConfigGeneral[currency].transform_to_min_price_unit,
-          //     payment_currency: currency,
-          //   }
-          // });
 
           const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
 
@@ -143,7 +165,6 @@ module.exports = {
             client.accounts: ${JSON.stringify(input.client.accounts, null, 3)}`);
           }
 
-          // input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price * priceConfigGeneral[currency].transform_to_min_price_unit;
           input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
           input.client.accounts[accountIndex].payment_currency = currency;
 

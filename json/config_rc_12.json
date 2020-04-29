@@ -973,6 +973,8 @@
         "BEHERO_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
         "BEHERO_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения \"$BeHeroTitle$\"",
         "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения \"$BeHeroTitle$\" на $paymentPeriod$",
+        "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "\"$BeHeroTitle$\" ($paymentPeriod$)",
+        "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION": "Скидка",
         "BEHERO_MAKE_PAYMENT_INVOICE_BTN": "Оплатить: $itemInvoicePrice$ руб.",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",

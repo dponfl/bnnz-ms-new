@@ -65,6 +65,10 @@ module.exports = {
         .any()
         .description('Breakdown of prices: Array of LabeledPrice (https://core.telegram.org/bots/api#labeledprice)')
         .required(),
+      invoiceAmount: Joi
+        .number()
+        .description('total invoice amount')
+        .required(),
       options: Joi
         .any()
         .description('Additional Telegram query options'),
@@ -117,6 +121,8 @@ module.exports = {
               prices: input.prices,
               options: input.options || {},
             },
+            amount: input.invoiceAmount,
+            currency: input.currency,
             paymentResponse: '',
             comments: 'Cannot get payment provider token',
             clientId: input.clientId,
@@ -155,7 +161,7 @@ module.exports = {
           clientId: input.clientId,
           clientGuid: input.clientGuid,
           accountGuid: input.accountGuid,
-          amount: input.prices[0].amount/100 || 0,
+          amount: input.invoiceAmount,
           currency: input.currency,
         });
 
