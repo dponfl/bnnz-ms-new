@@ -437,20 +437,10 @@
             "callbackHelper": null,
             "blockModifyHelper": null,
             "message": {
-              "doc": "sample.pdf",
+              "doc": "v1586616265/CY_Tax_2019.pdf",
               "html": [
                 {
-                  "text": "MSG_TASK_ACCOUNT",
-                  "style": "b",
-                  "cr": "DCR"
-                },
-                {
-                  "text": "MSG_TASK_LIKE",
-                  "style": "",
-                  "cr": "DCR"
-                },
-                {
-                  "text": "MSG_TASK",
+                  "text": "BEHERO_TERMS_DOC",
                   "style": "",
                   "cr": ""
                 }

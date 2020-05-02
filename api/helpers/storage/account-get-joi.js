@@ -99,7 +99,7 @@ module.exports = {
       return exits.success({
         status: 'ok',
         message: 'Account records',
-        payload: account,
+        payload: account, // массив объектов записей аккаунта или пустой массив
       })
 
     } catch (e) {

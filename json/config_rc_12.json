@@ -915,10 +915,12 @@
   "price": {
     "payment_periods": {
       "period_01": {
-        "value": "1 month"
+        "value": 1,
+        "period": "month"
       },
       "period_03": {
-        "value": "3 months"
+        "value": 3,
+        "period": "months"
       }
     },
     "RUB": {
@@ -976,6 +978,9 @@
         "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "\"$BeHeroTitle$\" ($paymentPeriod$)",
         "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION": "Скидка",
         "BEHERO_MAKE_PAYMENT_INVOICE_BTN": "Оплатить: $itemInvoicePrice$ руб.",
+        "BEHERO_TERMS_DOC": "Условия предоставления услуг",
+        "BEHERO_PAYMENT_SUCCESSFUL": "Пакет продвижения \"$BeHeroTitle$\" успешно оплачен.",
+        "BEHERO_MORE_INFO": "Получаемая живая активность:",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
         "MSG_OPTIN_HELLO": "Приветствую, $FirstName$",
         "MSG_OPTIN_GENERAL_INFO": "Ты знаешь, что со мной ты не только получишь продвижение твоего аккаунта в Инстаграме, но еще сможешь получать деньги, приглашая своих друзей?",

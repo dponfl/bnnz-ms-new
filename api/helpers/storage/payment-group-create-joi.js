@@ -86,6 +86,10 @@ module.exports = {
         .max(50)
         .valid(sails.config.custom.enums.messenger.TELEGRAM)
         .required(),
+      funnelBlockName: Joi
+        .string()
+        .description('funnel block name')
+        .required(),
       comments: Joi
         .string()
         .description('payment response'),
@@ -113,6 +117,7 @@ module.exports = {
         account_guid: input.accountGuid,
         amount: input.amount,
         currency: input.currency,
+        funnel_block: input.funnelBlockName,
       })
         .fetch();
 

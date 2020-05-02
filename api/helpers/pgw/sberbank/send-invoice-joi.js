@@ -45,10 +45,6 @@ module.exports = {
         .description('Three-letter ISO 4217 currency code (https://core.telegram.org/bots/payments#supported-currencies)')
         .max(3)
         .required(),
-      prices: Joi
-        .any()
-        .description('Breakdown of prices: Array of LabeledPrice (https://core.telegram.org/bots/api#labeledprice)')
-        .required(),
       title: Joi
         .string()
         .description('Product name: 1-32 characters')
@@ -59,9 +55,17 @@ module.exports = {
         .description('Product description: 1-255 characters')
         .max(255)
         .required(),
+      invoiceItems: Joi
+        .any()
+        .description('invoice items')
+        .required(),
       startParameter: Joi
         .string()
         .description('Deep-linking parameter')
+        .required(),
+      funnelBlockName: Joi
+        .string()
+        .description('funnel block name')
         .required(),
     });
 
@@ -81,7 +85,35 @@ module.exports = {
       const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
         '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
 
-      const itemInvoicePrice = input.prices[0].amount.toString();
+      const items = [];
+      const prices = [];
+      let invoiceAmount = 0;
+
+      for (const elem of input.invoiceItems) {
+
+        const item = {
+          description: elem.description,
+          quantity: elem.quantity,
+          amount: {
+            value: elem.price,
+            currency: elem.currency,
+          },
+          vat_code: 1,
+        };
+
+        const price = {
+          label: elem.description,
+          amount: elem.price * elem.transform_to_min_price_unit,
+        };
+
+        invoiceAmount = invoiceAmount + elem.price * elem.quantity;
+
+        items.push(item);
+        prices.push(price);
+
+      }
+
+      const itemInvoicePrice = invoiceAmount.toString();
 
       const inlineKeyboardText = MessageProcessor.parseStr({
         client: input.client,
@@ -102,17 +134,7 @@ module.exports = {
         send_email_to_provider: true,
         provider_data: {
           receipt: {
-            items: [
-              {
-                description: input.description,
-                quantity: '1.00',
-                amount: {
-                  value: itemInvoicePrice,
-                  currency: input.currency,
-                },
-                vat_code: 1,
-              },
-            ],
+            items,
           },
         },
         reply_markup: {
@@ -127,13 +149,6 @@ module.exports = {
         }
       };
 
-      const prices = [
-        {
-          label: input.prices[0].label,
-          amount: input.prices[0].amount*input.prices[0].transform_to_min_price_unit,
-        }
-      ];
-
       /**
        * Создать запись в таблице PaymentGroups
        */
@@ -142,12 +157,13 @@ module.exports = {
         clientId,
         clientGuid,
         accountGuid,
-        amount: input.prices[0].amount,
+        amount: invoiceAmount,
         currency: input.currency,
         type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
         status: sails.config.custom.enums.paymentGroupStatus.PROCESSING,
         paymentProvider,
         messenger,
+        funnelBlockName: input.funnelBlockName,
       });
 
       if (paymentGroupRecRaw.status !== 'ok') {
@@ -163,6 +179,7 @@ module.exports = {
         currency: input.currency,
         prices,
         options,
+        invoiceAmount,
         clientId,
         clientGuid,
         accountGuid,
@@ -176,7 +193,7 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: 'Successful Yandex sendInvoice',
+        message: 'Successful Sberbank sendInvoice',
         payload: sendInvoiceRaw.payload,
       });
 

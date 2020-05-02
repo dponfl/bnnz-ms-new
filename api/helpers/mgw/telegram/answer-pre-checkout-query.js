@@ -47,11 +47,7 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
-    // sails.log.info('************************* Telegram answerPreCheckoutQuery: ', inputs);
-
     try {
-
-      // sails.log.warn('answerPreCheckoutQuery...');
 
       const answerPreCheckoutQueryResult = await sails.config.custom.telegramBot.answerPreCheckoutQuery(
         inputs.preCheckoutQuery.id || '',
@@ -61,12 +57,6 @@ module.exports = {
         }
         );
 
-      // sails.log.warn(`answerPreCheckoutQueryResult:
-      // ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
-
-      const paymentProviderAndEnv = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
-        '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
-
       if (_.isNil(inputs.preCheckoutQuery.invoice_payload)) {
         sails.log.error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
           ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
@@ -74,21 +64,6 @@ module.exports = {
           ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
       }
 
-      // const paymentId = inputs.preCheckoutQuery.invoice_payload;
-      //
-      //
-      // //TODO: Заменить на метод storage.paymentGetJoi (нужно его создать)
-      // const invoiceRec = await Payments.findOne({
-      //   payment_id: paymentId,
-      //   payment_status: sails.config.custom.enums.paymentStatus.INVOICE,
-      // });
-      //
-      // if (invoiceRec == null) {
-      //   sails.log.error(`${moduleName}, error: no invoice payment record found for ${paymentId}`);
-      //   throw new Error(`${moduleName}, error: no invoice payment record found for ${paymentId}`);
-      // }
-
-      // const paymentGroupGuid = invoiceRec.paymentGroupGuid;
       const paymentGroupGuid = inputs.preCheckoutQuery.invoice_payload;
 
       if (answerPreCheckoutQueryResult) {

@@ -63,6 +63,10 @@ module.exports = {
         .string()
         .description('Deep-linking parameter')
         .required(),
+      funnelBlockName: Joi
+        .string()
+        .description('funnel block name')
+        .required(),
     });
 
     let input;
@@ -159,6 +163,7 @@ module.exports = {
         status: sails.config.custom.enums.paymentGroupStatus.PROCESSING,
         paymentProvider,
         messenger,
+        funnelBlockName: input.funnelBlockName,
       });
 
       if (paymentGroupRecRaw.status !== 'ok') {
@@ -188,7 +193,7 @@ module.exports = {
 
       return exits.success({
         status: 'ok',
-        message: 'Successful Yandex sendInvoice',
+        message: 'Successful Tranzzo sendInvoice',
         payload: sendInvoiceRaw.payload,
       });
 

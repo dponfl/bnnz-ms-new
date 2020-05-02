@@ -48,6 +48,12 @@ module.exports = {
     messenger: {
       type: 'string',
     },
+    /**
+     * Наименование блока воронки, на котором нажата кнопка отправки инвойса
+     */
+    funnel_block: {
+      type: 'string',
+    },
     comments: {
       type: 'string',
     },

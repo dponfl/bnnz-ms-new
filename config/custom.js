@@ -35,6 +35,9 @@ module.exports.custom = {
   tokens: {},
 
   enums: {
+
+    dummyGuid: "00000000-0000-0000-0000-000000000000",
+
     paymentCurrency: {
       RUB: 'RUB',
       EUR: 'EUR',

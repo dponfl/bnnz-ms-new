@@ -1,5 +1,7 @@
 "use strict";
 
+const moduleName = 'mgw:telegram:check-successful-payment';
+
 module.exports = {
 
   friendlyName: 'Check successful payment data',
@@ -54,7 +56,22 @@ module.exports = {
         || invoice.payment_response.invoice.total_amount !== inputs.paymentResponse.successful_payment.total_amount
         || invoice.payment_response.invoice.currency !== inputs.paymentResponse.successful_payment.currency
       ) {
-        throw new Error(`checkSuccessfulPayment, SuccessfulPayment response does not corresponds invoice, invoice: ${invoice} SuccessfulPayment: ${inputs.paymentResponse.successful_payment}`);
+        // throw new Error(`checkSuccessfulPayment, SuccessfulPayment response does not corresponds invoice, invoice: ${invoice} SuccessfulPayment: ${inputs.paymentResponse.successful_payment}`);
+
+        /**
+         * В этом случае не нужно бросать ошибку (для обработки этого кейса отдельно)
+         */
+
+        return exits.success({
+          status: 'error',
+          message: sails.config.custom.CHECK_SUCCESSFUL_PAYMENT_ERROR,
+          payload: {
+            errorMessage: `${moduleName}, successful_payment response does not corresponds invoice:
+            invoice: ${JSON.stringify(invoice, null, 3)} 
+            successful_payment: ${JSON.stringify(inputs.paymentResponse.successful_payment, null, 3)}`
+          },
+        });
+
       }
 
       return exits.success({
@@ -68,16 +85,19 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/mgw/telegram/check-successful-payment';
-      const errorMsg = sails.config.custom.CHECK_SUCCESSFUL_PAYMENT_ERROR;
+      const errorLocation = moduleName;
+      const errorMsg = `${moduleName}: ${sails.config.custom.CHECK_SUCCESSFUL_PAYMENT_ERROR}`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
 
-      throw {err: {
+      throw {
+        err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 

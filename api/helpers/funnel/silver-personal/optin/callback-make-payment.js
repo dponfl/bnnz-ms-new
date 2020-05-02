@@ -125,7 +125,6 @@ module.exports = {
           token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
           });
 
-
           const invoiceItems = [
             {
               description: item01Description,
@@ -150,6 +149,7 @@ module.exports = {
             startParameter: 'start',
             currency,
             invoiceItems,
+            funnelBlockName: `optin::${input.block.id}`,
           });
 
           if (sendInvoiceResultRaw.status !== 'ok') {
@@ -168,15 +168,23 @@ module.exports = {
           input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
           input.client.accounts[accountIndex].payment_currency = currency;
 
-
-
-          // input.block.next = 'optin::make_payment';
           break;
         case 'more_info':
-          // input.block.next = 'optin::try_again';
+
+          input.block.next = 'optin::more_info_01';
+
           break;
         case 'get_terms':
-          // input.block.next = 'optin::try_again';
+
+          const messageData = sails.config.custom.pushMessages.funnels.optin.show_terms.messages[0];
+
+          const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+            client: input.client,
+            messageData,
+          });
+
+          input.block.next = 'optin::make_payment_02';
+
           break;
         default:
           throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
@@ -192,11 +200,6 @@ module.exports = {
         previous: true,
         switchFunnel: true,
       });
-
-
-
-
-
 
       return exits.success({
         status: 'ok',
