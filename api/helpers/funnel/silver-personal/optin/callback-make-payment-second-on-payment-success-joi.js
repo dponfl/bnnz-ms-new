@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-on-payment-success-joi';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-success-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-on-payment-success-joi',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-success-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-on-payment-success-joi',
+  description: 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-success-joi',
 
 
   inputs: {
@@ -103,7 +103,7 @@ module.exports = {
       getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.previous = 'optin::make_payment';
+        getBlock.previous = 'optin::make_payment_02';
         getBlock.enabled = true;
       }
 

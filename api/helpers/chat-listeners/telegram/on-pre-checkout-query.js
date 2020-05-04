@@ -34,6 +34,8 @@ module.exports = {
       let paymentGroupGuid = sails.config.custom.enums.dummyGuid;
       const chatId = msg.from.id || 0;
 
+      // msg.invoice_payload = null;
+
       try {
 
         if (_.isNil(msg.invoice_payload)) {

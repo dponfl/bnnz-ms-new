@@ -230,7 +230,8 @@ module.exports = {
           data: {
             posts_received_day: ++acc.posts_received_day,
             posts_received_total: ++acc.posts_received_total,
-          }
+          },
+          createdBy: moduleName,
         });
 
       }
@@ -240,7 +241,8 @@ module.exports = {
         data: {
           posts_made_day: ++account.posts_made_day,
           posts_made_total: ++account.posts_made_total,
-        }
+        },
+        createdBy: moduleName,
       });
 
       return exits.success({

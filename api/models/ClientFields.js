@@ -24,7 +24,9 @@ module.exports = {
     new_value: {
       type: 'string',
     },
-
+    created_by: {
+      type: 'string',
+    },
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗

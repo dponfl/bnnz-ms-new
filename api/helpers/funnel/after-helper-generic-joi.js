@@ -145,10 +145,21 @@ module.exports = {
 
       }
 
+      // await sails.helpers.storage.clientUpdateJoi({
+      //   criteria: {guid: input.client.guid},
+      //   data: input.client,
+      //   createdBy: moduleName,
+      // });
+
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
-        data: input.client
+        data: {
+          current_funnel: input.client.current_funnel,
+          funnels: input.client.funnels,
+        },
+        createdBy: moduleName,
       });
+
 
       return exits.success();
 

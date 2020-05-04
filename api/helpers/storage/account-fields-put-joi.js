@@ -48,6 +48,10 @@ module.exports = {
         .any()
         .description('Data to save')
         .required(),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
     });
 
     let input;
@@ -84,8 +88,13 @@ module.exports = {
         'client',
       ]);
 
-      accountFieldsData.service = (accountFieldsData.service ? accountFieldsData.service.id : null);
-      accountFieldsData.next_service = (accountFieldsData.next_service ? accountFieldsData.next_service.id : null);
+      if (accountFieldsData.service) {
+        accountFieldsData.service = accountFieldsData.service.id;
+      }
+
+      if (accountFieldsData.next_service) {
+        accountFieldsData.next_service = accountFieldsData.next_service.id;
+      }
 
       const accountRec = await Account.findOne({
         guid: input.accountGuid
@@ -104,6 +113,7 @@ module.exports = {
             field: accountFieldKey,
             old_value: _.toString(accountRec[accountFieldKey]),
             new_value: _.toString(accountFieldValue),
+            created_by: `${input.createdBy} => ${moduleName}`,
           };
 
           await AccountFields.create(accountFieldRec);

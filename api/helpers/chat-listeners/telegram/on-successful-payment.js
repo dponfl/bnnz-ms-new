@@ -96,7 +96,8 @@ module.exports = {
             data: {
               payment_amount: null,
               payment_currency: null,
-            }
+            },
+            createdBy: moduleName,
           });
 
           /**

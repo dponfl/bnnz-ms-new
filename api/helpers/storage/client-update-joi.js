@@ -47,6 +47,10 @@ module.exports = {
         .any()
         .description('Data to update to the client record')
         .required(),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
     });
 
     let input;
@@ -62,6 +66,7 @@ module.exports = {
         await sails.helpers.storage.accountUpdateJoi({
           criteria: {id: acc.id},
           data: acc,
+          createdBy: `${input.createdBy} => ${moduleName}`,
         })
       });
 
@@ -73,6 +78,7 @@ module.exports = {
         await sails.helpers.storage.clientFieldsPut.with({
           clientGuid: clientRec.guid,
           data: input.data,
+          createdBy: `${input.createdBy} => ${moduleName}`,
         })
       }
 

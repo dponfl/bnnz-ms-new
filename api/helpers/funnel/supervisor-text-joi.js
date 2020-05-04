@@ -104,7 +104,8 @@ module.exports = {
 
             await sails.helpers.storage.clientUpdateJoi({
               criteria: {guid: input.client.guid},
-              data: {funnels: input.client.funnels}
+              data: {funnels: input.client.funnels},
+              createdBy: moduleName,
             });
 
           } else {
@@ -170,7 +171,8 @@ module.exports = {
 
         await sails.helpers.storage.clientUpdateJoi({
           criteria: {guid: input.client.guid},
-          data: {funnels: input.client.funnels}
+          data: {funnels: input.client.funnels},
+          createdBy: moduleName,
         });
 
       } else {

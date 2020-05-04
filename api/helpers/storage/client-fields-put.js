@@ -1,5 +1,7 @@
 "use strict";
 
+const moduleName = 'storage:client-fields-put';
+
 module.exports = {
 
 
@@ -24,6 +26,15 @@ module.exports = {
       type: 'ref',
       required: true,
     },
+
+    createdBy: {
+      friendlyName: 'createdBy',
+      description: 'source of update',
+      type: 'string',
+      required: true,
+    },
+
+
 
 
   },
@@ -93,6 +104,7 @@ module.exports = {
             field: clientFieldKey,
             old_value: _.toString(clientRec[clientFieldKey]),
             new_value: _.toString(clientFieldValue),
+            created_by: `${inputs.createdBy} => ${moduleName}`,
           };
 
           await ClientFields.create(clientFieldRec);

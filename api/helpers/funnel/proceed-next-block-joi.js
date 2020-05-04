@@ -91,7 +91,7 @@ module.exports = {
 
       if (
         block.enabled
-        // && !block.shown
+        && !block.shown
         && !block.done
         && block.actionType
       ) {
@@ -366,8 +366,9 @@ module.exports = {
           data: {
             current_funnel: input.client.current_funnel,
             funnels: funnel,
-            accounts: input.client.accounts,
-          }
+            // accounts: input.client.accounts,
+          },
+          createdBy: moduleName,
         });
 
 

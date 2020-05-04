@@ -46,6 +46,10 @@ module.exports = {
             .any()
             .required()
             .description('Data to update to the account record'),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
     });
 
     let input;
@@ -55,14 +59,14 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       const accountRec = _.omit(input.data, ['service', 'room', 'next_service']);
-      const serviceData = _.get(input.data, 'service');
-      const nextServiceData = _.get(input.data, 'next_service');
+      const serviceData = _.get(input.data, 'service', null);
+      const nextServiceData = _.get(input.data, 'next_service', null);
 
-      if (serviceData) {
+      if (serviceData != null) {
         accountRec.service = serviceData.id;
       }
 
-      if (nextServiceData) {
+      if (nextServiceData != null) {
         accountRec.next_service = nextServiceData.id;
       }
 
@@ -74,6 +78,7 @@ module.exports = {
         await sails.helpers.storage.accountFieldsPutJoi({
           accountGuid: accountRecord.guid,
           data: input.data,
+          createdBy: `${input.createdBy} => ${moduleName}`,
         })
       }
 

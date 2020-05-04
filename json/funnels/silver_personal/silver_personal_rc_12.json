@@ -252,36 +252,9 @@
       }
     },
     {
-      "id": "more_info_01",
-      "description": "",
-      "actionType": "text",
-      "initial": false,
-      "enabled": false,
-      "show_time": 0,
-      "previous": "optin::make_payment",
-      "next": null,
-      "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": null,
-      "forcedHelper": null,
-      "callbackHelper": null,
-      "blockModifyHelper": null,
-      "shown": false,
-      "done": false,
-      "message": {
-        "html": [
-          {
-            "text": "BEHERO_MORE_INFO",
-            "style": "",
-            "cr": ""
-          }
-        ]
-      }
-    },
-    {
       "id": "make_payment_02",
       "description": "",
-      "actionType": "text",
+      "actionType": "inline_keyboard",
       "initial": false,
       "enabled": false,
       "show_time": 0,
@@ -291,7 +264,7 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": null,
+      "callbackHelper": "optin::callbackMakePaymentSecond",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
@@ -302,6 +275,14 @@
             "style": "",
             "cr": ""
           }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "BEHERO_MAKE_PAYMENT_02_BTN_01",
+              "callback_data": "make_payment"
+            }
+          ]
         ]
       }
     },

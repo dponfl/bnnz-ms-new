@@ -192,9 +192,10 @@ module.exports = {
 
           params.funnels = funnels.funnel_data || null;
 
-          // sails.log.warn('params: ', params);
-
-          getClientResponse = await sails.helpers.storage.clientCreate(params);
+          getClientResponse = await sails.helpers.storage.clientCreate.with({
+            client: params,
+            createdBy: moduleName,
+          });
 
         }
 

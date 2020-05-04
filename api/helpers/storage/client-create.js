@@ -2,6 +2,8 @@
 
 const uuid = require('uuid-apikey');
 
+const moduleName = 'storage:client-create';
+
 module.exports = {
 
 
@@ -17,6 +19,13 @@ module.exports = {
       friendlyName: 'client',
       description: 'Client record',
       type: 'ref',
+      required: true,
+    },
+
+    createdBy: {
+      friendlyName: 'createdBy',
+      description: 'source of update',
+      type: 'string',
       required: true,
     },
 
@@ -73,6 +82,7 @@ module.exports = {
       client = await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: client.guid},
         data: client,
+        createdBy: `${inputs.createdBy} => ${moduleName}`,
       });
 
       return exits.success({
