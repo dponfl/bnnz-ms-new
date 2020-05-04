@@ -66,6 +66,10 @@ module.exports = {
       msg: Joi
         .any()
         .description('Message received'),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
     });
 
 
@@ -145,20 +149,20 @@ module.exports = {
 
       }
 
-      // await sails.helpers.storage.clientUpdateJoi({
-      //   criteria: {guid: input.client.guid},
-      //   data: input.client,
-      //   createdBy: moduleName,
-      // });
-
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
-        data: {
-          current_funnel: input.client.current_funnel,
-          funnels: input.client.funnels,
-        },
-        createdBy: moduleName,
+        data: input.client,
+        createdBy: `${input.createdBy} => ${moduleName}`,
       });
+
+      // await sails.helpers.storage.clientUpdateJoi({
+      //   criteria: {guid: input.client.guid},
+      //   data: {
+      //     current_funnel: input.client.current_funnel,
+      //     funnels: input.client.funnels,
+      //   },
+      //   createdBy: moduleName,
+      // });
 
 
       return exits.success();

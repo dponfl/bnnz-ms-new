@@ -77,7 +77,7 @@ module.exports = {
       if (accountRecord != null) {
         await sails.helpers.storage.accountFieldsPutJoi({
           accountGuid: accountRecord.guid,
-          data: input.data,
+          data: accountRec,
           createdBy: `${input.createdBy} => ${moduleName}`,
         })
       }

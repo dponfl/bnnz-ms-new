@@ -66,11 +66,14 @@ module.exports = {
 
       switch (input.query.data) {
         case 'profile_confirm_yes':
+          input.client.accounts[currentAccountInd].inst_profile = input.client.inst_profile_tmp;
+          input.client.inst_profile_tmp = null;
           input.client.accounts[currentAccountInd].profile_confirmed = true;
           input.block.next = 'optin::make_payment';
           break;
         case 'profile_confirm_no':
-          input.client.accounts[currentAccountInd].profile_confirmed = false;
+          input.client.inst_profile_tmp = null;
+          input.client.accounts[currentAccountInd].profile_provided = false;
           input.block.next = 'optin::try_again';
           break;
         default:
@@ -86,6 +89,7 @@ module.exports = {
         next: true,
         previous: true,
         switchFunnel: true,
+        createdBy: moduleName,
       });
 
       return exits.success({

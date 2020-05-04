@@ -150,6 +150,7 @@ module.exports = {
         next: true,
         previous: false,
         switchFunnel: false,
+        createdBy: moduleName,
       });
 
       return exits.success({

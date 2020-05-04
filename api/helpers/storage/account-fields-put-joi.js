@@ -88,13 +88,13 @@ module.exports = {
         'client',
       ]);
 
-      if (accountFieldsData.service) {
-        accountFieldsData.service = accountFieldsData.service.id;
-      }
-
-      if (accountFieldsData.next_service) {
-        accountFieldsData.next_service = accountFieldsData.next_service.id;
-      }
+      // if (accountFieldsData.service) {
+      //   accountFieldsData.service = accountFieldsData.service.id;
+      // }
+      //
+      // if (accountFieldsData.next_service) {
+      //   accountFieldsData.next_service = accountFieldsData.next_service.id;
+      // }
 
       const accountRec = await Account.findOne({
         guid: input.accountGuid

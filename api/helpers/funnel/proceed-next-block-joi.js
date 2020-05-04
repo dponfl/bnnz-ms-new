@@ -68,6 +68,14 @@ module.exports = {
         .description('Message received'),
     });
 
+    //TODO: Добавить в параметры и передать дальше во все соответствующие вызовы
+    /**
+     * createdBy: Joi
+     *  .string()
+     *  .description('source of update')
+     *  .required(),
+     */
+
 
     let block = null;
     let funnel = null;
@@ -395,6 +403,7 @@ module.exports = {
             next: true,
             previous: true,
             switchFunnel: true,
+            createdBy: moduleName,
           });
 
         }

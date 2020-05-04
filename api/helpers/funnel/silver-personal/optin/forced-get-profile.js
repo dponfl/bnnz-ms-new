@@ -90,7 +90,6 @@ module.exports = {
         if (profileExists) {
 
           input.client.inst_profile_tmp = instProfile;
-          input.client.accounts[currentAccountInd].inst_profile = instProfile;
           input.client.accounts[currentAccountInd].profile_provided = true;
 
           input.block.done = true;
@@ -112,6 +111,7 @@ module.exports = {
         next: true,
         previous: true,
         switchFunnel: true,
+        createdBy: moduleName,
       });
 
 

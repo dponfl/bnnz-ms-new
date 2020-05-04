@@ -64,26 +64,38 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
+
       /**
        * Обновляем поля записи текущего аккаунта
        */
 
       const priceConfig = sails.config.custom.config.price;
 
-      await sails.helpers.storage.accountUpdateJoi({
-        criteria: {
-          guid: input.client.account_use,
-        },
-        data: {
-          payment_made: true,
-          subscription_from: moment()
-            .format(),
-          subscription_until: moment()
-            .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
-            .format(),
-        },
-        createdBy: moduleName,
-      });
+      input.client.accounts[currentAccountInd].payment_made = true;
+      input.client.accounts[currentAccountInd].subscription_from = moment()
+        .format();
+      input.client.accounts[currentAccountInd].subscription_until = moment()
+        .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+        .format();
+
+      // await sails.helpers.storage.accountUpdateJoi({
+      //   criteria: {
+      //     guid: input.client.account_use,
+      //   },
+      //   data: {
+      //     payment_made: true,
+      //     subscription_from: moment()
+      //       .format(),
+      //     subscription_until: moment()
+      //       .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+      //       .format(),
+      //   },
+      //   createdBy: moduleName,
+      // });
 
       /**
        * Устанавливаем значение для следующего блока в 'optin::payment_successful'
@@ -109,7 +121,7 @@ module.exports = {
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
-        data: {funnels: input.client.funnels},
+        data: input.client,
         createdBy: moduleName,
       });
 

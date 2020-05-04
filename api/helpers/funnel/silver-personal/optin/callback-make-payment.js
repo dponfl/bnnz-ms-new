@@ -199,6 +199,7 @@ module.exports = {
         next: true,
         previous: true,
         switchFunnel: true,
+        createdBy: moduleName,
       });
 
       return exits.success({

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-second';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-third';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-second',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-third',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-second',
+  description: 'funnel:silver-personal:optin:callback-make-payment-third',
 
 
   inputs: {

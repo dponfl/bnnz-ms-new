@@ -84,6 +84,7 @@ module.exports = {
         previous: false,  // if we do not set it to false then previous block is set done=true
                           // and we will not be able to move to it again (but we want to move there
         switchFunnel: true,
+        createdBy: moduleName,
       });
 
       return exits.success({
