@@ -368,7 +368,8 @@ module.exports = {
           criteria: {guid: input.client.guid},
           data: {
             current_funnel: input.client.current_funnel,
-            funnels: funnel,
+            // funnels: funnel,
+            funnels: input.client.funnels,
             accounts: input.client.accounts,
           },
           createdBy: `${input.createdBy} => ${moduleName}`,

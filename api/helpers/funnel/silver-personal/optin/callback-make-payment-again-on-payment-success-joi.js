@@ -1,17 +1,18 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-success-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-success-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi',
+  description: 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-success-joi',
 
 
   inputs: {
@@ -54,30 +55,52 @@ module.exports = {
     });
 
     let input;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+    let getBlock;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
+
       /**
-       * Устанавливаем значение для следующего блока в 'optin::payment_error'
+       * Обновляем поля записи текущего аккаунта
        */
 
-      input.block.next = 'optin::payment_error';
+      const priceConfig = sails.config.custom.config.price;
+
+      input.client.accounts[currentAccountInd].payment_made = true;
+      input.client.accounts[currentAccountInd].subscription_from = moment()
+        .format();
+      input.client.accounts[currentAccountInd].subscription_until = moment()
+        .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+        .format();
 
       /**
-       * Устанавливае у следующего блока значение для предшествующего блока в 'optin::make_payment'
+       * Устанавливаем значение для следующего блока в 'optin::payment_successful'
        */
 
-      const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-      const updateFunnel = splitRes[0];
-      const updateId = splitRes[1];
+      input.block.next = 'optin::payment_successful';
+
+      /**
+       * Устанавливае у следующего блока значение для предшествующего блока в 'optin::payment_error'
+       */
+
+      splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
 
 
-      const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.previous = 'optin::make_payment';
+        getBlock.previous = 'optin::payment_error';
         getBlock.enabled = true;
       }
 
@@ -115,6 +138,7 @@ module.exports = {
 
         throw new Error(`${moduleName}, error: initial block was not found`);
       }
+
 
       return exits.success({
         status: 'ok',

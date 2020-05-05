@@ -78,6 +78,42 @@ module.exports = {
 
       if (getBlock) {
         getBlock.previous = 'optin::make_payment_02';
+        getBlock.enabled = true;
+      }
+
+      await sails.helpers.storage.clientUpdateJoi({
+        criteria: {guid: input.client.guid},
+        data: input.client,
+        createdBy: moduleName,
+      });
+
+      /**
+       * Try to find the initial block of the current funnel
+       */
+
+      let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+        {initial: true});
+
+      /**
+       * Check that the initial block was found
+       */
+
+      if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+        await sails.helpers.funnel.proceedNextBlockJoi({
+          client: input.client,
+          funnelName: input.client.current_funnel,
+          blockId: initialBlock.id,
+          createdBy: moduleName,
+        });
+
+      } else {
+
+        /**
+         * Throw error -> initial block was not found
+         */
+
+        throw new Error(`${moduleName}, error: initial block was not found`);
       }
 
       return exits.success({

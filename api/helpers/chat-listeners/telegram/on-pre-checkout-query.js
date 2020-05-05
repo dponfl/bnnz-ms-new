@@ -34,6 +34,9 @@ module.exports = {
       let paymentGroupGuid = sails.config.custom.enums.dummyGuid;
       const chatId = msg.from.id || 0;
 
+      /**
+       * Разкомментировать для проверки работы воронки в случае ошибки платежа
+       */
       // msg.invoice_payload = null;
 
       try {

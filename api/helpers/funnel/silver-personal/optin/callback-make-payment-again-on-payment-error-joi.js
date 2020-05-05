@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-error-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-on-payment-error-joi',
+  description: 'funnel:silver-personal:optin:callback-make-payment-again-on-payment-error-joi',
 
 
   inputs: {
@@ -60,26 +60,11 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       /**
-       * Устанавливаем значение для следующего блока в 'optin::payment_error'
+       * Устанавливаем значение для текущего блока
        */
 
-      input.block.next = 'optin::payment_error';
-
-      /**
-       * Устанавливае у следующего блока значение для предшествующего блока в 'optin::make_payment'
-       */
-
-      const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-      const updateFunnel = splitRes[0];
-      const updateId = splitRes[1];
-
-
-      const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.previous = 'optin::make_payment';
-        getBlock.enabled = true;
-      }
+      input.block.done = false;
+      input.block.shown = false;
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},

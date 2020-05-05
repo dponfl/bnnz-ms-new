@@ -191,6 +191,26 @@ module.exports = {
 
       }
 
+      /**
+       * Устанавливаем paymentGroup запись в статус "error"
+       */
+
+      const updatedPaymentGroupRaw = await sails.helpers.storage.paymentGroupUpdateJoi({
+        criteria: {
+          guid: paymentGroup.guid,
+        },
+        data: {
+          status: sails.config.custom.enums.paymentGroupStatus.ERROR,
+        },
+        createdBy: moduleName,
+      });
+
+      if (updatedPaymentGroupRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: paymentGroup not updated:
+        guid: ${paymentGroup.guid}
+        updatedPaymentGroupRaw: ${JSON.stringify(updatedPaymentGroupRaw, null, 3)}`);
+      }
+
 
       /**
        * Используя наименование сервиса, воронки, блока и коллбэк-хелпера - формируем обращение
