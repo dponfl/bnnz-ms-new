@@ -142,6 +142,7 @@ module.exports = {
           client: input.client,
           funnelName: input.client.current_funnel,
           blockId: initialBlock.id,
+          createdBy: moduleName,
         });
 
       } else {

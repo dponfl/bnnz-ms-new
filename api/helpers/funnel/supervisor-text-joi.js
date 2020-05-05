@@ -163,6 +163,7 @@ module.exports = {
           blockId: initialBlock.id,
           additionalTokens: input.additionalTokens,
           msg: input.msg,
+          createdBy: moduleName,
         });
 
         /**

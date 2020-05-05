@@ -5,9 +5,9 @@ const sleep = require('util').promisify(setTimeout);
 
 const moduleName = 'funnel:proceed-next-block-joi';
 
-const t = require('../../services/translate').t;
-const confObj = require('../../services/translate').getConfigObj;
-const emoji = require('node-emoji');
+// const t = require('../../services/translate').t;
+// const confObj = require('../../services/translate').getConfigObj;
+// const emoji = require('node-emoji');
 
 
 
@@ -66,16 +66,11 @@ module.exports = {
       msg: Joi
         .any()
         .description('Message received'),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
     });
-
-    //TODO: Добавить в параметры и передать дальше во все соответствующие вызовы
-    /**
-     * createdBy: Joi
-     *  .string()
-     *  .description('source of update')
-     *  .required(),
-     */
-
 
     let block = null;
     let funnel = null;
@@ -374,9 +369,9 @@ module.exports = {
           data: {
             current_funnel: input.client.current_funnel,
             funnels: funnel,
-            // accounts: input.client.accounts,
+            accounts: input.client.accounts,
           },
-          createdBy: moduleName,
+          createdBy: `${input.createdBy} => ${moduleName}`,
         });
 
 
@@ -403,7 +398,7 @@ module.exports = {
             next: true,
             previous: true,
             switchFunnel: true,
-            createdBy: moduleName,
+            createdBy: `${input.createdBy} => ${moduleName}`,
           });
 
         }
@@ -472,10 +467,14 @@ module.exports = {
             throw new Error(`next block not found, \nnextFunnelName: ${nextFunnelName} \nnextId : ${nextId}`);
           }
 
+          const createdByRegexp = new RegExp(moduleName);
+          const createdBy = input.createdBy.match(createdByRegexp) ? input.createdBy : `${input.createdBy} => ${moduleName}`;
+
           let proceedNextBlockParams = {
             client: input.client,
             funnelName: nextFunnelName,
             blockId: nextId,
+            createdBy,
           };
 
           if (input.msg) {

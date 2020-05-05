@@ -132,6 +132,7 @@ module.exports = {
                 blockId: initialBlock.id,
                 additionalTokens: input.additionalTokens,
                 msg: input.query.message,
+                createdBy: moduleName,
               });
 
             } else {
