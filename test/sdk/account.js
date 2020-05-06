@@ -111,7 +111,7 @@ async function generateAccount(account = null) {
 
     accountRec = {
       id: casual.integer(1, 1000),
-      guid: casual.uuid,
+      guid: uuidApiKey.uuid,
       ref_key: uuidApiKey.apiKey,
       is_ref: true,
       subscription_active: true,

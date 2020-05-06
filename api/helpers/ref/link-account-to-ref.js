@@ -391,6 +391,10 @@ async function getRandomRefRecordLessSomeAccounts(omitAccountsArray) {
   } else if (refRecs.length === 0) {
     return null;
   } else {
+    /**
+     * Таким образом мы в первую очередь линкуем аккаунты, которые пришли
+     * в реферальную систему раньше в отличае от случайного выбора аккаунта
+     */
     // return refRecs[_.random(refRecs.length - 1)];
     return refRecs[0];
   }

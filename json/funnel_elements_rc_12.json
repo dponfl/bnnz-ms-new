@@ -8,7 +8,7 @@
       "enabled": false,
       "show_time": 0,
       "previous": null,
-      "next": "optin::general_info",
+      "next": "XXXXXXX::XXXXXXX",
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
@@ -20,7 +20,7 @@
       "message": {
         "html": [
           {
-            "text": "MSG_OPTIN_HELLO",
+            "text": "XXXXXXX",
             "style": "",
             "cr": ""
           }
@@ -40,38 +40,38 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "xxx::xxx",
+      "callbackHelper": "XXXXXXX::XXXXXXX",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "MSG_OPTIN_GENERAL_INFO",
+            "text": "XXXXXXX",
             "style": "",
-            "cr": "DCR"
+            "cr": ""
           },
           {
-            "text": "MSG_OPTIN_GENERAL_INFO_01",
-            "style": "b",
+            "text": "XXXXXXX",
+            "style": "",
             "cr": ""
           }
         ],
         "inline_keyboard": [
           [
             {
-              "text": "ACT_NEW_POST",
-              "callback_data": "upload_post"
+              "text": "XXXXXXX",
+              "callback_data": "XXXXXXX"
             }
           ],
           [
             {
-              "text": "ACT_FAQ",
-              "url": "www.google.com"
+              "text": "XXXXXXX",
+              "url": "XXXXXXX"
             },
             {
-              "text": "ACT_WEB",
-              "url": "www.facebook.com"
+              "text": "XXXXXXX",
+              "url": "XXXXXXX"
             }
           ]
         ]
@@ -89,7 +89,7 @@
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
-      "forcedHelper": "xxx::xxx",
+      "forcedHelper": "XXXXXXX::XXXXXXX",
       "callbackHelper": null,
       "blockModifyHelper": null,
       "shown": false,
@@ -97,17 +97,17 @@
       "message": {
         "html": [
           {
-            "text": "NEW_SUBS_INST_01",
-            "style": "b",
-            "cr": "SCR"
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
           },
           {
-            "text": "NEW_SUBS_INST_01",
-            "style": "i",
-            "cr": "DCR"
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
           },
           {
-            "text": "NEW_SUBS_INST_01",
+            "text": "XXXXXXX",
             "style": "",
             "cr": ""
           }
@@ -132,11 +132,11 @@
       "shown": false,
       "done": false,
       "message": {
-        "img": "sample.jpg",
+        "img": "XXXXXXX",
         "html": [
           {
-            "text": "NEW_SUBS_WELCOME_02",
-            "style": "b",
+            "text": "XXXXXXX",
+            "style": "",
             "cr": ""
           }
         ]
@@ -160,11 +160,11 @@
       "shown": false,
       "done": false,
       "message": {
-        "video": "sample.mp4",
+        "video": "XXXXXXX",
         "html": [
           {
-            "text": "NEW_SUBS_WELCOME_02",
-            "style": "b",
+            "text": "XXXXXXX",
+            "style": "",
             "cr": ""
           }
         ]
@@ -188,11 +188,11 @@
       "shown": false,
       "done": false,
       "message": {
-        "doc": "sample.pdf",
+        "doc": "XXXXXXX",
         "html": [
           {
-            "text": "NEW_SUBS_WELCOME_02",
-            "style": "b",
+            "text": "XXXXXXX",
+            "style": "",
             "cr": ""
           }
         ]

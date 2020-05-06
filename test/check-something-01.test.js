@@ -254,7 +254,7 @@ describe.skip('Get account with null service', function () {
 
 });
 
-describe('Test sendInvoce', function () {
+describe.skip('Test sendInvoce', function () {
 
   let customConfig;
   let account;
@@ -343,6 +343,113 @@ describe('Test sendInvoce', function () {
         clientGuid: client.guid,
         accountGuid: client.account_use,
       });
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+});
+
+describe('Ref system activities', function () {
+
+  let customConfig;
+  let accounts = [];
+  let clients = [];
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    this.timeout(700000);
+
+    /**
+     * Создаём 20 клиентов по 1 аккаунту у каждого
+     * при этом 3+2 клиент связаны по реферальной системе
+     */
+
+    for (let i=0; i<3; i++) {
+
+      const clientParams = {
+        ref_key: (i > 0) ? accounts[i-1].ref_key : null,
+      };
+
+      const client = await clientSdk.createClientDB(clientParams);
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+        is_ref: true,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+    for (let i=3; i<20; i++) {
+
+      let client;
+
+      if (i === 5) {
+        client = await clientSdk.createClientDB({
+          ref_key: accounts[2].ref_key
+        });
+      } else if (i === 7 || i === 10) {
+        client = await clientSdk.createClientDB({
+          ref_key: accounts[0].ref_key
+        });
+      } else {
+        client = await clientSdk.createClientDB();
+      }
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+        is_ref: true,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+
+  });
+
+  it('should link accounts to ref system', async function () {
+
+    this.timeout(700000);
+
+    try {
+
+      for (let i = 0; i < 20; i++) {
+        await sails.helpers.ref.linkAccountToRef.with({
+          account: accounts[i],
+        });
+      }
 
     } catch (e) {
       mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
