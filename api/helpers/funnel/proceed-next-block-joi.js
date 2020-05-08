@@ -275,6 +275,61 @@ module.exports = {
 
             break;
 
+          case 'doc_inline_keyboard':
+
+            /**
+             * Send document + inline keyboard message
+             */
+
+            let htmlDocInlineKeyboardRaw = MessageProcessor.parseMessageStyle({
+                client: input.client,
+                message: block.message,
+                additionalTokens: input.additionalTokens,
+              });
+
+            let {text: htmlDocInlineKeyboard, inline_keyboard: keyboardInlineDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocInlineKeyboardRaw);
+
+            const docMessageJoiParams = {
+              chatId: input.client.chat_id,
+              docPath: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+              html: htmlDocInlineKeyboard,
+            };
+
+            if (keyboardInlineDoc != null) {
+
+              docMessageJoiParams.inlineKeyboard = MessageProcessor.mapDeep({
+                client: input.client,
+                data: keyboardInlineDoc,
+                additionalTokens: input.additionalTokens,
+              });
+
+            }
+
+            let docInlineKeyboardRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi'](docMessageJoiParams);
+
+            block.message_id = docInlineKeyboardRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSaveJoi({
+              message_id: docInlineKeyboardRes.payload.message_id || 0,
+              message: JSON.stringify({
+                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                html: htmlDocInlineKeyboard,
+              }),
+              message_format: sails.config.custom.enums.messageFormat.DOC,
+              messenger: input.client.messenger,
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
+              client_id: input.client.id,
+              client_guid: input.client.guid
+            });
+
+            break;
+
           case 'forced':
 
             /**

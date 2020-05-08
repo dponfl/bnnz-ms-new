@@ -53,6 +53,78 @@ describe.skip('Test sendDocument', function () {
 
 });
 
+describe.skip('Test sendDocument with inline keyboard', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send one document with inline keyboard', async function () {
+
+    const client = await Client.findOne({
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    if (client.accounts.length === 0) {
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+      client.account_use = client.accounts[0].guid;
+
+    }
+
+    const chatId = client.chat_id;
+    const html = 'Документ';
+    const inlineKeyboardRaw = [
+      [
+        {
+          "text": "BEHERO_PAYMENT_ERROR_BTN_01",
+          "callback_data": "make_payment"
+        }
+      ],
+      [
+        {
+          "text": "BEHERO_PAYMENT_ERROR_BTN_02",
+          "callback_data": "contact_support"
+        }
+      ]
+    ];
+
+    const inlineKeyboard = MessageProcessor.mapDeep({
+      client: client,
+      data: inlineKeyboardRaw,
+    });
+
+    const docPath = customConfig.cloudinaryDocUrl + 'v1586616265/CY_Tax_2019.pdf';
+
+    const res = await sails.helpers.mgw.telegram.docMessageJoi({
+      chatId,
+      docPath,
+      html,
+      inlineKeyboard,
+    });
+
+  });
+
+});
+
 describe.skip('Test send few test text messages', function () {
 
   let customConfig;
@@ -353,7 +425,7 @@ describe.skip('Test sendInvoce', function () {
 
 });
 
-describe('Ref system activities', function () {
+describe('Ref system: link accounts to ref system', function () {
 
   let customConfig;
   let accounts = [];
@@ -443,13 +515,20 @@ describe('Ref system activities', function () {
 
     this.timeout(700000);
 
+    const linkedAccounts = [];
+
     try {
 
       for (let i = 0; i < 20; i++) {
-        await sails.helpers.ref.linkAccountToRef.with({
+        const linkAccountToRefRaw = await sails.helpers.ref.linkAccountToRefJoi({
           account: accounts[i],
         });
+
+        linkedAccounts.push(linkAccountToRefRaw.payload);
+
       }
+
+      const ttt = 1;
 
     } catch (e) {
       mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
