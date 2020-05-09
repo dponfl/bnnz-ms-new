@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-again';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-second-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-again',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-second-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-again',
+  description: 'funnel:silver-personal:optin:callback-make-payment-second-joi',
 
 
   inputs: {
@@ -167,22 +167,6 @@ module.exports = {
 
           input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
           input.client.accounts[accountIndex].payment_currency = currency;
-
-          break;
-        case 'contact_support':
-
-          /**
-           * Инициировать отправку сообщения в службу поддержки
-           */
-
-          // const messageData = sails.config.custom.pushMessages.funnels.optin.show_terms.messages[0];
-          //
-          // const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
-          //   client: input.client,
-          //   messageData,
-          // });
-          //
-          // input.block.next = 'optin::make_payment_02';
 
           break;
         default:

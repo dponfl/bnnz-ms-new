@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:block-modify-confirm-profile';
+const moduleName = 'funnel:silver-personal:optin:block-modify-confirm-profile-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:block-modify-confirm-profile',
+  friendlyName: 'funnel:silver-personal:optin:block-modify-confirm-profile-joi',
 
 
-  description: 'funnel:silver-personal:optin:block-modify-confirm-profile',
+  description: 'funnel:silver-personal:optin:block-modify-confirm-profile-joi',
 
 
   inputs: {

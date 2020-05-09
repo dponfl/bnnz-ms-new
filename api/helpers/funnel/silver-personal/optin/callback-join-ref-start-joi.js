@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver_personal:optin:after-wrong-profile';
+const moduleName = 'funnel:silver-personal:optin:callback-join-ref-start-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver_personal:optin:after-wrong-profile',
+  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-start-joi',
 
 
-  description: 'funnel:silver_personal:optin:after-wrong-profile',
+  description: 'funnel:silver-personal:optin:callback-join-ref-start-joi',
 
 
   inputs: {
@@ -47,9 +47,10 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      msg: Joi
+      query: Joi
         .any()
-        .description('Message received'),
+        .description('Callback query received')
+        .required(),
     });
 
     let input;
@@ -58,31 +59,43 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      let getProfileBlock;
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
 
-      let splitRes = _.split(input.block.previous, sails.config.custom.JUNCTION, 2);
-      let nextFunnel = splitRes[0];
-      let nextId = splitRes[1];
+      switch (input.query.data) {
+        case 'join':
+          input.client.accounts[currentAccountInd].is_ref = true;
 
+          /**
+           * "Прописываем" currentAccount в реферальную систему
+           */
 
-      getProfileBlock = _.find(input.client.funnels[nextFunnel], {id: nextId});
+          await sails.helpers.ref.linkAccountToRef.with({
+            account: currentAccount,
+          });
 
-      if (getProfileBlock) {
-        getProfileBlock.shown = false;
-        getProfileBlock.done = false;
-        getProfileBlock.next = null;
-
-      } else {
-        throw new Error(`${moduleName}, error: wrong block.previous: \n${input.block.previous}`);
+          input.block.next = 'optin::join_ref_subscribe';
+          break;
+        case 'not_join':
+          input.block.next = 'optin::join_ref_no';
+          break;
+        case 'need_more_info':
+          input.block.next = 'optin::join_ref_more_info_first';
+          break;
+        default:
+          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
       }
+
+      input.block.done = true;
 
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,
         block: input.block,
-        msg: input.msg,
+        msg: input.query,
         next: true,
-        previous: false,  // if we do not set it to false then previous block is set done=true
-                          // and we will not be able to move to it again (but we want to move there
+        previous: true,
         switchFunnel: true,
         createdBy: moduleName,
       });

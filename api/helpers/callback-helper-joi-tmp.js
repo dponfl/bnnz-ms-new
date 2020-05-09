@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver_personal:optin:forced-get-profile';
+const moduleName = 'module:helper';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver_personal:optin:forced-get-profile',
+  friendlyName: 'module:helper',
 
 
-  description: 'funnel:silver_personal:optin:forced-get-profile',
+  description: 'module:helper',
 
 
   inputs: {
@@ -47,9 +47,9 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      msg: Joi
+      query: Joi
         .any()
-        .description('Message received')
+        .description('Callback query received')
         .required(),
     });
 
@@ -64,56 +64,32 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      if (_.trim(input.msg.text) === '') {
+      switch (input.query.data) {
+        case 'one':
 
-        /**
-         * No Instagram profile entered
-         */
-
-        input.block.done = true;
-        input.block.next = 'optin::wrong_profile';
-
-      } else {
-
-        /**
-         * Парсером проверяем, что этот профиль существует в Instagram
-         */
-
-        const instProfile = _.trim(input.msg.text);
-
-        const activeParser = sails.config.custom.config.parsers.inst;
-
-        const profileExists = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
-          instProfile,
-        });
-
-        if (profileExists) {
-
-          input.client.inst_profile_tmp = instProfile;
-          input.client.accounts[currentAccountInd].profile_provided = true;
-
-          input.block.done = true;
-          input.block.next = 'optin::confirm_profile';
-
-        } else {
-
-          input.block.done = true;
-          input.block.next = 'optin::wrong_profile';
-
-        }
-
+          input.block.next = 'xxx::xxx';
+          break;
+        case 'two':
+          input.block.next = 'xxx::xxx';
+          break;
+        case 'three':
+          input.block.next = 'xxx::xxx';
+          break;
+        default:
+          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
       }
+
+      input.block.done = true;
 
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,
         block: input.block,
-        msg: input.msg,
+        msg: input.query,
         next: true,
         previous: true,
         switchFunnel: true,
         createdBy: moduleName,
       });
-
 
       return exits.success({
         status: 'ok',

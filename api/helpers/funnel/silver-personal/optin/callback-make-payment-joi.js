@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-third';
+const moduleName = 'funnel:silver-personal:optin:callback-make-payment-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-third',
+  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-third',
+  description: 'funnel:silver-personal:optin:callback-make-payment-joi',
 
 
   inputs: {
@@ -167,6 +167,16 @@ module.exports = {
 
           input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
           input.client.accounts[accountIndex].payment_currency = currency;
+
+          break;
+        case 'more_info':
+
+          input.block.next = 'optin::more_info_01';
+
+          break;
+        case 'get_terms':
+
+          input.block.next = 'optin::show_terms';
 
           break;
         default:

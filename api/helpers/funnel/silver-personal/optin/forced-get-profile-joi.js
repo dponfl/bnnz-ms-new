@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-confirm-profile';
+const moduleName = 'funnel:silver_personal:optin:forced-get-profile-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-confirm-profile',
+  friendlyName: 'funnel:silver_personal:optin:forced-get-profile-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-confirm-profile',
+  description: 'funnel:silver_personal:optin:forced-get-profile-joi',
 
 
   inputs: {
@@ -47,9 +47,9 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      query: Joi
+      msg: Joi
         .any()
-        .description('Callback query received')
+        .description('Message received')
         .required(),
     });
 
@@ -64,33 +64,56 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      switch (input.query.data) {
-        case 'profile_confirm_yes':
-          input.client.accounts[currentAccountInd].inst_profile = input.client.inst_profile_tmp;
-          input.client.inst_profile_tmp = null;
-          input.client.accounts[currentAccountInd].profile_confirmed = true;
-          input.block.next = 'optin::make_payment';
-          break;
-        case 'profile_confirm_no':
-          input.client.inst_profile_tmp = null;
-          input.client.accounts[currentAccountInd].profile_provided = false;
-          input.block.next = 'optin::try_again';
-          break;
-        default:
-          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
-      }
+      if (_.trim(input.msg.text) === '') {
 
-      input.block.done = true;
+        /**
+         * No Instagram profile entered
+         */
+
+        input.block.done = true;
+        input.block.next = 'optin::wrong_profile';
+
+      } else {
+
+        /**
+         * Парсером проверяем, что этот профиль существует в Instagram
+         */
+
+        const instProfile = _.trim(input.msg.text);
+
+        const activeParser = sails.config.custom.config.parsers.inst;
+
+        const profileExists = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
+          instProfile,
+        });
+
+        if (profileExists) {
+
+          input.client.inst_profile_tmp = instProfile;
+          input.client.accounts[currentAccountInd].profile_provided = true;
+
+          input.block.done = true;
+          input.block.next = 'optin::confirm_profile';
+
+        } else {
+
+          input.block.done = true;
+          input.block.next = 'optin::wrong_profile';
+
+        }
+
+      }
 
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,
         block: input.block,
-        msg: input.query,
+        msg: input.msg,
         next: true,
         previous: true,
         switchFunnel: true,
         createdBy: moduleName,
       });
+
 
       return exits.success({
         status: 'ok',

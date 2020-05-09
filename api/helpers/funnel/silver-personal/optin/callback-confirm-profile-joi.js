@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-join-ref-start';
+const moduleName = 'funnel:silver-personal:optin:callback-confirm-profile-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-start',
+  friendlyName: 'funnel:silver-personal:optin:callback-confirm-profile-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-join-ref-start',
+  description: 'funnel:silver-personal:optin:callback-confirm-profile-joi',
 
 
   inputs: {
@@ -65,24 +65,16 @@ module.exports = {
       });
 
       switch (input.query.data) {
-        case 'join':
-          input.client.accounts[currentAccountInd].is_ref = true;
-
-          /**
-           * "Прописываем" currentAccount в реферальную систему
-           */
-
-          await sails.helpers.ref.linkAccountToRef.with({
-            account: currentAccount,
-          });
-
-          input.block.next = 'optin::join_ref_subscribe';
+        case 'profile_confirm_yes':
+          input.client.accounts[currentAccountInd].inst_profile = input.client.inst_profile_tmp;
+          input.client.inst_profile_tmp = null;
+          input.client.accounts[currentAccountInd].profile_confirmed = true;
+          input.block.next = 'optin::make_payment';
           break;
-        case 'not_join':
-          input.block.next = 'optin::join_ref_no';
-          break;
-        case 'need_more_info':
-          input.block.next = 'optin::join_ref_more_info_first';
+        case 'profile_confirm_no':
+          input.client.inst_profile_tmp = null;
+          input.client.accounts[currentAccountInd].profile_provided = false;
+          input.block.next = 'optin::try_again';
           break;
         default:
           throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
