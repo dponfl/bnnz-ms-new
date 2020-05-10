@@ -32,23 +32,23 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    if (!uuid.isAPIKey(inputs.serviceKey)) {
-
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_NOT_API_KEY;
-
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', {
-        params: inputs,
-      });
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
-    }
+    // if (!uuid.isAPIKey(inputs.serviceKey)) {
+    //
+    //   const errorLocation = 'api/helpers/storage/get-service-ref';
+    //   const errorMsg = sails.config.custom.SERVICEREF_NOT_API_KEY;
+    //
+    //   sails.log.error(errorLocation + ', error: ' + errorMsg);
+    //   sails.log.error(errorLocation + ', error details: ', {
+    //     params: inputs,
+    //   });
+    //
+    //   throw {err: {
+    //       module: errorLocation,
+    //       message: errorMsg,
+    //       payload: {},
+    //     }
+    //   };
+    // }
 
     let serviceRefRecord;
     let updatedServiceRefRec;

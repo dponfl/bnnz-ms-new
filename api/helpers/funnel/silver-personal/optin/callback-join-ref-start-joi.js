@@ -66,17 +66,7 @@ module.exports = {
 
       switch (input.query.data) {
         case 'join':
-          input.client.accounts[currentAccountInd].is_ref = true;
-
-          /**
-           * "Прописываем" currentAccount в реферальную систему
-           */
-
-          await sails.helpers.ref.linkAccountToRef.with({
-            account: currentAccount,
-          });
-
-          input.block.next = 'optin::join_ref_subscribe';
+          input.block.next = 'optin::join_ref_prepare_list';
           break;
         case 'not_join':
           input.block.next = 'optin::join_ref_no';

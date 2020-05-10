@@ -258,7 +258,7 @@
       "initial": false,
       "enabled": false,
       "show_time": 0,
-      "previous": "optin::make_payment",
+      "previous": null,
       "next": "optin::make_payment_02",
       "switchToFunnel": null,
       "beforeHelper": null,
@@ -321,7 +321,7 @@
       "initial": false,
       "enabled": false,
       "show_time": 0,
-      "previous": "optin::make_payment",
+      "previous": null,
       "next": "optin::more_info_02",
       "switchToFunnel": null,
       "beforeHelper": null,
@@ -613,6 +613,73 @@
             {
               "text": "BEHERO_JOIN_REF_BTN_03",
               "callback_data": "need_more_info"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "join_ref_prepare_list",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "optin::join_ref_subscribe",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_PREPARE_LIST",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_subscribe",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "optin::beforeJoinRefSubscribeJoi",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackJoinRefSubscribeJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_SUBSCRIBE",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_JOIN_REF_SUBSCRIBE_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "BEHERO_JOIN_REF_SUBSCRIBE_BTN_CHECK",
+              "callback_data": "check"
             }
           ]
         ]

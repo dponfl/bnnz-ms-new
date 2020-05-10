@@ -82,8 +82,8 @@ module.exports = {
              */
 
             parseRefResult = _.trim(msg.text).match(/ref(\S{31})/);
-            parseServiceResult = _.trim(msg.text).match(/srf(\S{31})/);
-            parseCategoryResult = _.trim(msg.text).match(/cat(\S{31})/);
+            parseServiceResult = _.trim(msg.text).match(/srf(\S{7})/);
+            parseCategoryResult = _.trim(msg.text).match(/cat(\S{7})/);
 
           }
 

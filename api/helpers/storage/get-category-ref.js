@@ -32,23 +32,23 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    if (!uuid.isAPIKey(inputs.categoryKey)) {
-
-      const errorLocation = 'api/helpers/storage/get-category-ref';
-      const errorMsg = sails.config.custom.CATEGORYREF_NOT_API_KEY;
-
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', {
-        params: inputs,
-      });
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
-    }
+    // if (!uuid.isAPIKey(inputs.categoryKey)) {
+    //
+    //   const errorLocation = 'api/helpers/storage/get-category-ref';
+    //   const errorMsg = sails.config.custom.CATEGORYREF_NOT_API_KEY;
+    //
+    //   sails.log.error(errorLocation + ', error: ' + errorMsg);
+    //   sails.log.error(errorLocation + ', error details: ', {
+    //     params: inputs,
+    //   });
+    //
+    //   throw {err: {
+    //       module: errorLocation,
+    //       message: errorMsg,
+    //       payload: {},
+    //     }
+    //   };
+    // }
 
     let categoryRefRecord;
     let updatedCategoryRefRec;

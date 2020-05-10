@@ -475,7 +475,7 @@ describe('Ref system: link accounts to ref system', function () {
 
       let client;
 
-      if (i === 5) {
+      if (i === 5 || i === 15) {
         client = await clientSdk.createClientDB({
           ref_key: accounts[2].ref_key
         });

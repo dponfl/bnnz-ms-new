@@ -49,7 +49,7 @@ module.exports.datastores = {
     *                                                                          *
     ***************************************************************************/
     adapter: 'sails-mysql',
-    url: process.env.CLEARDB_DATABASE_URL,
+    url: process.env.MAIN_DATABASE_URL,
 
   },
 

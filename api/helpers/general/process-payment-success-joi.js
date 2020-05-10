@@ -92,12 +92,12 @@ module.exports = {
       if (paymentGroupRaw.payload.length !== 1) {
         throw new Error(`${moduleName}, error: several or none payment group records found:
         guid: ${paymentGroupGuid}
-        paymentGroupRaw: ${JSON.stringify(paymentGroupRaw.payload)}`)
+        paymentGroupRaw: ${JSON.stringify(paymentGroupRaw.payload, null, 3)}`);
       }
 
       paymentGroup = paymentGroupRaw.payload[0];
 
-      const clientGuid = paymentGroup.clientGuid;
+      const clientGuid = paymentGroup.client_guid;
 
       /**
        * Достаём запись клиента
@@ -117,7 +117,7 @@ module.exports = {
       if (clientRaw.payload.length !== 1) {
         throw new Error(`${moduleName}, error: several or none client records found:
         guid: ${clientGuid}
-        clientRaw: ${JSON.stringify(clientRaw.payload)}`)
+        clientRaw: ${JSON.stringify(clientRaw.payload, null, 3)}`);
       }
 
       client = clientRaw.payload[0];
