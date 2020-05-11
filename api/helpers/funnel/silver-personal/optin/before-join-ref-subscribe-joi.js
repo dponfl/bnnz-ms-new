@@ -130,17 +130,6 @@ module.exports = {
 
       }
 
-      currentAccount.ref_list = accountAndInstProfilePairs;
-
-      // await sails.helpers.storage.accountUpdateJoi({
-      //   criteria: {
-      //     guid: currentAccount.guid,
-      //   },
-      //   data: {
-      //     ref_list: accountAndInstProfilePairs,
-      //   },
-      // });
-
       let refProfilesList = '';
 
       for (const refListElem of accountAndInstProfilePairs) {

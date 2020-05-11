@@ -73,6 +73,11 @@ module.exports = {
           const blockFunnel = blockNameSplitRes[0];
           const blockId = blockNameSplitRes[1];
 
+          if (_.isNil(blockFunnel)
+            || _.isNil(blockId)
+          ) {
+            throw new Error(`${moduleName}, error: parsing error of ${blockName}`);
+          }
 
           const blockData = _.find(input.client.funnels[blockFunnel], {id: blockId});
 

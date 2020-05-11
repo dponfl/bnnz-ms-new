@@ -66,20 +66,33 @@ module.exports = {
       const notSubscribed = [];
       const subscribed = input.profilesList;
 
-      for (let i = 0; i < input.flag; i++) {
-        const randomIndex = _.random(0, input.profilesList.length - 1);
-        notSubscribed.push(input.profilesList[randomIndex]);
-        _.pull(subscribed, input.profilesList[randomIndex]);
+      let allSubscribed;
+
+      if (input.flag != null && input.flag > 0) {
+        allSubscribed = false;
+
+        for (let i = 0; i < input.flag; i++) {
+          const randomIndex = _.random(0, input.profilesList.length - 1);
+          notSubscribed.push(input.profilesList[randomIndex]);
+          _.pull(subscribed, input.profilesList[randomIndex]);
+        }
+
+      } else {
+        allSubscribed = true;
       }
 
       result = {
-        allSubscribed: input.flag === 0,
+        allSubscribed,
         notSubscribed,
         subscribed,
       };
 
 
-      return exits.success(result);
+      return exits.success({
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: result,
+      })
 
     } catch (e) {
 

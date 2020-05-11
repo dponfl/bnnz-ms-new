@@ -2,16 +2,15 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'storage:ref-up-get-joi';
-
+const moduleName = 'storage:ref-up-update-joi';
 
 module.exports = {
 
 
-  friendlyName: 'storage:ref-up-get-joi',
+  friendlyName: 'storage:ref-up-update-joi',
 
 
-  description: 'storage:ref-up-get-joi',
+  description: 'storage:ref-up-update-joi',
 
 
   inputs: {
@@ -41,7 +40,15 @@ module.exports = {
     const schema = Joi.object({
       criteria: Joi
         .any()
-        .description('criteria to get records for')
+        .required()
+        .description('Criteria to update record(s)'),
+      data: Joi
+        .any()
+        .required()
+        .description('Data to update record(s)'),
+      createdBy: Joi
+        .string()
+        .description('source of update')
         .required(),
     });
 
@@ -51,14 +58,12 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const refUpRecs = await RefUp.find({
-        where: input.criteria,
-      });
+      await RefUp.update(input.criteria).set(input.data);
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
-        payload: refUpRecs, // array of objects or an empty array
+        payload: {},
       })
 
     } catch (e) {
