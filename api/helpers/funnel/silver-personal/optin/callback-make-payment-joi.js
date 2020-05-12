@@ -62,111 +62,119 @@ module.exports = {
       switch (input.query.data) {
         case 'make_payment':
 
+          // TODO: Временная заглушка по причине нереботы тестовых платежей
+
+          input.block.next = 'optin::payment_successful';
+
+
           /**
            * Инициировать последовательность действий по оплате
            */
 
-          const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
-
-          if (paymentProvider == null) {
-            throw new Error(`${moduleName}, error: No payment provider config for messenger: ${input.client.messenger}`);
-          }
-
-          const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
-
-          const priceConfigText = sails.config.custom.config.lang[useLang].price;
-          const priceConfigGeneral = sails.config.custom.config.price;
-
-          if (priceConfigText == null) {
-            throw new Error(`${moduleName}, error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
-          }
-
-          if (priceConfigGeneral == null) {
-            throw new Error(`${moduleName}, error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
-          }
-
-          const title = MessageProcessor.parseStr({
-            client: input.client,
-            token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
-            additionalTokens: [
-              {
-                token: "$paymentPeriod$",
-                value: priceConfigText.payment_periods.period_01,
-              }
-            ]
-          });
-
-          const description = MessageProcessor.parseStr({
-            client: input.client,
-            token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
-            additionalTokens: [
-              {
-                token: "$paymentPeriod$",
-                value: priceConfigText.payment_periods.period_01,
-              }
-            ]
-          });
-
-          const currency = 'RUB';
-
-          const item01Description = MessageProcessor.parseStr({
-          client: input.client,
-          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
-            additionalTokens: [
-              {
-                token: "$paymentPeriod$",
-                value: priceConfigText.payment_periods.period_01,
-              }
-            ]
-          });
-
-          const item02Description = MessageProcessor.parseStr({
-          client: input.client,
-          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
-          });
-
-          const invoiceItems = [
-            {
-              description: item01Description,
-              quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
-              currency,
-              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-            },
-            {
-              description: item02Description,
-              quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
-              currency,
-              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-            },
-          ];
-
-          const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
-            client: input.client,
-            title,
-            description,
-            startParameter: 'start',
-            currency,
-            invoiceItems,
-            funnelBlockName: `optin::${input.block.id}`,
-          });
-
-          if (sendInvoiceResultRaw.status !== 'ok') {
-            throw new Error(`${moduleName}, error: sendInvoice error response:
-            ${JSON.stringify(sendInvoiceResultRaw, null, 3)}`);
-          }
-
-          const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
-
-          if (accountIndex < 0) {
-            throw new Error(`${moduleName}, error: account not found:
-            client.account_use: ${input.client.account_use}
-            client.accounts: ${JSON.stringify(input.client.accounts, null, 3)}`);
-          }
-
-          input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
-          input.client.accounts[accountIndex].payment_currency = currency;
+          // const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
+          //
+          // if (paymentProvider == null) {
+          //   throw new Error(`${moduleName}, error: No payment provider config for messenger: ${input.client.messenger}`);
+          // }
+          //
+          // const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+          //
+          // const priceConfigText = sails.config.custom.config.lang[useLang].price;
+          // const priceConfigGeneral = sails.config.custom.config.price;
+          //
+          // if (priceConfigText == null) {
+          //   throw new Error(`${moduleName}, error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
+          // }
+          //
+          // if (priceConfigGeneral == null) {
+          //   throw new Error(`${moduleName}, error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
+          // }
+          //
+          // const title = MessageProcessor.parseStr({
+          //   client: input.client,
+          //   token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+          //   additionalTokens: [
+          //     {
+          //       token: "$paymentPeriod$",
+          //       value: priceConfigText.payment_periods.period_01,
+          //     }
+          //   ]
+          // });
+          //
+          // const description = MessageProcessor.parseStr({
+          //   client: input.client,
+          //   token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+          //   additionalTokens: [
+          //     {
+          //       token: "$paymentPeriod$",
+          //       value: priceConfigText.payment_periods.period_01,
+          //     }
+          //   ]
+          // });
+          //
+          // const currency = 'RUB';
+          //
+          // const item01Description = MessageProcessor.parseStr({
+          // client: input.client,
+          // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+          //   additionalTokens: [
+          //     {
+          //       token: "$paymentPeriod$",
+          //       value: priceConfigText.payment_periods.period_01,
+          //     }
+          //   ]
+          // });
+          //
+          // const item02Description = MessageProcessor.parseStr({
+          // client: input.client,
+          // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
+          // });
+          //
+          // const invoiceItems = [
+          //   {
+          //     description: item01Description,
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
+          //     currency,
+          //     transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
+          //   }
+          // ];
+          //
+          // if (priceConfigGeneral[currency].silver_personal.period_01.current_price !== priceConfigGeneral[currency].silver_personal.period_01.list_price) {
+          //   invoiceItems.push({
+          //     description: item02Description,
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
+          //     currency,
+          //     transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
+          //   });
+          // }
+          //
+          // const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
+          //   client: input.client,
+          //   title,
+          //   description,
+          //   startParameter: 'start',
+          //   currency,
+          //   invoiceItems,
+          //   funnelBlockName: `optin::${input.block.id}`,
+          // });
+          //
+          // if (sendInvoiceResultRaw.status !== 'ok') {
+          //   throw new Error(`${moduleName}, error: sendInvoice error response:
+          //   ${JSON.stringify(sendInvoiceResultRaw, null, 3)}`);
+          // }
+          //
+          // const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
+          //
+          // if (accountIndex < 0) {
+          //   throw new Error(`${moduleName}, error: account not found:
+          //   client.account_use: ${input.client.account_use}
+          //   client.accounts: ${JSON.stringify(input.client.accounts, null, 3)}`);
+          // }
+          //
+          // input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
+          // input.client.accounts[accountIndex].payment_currency = currency;
 
           break;
         case 'more_info':

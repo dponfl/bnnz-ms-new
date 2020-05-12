@@ -132,15 +132,18 @@ module.exports = {
               price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
               currency,
               transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-            },
-            {
+            }
+          ];
+
+          if (priceConfigGeneral[currency].silver_personal.period_01.current_price !== priceConfigGeneral[currency].silver_personal.period_01.list_price) {
+            invoiceItems.push({
               description: item02Description,
               quantity: '1.0',
               price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
               currency,
               transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-            },
-          ];
+            });
+          }
 
           const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
             client: input.client,

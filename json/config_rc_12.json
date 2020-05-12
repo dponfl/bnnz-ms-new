@@ -5,7 +5,7 @@
   },
   "payments": {
     "telegram": {
-      "provider": "TRANZZO",
+      "provider": "SBERBANK",
       "env": "TEST"
     }
   },
@@ -927,7 +927,7 @@
       "transform_to_min_price_unit": 100,
       "silver_personal": {
         "period_01": {
-          "list_price": 4620,
+          "list_price": 3780,
           "current_price": 3780
         },
         "period_03": {

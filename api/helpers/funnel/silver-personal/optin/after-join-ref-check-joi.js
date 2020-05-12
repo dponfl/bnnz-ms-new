@@ -161,7 +161,8 @@ module.exports = {
           },
           data: {
             signed: true,
-          }
+          },
+          createdBy: moduleName,
         });
 
       }
