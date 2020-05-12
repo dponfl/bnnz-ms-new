@@ -711,6 +711,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "join_ref_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "optin::optin_completed",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterJoinRefDoneJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_DONE_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_JOIN_REF_DONE_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
