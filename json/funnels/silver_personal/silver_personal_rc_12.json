@@ -652,7 +652,7 @@
       "initial": false,
       "enabled": false,
       "show_time": 0,
-      "previous": null,
+      "previous": "optin::join_ref_prepare_list",
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": "optin::beforeJoinRefSubscribeJoi",
@@ -741,6 +741,99 @@
             "style": "",
             "cr": ""
           }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_missed_profiles",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "optin::beforeJoinRefMissedProfilesJoi",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackJoinRefMissedProfilesJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_01",
+            "style": "DCR",
+            "cr": ""
+          },
+          {
+            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_02",
+            "style": "DCR",
+            "cr": ""
+          },
+          {
+            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_03",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "BEHERO_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
+              "callback_data": "check"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "join_ref_no",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackJoinRefNoJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_NO_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_JOIN_REF_NO_02",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "BEHERO_JOIN_REF_NO_BTN_01",
+              "callback_data": "join"
+            },
+            {
+              "text": "BEHERO_JOIN_REF_NO_BTN_02",
+              "callback_data": "not_join"
+            },
+            {
+              "text": "BEHERO_JOIN_REF_NO_BTN_03",
+              "callback_data": "need_more_info"
+            }
+          ]
         ]
       }
     }

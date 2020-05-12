@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-join-ref-start-joi';
+const moduleName = 'funnel:silver-personal:optin:callback-join-ref-no-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-start-joi',
+  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-no-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-join-ref-start-joi',
+  description: 'funnel:silver-personal:optin:callback-join-ref-no-joi',
 
 
   inputs: {
@@ -91,7 +91,7 @@ module.exports = {
             blockData.shown = false;
             blockData.done = false;
             blockData.next = null;
-            blockData.previous = 'optin::join_ref_start';
+            blockData.previous = 'optin::join_ref_no';
 
           } else {
             throw new Error(`${moduleName}, error: block not found:
@@ -103,7 +103,7 @@ module.exports = {
 
           break;
         case 'not_join':
-          input.block.next = 'optin::join_ref_no';
+          input.block.next = 'optin::no_ref_done';
 
           blockName = input.block.next;
           blockNameSplitRes = _.split(blockName, sails.config.custom.JUNCTION, 2);
@@ -122,7 +122,7 @@ module.exports = {
             blockData.shown = false;
             blockData.done = false;
             blockData.next = null;
-            blockData.previous = 'optin::join_ref_start';
+            blockData.previous = 'optin::join_ref_no';
 
           } else {
             throw new Error(`${moduleName}, error: block not found:
@@ -134,7 +134,7 @@ module.exports = {
 
           break;
         case 'need_more_info':
-          input.block.next = 'optin::join_ref_more_info_first';
+          input.block.next = 'optin::join_ref_more_info_second';
 
           blockName = input.block.next;
           blockNameSplitRes = _.split(blockName, sails.config.custom.JUNCTION, 2);
@@ -153,7 +153,7 @@ module.exports = {
             blockData.shown = false;
             blockData.done = false;
             blockData.next = null;
-            blockData.previous = 'optin::join_ref_start';
+            blockData.previous = 'optin::join_ref_no';
 
           } else {
             throw new Error(`${moduleName}, error: block not found:
