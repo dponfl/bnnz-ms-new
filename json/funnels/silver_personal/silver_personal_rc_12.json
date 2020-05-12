@@ -836,6 +836,46 @@
           ]
         ]
       }
+    },
+    {
+      "id": "join_ref_more_info_first",
+      "description": "",
+      "actionType": "doc_inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "optin::callbackJoinRefMoreInfoFirstJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "doc": "v1588924524/BeFame-Ref-test.pdf",
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST_BTN_01",
+              "callback_data": "join"
+            },
+            {
+              "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST_BTN_02",
+              "callback_data": "join"
+            }
+          ]
+        ]
+      }
     }
   ]
 }
