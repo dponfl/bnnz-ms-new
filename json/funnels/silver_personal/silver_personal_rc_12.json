@@ -991,6 +991,33 @@
           }
         ]
       }
+    },
+    {
+      "id": "optin_completed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "general::start",
+      "switchToFunnel": "general",
+      "beforeHelper": null,
+      "afterHelper": "optin::afterOptinCompletedJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_OPTIN_COMPLETED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }

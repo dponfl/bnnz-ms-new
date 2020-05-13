@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-join-ref-subscribe-joi';
+const moduleName = 'funnel:silver-personal:optin:after-optin-completed-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-subscribe-joi',
+  friendlyName: 'funnel:silver-personal:optin:after-optin-completed-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-join-ref-subscribe-joi',
+  description: 'funnel:silver-personal:optin:after-optin-completed-joi',
 
 
   inputs: {
@@ -47,10 +47,9 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      query: Joi
+      msg: Joi
         .any()
-        .description('Callback query received')
-        .required(),
+        .description('Message received'),
     });
 
     let input;
@@ -64,50 +63,16 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      switch (input.query.data) {
-        case 'check':
-          input.block.next = 'optin::join_ref_check';
+      currentAccount.subscription_made = true;
+      currentAccount.service_subscription_finalized = true;
 
-          currentAccount.subscription_confirmed_by_client = true;
-
-          const blockName = input.block.next;
-          const blockNameSplitRes = _.split(blockName, sails.config.custom.JUNCTION, 2);
-          const blockFunnel = blockNameSplitRes[0];
-          const blockId = blockNameSplitRes[1];
-
-          if (_.isNil(blockFunnel)
-            || _.isNil(blockId)
-          ) {
-            throw new Error(`${moduleName}, error: parsing error of ${blockName}`);
-          }
-
-          const blockData = _.find(input.client.funnels[blockFunnel], {id: blockId});
-
-          if (blockData) {
-            blockData.shown = false;
-            blockData.done = false;
-            blockData.next = null;
-            blockData.previous = 'optin::join_ref_subscribe';
-
-          } else {
-            throw new Error(`${moduleName}, error: block not found:
-             blockName: ${blockName}
-             blockFunnel: ${blockFunnel}
-             blockId: ${blockId}
-             input.client.funnels[blockFunnel]: ${JSON.stringify(input.client.funnels[blockFunnel], null, 3)}`);
-          }
-
-          break;
-        default:
-          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
-      }
-
+      input.block.shown = true;
       input.block.done = true;
 
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,
         block: input.block,
-        msg: input.query,
+        msg: input.msg,
         next: true,
         previous: true,
         switchFunnel: true,
