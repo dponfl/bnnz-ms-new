@@ -1019,5 +1019,34 @@
         ]
       }
     }
+  ],
+  "general": [
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_GENERAL_START",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
   ]
 }

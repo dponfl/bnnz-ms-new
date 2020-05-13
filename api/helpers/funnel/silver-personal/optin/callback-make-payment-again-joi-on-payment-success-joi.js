@@ -82,6 +82,18 @@ module.exports = {
         .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
         .format();
 
+      const reallocateRoomsToAccountJoiParams = {
+        account: currentAccount,
+      };
+
+      const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
+
+      if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
+        reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
+        reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
+      }
+
       /**
        * Устанавливаем значение для следующего блока в 'optin::payment_successful'
        */
