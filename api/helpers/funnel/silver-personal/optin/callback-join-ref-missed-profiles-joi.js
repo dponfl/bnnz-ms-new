@@ -107,7 +107,7 @@ module.exports = {
         block: input.block,
         msg: input.query,
         next: true,
-        previous: true,
+        previous: false,
         switchFunnel: true,
         createdBy: moduleName,
       });

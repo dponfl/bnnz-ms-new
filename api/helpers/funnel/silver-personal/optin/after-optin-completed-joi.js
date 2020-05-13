@@ -65,6 +65,7 @@ module.exports = {
 
       currentAccount.subscription_made = true;
       currentAccount.service_subscription_finalized = true;
+      currentAccount.subscription_active = true;
 
       input.block.shown = true;
       input.block.done = true;

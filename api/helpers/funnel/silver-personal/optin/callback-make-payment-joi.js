@@ -1,6 +1,8 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const moment = require('moment');
+
 
 const moduleName = 'funnel:silver-personal:optin:callback-make-payment-joi';
 
@@ -62,10 +64,60 @@ module.exports = {
       switch (input.query.data) {
         case 'make_payment':
 
-          // TODO: Временная заглушка по причине нереботы тестовых платежей
+// TODO: Временная заглушка по причине нереботы тестовых платежей: Начало
+
+          const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+          const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+            return o.guid === currentAccount.guid;
+          });
+
+          /**
+           * Обновляем поля записи текущего аккаунта
+           */
+
+          const priceConfig = sails.config.custom.config.price;
+
+          input.client.accounts[currentAccountInd].payment_made = true;
+          input.client.accounts[currentAccountInd].subscription_from = moment()
+            .format();
+          input.client.accounts[currentAccountInd].subscription_until = moment()
+            .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+            .format();
+
+          const reallocateRoomsToAccountJoiParams = {
+            account: currentAccount,
+          };
+
+          const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
+
+          if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
+            throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
+        reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
+        reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
+          }
+
 
           input.block.next = 'optin::payment_successful';
 
+          /**
+           * Устанавливае у следующего блока значение для предшествующего блока в 'optin::make_payment'
+           */
+
+          const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
+          const updateFunnel = splitRes[0];
+          const updateId = splitRes[1];
+
+
+          const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.previous = 'optin::make_payment';
+            getBlock.enabled = true;
+          }
+
+
+
+          // TODO: Временная заглушка по причине нереботы тестовых платежей: Окончание
 
           /**
            * Инициировать последовательность действий по оплате

@@ -90,7 +90,6 @@ module.exports = {
           if (blockData) {
             blockData.shown = false;
             blockData.done = false;
-            blockData.next = null;
             blockData.previous = 'optin::join_ref_start';
 
           } else {
@@ -121,7 +120,6 @@ module.exports = {
           if (blockData) {
             blockData.shown = false;
             blockData.done = false;
-            blockData.next = null;
             blockData.previous = 'optin::join_ref_start';
 
           } else {
@@ -152,7 +150,6 @@ module.exports = {
           if (blockData) {
             blockData.shown = false;
             blockData.done = false;
-            blockData.next = null;
             blockData.previous = 'optin::join_ref_start';
 
           } else {

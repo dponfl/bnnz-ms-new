@@ -177,6 +177,47 @@ module.exports = {
         input.block.done = true;
         input.block.shown = true;
 
+        /**
+         * Update input.block.next block
+         */
+
+        updateBlock = input.block.next;
+
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
+
+        if (_.isNil(updateFunnel)
+          || _.isNil(updateId)
+        ) {
+          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+        }
+
+        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+        if (getBlock) {
+          getBlock.shown = false;
+          getBlock.done = false;
+          getBlock.previous = 'optin::join_ref_check';
+        } else {
+          throw new Error(`${moduleName}, error: block not found:
+             updateBlock: ${updateBlock}
+             updateFunnel: ${updateFunnel}
+             updateId: ${updateId}
+             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+        }
+
+        await sails.helpers.funnel.afterHelperGenericJoi({
+          client: input.client,
+          block: input.block,
+          msg: input.msg,
+          next: true,
+          previous: true,
+          switchFunnel: true,
+          createdBy: moduleName,
+        });
+
+
       } else {
 
         /**
@@ -187,48 +228,49 @@ module.exports = {
         input.block.done = true;
         input.block.shown = true;
 
-      }
+        /**
+         * Update input.block.next block
+         */
 
-      /**
-       * Update input.block.next block
-       */
+        updateBlock = input.block.next;
 
-      updateBlock = input.block.next;
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
 
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
+        if (_.isNil(updateFunnel)
+          || _.isNil(updateId)
+        ) {
+          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+        }
 
-      if (_.isNil(updateFunnel)
-        || _.isNil(updateId)
-      ) {
-        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
-      }
+        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.shown = false;
-        getBlock.done = false;
-        getBlock.next = null;
-        getBlock.previous = 'optin::join_ref_check';
-      } else {
-        throw new Error(`${moduleName}, error: block not found:
+        if (getBlock) {
+          getBlock.shown = false;
+          getBlock.done = false;
+          getBlock.previous = 'optin::join_ref_check';
+        } else {
+          throw new Error(`${moduleName}, error: block not found:
              updateBlock: ${updateBlock}
              updateFunnel: ${updateFunnel}
              updateId: ${updateId}
              input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+        }
+
+        await sails.helpers.funnel.afterHelperGenericJoi({
+          client: input.client,
+          block: input.block,
+          msg: input.msg,
+          next: true,
+          previous: false,
+          switchFunnel: true,
+          createdBy: moduleName,
+        });
+
+
       }
 
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.msg,
-        next: true,
-        previous: true,
-        switchFunnel: true,
-        createdBy: moduleName,
-      });
 
       return exits.success({
         status: 'ok',
