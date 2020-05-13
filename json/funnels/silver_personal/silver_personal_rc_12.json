@@ -964,6 +964,33 @@
           ]
         ]
       }
+    },
+    {
+      "id": "no_ref_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "optin::optin_completed",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterNoRefDoneJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_NO_REF_DONE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
