@@ -207,6 +207,37 @@ module.exports = {
              input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
         }
 
+        /**
+         * Update 'optin::join_ref_missed_profiles' block
+         */
+
+        updateBlock = 'optin::join_ref_missed_profiles';
+
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
+
+        if (_.isNil(updateFunnel)
+          || _.isNil(updateId)
+        ) {
+          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+        }
+
+        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+        if (getBlock) {
+          getBlock.shown = true;
+          getBlock.done = true;
+          getBlock.previous = 'optin::join_ref_check';
+        } else {
+          throw new Error(`${moduleName}, error: block not found:
+             updateBlock: ${updateBlock}
+             updateFunnel: ${updateFunnel}
+             updateId: ${updateId}
+             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+        }
+
+
         await sails.helpers.funnel.afterHelperGenericJoi({
           client: input.client,
           block: input.block,
@@ -250,6 +281,7 @@ module.exports = {
           getBlock.shown = false;
           getBlock.done = false;
           getBlock.previous = 'optin::join_ref_check';
+          getBlock.next = null;
         } else {
           throw new Error(`${moduleName}, error: block not found:
              updateBlock: ${updateBlock}

@@ -871,7 +871,7 @@
             },
             {
               "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST_BTN_02",
-              "callback_data": "join"
+              "callback_data": "not_join"
             }
           ]
         ]
@@ -959,7 +959,7 @@
           [
             {
               "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND_BTN_02",
-              "callback_data": "join"
+              "callback_data": "not_join"
             }
           ]
         ]
