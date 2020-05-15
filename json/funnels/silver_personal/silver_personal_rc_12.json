@@ -824,11 +824,15 @@
             {
               "text": "BEHERO_JOIN_REF_NO_BTN_01",
               "callback_data": "join"
-            },
+            }
+          ],
+          [
             {
               "text": "BEHERO_JOIN_REF_NO_BTN_02",
               "callback_data": "not_join"
-            },
+            }
+          ],
+          [
             {
               "text": "BEHERO_JOIN_REF_NO_BTN_03",
               "callback_data": "need_more_info"

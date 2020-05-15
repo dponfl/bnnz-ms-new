@@ -115,7 +115,57 @@ module.exports = {
             getBlock.enabled = true;
           }
 
+          /**
+           * Создаём запись о получении платежа
+           */
 
+          const priceConfigGeneral = sails.config.custom.config.price;
+          const currency = 'RUB';
+          const invoiceItems = [
+            {
+              quantity: '1.0',
+              price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
+            }
+          ];
+
+          if (priceConfigGeneral[currency].silver_personal.period_01.current_price !== priceConfigGeneral[currency].silver_personal.period_01.list_price) {
+            invoiceItems.push({
+              quantity: '1.0',
+              price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
+            });
+          }
+
+          const messenger = input.client.messenger;
+          const clientId = input.client.id;
+          const clientGuid = input.client.guid;
+          const accountGuid = input.client.account_use;
+
+          const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
+            '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
+
+          let invoiceAmount = 0;
+
+          for (const elem of input.invoiceItems) {
+            invoiceAmount = invoiceAmount + elem.price * elem.quantity;
+          }
+
+          const paymentGroupRecRaw = await sails.helpers.storage.paymentGroupCreateJoi({
+            clientId,
+            clientGuid,
+            accountGuid,
+            amount: invoiceAmount,
+            currency,
+            type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
+            status: sails.config.custom.enums.paymentGroupStatus.SUCCESS,
+            paymentProvider,
+            messenger,
+            funnelBlockName: `optin::${input.block.id}`,
+          });
+
+          if (paymentGroupRecRaw.status !== 'ok') {
+            throw new Error(`${moduleName}, error: payment group record create error:
+            ${JSON.stringify(paymentGroupRecRaw, null, 3)}`);
+          }
 
           // TODO: Временная заглушка по причине нереботы тестовых платежей: Окончание
 
