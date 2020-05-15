@@ -115,22 +115,6 @@ module.exports = {
           }
 
           /**
-           * Устанавливае у следующего блока значение для предшествующего блока в 'optin::make_payment'
-           */
-
-          const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-          const updateFunnel = splitRes[0];
-          const updateId = splitRes[1];
-
-
-          const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-          if (getBlock) {
-            getBlock.previous = 'optin::make_payment';
-            getBlock.enabled = true;
-          }
-
-          /**
            * Создаём запись о получении платежа
            */
 
