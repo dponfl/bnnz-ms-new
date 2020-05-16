@@ -46,8 +46,8 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`*** ${moduleName} ***`);
-    sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
+    // sails.log.info(`*** ${moduleName} ***`);
+    // sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
       .populate('account');

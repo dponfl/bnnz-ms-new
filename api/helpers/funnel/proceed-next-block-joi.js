@@ -543,6 +543,10 @@ module.exports = {
 
           if (showTime > 0) {
 
+            sails.log(`${moduleName}, showTime > 0: 
+            nextBlock.id: ${nextBlock.id}
+            nextBlock.show_time: ${nextBlock.show_time}`);
+
             await sleep(showTime);
             await sails.helpers.funnel.proceedNextBlockJoi(proceedNextBlockParams);
 
