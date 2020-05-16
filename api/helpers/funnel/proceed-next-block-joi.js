@@ -545,6 +545,8 @@ module.exports = {
 
             sails.log(`${moduleName}, showTime > 0: 
             nextBlock.id: ${nextBlock.id}
+            nextBlock.shown: ${nextBlock.shown}
+            nextBlock.done: ${nextBlock.done}
             nextBlock.show_time: ${nextBlock.show_time}`);
 
             await sleep(showTime);
