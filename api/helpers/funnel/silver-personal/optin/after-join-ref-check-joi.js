@@ -119,11 +119,13 @@ module.exports = {
         profilesList.push(elem.inst_profile);
       });
 
+      const flag = profilesList.length < 2 ? 0 : _.random(0, 3);
+
       const checkProfileSubscriptionParams = {
         checkProfile: currentAccount.inst_profile,
         profilesList,
         // TODO: позже этот параметр нужно исключить и здесь, и в самом checkProfileSubscriptionJoi хелпере
-        flag: _.random(0, 3),
+        flag,
       };
 
       const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst.ninja.checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
