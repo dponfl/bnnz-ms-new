@@ -144,7 +144,7 @@ module.exports = {
 
           let invoiceAmount = 0;
 
-          for (const elem of input.invoiceItems) {
+          for (const elem of invoiceItems) {
             invoiceAmount = invoiceAmount + elem.price * elem.quantity;
           }
 
