@@ -539,15 +539,15 @@ module.exports = {
 
           }
 
-          const showTime = nextBlock.show_time || 0;
+          const showTime = !nextBlock.done ? nextBlock.show_time || 0 : 0;
 
           if (showTime > 0) {
 
-            sails.log(`${moduleName}, showTime > 0: 
-            nextBlock.id: ${nextBlock.id}
-            nextBlock.shown: ${nextBlock.shown}
-            nextBlock.done: ${nextBlock.done}
-            nextBlock.show_time: ${nextBlock.show_time}`);
+            // sails.log(`${moduleName}, showTime > 0:
+            // nextBlock.id: ${nextBlock.id}
+            // nextBlock.shown: ${nextBlock.shown}
+            // nextBlock.done: ${nextBlock.done}
+            // nextBlock.show_time: ${nextBlock.show_time}`);
 
             await sleep(showTime);
             await sails.helpers.funnel.proceedNextBlockJoi(proceedNextBlockParams);
