@@ -48,11 +48,13 @@ module.exports = {
      */
 
     const schema = Joi.object({
-      client: Joi.any().required(),
-      // postLink: Joi.string().uri({
-      //   scheme: sails.config.custom.config.general.instagram_post_prefix,
-      // }).required(),
-      postLink: Joi.string().pattern(RegExp(sails.config.custom.config.general.instagram_post_prefix)).required(),
+      client: Joi
+        .any()
+        .required(),
+      postLink: Joi
+        .string()
+        .pattern(RegExp(sails.config.custom.config.general.instagram_post_prefix))
+        .required(),
     });
 
     let accountsList = [];
@@ -62,7 +64,7 @@ module.exports = {
       const input = await schema.validateAsync(inputs.params);
 
       /**
-       * Получаем текущий аккаунт клиенгта
+       * Получаем текущий аккаунт клиента
        */
 
       const account = _.find(input.client.accounts, {guid: input.client.account_use});

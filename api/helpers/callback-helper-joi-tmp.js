@@ -55,6 +55,13 @@ module.exports = {
 
     let input;
 
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
@@ -64,25 +71,34 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      const blockName = input.block.xxx;
-      const blockNameSplitRes = _.split(blockName, sails.config.custom.JUNCTION, 2);
-      const blockFunnel = blockNameSplitRes[0];
-      const blockId = blockNameSplitRes[1];
+      /**
+       * Update xxx::xxx block
+       */
 
+      updateBlock = 'xxx::xxx';
 
-      const blockData = _.find(input.client.funnels[blockFunnel], {id: blockId});
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
 
-      if (blockData) {
-        blockData.shown = false;
-        blockData.done = false;
-        blockData.next = null;
+      if (_.isNil(updateFunnel)
+        || _.isNil(updateId)
+      ) {
+        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+      }
 
+      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.shown = false;
+        getBlock.done = false;
+        getBlock.next = null;
       } else {
         throw new Error(`${moduleName}, error: block not found:
-         blockName: ${blockName}
-         blockFunnel: ${blockFunnel}
-         blockId: ${blockId}
-         input.client.funnels[blockFunnel]: ${JSON.stringify(input.client.funnels[blockFunnel], null, 3)}`);
+          updateBlock: ${updateBlock}
+          updateFunnel: ${updateFunnel}
+          updateId: ${updateId}
+          input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
       }
 
 
