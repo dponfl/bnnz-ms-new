@@ -1061,6 +1061,33 @@
           ]
         ]
       }
+    },
+    {
+      "id": "provide_post_link",
+      "description": "",
+      "actionType": "forced",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "main::forcedProvidePostLinkJoi",
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_MAIN_PROVIDE_POST_LINK",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
