@@ -1147,6 +1147,33 @@
           }
         ]
       }
+    },
+    {
+      "id": "can_provide_next_post_link",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "main::post_performed",
+      "next": "main::start",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "main::afterCanProvideNextPostLinkJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
