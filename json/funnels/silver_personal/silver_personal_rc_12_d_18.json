@@ -1088,6 +1088,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "wrong_post_link",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "main::provide_post_link",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "main::afterWrongPostLinkJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_MAIN_WRONG_POST_LINK_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_MAIN_WRONG_POST_LINK_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ]
 }
