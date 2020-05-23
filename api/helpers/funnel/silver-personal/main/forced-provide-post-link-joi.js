@@ -79,8 +79,8 @@ module.exports = {
 
         if (generateTasksResult.status === 'ok') {
 
-          inputs.block.done = true;
-          inputs.block.next = 'main::post_performed';
+          input.block.done = true;
+          input.block.next = 'main::post_performed';
 
           /**
            * Update next block

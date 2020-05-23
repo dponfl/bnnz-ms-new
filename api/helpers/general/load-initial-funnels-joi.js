@@ -65,11 +65,12 @@ module.exports = {
 
       input.client.funnels[input.funnelName] = funnels.funnel_data[input.funnelName];
 
-      await sails.helpers.storage.clientUpdate.with({
+      await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
         data: {
           funnels: input.client.funnels,
-        }
+        },
+        createdBy: moduleName,
       });
 
       return exits.success({

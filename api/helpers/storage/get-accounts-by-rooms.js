@@ -34,8 +34,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`*************** ${moduleName} ***************`);
-
     let accountsList = {};
 
     try {
@@ -48,22 +46,38 @@ module.exports = {
             banned: false,
           }
         })
-          .populate('client', {
-            where: {
-              deleted: false,
-              banned: false,
-            }
-          })
-          .populate('service')
-          .populate('room', {
-            where: {
-              id: room,
-            }
-          });
+        .populate('service')
+        .populate('room', {
+          where: {
+            id: room,
+          }
+        });
 
         for (const acc of accountsListByRoom) {
 
           if (acc.posts_received_day < acc.service.max_incoming_posts_per_day) {
+
+            const criteria = {
+              id: acc.client,
+            };
+
+            const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
+              criteria,
+            });
+
+            if (clientRaw.status !== 'ok') {
+              throw new Error(`${moduleName}, error: wrong clientGetByCriteriaJoi reply:
+              criteria: ${JSON.stringify(criteria, null, 3)}
+              clientRaw: ${JSON.stringify(clientRaw, null, 3)}`);
+            }
+
+            if (clientRaw.payload.length !== 1) {
+              throw new Error(`${moduleName}, error: several or none clients found:
+              criteria: ${JSON.stringify(criteria, null, 3)}
+              clientRaw.payload: ${JSON.stringify(clientRaw.payload, null, 3)}`);
+            }
+
+            acc.client = clientRaw.payload[0];
 
             accountsList.push(_.pick(acc, [
               'id',

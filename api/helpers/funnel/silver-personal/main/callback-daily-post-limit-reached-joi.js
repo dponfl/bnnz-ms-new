@@ -71,37 +71,6 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      /**
-       * Update xxx::xxx block
-       */
-
-      updateBlock = 'xxx::xxx';
-
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
-
-      if (_.isNil(updateFunnel)
-        || _.isNil(updateId)
-      ) {
-        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
-      }
-
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.shown = false;
-        getBlock.done = false;
-        getBlock.next = null;
-      } else {
-        throw new Error(`${moduleName}, error: block not found:
-          updateBlock: ${updateBlock}
-          updateFunnel: ${updateFunnel}
-          updateId: ${updateId}
-          input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
-      }
-
-
       switch (input.query.data) {
         case 'check_daily_post_limit':
 
@@ -139,18 +108,38 @@ module.exports = {
              * Дневной лимит отправки постов НЕ достигнут
              */
 
-            input.block.next = 'main::start';
+            input.block.next = 'main::can_provide_next_post_link';
             input.block.done = true;
 
             /**
-             * Update General funnel to the initial state to enable the client to perform it again
+             * Update input.block.next block
              */
 
-            await sails.helpers.general.loadInitialFunnelsJoi({
-              client: input.client,
-              clientCategory: input.client.accounts[currentAccountInd]['service']['funnel_name'],
-              funnelName: 'main',
-            });
+            updateBlock = input.block.next;
+
+            splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+            updateFunnel = splitRes[0];
+            updateId = splitRes[1];
+
+            if (_.isNil(updateFunnel)
+              || _.isNil(updateId)
+            ) {
+              throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+            }
+
+            getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.shown = false;
+              getBlock.done = false;
+              getBlock.previous = 'main::daily_post_limit_reached';
+            } else {
+              throw new Error(`${moduleName}, error: block not found:
+              updateBlock: ${updateBlock}
+              updateFunnel: ${updateFunnel}
+              updateId: ${updateId}
+              input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+            }
 
             await sails.helpers.funnel.afterHelperGenericJoi({
               client: input.client,

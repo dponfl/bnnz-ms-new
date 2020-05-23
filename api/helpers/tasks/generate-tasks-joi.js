@@ -41,8 +41,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`*************** ${moduleName} ***************`);
-
     /**
      * Input data schema
      */
@@ -135,7 +133,6 @@ module.exports = {
          */
 
         accountsList = _.filter(accountsListRaw.payload, (acc) => {
-          let ttt = acc;
           return acc.guid !== account.guid;
         });
       }

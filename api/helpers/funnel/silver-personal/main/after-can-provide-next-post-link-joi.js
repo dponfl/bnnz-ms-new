@@ -69,11 +69,21 @@ module.exports = {
        * Update General funnel to the initial state to enable the client to perform it again
        */
 
-      await sails.helpers.general.loadInitialFunnelsJoi({
+      const loadInitialFunnelsJoiParams = {
         client: input.client,
         clientCategory: input.client.accounts[currentAccountInd]['service']['funnel_name'],
         funnelName: 'main',
-      });
+      };
+
+      const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsJoi(loadInitialFunnelsJoiParams);
+
+      if (loadInitialFunnelsJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong loadInitialFunnelsJoi response:
+              loadInitialFunnelsJoiParams: ${JSON.stringify(loadInitialFunnelsJoiParams, null, 3)}
+              loadInitialFunnelsJoiRaw: ${JSON.stringify(loadInitialFunnelsJoiRaw, null, 3)}`);
+      }
+
+      input.client = loadInitialFunnelsJoiRaw.payload.client;
 
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,

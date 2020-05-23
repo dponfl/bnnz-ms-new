@@ -1031,7 +1031,7 @@
       "id": "start",
       "description": "",
       "actionType": "inline_keyboard",
-      "initial": false,
+      "initial": true,
       "enabled": false,
       "show_time": 0,
       "previous": "optin::optin_completed",
@@ -1155,7 +1155,7 @@
       "initial": false,
       "enabled": false,
       "show_time": 0,
-      "previous": "main::post_performed",
+      "previous": null,
       "next": "main::start",
       "switchToFunnel": null,
       "beforeHelper": null,
@@ -1168,7 +1168,7 @@
       "message": {
         "html": [
           {
-            "text": "XXXXXXX",
+            "text": "BEHERO_MAIN_CAN_PROVIDE_NEXT_POST_LINK",
             "style": "",
             "cr": ""
           }
@@ -1176,7 +1176,7 @@
       }
     },
     {
-      "id": "daily_post_llmit_reached",
+      "id": "daily_post_limit_reached",
       "description": "",
       "actionType": "inline_keyboard",
       "initial": false,
