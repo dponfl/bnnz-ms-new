@@ -1048,7 +1048,7 @@
         "BEHERO_MAIN_WRONG_POST_LINK_02": "Попробуй снова",
         "BEHERO_MAIN_POST_PERFORMED": "$FirstName$, твой пост успешно загружен в систему. В ближайшее время на него начнет приходить активность. ",
         "BEHERO_MAIN_CAN_PROVIDE_NEXT_POST_LINK": "Можешь продолжать отправку новых постов.",
-        "BEHERO_MAIN_DAILY_POST_LIMIT_REACHED_01": "Ты достиг суточного лимита отправки постов на текущем аккаунте ($CurrentAccount$).",
+        "BEHERO_MAIN_DAILY_POST_LIMIT_REACHED_01": "Ты достиг суточного лимита отправки постов на текущем аккаунте (Instagram ник: $CurrentAccount$).",
         "BEHERO_MAIN_DAILY_POST_LIMIT_REACHED_02": "Используй кнопку ниже для проверки возможности отправлять новые посты.",
         "BEHERO_MAIN_DAILY_POST_LIMIT_REACHED_BTN": "Можно отправлять новый пост?",
         "$$$$$$$$$$$$$$$$$$$$$_Old_Tokens": "*** ТОКЕНЫ ПРОШЛОЙ ВЕРСИИ ВОРОНОК ***",
