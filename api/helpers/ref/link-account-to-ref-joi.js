@@ -268,7 +268,9 @@ module.exports = {
       throw {err: {
           module: errorLocation,
           message: errorMsg,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 
@@ -364,33 +366,38 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
     const selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitArray);
 
     if (selectedRefRec == null) {
-      throw new Error(`${moduleName}, error: Could not select Ref record for: 
-      new_account_guid: "${new_account_guid}" 
+      // throw new Error(`${moduleName}, error: Could not select Ref record for:
+      // newAccountGuid: "${newAccountGuid}"
+      // omitArray: ${JSON.stringify(omitArray, null, 3)}`);
+      sails.log.error(`${moduleName}, error: Could not select Ref record for: 
+      newAccountGuid: "${newAccountGuid}" 
       omitArray: ${JSON.stringify(omitArray, null, 3)}`);
-    }
-
-    await Ref.updateOne({
-      guid: selectedRefRec.guid
-    }).set({
-      direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
-      total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
-    });
-
-    const refDownCreateRawParams = {
-      accountGuid: newAccountGuid,
-      refAccountGuid: selectedRefRec.account_guid,
-      level: sails.config.custom.config.ref.general.overFlowLevel,
-      type: sails.config.custom.enums.ref.refDownType.OVERFLOW,
-    };
-
-    const refDownCreateRaw = await sails.helpers.storage.refDownCreate.with(refDownCreateRawParams);
-
-    if (refDownCreateRaw.status === 'ok') {
-      refDownRes.push(refDownCreateRaw.payload);
     } else {
-      throw new Error(`${methodName}, error: refDownCreate error:
+
+      await Ref.updateOne({
+        guid: selectedRefRec.guid
+      }).set({
+        direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+        total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+      });
+
+      const refDownCreateRawParams = {
+        accountGuid: newAccountGuid,
+        refAccountGuid: selectedRefRec.account_guid,
+        level: sails.config.custom.config.ref.general.overFlowLevel,
+        type: sails.config.custom.enums.ref.refDownType.OVERFLOW,
+      };
+
+      const refDownCreateRaw = await sails.helpers.storage.refDownCreate.with(refDownCreateRawParams);
+
+      if (refDownCreateRaw.status === 'ok') {
+        refDownRes.push(refDownCreateRaw.payload);
+      } else {
+        throw new Error(`${methodName}, error: refDownCreate error:
     params: ${JSON.stringify(refDownCreateRawParams, null, 3)}
     refDownCreateRaw: ${JSON.stringify(refDownCreateRaw, null, 3)}`);
+      }
+
     }
 
   }
