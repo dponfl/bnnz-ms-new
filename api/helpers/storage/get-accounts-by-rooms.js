@@ -34,28 +34,47 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    let accountsList = {};
+    let accountsList = [];
 
     try {
 
       for (const room of inputs.rooms) {
-        const accountsListByRoom = await Account.find({
-          where: {
-            subscription_active: true,
-            deleted: false,
-            banned: false,
-          }
-        })
-        .populate('service')
-        .populate('room', {
-          where: {
-            id: room,
-          }
-        });
 
-        for (const acc of accountsListByRoom) {
+        const roomWithAccounts = await Room.findOne({id: room})
+          .populate('account', {
+            where: {
+              subscription_active: true,
+              deleted: false,
+              banned: false,
+            }
+          });
 
-          if (acc.posts_received_day < acc.service.max_incoming_posts_per_day) {
+
+        for (const acc of roomWithAccounts.account) {
+
+          const criteria = {
+            id: acc.service
+          };
+
+          const serviceRaw = await sails.helpers.storage.serviceGetJoi({
+            criteria
+          });
+
+          if (serviceRaw.status !== 'ok') {
+            throw new Error(`${moduleName}, error: wrong serviceGetJoi reply:
+            criteria: ${JSON.stringify(criteria, null, 3)}
+            serviceRaw: ${JSON.stringify(serviceRaw, null, 3)}`);
+          }
+
+          if (serviceRaw.payload.length !== 1) {
+            throw new Error(`${moduleName}, error: several on none service records:
+            criteria: ${JSON.stringify(criteria, null, 3)}
+            serviceRaw.payload: ${JSON.stringify(serviceRaw.payload, null, 3)}`);
+          }
+
+          acc.service = serviceRaw.payload[0];
+
+          if (acc.posts_received_day < acc.service.max_incoming_posts_day) {
 
             const criteria = {
               id: acc.client,
@@ -105,7 +124,9 @@ module.exports = {
       throw {err: {
           module: `${moduleName}`,
           message: sails.config.custom.GENERAL_HELPER_ERROR,
-          payload: {},
+          payload: {
+            error: e,
+          },
         }
       };
 
