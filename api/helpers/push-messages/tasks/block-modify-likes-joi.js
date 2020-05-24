@@ -59,7 +59,8 @@ module.exports = {
       const input = await schema.validateAsync(inputs.params);
 
       let resBlock = input.messageData;
-      let messageInlineKeyboard = resBlock.message.inline_keyboard || [];
+      let messageInlineKeyboard = [];
+      messageInlineKeyboard.push(resBlock.message.inline_keyboard[0]);
 
       if (!uuid.isUUID(input.additionalParams.taskGuid)) {
         throw new Error(`Received input.additionalParams.taskGuid is not a valid UUID: ${input.additionalParams.taskGuid}`);

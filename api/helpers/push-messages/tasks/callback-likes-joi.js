@@ -133,40 +133,44 @@ module.exports = {
         instPostCode,
       });
 
+      let taskData = {
+        makeLikePerformed: taskRec.makeLikePerformed,
+        makeCommentPerformed: taskRec.makeCommentPerformed,
+      };
+
+      let postData = {
+        receivedLikes: postRec.receivedLikes,
+        receivedComments: postRec.receivedComments,
+        allLikesDone: postRec.allLikesDone,
+        allCommentsDone: postRec.allCommentsDone,
+      };
+
       if (likeDone) {
 
         /**
          * Выполняем действия для случая успешного выполнения задания
          */
 
-        const makeLikePerformed = true;
+        taskData.makeLikePerformed = true;
+        postData.receivedLikes++;
+        postData.allLikesDone = postData.receivedLikes >= postRec.requestedLikes;
+
+        /**
+         * Обновляем записи в таблицах Tasks & Posts
+         */
 
         await sails.helpers.storage.tasksUpdateJoi({
           criteria: {
             guid: taskRec.guid,
           },
-          data: {
-            makeLikePerformed,
-          }
+          data: taskData,
         });
-
-        const receivedLikes = postRec.receivedLikes + 1;
-
-        let data = {
-          receivedLikes,
-        };
-
-        const allLikesDone = receivedLikes >= postRec.requestedLikes;
-
-        if (allLikesDone) {
-          data = _.assign(data, allLikesDone);
-        }
 
         await sails.helpers.storage.postsUpdateJoi({
           criteria: {
             guid: postRec.guid,
           },
-          data,
+          data: postData,
         });
 
         /**
