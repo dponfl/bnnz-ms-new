@@ -55,6 +55,7 @@ module.exports = {
         .required(),
     });
 
+    let accountsListDraft = [];
     let accountsList = [];
 
     try {
@@ -111,7 +112,7 @@ module.exports = {
       const postRec = postRecRaw.payload;
 
       /**
-       * Получаем список всех активных аккаунтов (accountsList),
+       * Получаем список всех активных аккаунтов (accountsListRaw),
        * которые находятся в тех же комнатах, в которых размещен input.accountId
        * и у которых не исчерпаны суточные лимиты на получение постов
        */
@@ -132,10 +133,16 @@ module.exports = {
          * Удаляем из списка аккаунт, отправивший пост
          */
 
-        accountsList = _.filter(accountsListRaw.payload, (acc) => {
+        accountsListDraft = _.filter(accountsListRaw.payload, (acc) => {
           return acc.guid !== account.guid;
         });
       }
+
+      /**
+       * Убираем дубликаты аккаунтов
+       */
+
+      accountsList = _.uniqBy(accountsListDraft, 'id');
 
       /**
        * Для каждого аккаунта из accountsList
@@ -159,10 +166,10 @@ module.exports = {
         await sails.helpers.storage.postsUpdateJoi({
           criteria: {guid: postRec.guid},
           data: {
-            requested_likes: ++postRec.requested_likes,
-            requested_comments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
-              ? ++postRec.requested_comments
-              : postRec.requested_comments,
+            requestedLikes: ++postRec.requestedLikes,
+            requestedComments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+              ? ++postRec.requestedComments
+              : postRec.requestedComments,
           }
         });
 
