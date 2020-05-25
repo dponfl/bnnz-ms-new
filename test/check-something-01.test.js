@@ -425,7 +425,7 @@ describe.skip('Test sendInvoce', function () {
 
 });
 
-describe('Ref system: link accounts to ref system', function () {
+describe('Ref system: link 20 accounts to ref system', function () {
 
   let customConfig;
   let accounts = [];

@@ -202,6 +202,38 @@ module.exports = {
     },
 
     /**
+     * количество лайков, которые должен поставить аккаунт всего
+     */
+    requested_likes_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+
+    /**
+     * количество лайков, которые аккаунт поставил  всего
+     */
+    made_likes_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+
+    /**
+     * количество комментариев, которые аккаунт должен оставить всего
+     */
+    requested_comments_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+
+    /**
+     * количество комментариев, которые аккаунт оставил  всего
+     */
+    made_comments_total: {
+      type: 'number',
+      columnType: 'integer',
+    },
+
+    /**
      * флаг того, что клиент указал свой Инстаграм профиль
      */
     profile_provided: {

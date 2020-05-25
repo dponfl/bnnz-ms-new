@@ -105,6 +105,10 @@ module.exports = {
               'inst_profile',
               'posts_received_day',
               'posts_received_total',
+              'requested_likes_day',
+              'requested_comments_day',
+              'requested_likes_total',
+              'requested_comments_total',
             ]));
 
           }

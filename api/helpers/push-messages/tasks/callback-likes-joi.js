@@ -174,6 +174,19 @@ module.exports = {
         });
 
         /**
+         * Обновляем запись в таблице Account
+         */
+
+        await sails.helpers.storage.accountUpdateJoi({
+          criteria: {guid: account.guid},
+          data: {
+            made_likes_day: ++account.made_likes_day,
+            made_likes_total: ++account.made_likes_total,
+          },
+          createdBy: moduleName,
+        });
+
+        /**
          * Трансформируем в чате аккаунта сообщение с требованием выполнить задание
          * в сообщение, что задание успешно выполнено
          */

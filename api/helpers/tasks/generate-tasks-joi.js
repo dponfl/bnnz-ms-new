@@ -236,6 +236,14 @@ module.exports = {
           data: {
             posts_received_day: ++acc.posts_received_day,
             posts_received_total: ++acc.posts_received_total,
+            requested_likes_day: ++acc.requested_likes_day,
+            requested_comments_day: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+              ? ++acc.requested_comments_day
+              : acc.requested_comments_day,
+            requested_likes_total: ++acc.requested_likes_total,
+            requested_comments_total: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+              ? ++acc.requested_comments_total
+              : acc.requested_comments_total,
           },
           createdBy: moduleName,
         });

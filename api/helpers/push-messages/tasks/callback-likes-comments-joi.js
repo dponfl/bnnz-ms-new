@@ -182,6 +182,29 @@ module.exports = {
           data: postData,
         });
 
+        /**
+         * Обновляем запись в таблице Account
+         */
+
+        await sails.helpers.storage.accountUpdateJoi({
+          criteria: {guid: account.guid},
+          data: {
+            made_likes_day: likeCommentDone.likeMade
+              ? ++account.made_likes_day
+              : account.made_likes_day,
+            made_likes_total: likeCommentDone.likeMade
+              ? ++account.made_likes_total
+              : account.made_likes_total,
+            made_comments_day: likeCommentDone.commentMade
+              ? ++account.made_comments_day
+              : account.made_comments_day,
+            made_comments_total: likeCommentDone.commentMade
+              ? ++account.made_comments_total
+              : account.made_comments_total,
+          },
+          createdBy: moduleName,
+        });
+
       }
 
       if (taskRec.messageId != null) {
