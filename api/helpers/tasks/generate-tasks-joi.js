@@ -145,6 +145,19 @@ module.exports = {
       accountsList = _.uniqBy(accountsListDraft, 'id');
 
       /**
+       * Обновляем данные по структуре PushMessages (из-за inline_keyboard кнопок)
+       */
+
+      const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
+
+      if (pushMessagesRaw.status === 'ok') {
+        sails.config.custom.pushMessages = pushMessagesRaw.payload;
+      } else {
+        throw new Error(`${moduleName}, Critical error: Cannot get push messages data:
+        pushMessagesRaw: ${JSON.stringify(pushMessagesRaw, null, 3)}`);
+      }
+
+      /**
        * Для каждого аккаунта из accountsList
        * нужно сформировать задание и отправить соответствующее сообщение
        */
