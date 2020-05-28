@@ -100,6 +100,17 @@ module.exports = {
       ) {
 
         /**
+         * Сохраняем информацию о прохождении данного блока клиентом
+         */
+
+        await sails.helpers.storage.clientJourneyCreateJoi({
+          clientGuid: input.client.guid,
+          accountGuid: input.client.account_use,
+          funnelName: input.funnelName,
+          blockId: input.blockId,
+        });
+
+        /**
          * Call blockModifyHelper to update block if needed
          */
 
@@ -430,68 +441,67 @@ module.exports = {
           createdBy: `${input.createdBy} => ${moduleName}`,
         });
 
-
-      }
-
-      /**
-       * After sending message we need to perform afterHelper
-       */
-
-      if (_.isNil(block.afterHelper)) {
-
         /**
-         * Only for simple messages (like text, img, video & doc) we perform afterHelperGeneric
-         * because for both forced and inline_keyboard messages
-         * we perform next actions based on the information provided by client
+         * After sending message we need to perform afterHelper
          */
 
-        if (_.includes(['text', 'img', 'video', 'doc'], block.actionType)) {
-
-          await sails.helpers.funnel.afterHelperGenericJoi({
-            client: input.client,
-            block: block,
-            msg: input.msg || 'no message',
-            next: true,
-            previous: true,
-            switchFunnel: true,
-            createdBy: `${input.createdBy} => ${moduleName}`,
-          });
-
-        }
-
-      } else {
-
-        let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
-        let afterHelperBlock = splitAfterHelperRes[0];
-        let afterHelperName = splitAfterHelperRes[1];
-
-        if (afterHelperBlock && afterHelperName) {
+        if (_.isNil(block.afterHelper)) {
 
           /**
-           * We managed to parse the specified afterHelper and can perform it
+           * Only for simple messages (like text, img, video & doc) we perform afterHelperGeneric
+           * because for both forced and inline_keyboard messages
+           * we perform next actions based on the information provided by client
            */
 
-          let afterHelperParams = {
-            client: input.client,
-            block: block,
-          };
+          if (_.includes(['text', 'img', 'video', 'doc'], block.actionType)) {
 
-          if (input.msg) {
-
-            afterHelperParams.msg = input.msg;
+            await sails.helpers.funnel.afterHelperGenericJoi({
+              client: input.client,
+              block: block,
+              msg: input.msg || 'no message',
+              next: true,
+              previous: true,
+              switchFunnel: true,
+              createdBy: `${input.createdBy} => ${moduleName}`,
+            });
 
           }
 
-          await sails.helpers.funnel[input.client.funnel_name][afterHelperBlock][afterHelperName](afterHelperParams);
-
-
         } else {
 
-          /**
-           * Throw error: we could not parse the specified afterHelper
-           */
+          let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
+          let afterHelperBlock = splitAfterHelperRes[0];
+          let afterHelperName = splitAfterHelperRes[1];
 
-          throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR);
+          if (afterHelperBlock && afterHelperName) {
+
+            /**
+             * We managed to parse the specified afterHelper and can perform it
+             */
+
+            let afterHelperParams = {
+              client: input.client,
+              block: block,
+            };
+
+            if (input.msg) {
+
+              afterHelperParams.msg = input.msg;
+
+            }
+
+            await sails.helpers.funnel[input.client.funnel_name][afterHelperBlock][afterHelperName](afterHelperParams);
+
+
+          } else {
+
+            /**
+             * Throw error: we could not parse the specified afterHelper
+             */
+
+            throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR);
+          }
+
         }
 
       }

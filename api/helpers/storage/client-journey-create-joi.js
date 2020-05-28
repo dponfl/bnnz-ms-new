@@ -1,16 +1,18 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
-const moduleName = 'mgw:telegram:simple-message-joi';
+const moduleName = 'storage:client-journey-create-joi';
+
 
 module.exports = {
 
 
-  friendlyName: 'Simple message Telegram',
+  friendlyName: 'storage:client-journey-create-joi',
 
 
-  description: 'Send simple text message on Telegram messenger',
+  description: 'Create client journey record',
 
 
   inputs: {
@@ -26,50 +28,59 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
+    err: {
+      description: 'Error',
+    }
   },
 
 
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      chatId: Joi
+      clientGuid: Joi
         .string()
-        .description('client chat id we use to send message')
+        .description('client guid')
+        .guid()
         .required(),
-      html: Joi
+      accountGuid: Joi
         .string()
-        .description('html code of the message')
+        .description('account guid')
+        .guid()
         .required(),
-      disableWebPagePreview: Joi
-        .boolean()
-        .description('flag to disable web page preview at message'),
+      funnelName: Joi
+        .string()
+        .description('funnel name')
+        .required(),
+      blockId: Joi
+        .string()
+        .description('funnel block id')
+        .required(),
     });
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
-      const disable_web_page_preview = input.disableWebPagePreview || false;
+      const uuidApiKey = uuid.create();
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
-        input.chatId,
-        input.html,
-        {
-          parse_mode: 'HTML',
-          disable_web_page_preview,
-        }
-      );
+      const clientJourneyRec = {
+        guid: uuidApiKey.uuid,
+        clientGuid: input.clientGuid,
+        accountGuid: input.accountGuid,
+        funnelName: input.funnelName,
+        blockId: input.blockId,
+      };
+
+      await ClientJourney.create(clientJourneyRec);
 
       return exits.success({
         status: 'ok',
-        message: 'Telegram simple message was sent',
-        payload: sendMessageRes,
-      })
+        message: 'ClientJourney record created',
+        payload: clientJourneyRec,
+    })
 
     } catch (e) {
 
@@ -91,7 +102,6 @@ module.exports = {
     }
 
   }
-
 
 };
 

@@ -629,7 +629,7 @@
       "next": "optin::join_ref_subscribe",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": null,
+      "afterHelper": "optin::afterJoinRefPrepareListJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -765,13 +765,13 @@
         "html": [
           {
             "text": "BEHERO_JOIN_REF_MISSED_PROFILES_01",
-            "style": "DCR",
-            "cr": ""
+            "style": "",
+            "cr": "DCR"
           },
           {
             "text": "BEHERO_JOIN_REF_MISSED_PROFILES_02",
-            "style": "DCR",
-            "cr": ""
+            "style": "",
+            "cr": "DCR"
           },
           {
             "text": "BEHERO_JOIN_REF_MISSED_PROFILES_03",

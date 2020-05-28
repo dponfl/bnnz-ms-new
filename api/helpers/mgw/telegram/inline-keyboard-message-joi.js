@@ -37,8 +37,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // sails.log.info('Telegram inline keyboard message: ', inputs);
-
     const schema = Joi.object({
       chatId: Joi
         .string()
@@ -52,6 +50,9 @@ module.exports = {
         .any()
         .description('inline keyboard of the message')
         .required(),
+      disableWebPagePreview: Joi
+        .boolean()
+        .description('flag to disable web page preview at message'),
     });
 
 
@@ -59,11 +60,14 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      const disable_web_page_preview = input.disableWebPagePreview || false;
+
       let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
         {
           parse_mode: 'HTML',
+          disable_web_page_preview,
           reply_markup: {
             inline_keyboard: input.inlineKeyboard,
           }

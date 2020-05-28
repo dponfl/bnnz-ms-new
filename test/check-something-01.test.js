@@ -53,6 +53,71 @@ describe.skip('Test sendDocument', function () {
 
 });
 
+describe.skip('Test sendMessage', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send one simple message', async function () {
+
+    const client = await Client.findOne({
+      guid: '4f71e0c9-26ae-4bfd-b633-2f353ae7fe26'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    const chatId = client.chat_id;
+    const html = `Это твой профиль в Instagram? https://www.facebook.com Ответь с помощью кнопок.`;
+
+    const res = await sails.helpers.mgw.telegram.simpleMessageJoi({
+      chatId,
+      html,
+    });
+
+  });
+
+  it('should send one simple message', async function () {
+
+    const client = await Client.findOne({
+      guid: '4f71e0c9-26ae-4bfd-b633-2f353ae7fe26'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    const chatId = client.chat_id;
+    const html = `Это твой профиль в Instagram? https://www.instagram.com/webstudiopro/?ref=123 Ответь с помощью кнопок.`;
+
+    const res = await sails.helpers.mgw.telegram.simpleMessageJoi({
+      chatId,
+      html,
+    });
+
+  });
+
+  it.skip('should send one simple message', async function () {
+
+    const client = await Client.findOne({
+      guid: '4f71e0c9-26ae-4bfd-b633-2f353ae7fe26'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    const chatId = client.chat_id;
+    const html = 'Задание поставить лайк для поста https://www.instagram.com/p/B7QmKU8FORo/?igshid=1t040901hzji4 выполнено. Спасибо';
+
+    const res = await sails.helpers.mgw.telegram.simpleMessageJoi({
+      chatId,
+      html,
+    });
+
+  });
+
+});
+
 describe.skip('Test sendDocument with inline keyboard', function () {
 
   let customConfig;
@@ -527,8 +592,6 @@ describe('Ref system: link 20 accounts to ref system', function () {
         linkedAccounts.push(linkAccountToRefRaw.payload);
 
       }
-
-      const ttt = 1;
 
     } catch (e) {
       mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);

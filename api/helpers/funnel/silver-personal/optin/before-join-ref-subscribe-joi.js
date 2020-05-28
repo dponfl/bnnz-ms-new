@@ -57,6 +57,7 @@ module.exports = {
     });
 
     let input;
+    let refUps;
 
     try {
 
@@ -69,29 +70,62 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      currentAccount.is_ref = true;
+      if (!currentAccount.is_ref) {
 
-      // input.client.accounts[currentAccountInd].is_ref = true;
+        currentAccount.is_ref = true;
 
-      /**
-       * "Прописываем" currentAccount в реферальную систему
-       */
+        /**
+         * "Прописываем" currentAccount в реферальную систему
+         */
 
-      const RefDataRaw = await sails.helpers.ref.linkAccountToRefJoi({
-        account: currentAccount,
-      });
+        const RefDataRaw = await sails.helpers.ref.linkAccountToRefJoi({
+          account: currentAccount,
+        });
 
-      if (RefDataRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong linkAccountToRefJoi response:
+        if (RefDataRaw.status !== 'ok') {
+          throw new Error(`${moduleName}, error: wrong linkAccountToRefJoi response:
         account: ${currentAccount}
         RefDataRaw: ${JSON.stringify(RefDataRaw, null, 3)}`);
+        }
+
+        /**
+         * Получаем список "аккаунт/профиль" для RefUp
+         */
+
+        refUps = RefDataRaw.payload.refUp;
+
+
+      } else {
+
+        /**
+         * Аккаунт уже "прописан" в реферальной системе.
+         * Получаем список "аккаунт/профиль" для него
+         */
+
+        const refUpGetCriteria = {
+          account_guid: currentAccount.guid,
+        };
+
+        const refUpDataRaw = await sails.helpers.storage.refUpGetByCriteriaJoi({
+          criteria: refUpGetCriteria,
+        });
+
+        if (refUpDataRaw.status !== 'ok') {
+          throw new Error(`${moduleName}, error: wrong refUpGetByCriteria response:
+        criteria: ${refUpGetCriteria}
+        refUpDataRaw: ${JSON.stringify(refUpDataRaw, null, 3)}`);
+        }
+
+        if (refUpDataRaw.payload.length === 0) {
+          throw new Error(`${moduleName}, error: no refUp records found:
+        criteria: ${refUpGetCriteria}
+        refUpDataRaw.payload: ${JSON.stringify(refUpDataRaw.payload, null, 3)}`);
+        }
+
+        refUps = refUpDataRaw.payload;
+
       }
 
-      /**
-       * Получаем список "аккаунт/профиль" для RefUp
-       */
-
-      const refUps = RefDataRaw.payload.refUp;
       const accountAndInstProfilePairs = [];
       const accountGuids = [];
 

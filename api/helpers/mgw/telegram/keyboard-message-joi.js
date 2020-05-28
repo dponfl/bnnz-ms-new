@@ -2,15 +2,15 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'mgw:telegram:simple-message-joi';
+const moduleName = 'mgw:telegram:keyboard-message-joi';
 
 module.exports = {
 
 
-  friendlyName: 'Simple message Telegram',
+  friendlyName: 'Keyboard for Telegram',
 
 
-  description: 'Send simple text message on Telegram messenger',
+  description: 'Send keyboard on Telegram messenger',
 
 
   inputs: {
@@ -26,11 +26,12 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
+    err: {
+      description: 'Error',
+    },
   },
 
 
@@ -45,10 +46,15 @@ module.exports = {
         .string()
         .description('html code of the message')
         .required(),
+      keyboard: Joi
+        .any()
+        .description('keyboard of the message')
+        .required(),
       disableWebPagePreview: Joi
         .boolean()
         .description('flag to disable web page preview at message'),
     });
+
 
     try {
 
@@ -62,24 +68,29 @@ module.exports = {
         {
           parse_mode: 'HTML',
           disable_web_page_preview,
+          reply_markup: {
+            keyboard: input.keyboard,
+          }
         }
       );
 
       return exits.success({
         status: 'ok',
-        message: 'Telegram simple message was sent',
+        message: 'Telegram keyboard message was sent',
         payload: sendMessageRes,
       })
 
     } catch (e) {
 
+
       const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      const errorMsg = `${moduleName}: ${sails.config.custom.KEYBOARD_MESSAGE_SEND_ERROR}`;
 
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
 
-      throw {err: {
+      throw {
+        err: {
           module: errorLocation,
           message: errorMsg,
           payload: {
@@ -91,7 +102,6 @@ module.exports = {
     }
 
   }
-
 
 };
 
