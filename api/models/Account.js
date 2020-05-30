@@ -275,6 +275,30 @@ module.exports = {
       type: 'boolean',
     },
 
+    /**
+     * Структура текущей клавиатуры
+     * (используется для проверки валидности поступающего сообщения в контексте)
+     */
+
+    // keyboard: {
+    //   type: 'json',
+    // },
+
+    /**
+     * Эта группа данных прогружается в Client при смене тек. аккаунта
+     */
+    // funnel_name: {
+    //   type: 'string',
+    //   allowNull: true,
+    // },
+    // current_funnel: {
+    //   type: 'string',
+    //   allowNull: true,
+    // },
+    // funnels: {
+    //   type: 'json',
+    // },
+
     client: {
       model: 'client',
     },

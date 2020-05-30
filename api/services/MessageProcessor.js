@@ -166,14 +166,33 @@ module.exports = {
 
       return arr;
 
+    // } else if (_.isObject(input.data)) {
+    //   const ob = {};
+    //   _.forEach(input.data, (val, key) => {
+    //     if (key === 'text' || key === 'url') {
+    //       ob[key] = MessageProcessor.parseSpecialTokens({
+    //         client: input.client,
+    //         message: t(input.client.lang, val),
+    //         additionalTokens: input.additionalTokens,
+    //       });
+    //     }
+    //   });
+    //
+    //   return ob;
+    //
+    // }
+
     } else if (_.isObject(input.data)) {
-      let ob = _.forEach(input.data, (val, key, o) => {
+      const ob = {};
+      _.forEach(input.data, (val, key) => {
         if (key === 'text' || key === 'url') {
-          o[key] = MessageProcessor.parseSpecialTokens({
+          ob[key] = MessageProcessor.parseSpecialTokens({
             client: input.client,
             message: t(input.client.lang, val),
             additionalTokens: input.additionalTokens,
           });
+        } else {
+          ob[key] = val;
         }
       });
 
