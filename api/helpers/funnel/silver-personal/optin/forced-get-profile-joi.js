@@ -79,7 +79,11 @@ module.exports = {
          * Парсером проверяем, что этот профиль существует в Instagram
          */
 
-        const instProfile = _.trim(input.msg.text);
+        let instProfile = _.trim(input.msg.text);
+
+        if (instProfile[0] === '@') {
+          instProfile = _.replace(instProfile, '@', '');
+        }
 
         const activeParser = sails.config.custom.config.parsers.inst;
 

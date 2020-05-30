@@ -229,6 +229,7 @@ module.exports = {
             additionalParams: {
               chat_id: input.client.chat_id,
               message_id: taskRec.messageId,
+              disable_web_page_preview: true,
             },
           });
 
@@ -267,6 +268,7 @@ module.exports = {
             additionalParams: {
               chat_id: input.client.chat_id,
               message_id: taskRec.messageId,
+              disable_web_page_preview: true,
             },
           });
 
@@ -305,6 +307,7 @@ module.exports = {
             additionalParams: {
               chat_id: input.client.chat_id,
               message_id: taskRec.messageId,
+              disable_web_page_preview: true,
             },
           });
 
@@ -343,6 +346,7 @@ module.exports = {
             additionalParams: {
               chat_id: input.client.chat_id,
               message_id: taskRec.messageId,
+              disable_web_page_preview: true,
             },
           });
 

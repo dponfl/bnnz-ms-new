@@ -210,6 +210,7 @@ module.exports = {
               blockModifyHelperParams: {
                 taskGuid: taskRecRaw.payload.guid || '',
               },
+              disableWebPagePreview: true,
             });
             break;
           case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
@@ -229,6 +230,7 @@ module.exports = {
               blockModifyHelperParams: {
                 taskGuid: taskRecRaw.payload.guid || '',
               },
+              disableWebPagePreview: true,
             });
             break;
           default:

@@ -40,13 +40,13 @@ module.exports = {
 
     const schema = Joi.object({
       html: Joi
-            .string()
-            .description('html code of the message')
-            .required(),
+        .string()
+        .description('html code of the message')
+        .required(),
       optionalParams: Joi
-            .any()
-            .description('optional parameters')
-            .required(),
+        .any()
+        .description('optional parameters')
+        .required(),
     });
 
     try {

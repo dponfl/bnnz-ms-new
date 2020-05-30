@@ -44,14 +44,27 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    const schema = Joi.object({
-      client: Joi.any().required(),
-      messageData: Joi.any().required(),
-      additionalTokens: Joi.any(),
-      additionalParams: Joi.any(),
-      blockModifyHelperParams: Joi.any(),
-      beforeHelperParams: Joi.any(),
-      afterHelperParams: Joi.any(),
+    const schema = Joi
+      .object({
+        client: Joi
+          .any()
+          .required(),
+        messageData: Joi
+          .any()
+          .required(),
+        additionalTokens: Joi
+          .any(),
+        additionalParams: Joi
+          .any(),
+        blockModifyHelperParams: Joi
+          .any(),
+        beforeHelperParams: Joi
+          .any(),
+        afterHelperParams: Joi
+          .any(),
+        disableWebPagePreview: Joi
+          .boolean()
+          .description('flag to disable web page preview at message'),
     });
 
     let sendMessageResult = null;
@@ -62,6 +75,8 @@ module.exports = {
       const input = await schema.validateAsync(inputs.params);
 
       messageData = input.messageData;
+
+      const disableWebPagePreview = input.disableWebPagePreview || false;
 
       /**
        * Call blockModifyHelper to update block if needed
@@ -104,6 +119,7 @@ module.exports = {
           const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
             chatId: input.client.chat_id,
             html: htmlSimple,
+            disableWebPagePreview,
           });
 
           sendMessageResult = simpleRes;
@@ -298,6 +314,7 @@ module.exports = {
             chatId: input.client.chat_id,
             html: htmlInline,
             inlineKeyboard: inlineKeyboard,
+            disableWebPagePreview,
           });
 
           sendMessageResult = inlineRes;
