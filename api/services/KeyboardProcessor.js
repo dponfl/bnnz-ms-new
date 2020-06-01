@@ -2,12 +2,11 @@
 
 const Joi = require('@hapi/joi');
 
-const confObj = require('./translate').getConfigObj;
 const emoji = require('node-emoji');
 
 const t = require('./translate').t;
 
-const moduleName = 'MessageProcessor';
+const moduleName = 'KeyboardProcessor';
 
 
 module.exports = {
@@ -35,11 +34,8 @@ module.exports = {
         resultHtml = resultHtml +
           (/b/i.test(input.message.html[i].style) ? '<b>' : '') +
           (/i/i.test(input.message.html[i].style) ? '<i>' : '') +
-          (/url/i.test(input.message.html[i].style) ? `<a href="${input.message.html[i].url}">` : '') +
-          t(input.client.lang, input.message.html[i].text) +
           (/i/i.test(input.message.html[i].style) ? '</i>' : '') +
           (/b/i.test(input.message.html[i].style) ? '</b>' : '') +
-          (/url/i.test(input.message.html[i].style) ? '</a>' : '') +
           (input.message.html.length > 1
             ? (input.message.html[i].cr
               ? sails.config.custom[input.message.html[i].cr]
@@ -47,7 +43,7 @@ module.exports = {
             : '');
       }
 
-      resultHtml = MessageProcessor.parseSpecialTokens({
+      resultHtml = KeyboardProcessor.parseSpecialTokens({
         client: input.client,
         message: resultHtml,
         additionalTokens: input.additionalTokens,
@@ -104,7 +100,7 @@ module.exports = {
 
       let resStr = t(input.client.lang, input.token);
 
-      resStr = MessageProcessor.parseSpecialTokens({
+      resStr = KeyboardProcessor.parseSpecialTokens({
         client: input.client,
         message: resStr,
         additionalTokens: input.additionalTokens,
@@ -228,15 +224,15 @@ module.exports = {
 
   },
 
-  mapDeep: function mapDeep(params) {
+  parseButtonActions: function parseButtonActions(params) {
 
-    const methodName = 'mapDeep';
+    const methodName = 'parseButtonActions';
 
     const schema = Joi.object({
       client: Joi
         .any()
         .required(),
-      data: Joi
+      buttons: Joi
         .any()
         .required(),
       additionalTokens: Joi
@@ -248,22 +244,19 @@ module.exports = {
     try {
 
       const inputRaw = schema.validate(params);
+
       input = inputRaw.value;
 
-      if (_.isArray(input.data)) {
-        const arr = input.data.map((innerObj) => mapDeep({
-          client: input.client,
-          data: innerObj,
-          additionalTokens: input.additionalTokens,
-        }));
+      let flattenButtons = _.flattenDeep(input.buttons);
 
-        return arr;
+      let res = [];
 
-      } else if (_.isObject(input.data)) {
+      flattenButtons.map((elem) => {
+
         const ob = {};
-        _.forEach(input.data, (val, key) => {
-          if (key === 'text' || key === 'url') {
-            ob[key] = MessageProcessor.parseSpecialTokens({
+        _.forEach(elem, (val, key) => {
+          if (key === 'text') {
+            ob[key] = KeyboardProcessor.parseSpecialTokens({
               client: input.client,
               message: t(input.client.lang, val),
               additionalTokens: input.additionalTokens,
@@ -273,9 +266,11 @@ module.exports = {
           }
         });
 
-        return ob;
+        res.push(ob);
 
-      }
+      });
+
+      return res;
 
     } catch (e) {
 

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'keyboard-processor:send-keyboard-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'keyboard-processor:send-keyboard-joi',
 
 
-  description: 'module:helper',
+  description: 'keyboard-processor:send-keyboard-joi',
 
 
   inputs: {
@@ -38,19 +38,28 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    const schema = Joi.object({
-      someOne: Joi
-        .any()
-        .description('XXX')
-        .required(),
-      someTwo: Joi
-        .any()
-        .description('XXX')
-        .required(),
-      someThree: Joi
-        .any()
-        .description('XXX'),
-    });
+    const schema = Joi
+      .object({
+        client: Joi
+          .any()
+          .required(),
+        keyboardData: Joi
+          .any()
+          .required(),
+        additionalTokens: Joi
+          .any(),
+        additionalParams: Joi
+          .any(),
+        blockModifyHelperParams: Joi
+          .any(),
+        beforeHelperParams: Joi
+          .any(),
+        afterHelperParams: Joi
+          .any(),
+        disableWebPagePreview: Joi
+          .boolean()
+          .description('flag to disable web page preview at message'),
+      });
 
     let input;
 

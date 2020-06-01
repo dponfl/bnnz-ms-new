@@ -1,0 +1,31 @@
+{
+  "main": [
+    {
+      "id": "button_id",
+      "description": "XXX",
+      "actionType": "XXX",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "XXX",
+            "text": "XXX",
+            "action": null
+          }
+        ]
+      ]
+    }
+  ]
+}

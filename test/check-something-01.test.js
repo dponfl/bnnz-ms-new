@@ -490,7 +490,7 @@ describe.skip('Test sendInvoce', function () {
 
 });
 
-describe('Ref system: link 20 accounts to ref system', function () {
+describe.skip('Ref system: link 20 accounts to ref system', function () {
 
   let customConfig;
   let accounts = [];
@@ -601,4 +601,80 @@ describe('Ref system: link 20 accounts to ref system', function () {
   });
 
 });
+
+describe('Check KeyboardProcessor methods', function () {
+
+  let customConfig;
+  let client;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    client = await Client.findOne({
+      chat_id: '372204823'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+  });
+
+  it('parseButtonActions', async function () {
+
+    const buttons = [
+      [
+        {
+          "text": "TEST_BTN_01",
+          "action": "main::actionForButton01"
+        }
+      ],
+      [
+        {
+          "text": "TEST_BTN_02",
+          "action": "main::actionForButton02"
+        }
+      ],
+      [
+        [
+          {
+            "text": "TEST_BTN_03",
+            "action": "main::actionForButton03"
+          }
+        ],
+        [
+          {
+            "text": "TEST_BTN_04",
+            "action": "main::actionForButton04"
+          }
+        ],
+      ],
+      [
+        {
+          "text": "TEST_BTN_05",
+          "action": "main::actionForButton05"
+        }
+      ],
+    ];
+
+    try {
+
+      const res = KeyboardProcessor.parseButtonActions({
+        client,
+        buttons,
+      });
+
+      // const res = _.flattenDeep(buttons);
+
+      mlog.success(`Result:
+      ${JSON.stringify(res, null, 3)}`);
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+});
+
 

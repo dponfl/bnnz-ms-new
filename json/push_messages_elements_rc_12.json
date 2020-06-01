@@ -1,0 +1,42 @@
+{
+  "tasks": {
+    "task_name": {
+      "description": "***",
+      "messages": [
+        {
+          "id": "task_id",
+          "description": "***",
+          "actionType": "inline_keyboard",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "***",
+                  "url": "***"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

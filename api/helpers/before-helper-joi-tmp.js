@@ -73,17 +73,21 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      const errorMsg = 'General error';
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      sails.log.error(`${moduleName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
 
       throw {err: {
-          module: errorLocation,
+          module: `${moduleName}`,
           message: errorMsg,
           payload: {
-            error: e,
+            error_name: e.name || 'no name',
+            error_message: e.message || 'no message',
+            error_stack: e.stack || {},
           },
         }
       };

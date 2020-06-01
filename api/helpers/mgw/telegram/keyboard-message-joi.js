@@ -82,19 +82,21 @@ module.exports = {
 
     } catch (e) {
 
+      const errorMsg = `${sails.config.custom.KEYBOARD_MESSAGE_SEND_ERROR}`;
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.KEYBOARD_MESSAGE_SEND_ERROR}`;
+      sails.log.error(`${moduleName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {
-        err: {
-          module: errorLocation,
+      throw {err: {
+          module: `${moduleName}`,
           message: errorMsg,
           payload: {
-            error: e,
+            error_name: e.name || 'no name',
+            error_message: e.message || 'no message',
+            error_stack: e.stack || {},
           },
         }
       };
