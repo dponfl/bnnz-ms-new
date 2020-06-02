@@ -43,18 +43,13 @@ module.exports = {
         client: Joi
           .any()
           .required(),
+        messageData: Joi
+          .any()
+          .required(),
         keyboardData: Joi
           .any()
           .required(),
         additionalTokens: Joi
-          .any(),
-        additionalParams: Joi
-          .any(),
-        blockModifyHelperParams: Joi
-          .any(),
-        beforeHelperParams: Joi
-          .any(),
-        afterHelperParams: Joi
           .any(),
         disableWebPagePreview: Joi
           .boolean()
@@ -67,12 +62,28 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
+      const html = KeyboardProcessor.parseMessageStyle({
+        client: input.client,
+        message: input.messageData,
+        additionalTokens: input.additionalTokens,
+      });
+
+      const keyboard = KeyboardProcessor.mapButtonsDeep({
+        client: input.client,
+        buttons: input.keyboardData,
+      });
+
+      const res = await sails.helpers.mgw.telegram.keyboardMessageJoi({
+        chatId: input.client.chat_id,
+        html,
+        keyboard,
+      });
+
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
-        payload: {},
+        payload: res,
       })
 
     } catch (e) {

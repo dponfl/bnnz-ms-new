@@ -1,9 +1,8 @@
 {
   "main": [
     {
-      "id": "button_id",
+      "id": "keyboard_id",
       "description": "XXX",
-      "actionType": "XXX",
       "initial": true,
       "enabled": false,
       "previous": null,

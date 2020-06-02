@@ -602,7 +602,7 @@ describe.skip('Ref system: link 20 accounts to ref system', function () {
 
 });
 
-describe('Check KeyboardProcessor methods', function () {
+describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
   let customConfig;
   let client;
@@ -619,37 +619,38 @@ describe('Check KeyboardProcessor methods', function () {
 
   });
 
-  it('parseButtonActions', async function () {
+  it.skip('parseButtonActions', async function () {
 
     const buttons = [
       [
         {
+          "id": "btn_id_01",
           "text": "TEST_BTN_01",
           "action": "main::actionForButton01"
         }
       ],
       [
         {
+          "id": "btn_id_02",
           "text": "TEST_BTN_02",
           "action": "main::actionForButton02"
         }
       ],
       [
-        [
-          {
-            "text": "TEST_BTN_03",
-            "action": "main::actionForButton03"
-          }
-        ],
-        [
-          {
-            "text": "TEST_BTN_04",
-            "action": "main::actionForButton04"
-          }
-        ],
+        {
+          "id": "btn_id_03",
+          "text": "TEST_BTN_03",
+          "action": "main::actionForButton03"
+        },
+        {
+          "id": "btn_id_04",
+          "text": "TEST_BTN_04",
+          "action": "main::actionForButton04"
+        }
       ],
       [
         {
+          "id": "btn_id_05",
           "text": "TEST_BTN_05",
           "action": "main::actionForButton05"
         }
@@ -664,6 +665,202 @@ describe('Check KeyboardProcessor methods', function () {
       });
 
       // const res = _.flattenDeep(buttons);
+
+      mlog.success(`Result:
+      ${JSON.stringify(res, null, 3)}`);
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+  it.skip('mapButtonsDeep', async function () {
+
+    const buttons = [
+      [
+        {
+          "id": "btn_id_01",
+          "text": "TEST_BTN_01",
+          "action": "main::actionForButton01"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_02",
+          "text": "TEST_BTN_02",
+          "action": "main::actionForButton02"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_03",
+          "text": "TEST_BTN_03",
+          "action": "main::actionForButton03"
+        },
+        {
+          "id": "btn_id_04",
+          "text": "TEST_BTN_04",
+          "action": "main::actionForButton04"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_05",
+          "text": "TEST_BTN_05",
+          "action": "main::actionForButton05"
+        }
+      ],
+    ];
+
+    try {
+
+      const res = KeyboardProcessor.mapButtonsDeep({
+        client,
+        buttons,
+      });
+
+      mlog.success(`Result:
+      ${JSON.stringify(res, null, 3)}`);
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+  it.skip('keyboardMessageJoi', async function () {
+
+    const buttonsObj = [
+      [
+        {
+          "id": "btn_id_01",
+          "text": "TEST_BTN_01",
+          "action": "main::actionForButton01"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_02",
+          "text": "TEST_BTN_02",
+          "action": "main::actionForButton02"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_03",
+          "text": "TEST_BTN_03",
+          "action": "main::actionForButton03"
+        },
+        {
+          "id": "btn_id_04",
+          "text": "TEST_BTN_04",
+          "action": "main::actionForButton04"
+        }
+      ],
+      [
+        {
+          "id": "btn_id_05",
+          "text": "TEST_BTN_05",
+          "action": "main::actionForButton05"
+        }
+      ],
+    ];
+
+
+
+    try {
+
+      const buttons = KeyboardProcessor.mapButtonsDeep({
+        client,
+        buttons: buttonsObj,
+      });
+
+      const res = await sails.helpers.mgw.telegram.keyboardMessageJoi({
+        chatId: client.chat_id,
+        html: "Some message here...",
+        keyboard: buttons,
+      });
+
+      mlog.success(`Result:
+      ${JSON.stringify(res, null, 3)}`);
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+  it('sendKeyboardJoi', async function () {
+
+    const keyboardObj = {
+      "id": "keyboard_id",
+      "description": "XXX",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "TEST_BTN_05",
+            "style": "bi",
+            "cr": "DCR"
+          },
+          {
+            "text": "TEST_BTN_04",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "btn_id_01",
+            "text": "TEST_BTN_01",
+            "action": "main::actionForButton01"
+          }
+        ],
+        [
+          {
+            "id": "btn_id_02",
+            "text": "TEST_BTN_02",
+            "action": "main::actionForButton02"
+          }
+        ],
+        [
+          {
+            "id": "btn_id_03",
+            "text": "TEST_BTN_03",
+            "action": "main::actionForButton03"
+          },
+          {
+            "id": "btn_id_04",
+            "text": "TEST_BTN_04",
+            "action": "main::actionForButton04"
+          }
+        ],
+        [
+          {
+            "id": "btn_id_05",
+            "text": "TEST_BTN_05",
+            "action": "main::actionForButton05"
+          }
+        ],
+      ]
+    };
+
+    try {
+
+      const res = await sails.helpers.keyboardProcessor.sendKeyboardJoi({
+        client,
+        messageData: keyboardObj.message,
+        keyboardData: keyboardObj.buttons,
+      });
 
       mlog.success(`Result:
       ${JSON.stringify(res, null, 3)}`);

@@ -34,6 +34,7 @@ module.exports = {
         resultHtml = resultHtml +
           (/b/i.test(input.message.html[i].style) ? '<b>' : '') +
           (/i/i.test(input.message.html[i].style) ? '<i>' : '') +
+          t(input.client.lang, input.message.html[i].text) +
           (/i/i.test(input.message.html[i].style) ? '</i>' : '') +
           (/b/i.test(input.message.html[i].style) ? '</b>' : '') +
           (input.message.html.length > 1
@@ -223,6 +224,79 @@ module.exports = {
     }
 
   },
+
+  mapButtonsDeep: function mapButtonsDeep(params) {
+
+    const methodName = 'mapButtonsDeep';
+
+    const schema = Joi.object({
+      client: Joi
+        .any()
+        .required(),
+      buttons: Joi
+        .any()
+        .required(),
+      additionalTokens: Joi
+        .any(),
+    });
+
+    let input;
+
+    try {
+
+      const inputRaw = schema.validate(params);
+      input = inputRaw.value;
+
+      if (_.isArray(input.buttons)) {
+        const arr = input.buttons.map((innerObj) => mapButtonsDeep({
+          client: input.client,
+          buttons: innerObj,
+          additionalTokens: input.additionalTokens,
+        }));
+
+        return arr;
+
+      } else if (_.isObject(input.buttons)) {
+        let buttonText = '';
+        _.forEach(input.buttons, (val, key) => {
+          if (key === 'text') {
+            buttonText = MessageProcessor.parseSpecialTokens({
+              client: input.client,
+              message: t(input.client.lang, val),
+              additionalTokens: input.additionalTokens,
+            });
+          }
+        });
+
+        return buttonText;
+
+      }
+
+    } catch (e) {
+
+      const errorMsg = 'General error';
+
+      sails.log.error(`${moduleName}:${methodName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+
+      throw {err: {
+          module: `${moduleName}:${methodName}`,
+          message: errorMsg,
+          payload: {
+            error_name: e.name || 'no name',
+            error_message: e.message || 'no message',
+            error_stack: e.stack || {},
+          },
+        }
+      };
+
+    }
+
+  },
+
 
   parseButtonActions: function parseButtonActions(params) {
 
