@@ -796,6 +796,8 @@ describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
   it('sendKeyboardJoi', async function () {
 
+    this.timeout(10000);
+
     const keyboardObj = {
       "id": "keyboard_id",
       "description": "XXX",
@@ -854,6 +856,74 @@ describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
       ]
     };
 
+    const keyboardObj01 = {
+      "id": "keyboard_id",
+      "description": "XXX",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_NO_INTEREST_02",
+            "style": "bi",
+            "cr": "DCR"
+          },
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "btn_id_01",
+            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_01",
+            "action": "main::actionForButton01"
+          }
+        ],
+        [
+          {
+            "id": "btn_id_02",
+            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_02",
+            "action": "main::actionForButton02"
+          }
+        ],
+      ]
+    };
+
+    const keyboardObj02 = {
+      "id": "keyboard_id",
+      "description": "XXX",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND",
+            "style": "bi",
+            "cr": "DCR"
+          },
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "btn_id_01",
+            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_01",
+            "action": "main::actionForButton01"
+          }
+        ],
+        [
+          {
+            "id": "btn_id_02",
+            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_02",
+            "action": "main::actionForButton02"
+          }
+        ],
+      ]
+    };
+
     try {
 
       const res = await sails.helpers.keyboardProcessor.sendKeyboardJoi({
@@ -862,8 +932,26 @@ describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
         keyboardData: keyboardObj.buttons,
       });
 
+      await sleep(3000);
+
+      const res01 = await sails.helpers.keyboardProcessor.removeKeyboardJoi({
+        client,
+        messageData: keyboardObj01.message,
+      });
+
+      await sleep(3000);
+
+      const res02 = await sails.helpers.keyboardProcessor.sendKeyboardJoi({
+        client,
+        messageData: keyboardObj02.message,
+        keyboardData: keyboardObj02.buttons,
+      });
+
       mlog.success(`Result:
       ${JSON.stringify(res, null, 3)}`);
+
+      mlog.success(`Result:
+      ${JSON.stringify(res02, null, 3)}`);
 
     } catch (e) {
       mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);

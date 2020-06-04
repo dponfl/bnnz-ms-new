@@ -213,10 +213,23 @@ module.exports = {
 
         // await sails.helpers.general.checkFunnels(getClientResponse.payload);
 
-        await sails.helpers.funnel.supervisorTextJoi({
-          client: getClientResponse.payload,
-          msg,
+        /**
+         * Проверяем не относиться ли полученное сообщение к активной клавиатуре
+         * и если относиться - выполняем необходимые действия
+         */
+
+        const keyboardUsed = await sails.helpers.keyboardProcessor.checkActiveKeyboard({
+
         });
+
+        if (!keyboardUsed) {
+
+          await sails.helpers.funnel.supervisorTextJoi({
+            client: getClientResponse.payload,
+            msg,
+          });
+
+        }
 
       } catch (e) {
 

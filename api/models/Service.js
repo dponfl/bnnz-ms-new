@@ -36,6 +36,9 @@ module.exports = {
       description: 'Funnel name to use',
       type: 'string',
     },
+    keyboard_name: {
+      type: 'string',
+    },
     rooms: {
       type: 'number',
       columnType: 'integer',
