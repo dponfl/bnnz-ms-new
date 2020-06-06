@@ -12,7 +12,7 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
-    service_name: {
+    name: {
       type: 'string',
       required: true,
     },

@@ -21,7 +21,7 @@
           {
             "id": "place_post",
             "text": "BEHERO_MAIN_START_BTN_01",
-            "action": "main::place_post"
+            "action": "main::placePostJoi"
           }
         ],
         [
