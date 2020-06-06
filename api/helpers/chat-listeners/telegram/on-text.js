@@ -53,6 +53,7 @@ module.exports = {
       let getCategoryRefResRaw = null;
       let serviceName = null;
       let categoryName = 'user';
+      let client;
 
 
       try {
@@ -203,6 +204,8 @@ module.exports = {
          * Client record was found - proceed based on client record info
          */
 
+        client = getClientResponse.payload;
+
         /**
          * Check that funnels do not have big errors
          */
@@ -218,14 +221,27 @@ module.exports = {
          * и если относиться - выполняем необходимые действия
          */
 
-        const keyboardUsed = await sails.helpers.keyboardProcessor.checkActiveKeyboard({
+        let keyboardInUse;
 
-        });
+        const checkAndPerformKeyboardActionsJoiParams = {
+          client,
+          text: msg.text,
+        };
 
-        if (!keyboardUsed) {
+        const checkAndPerformKeyboardActionsRaw = await sails.helpers.keyboardProcessor.checkAndPerformKeyboardActionsJoi(checkAndPerformKeyboardActionsJoiParams);
+
+        if (checkAndPerformKeyboardActionsRaw.status === 'ok') {
+          keyboardInUse = checkAndPerformKeyboardActionsRaw.payload.keyboardInUse;
+        } else {
+          throw new Error(`${moduleName}, Critical error: wrong checkActiveKeyboardJoi response:
+          checkAndPerformKeyboardActionsJoiParams: ${JSON.stringify(checkAndPerformKeyboardActionsJoiParams, null, 3)}
+          checkAndPerformKeyboardActionsRaw: ${JSON.stringify(checkAndPerformKeyboardActionsRaw, null, 3)}`);
+        }
+
+        if (!keyboardInUse) {
 
           await sails.helpers.funnel.supervisorTextJoi({
-            client: getClientResponse.payload,
+            client,
             msg,
           });
 

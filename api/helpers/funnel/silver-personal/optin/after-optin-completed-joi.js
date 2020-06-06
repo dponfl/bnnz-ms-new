@@ -66,19 +66,38 @@ module.exports = {
       currentAccount.subscription_made = true;
       currentAccount.service_subscription_finalized = true;
       currentAccount.subscription_active = true;
+      currentAccount.keyboard = "main::place_post";
 
       input.block.shown = true;
       input.block.done = true;
 
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.msg,
-        next: true,
-        previous: true,
-        switchFunnel: true,
-        createdBy: moduleName,
+      await sails.helpers.storage.clientUpdateJoi({
+        criteria: {guid: input.client.guid},
+        data: input.client,
+        createdBy: `${moduleName}`,
       });
+
+      const sendKeyboardForAccountParams = {
+        client: input.client,
+      };
+
+      const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+
+      if (sendKeyboardForAccountRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
+        sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
+        sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+      }
+
+      // await sails.helpers.funnel.afterHelperGenericJoi({
+      //   client: input.client,
+      //   block: input.block,
+      //   msg: input.msg,
+      //   next: true,
+      //   previous: true,
+      //   switchFunnel: true,
+      //   createdBy: moduleName,
+      // });
 
       return exits.success({
         status: 'ok',

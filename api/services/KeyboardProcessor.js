@@ -297,8 +297,7 @@ module.exports = {
 
   },
 
-
-  parseButtonActions: function parseButtonActions(params) {
+  parseButtonActions: function (params) {
 
     const methodName = 'parseButtonActions';
 

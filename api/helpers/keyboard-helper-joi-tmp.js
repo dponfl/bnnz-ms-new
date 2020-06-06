@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'storage:keyboard-get-joi';
+const moduleName = 'module:helper';
 
 
 module.exports = {
 
 
-  friendlyName: 'storage:keyboard-get-joi',
+  friendlyName: 'module:helper',
 
 
-  description: 'storage:keyboard-get-joi',
+  description: 'module:helper',
 
 
   inputs: {
@@ -39,40 +39,30 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      keyboardName: Joi
-        .string()
-        .description('keyboard name')
+      client: Joi
+        .any()
+        .description('Client record')
         .required(),
     });
 
     let input;
 
+
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      const keyboard = await Keyboards.findOne({
-        active: true,
-        name: input.keyboardName,
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
       });
 
-      if (keyboard.keyboard_data != null) {
 
-        return exits.success({
-          status: 'ok',
-          message: 'Get keyboard data success',
-          payload: keyboard.keyboard_data,
-        })
-
-      } else {
-
-        return exits.success({
-          status: 'nok',
-          message: 'Get keyboard data error',
-          payload: {},
-        })
-
-      }
+      return exits.success({
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: {},
+      })
 
     } catch (e) {
 

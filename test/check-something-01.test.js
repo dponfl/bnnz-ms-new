@@ -602,7 +602,7 @@ describe.skip('Ref system: link 20 accounts to ref system', function () {
 
 });
 
-describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
+describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
   let customConfig;
   let client;
@@ -794,7 +794,7 @@ describe('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
   });
 
-  it('sendKeyboardJoi', async function () {
+  it.skip('sendKeyboardJoi', async function () {
 
     this.timeout(10000);
 

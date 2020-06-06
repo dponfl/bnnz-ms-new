@@ -1,0 +1,37 @@
+{
+  "main": [
+    {
+      "id": "place_post",
+      "description": "allows to place post link",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_MAIN_START",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "place_post",
+            "text": "BEHERO_MAIN_START_BTN_01",
+            "action": "main::place_post"
+          }
+        ],
+        [
+          {
+            "id": "main_menu",
+            "text": "BEHERO_MAIN_START_BTN_02",
+            "action": null
+          }
+        ]
+      ]
+    }
+  ]
+}
