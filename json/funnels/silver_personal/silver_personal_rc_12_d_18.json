@@ -1006,7 +1006,7 @@
       "enabled": false,
       "show_time": 0,
       "previous": null,
-      "next": "main::start",
+      "next": null,
       "switchToFunnel": "main",
       "beforeHelper": null,
       "afterHelper": "optin::afterOptinCompletedJoi",
@@ -1028,45 +1028,10 @@
   ],
   "main": [
     {
-      "id": "start",
-      "description": "",
-      "actionType": "inline_keyboard",
-      "initial": true,
-      "enabled": false,
-      "show_time": 0,
-      "previous": "optin::optin_completed",
-      "next": null,
-      "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": null,
-      "forcedHelper": null,
-      "callbackHelper": "main::callbackStartJoi",
-      "blockModifyHelper": null,
-      "shown": false,
-      "done": false,
-      "message": {
-        "html": [
-          {
-            "text": "BEHERO_MAIN_START",
-            "style": "",
-            "cr": ""
-          }
-        ],
-        "inline_keyboard": [
-          [
-            {
-              "text": "BEHERO_MAIN_START_BTN_01",
-              "callback_data": "start_upload"
-            }
-          ]
-        ]
-      }
-    },
-    {
       "id": "provide_post_link",
       "description": "",
       "actionType": "forced",
-      "initial": false,
+      "initial": true,
       "enabled": false,
       "show_time": 0,
       "previous": null,

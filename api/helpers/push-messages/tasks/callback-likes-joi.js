@@ -195,7 +195,7 @@ module.exports = {
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
-            messageData: sails.config.custom.pushMessages.tasks.likes_done.messages[0],
+            messageData: sails.config.custom.pushMessages.tasks.likes_done[0],
             additionalTokens: [
               {
                 token: '$PostLink$',
@@ -217,7 +217,7 @@ module.exports = {
          * Выполняем необходимые действия в случае невыполнения задания
          */
 
-        const messageData = sails.config.custom.pushMessages.tasks.likes_not_done.messages[0].message;
+        const messageData = sails.config.custom.pushMessages.tasks.likes_not_done[0].message;
 
         messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
           [

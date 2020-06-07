@@ -71,10 +71,14 @@ module.exports = {
       input.block.shown = true;
       input.block.done = true;
 
-      await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
-        createdBy: `${moduleName}`,
+      await sails.helpers.funnel.afterHelperGenericJoi({
+        client: input.client,
+        block: input.block,
+        msg: input.msg,
+        next: false,
+        previous: true,
+        switchFunnel: true,
+        createdBy: moduleName,
       });
 
       const sendKeyboardForAccountParams = {
@@ -88,16 +92,6 @@ module.exports = {
         sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
         sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
       }
-
-      // await sails.helpers.funnel.afterHelperGenericJoi({
-      //   client: input.client,
-      //   block: input.block,
-      //   msg: input.msg,
-      //   next: true,
-      //   previous: true,
-      //   switchFunnel: true,
-      //   createdBy: moduleName,
-      // });
 
       return exits.success({
         status: 'ok',

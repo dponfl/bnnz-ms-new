@@ -175,30 +175,34 @@ module.exports = {
          * Необходимо выполнить действия, соответствующие этой клавише
          */
 
-        let actionHelperRes = _.split(activatedButton.action, sails.config.custom.JUNCTION, 2);
-        let actionHelperBlock = actionHelperRes[0];
-        let actionHelperName = actionHelperRes[1];
+        if (activatedButton.action != null) {
 
-        if (actionHelperBlock && actionHelperName) {
+          let actionHelperRes = _.split(activatedButton.action, sails.config.custom.JUNCTION, 2);
+          let actionHelperBlock = actionHelperRes[0];
+          let actionHelperName = actionHelperRes[1];
 
-          /**
-           * We managed to parse the specified actionHelper and can perform it
-           */
+          if (actionHelperBlock && actionHelperName) {
 
-          let actionHelperParams = {
-            client: input.client,
-          };
+            /**
+             * We managed to parse the specified actionHelper and can perform it
+             */
 
-          await sails.helpers.keyboards[keyboardName][actionHelperBlock][actionHelperName](actionHelperParams);
+            let actionHelperParams = {
+              client: input.client,
+            };
 
-        } else {
+            await sails.helpers.keyboards[keyboardName][actionHelperBlock][actionHelperName](actionHelperParams);
 
-          /**
-           * Throw error: we could not parse the specified actionHelper
-           */
+          } else {
 
-          throw new Error(`${moduleName}, error: could not parse action helper:
+            /**
+             * Throw error: we could not parse the specified actionHelper
+             */
+
+            throw new Error(`${moduleName}, error: could not parse action helper:
           activatedButton.action: ${activatedButton.action}`);
+          }
+
         }
 
       }

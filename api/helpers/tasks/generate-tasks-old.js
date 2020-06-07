@@ -181,7 +181,7 @@ module.exports = {
           case sails.config.custom.config.tasks.task_types.LIKE:
             msgRes = await sails.helpers.messageProcessor.sendMessage.with({
               client: acc.client,
-              messageData: sails.config.custom.pushMessages.tasks.likes.messages[0],
+              messageData: sails.config.custom.pushMessages.tasks.likes[0],
               additionalTokens: [
                 {
                   token: '$PostLink$',
@@ -193,7 +193,7 @@ module.exports = {
           case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
             msgRes = await sails.helpers.messageProcessor.sendMessage.with({
               client: acc.client,
-              messageData: sails.config.custom.pushMessages.tasks.likes_comments.messages[0],
+              messageData: sails.config.custom.pushMessages.tasks.likes_comments[0],
               additionalTokens: [
                 {
                   token: '$PostLink$',

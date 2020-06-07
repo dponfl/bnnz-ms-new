@@ -207,6 +207,69 @@ module.exports = {
         client = getClientResponse.payload;
 
         /**
+         * Отрабытываем, если были вызваны зарегистрированные команды
+         */
+
+        if (_.trim(msg.text).match(/\/main/i)) {
+
+          const currentAccount = _.find(client.accounts, {guid: client.account_use});
+
+          if (currentAccount.service_subscription_finalized) {
+
+            /**
+             * Проверяем достижение дневного лимита отправки постов
+             * и в зависимости от этого показываем соответствующую клавиатуру
+             */
+
+            const checkDayPostsJoiRaw = await sails.helpers.general.checkDayPostsJoi({
+              client,
+            });
+
+            if (checkDayPostsJoiRaw.status !== 'ok') {
+              throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
+              client: ${client}
+              checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+            }
+
+            const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
+
+            if (dayPostsReached) {
+
+              /**
+               * Дневной лимит отправки постов достигнут
+               */
+
+
+            } else {
+
+              /**
+               * Дневной лимит отправки постов НЕ достигнут
+               */
+
+
+            }
+
+          } else {
+
+            /**
+             * Онбординг не завершен - толкаем выполнение текущей воронки
+             */
+
+            const initialBlock = _.find(client.funnels[client.current_funnel],
+              {initial: true});
+
+            await sails.helpers.funnel.proceedNextBlockJoi({
+              client,
+              funnelName: client.current_funnel,
+              blockId: initialBlock.id,
+              createdBy: moduleName,
+            });
+
+          }
+
+        }
+
+        /**
          * Check that funnels do not have big errors
          */
 

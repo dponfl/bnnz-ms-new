@@ -76,40 +76,44 @@ module.exports = {
 
       const keyboards = keyboardGetRaw.payload;
 
-      let splitKeyboardRes = _.split(currentAccount.keyboard, sails.config.custom.JUNCTION, 2);
-      let keyboardBlock = splitKeyboardRes[0];
-      let keyboardId = splitKeyboardRes[1];
+      if (currentAccount.keyboard != null) {
 
-      if (keyboardBlock == null || keyboardId == null) {
+        let splitKeyboardRes = _.split(currentAccount.keyboard, sails.config.custom.JUNCTION, 2);
+        let keyboardBlock = splitKeyboardRes[0];
+        let keyboardId = splitKeyboardRes[1];
 
-        throw new Error(`${moduleName}, error: account.keyboard parsing error:
+        if (keyboardBlock == null || keyboardId == null) {
+
+          throw new Error(`${moduleName}, error: account.keyboard parsing error:
         currentAccount.keyboard: ${currentAccount.keyboard}
         keyboardBlock: ${keyboardBlock}
         keyboardId: ${keyboardId}`);
 
-      }
+        }
 
-      const activeKeyboard = _.find(keyboards[keyboardBlock], {id: keyboardId});
+        const activeKeyboard = _.find(keyboards[keyboardBlock], {id: keyboardId});
 
-      if (activeKeyboard == null) {
-        throw new Error(`${moduleName}, error: keyboard not found:
+        if (activeKeyboard == null) {
+          throw new Error(`${moduleName}, error: keyboard not found:
           keyboards: ${JSON.stringify(keyboards, null, 3)}
           keyboardBlock: ${keyboardBlock}
           keyboardId: ${keyboardId}`);
-      }
+        }
 
-      const sendKeyboardParams = {
-        client: input.client,
-        messageData: activeKeyboard.message,
-        keyboardData: activeKeyboard.buttons,
-      };
+        const sendKeyboardParams = {
+          client: input.client,
+          messageData: activeKeyboard.message,
+          keyboardData: activeKeyboard.buttons,
+        };
 
-      const sendKeyboardJoiRaw = await sails.helpers.keyboardProcessor.sendKeyboardJoi(sendKeyboardParams);
+        const sendKeyboardJoiRaw = await sails.helpers.keyboardProcessor.sendKeyboardJoi(sendKeyboardParams);
 
-      if (sendKeyboardJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong sendKeyboardJoi response
+        if (sendKeyboardJoiRaw.status !== 'ok') {
+          throw new Error(`${moduleName}, error: wrong sendKeyboardJoi response
         sendKeyboardParams: ${JSON.stringify(sendKeyboardParams, null, 3)}
         sendKeyboardJoiRaw: ${JSON.stringify(sendKeyboardJoiRaw, null, 3)}`);
+        }
+
       }
 
       return exits.success({

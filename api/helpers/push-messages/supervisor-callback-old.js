@@ -90,11 +90,7 @@ module.exports = {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes property`);
           }
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes.messages')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes.messages property`);
-          }
-
-          if (sails.config.custom.pushMessages.tasks.likes.messages[0].callbackHelper == null) {
+          if (sails.config.custom.pushMessages.tasks.likes[0].callbackHelper == null) {
             throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
           }
 
@@ -104,7 +100,7 @@ module.exports = {
            *    - blockModifyHelper
            */
 
-          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.likes.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
+          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.likes[0].callbackHelper, sails.config.custom.JUNCTION, 2);
           let callbackHelperBlock = splitCallbackHelperRes[0];
           let callbackHelperName = splitCallbackHelperRes[1];
 
@@ -114,7 +110,7 @@ module.exports = {
              * We managed to parse the specified callbackHelper and can perform it
              */
 
-            await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](inputs.client, sails.config.custom.pushMessages.tasks.likes.messages[0], inputs.query);
+            await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](inputs.client, sails.config.custom.pushMessages.tasks.likes[0], inputs.query);
 
           } else {
             throw new Error(`${moduleName}, critical error: could not parse callback helper name: 
@@ -140,11 +136,7 @@ module.exports = {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
           }
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments.messages')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments.messages property`);
-          }
-
-          if (sails.config.custom.pushMessages.tasks.likes_comments.messages[0].callbackHelper == null) {
+          if (sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper == null) {
             throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
           }
 
@@ -154,7 +146,7 @@ module.exports = {
            *    - blockModifyHelper
            */
 
-          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.likes_comments.messages[0].callbackHelper, sails.config.custom.JUNCTION, 2);
+          let splitCallbackHelperRes = _.split(sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper, sails.config.custom.JUNCTION, 2);
           let callbackHelperBlock = splitCallbackHelperRes[0];
           let callbackHelperName = splitCallbackHelperRes[1];
 
@@ -164,7 +156,7 @@ module.exports = {
              * We managed to parse the specified callbackHelper and can perform it
              */
 
-            await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](inputs.client, sails.config.custom.pushMessages.tasks.likes.messages[0], inputs.query);
+            await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName](inputs.client, sails.config.custom.pushMessages.tasks.likes[0], inputs.query);
 
           } else {
             throw new Error(`${moduleName}, critical error: could not parse callback helper name: 

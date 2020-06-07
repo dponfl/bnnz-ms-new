@@ -10,7 +10,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAIN_START",
+            "text": "BEHERO_KEYBOARD_PLACE_POST_MSG",
             "style": "",
             "cr": ""
           }
@@ -20,14 +20,14 @@
         [
           {
             "id": "place_post",
-            "text": "BEHERO_MAIN_START_BTN_01",
+            "text": "BEHERO_KEYBOARD_PLACE_POST_BTN_01",
             "action": "main::placePostJoi"
           }
         ],
         [
           {
             "id": "main_menu",
-            "text": "BEHERO_MAIN_START_BTN_02",
+            "text": "BEHERO_KEYBOARD_PLACE_POST_BTN_02",
             "action": null
           }
         ]

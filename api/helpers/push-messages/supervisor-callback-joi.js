@@ -94,7 +94,7 @@ module.exports = {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes.messages property`);
           }
 
-          if (sails.config.custom.pushMessages.tasks.likes.messages[0].callbackHelper == null) {
+          if (sails.config.custom.pushMessages.tasks.likes[0].callbackHelper == null) {
             throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
           }
 
@@ -102,7 +102,7 @@ module.exports = {
            * Находим стартовый блок в групе блоков
            */
 
-          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes.messages,
+          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes,
             {initial: true});
 
           /**
@@ -118,7 +118,7 @@ module.exports = {
             });
 
           } else {
-            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes.messages, null, 3)}`);
+            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes, null, 3)}`);
           }
 
 
@@ -136,7 +136,7 @@ module.exports = {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments.messages property`);
           }
 
-          if (sails.config.custom.pushMessages.tasks.likes_comments.messages[0].callbackHelper == null) {
+          if (sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper == null) {
             throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
           }
 
@@ -144,7 +144,7 @@ module.exports = {
            * Находим стартовый блок в групе блоков
            */
 
-          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes_comments.messages,
+          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes_comments,
             {initial: true});
 
           /**
@@ -160,7 +160,7 @@ module.exports = {
             });
 
           } else {
-            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes_comments.messages, null, 3)}`);
+            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes_comments, null, 3)}`);
           }
 
         } else {

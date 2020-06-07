@@ -219,7 +219,7 @@ module.exports = {
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
-            messageData: sails.config.custom.pushMessages.tasks.likes_comments_done.messages[0],
+            messageData: sails.config.custom.pushMessages.tasks.likes_comments_done[0],
             additionalTokens: [
               {
                 token: '$PostLink$',
@@ -243,7 +243,7 @@ module.exports = {
 
         if (!likeCommentDone.likeMade && !likeCommentDone.commentMade) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done.messages[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0].message;
 
           messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
             [
@@ -282,7 +282,7 @@ module.exports = {
 
         if (likeCommentDone.likeMade && !likeCommentDone.commentMade) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment.messages[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0].message;
 
           messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
             [
@@ -321,7 +321,7 @@ module.exports = {
 
         if (!likeCommentDone.likeMade && likeCommentDone.commentMade) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like.messages[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0].message;
 
           messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
             [

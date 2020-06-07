@@ -46,13 +46,56 @@ module.exports = {
     });
 
     let input;
+    let currentAccount;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      sails.log.info(`${moduleName} called
-      client: ${JSON.stringify(input.client, null, 3)}`);
+      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
+
+      /**
+       * Update General funnel to the initial state to enable the client to perform it again
+       */
+
+      const loadInitialFunnelsJoiParams = {
+        client: input.client,
+        clientCategory: input.client.accounts[currentAccountInd]['service']['funnel_name'],
+        funnelName: 'main',
+      };
+
+      const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsJoi(loadInitialFunnelsJoiParams);
+
+      if (loadInitialFunnelsJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong loadInitialFunnelsJoi response:
+              loadInitialFunnelsJoiParams: ${JSON.stringify(loadInitialFunnelsJoiParams, null, 3)}
+              loadInitialFunnelsJoiRaw: ${JSON.stringify(loadInitialFunnelsJoiRaw, null, 3)}`);
+      }
+
+      input.client = loadInitialFunnelsJoiRaw.payload.client;
+
+      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
+      currentAccount.keyboard = null;
+
+
+
+      const initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+        {initial: true});
+
+      initialBlock.enabled = true;
+
+      await sails.helpers.funnel.proceedNextBlockJoi({
+        client: input.client,
+        funnelName: input.client.current_funnel,
+        blockId: "provide_post_link",
+        createdBy: moduleName,
+      });
+
+
 
       return exits.success({
         status: 'ok',
