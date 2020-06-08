@@ -90,10 +90,6 @@ module.exports = {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes property`);
           }
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes.messages')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes.messages property`);
-          }
-
           if (sails.config.custom.pushMessages.tasks.likes[0].callbackHelper == null) {
             throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
           }
@@ -130,10 +126,6 @@ module.exports = {
 
           if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments')) {
             throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
-          }
-
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments.messages')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments.messages property`);
           }
 
           if (sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper == null) {

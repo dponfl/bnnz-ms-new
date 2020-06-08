@@ -175,14 +175,6 @@ module.exports = {
            * Инициировать отправку сообщения в службу поддержки
            */
 
-          // const messageData = sails.config.custom.pushMessages.funnels.optin.show_terms.messages[0];
-          //
-          // const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
-          //   client: input.client,
-          //   messageData,
-          // });
-          //
-          // input.block.next = 'optin::make_payment_02';
 
           break;
         default:
