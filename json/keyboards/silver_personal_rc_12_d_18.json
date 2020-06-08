@@ -11,7 +11,7 @@
         "html": [
           {
             "text": "BEHERO_KEYBOARD_PLACE_POST_MSG",
-            "style": "",
+            "style": "b",
             "cr": ""
           }
         ]
@@ -58,14 +58,14 @@
         [
           {
             "id": "check_send_post_limits",
-            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN",
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN_01",
             "action": "main::checkSendPostLimitsJoi"
           }
         ],
         [
           {
             "id": "main_menu",
-            "text": "BEHERO_KEYBOARD_PLACE_POST_BTN_02",
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN_02",
             "action": null
           }
         ]

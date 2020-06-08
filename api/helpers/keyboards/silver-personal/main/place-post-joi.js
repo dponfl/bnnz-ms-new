@@ -81,7 +81,11 @@ module.exports = {
 
       currentAccount.keyboard = null;
 
+      /**
+       * Установить в client, что выполняется воронка "main"
+       */
 
+      input.client.current_funnel = 'main';
 
       const initialBlock = _.find(input.client.funnels[input.client.current_funnel],
         {initial: true});

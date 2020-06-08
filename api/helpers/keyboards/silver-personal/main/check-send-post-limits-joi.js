@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:main:after-post-performed-joi';
+const moduleName = 'keyboards:silver-personal:main:check-send-post-limits-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:main:after-post-performed-joi',
+  friendlyName: 'keyboards:silver-personal:main:check-send-post-limits-joi',
 
 
-  description: 'funnel:silver-personal:main:after-post-performed-joi',
+  description: 'keyboards:silver-personal:main:check-send-post-limits-joi',
 
 
   inputs: {
@@ -41,30 +41,18 @@ module.exports = {
     const schema = Joi.object({
       client: Joi
         .any()
-        .description('Client record')
+        .description('client object')
         .required(),
-      block: Joi
-        .any()
-        .description('Current funnel block')
-        .required(),
-      msg: Joi
-        .any()
-        .description('Message received'),
     });
 
     let input;
-
-    let updateBlock;
-    let getBlock;
-    let splitRes;
-    let updateFunnel;
-    let updateId;
+    let currentAccount;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       const checkDayPostsJoiRaw = await sails.helpers.general.checkDayPostsJoi({
         client: input.client,
@@ -96,8 +84,6 @@ module.exports = {
 
       }
 
-      input.client.current_funnel = '';
-
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
         data: input.client,
@@ -124,17 +110,21 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      const errorMsg = 'General error';
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      sails.log.error(`${moduleName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
 
       throw {err: {
-          module: errorLocation,
+          module: `${moduleName}`,
           message: errorMsg,
           payload: {
-            error: e,
+            error_name: e.name || 'no name',
+            error_message: e.message || 'no message',
+            error_stack: e.stack || {},
           },
         }
       };
