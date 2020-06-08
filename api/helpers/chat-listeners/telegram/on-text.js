@@ -210,7 +210,7 @@ module.exports = {
          * Отрабытываем, если были вызваны зарегистрированные команды
          */
 
-        if (_.trim(msg.text).match(/\/main/i)) {
+        if (_.trim(msg.text).match(/^\/main$/i)) {
 
           const currentAccount = _.find(client.accounts, {guid: client.account_use});
 
@@ -239,6 +239,7 @@ module.exports = {
                * Дневной лимит отправки постов достигнут
                */
 
+              currentAccount.keyboard = "main::check_post_limit";
 
             } else {
 
@@ -246,7 +247,26 @@ module.exports = {
                * Дневной лимит отправки постов НЕ достигнут
                */
 
+              currentAccount.keyboard = "main::place_post";
 
+            }
+
+            await sails.helpers.storage.clientUpdateJoi({
+              criteria: {guid: client.guid},
+              data: client,
+              createdBy: moduleName,
+            });
+
+            const sendKeyboardForAccountParams = {
+              client,
+            };
+
+            const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+
+            if (sendKeyboardForAccountRaw.status !== 'ok') {
+              throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
+                sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
+                sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
             }
 
           } else {
@@ -267,46 +287,48 @@ module.exports = {
 
           }
 
-        }
-
-        /**
-         * Check that funnels do not have big errors
-         */
-
-        // TODO: Убрать отсюда проверку воронок. Проверку воронок нужно делать один раз
-        // при старте системы и реализовать возможность инициировать эту проверку через API
-        // (это нужно для запуска проверки после загрузки обновления воронок)
-
-        // await sails.helpers.general.checkFunnels(getClientResponse.payload);
-
-        /**
-         * Проверяем не относиться ли полученное сообщение к активной клавиатуре
-         * и если относиться - выполняем необходимые действия
-         */
-
-        let keyboardInUse;
-
-        const checkAndPerformKeyboardActionsJoiParams = {
-          client,
-          text: msg.text,
-        };
-
-        const checkAndPerformKeyboardActionsRaw = await sails.helpers.keyboardProcessor.checkAndPerformKeyboardActionsJoi(checkAndPerformKeyboardActionsJoiParams);
-
-        if (checkAndPerformKeyboardActionsRaw.status === 'ok') {
-          keyboardInUse = checkAndPerformKeyboardActionsRaw.payload.keyboardInUse;
         } else {
-          throw new Error(`${moduleName}, Critical error: wrong checkActiveKeyboardJoi response:
-          checkAndPerformKeyboardActionsJoiParams: ${JSON.stringify(checkAndPerformKeyboardActionsJoiParams, null, 3)}
-          checkAndPerformKeyboardActionsRaw: ${JSON.stringify(checkAndPerformKeyboardActionsRaw, null, 3)}`);
-        }
 
-        if (!keyboardInUse) {
+          /**
+           * Check that funnels do not have big errors
+           */
 
-          await sails.helpers.funnel.supervisorTextJoi({
+          // TODO: Убрать отсюда проверку воронок. Проверку воронок нужно делать один раз
+          // при старте системы и реализовать возможность инициировать эту проверку через API
+          // (это нужно для запуска проверки после загрузки обновления воронок)
+
+          // await sails.helpers.general.checkFunnels(getClientResponse.payload);
+
+          /**
+           * Проверяем не относиться ли полученное сообщение к активной клавиатуре
+           * и если относиться - выполняем необходимые действия
+           */
+
+          let keyboardInUse;
+
+          const checkAndPerformKeyboardActionsJoiParams = {
             client,
-            msg,
-          });
+            text: msg.text,
+          };
+
+          const checkAndPerformKeyboardActionsRaw = await sails.helpers.keyboardProcessor.checkAndPerformKeyboardActionsJoi(checkAndPerformKeyboardActionsJoiParams);
+
+          if (checkAndPerformKeyboardActionsRaw.status === 'ok') {
+            keyboardInUse = checkAndPerformKeyboardActionsRaw.payload.keyboardInUse;
+          } else {
+            throw new Error(`${moduleName}, Critical error: wrong checkActiveKeyboardJoi response:
+            checkAndPerformKeyboardActionsJoiParams: ${JSON.stringify(checkAndPerformKeyboardActionsJoiParams, null, 3)}
+            checkAndPerformKeyboardActionsRaw: ${JSON.stringify(checkAndPerformKeyboardActionsRaw, null, 3)}`);
+          }
+
+          if (!keyboardInUse) {
+
+            await sails.helpers.funnel.supervisorTextJoi({
+              client,
+              msg,
+            });
+
+          }
 
         }
 

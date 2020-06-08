@@ -32,6 +32,44 @@
           }
         ]
       ]
+    },
+    {
+      "id": "check_post_limit",
+      "description": "check possibility place a post link",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "check_send_post_limits",
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN",
+            "action": "main::checkSendPostLimitsJoi"
+          }
+        ],
+        [
+          {
+            "id": "main_menu",
+            "text": "BEHERO_KEYBOARD_PLACE_POST_BTN_02",
+            "action": null
+          }
+        ]
+      ]
     }
   ]
 }
