@@ -83,7 +83,12 @@
       "message": {
         "html": [
           {
-            "text": "XXXXXXX",
+            "text": "BEHERO_KEYBOARD_HOME_START_MSG_01",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_HOME_START_MSG_02",
             "style": "",
             "cr": ""
           }
@@ -92,9 +97,23 @@
       "buttons": [
         [
           {
-            "id": "XXX",
-            "text": "XXX",
-            "action": null
+            "id": "place_post",
+            "text": "BEHERO_KEYBOARD_HOME_START_BTN_01",
+            "action": "home::accountJoi"
+          }
+        ],
+        [
+          {
+            "id": "place_post",
+            "text": "BEHERO_KEYBOARD_HOME_START_BTN_02",
+            "action": "home::helpJoi"
+          }
+        ],
+        [
+          {
+            "id": "place_post",
+            "text": "BEHERO_KEYBOARD_HOME_START_BTN_03",
+            "action": "home::mainJoi"
           }
         ]
       ]
