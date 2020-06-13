@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'keyboards:silver-personal:main:home-menu-joi';
+const moduleName = 'keyboards:silver-personal:home:main-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'keyboards:silver-personal:main:home-menu-joi',
+  friendlyName: 'keyboards:silver-personal:home:main-joi',
 
 
-  description: 'keyboards:silver-personal:main:home-menu-joi',
+  description: 'keyboards:silver-personal:home:main-joi',
 
 
   inputs: {
@@ -41,11 +41,12 @@ module.exports = {
     const schema = Joi.object({
       client: Joi
         .any()
-        .description('client object')
+        .description('Client record')
         .required(),
     });
 
     let input;
+
 
     try {
 
@@ -53,7 +54,35 @@ module.exports = {
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-      currentAccount.keyboard = "home::start";
+      const checkDayPostsJoiRaw = await sails.helpers.general.checkDayPostsJoi({
+        client: input.client,
+      });
+
+      if (checkDayPostsJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
+          client: ${input.client}
+          checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+      }
+
+      const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
+
+      if (dayPostsReached) {
+
+        /**
+         * Дневной лимит отправки постов достигнут
+         */
+
+        currentAccount.keyboard = "main::check_post_limit";
+
+      } else {
+
+        /**
+         * Дневной лимит отправки постов НЕ достигнут
+         */
+
+        currentAccount.keyboard = "main::place_post";
+
+      }
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
@@ -72,6 +101,7 @@ module.exports = {
         sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
         sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
       }
+
 
       return exits.success({
         status: 'ok',
