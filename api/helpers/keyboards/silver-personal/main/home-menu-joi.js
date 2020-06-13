@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'keyboards:silver-personal:main:home-menu-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'keyboards:silver-personal:main:home-menu-joi',
 
 
-  description: 'module:helper',
+  description: 'keyboards:silver-personal:main:home-menu-joi',
 
 
   inputs: {
@@ -41,12 +41,11 @@ module.exports = {
     const schema = Joi.object({
       client: Joi
         .any()
-        .description('Client record')
+        .description('client object')
         .required(),
     });
 
     let input;
-
 
     try {
 
@@ -57,7 +56,7 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      currentAccount.keyboard = "***";
+      currentAccount.keyboard = "home::start";
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
@@ -76,7 +75,6 @@ module.exports = {
         sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
         sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
       }
-
 
       return exits.success({
         status: 'ok',

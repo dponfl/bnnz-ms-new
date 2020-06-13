@@ -26,9 +26,9 @@
         ],
         [
           {
-            "id": "main_menu",
+            "id": "home_menu",
             "text": "BEHERO_KEYBOARD_PLACE_POST_BTN_02",
-            "action": null
+            "action": "main::homeMenuJoi"
           }
         ]
       ]
@@ -64,8 +64,36 @@
         ],
         [
           {
-            "id": "main_menu",
+            "id": "home_menu",
             "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN_02",
+            "action": "main::homeMenuJoi"
+          }
+        ]
+      ]
+    }
+  ],
+  "home": [
+    {
+      "id": "start",
+      "description": "Home menu",
+      "initial": true,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "XXX",
+            "text": "XXX",
             "action": null
           }
         ]
