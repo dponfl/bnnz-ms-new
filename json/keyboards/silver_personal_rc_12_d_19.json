@@ -151,7 +151,7 @@
           {
             "id": "ref",
             "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_02",
-            "action": null
+            "action": "account::refMenuJoi"
           }
         ],
         [
