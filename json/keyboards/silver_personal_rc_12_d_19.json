@@ -175,5 +175,50 @@
         ]
       ]
     }
+  ],
+  "help": [
+    {
+      "id": "start",
+      "description": "Help menu",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KEYBOARD_HELP_START_MSG_01",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_HELP_START_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "how_make_post",
+            "text": "BEHERO_KEYBOARD_HELP_START_BTN_01",
+            "action": null
+          },
+          {
+            "id": "how_perform_task",
+            "text": "BEHERO_KEYBOARD_HELP_START_BTN_02",
+            "action": null
+          }
+        ],
+        [
+          {
+            "id": "home_menu",
+            "text": "BEHERO_KEYBOARD_HELP_START_BTN_03",
+            "action": "help::homeMenuJoi"
+          }
+        ]
+      ]
+    }
   ]
 }
