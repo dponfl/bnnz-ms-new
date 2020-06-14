@@ -76,7 +76,7 @@
     {
       "id": "start",
       "description": "Home menu",
-      "initial": true,
+      "initial": false,
       "enabled": false,
       "previous": null,
       "next": null,
@@ -114,6 +114,63 @@
             "id": "place_post",
             "text": "BEHERO_KEYBOARD_HOME_START_BTN_03",
             "action": "home::mainJoi"
+          }
+        ]
+      ]
+    }
+  ],
+  "account": [
+    {
+      "id": "start",
+      "description": "Account menu",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_MSG_01",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "stats",
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_01",
+            "action": null
+          },
+          {
+            "id": "ref",
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_02",
+            "action": null
+          }
+        ],
+        [
+          {
+            "id": "change_account",
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_03",
+            "action": null
+          },
+          {
+            "id": "new_account",
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_04",
+            "action": null
+          }
+        ],
+        [
+          {
+            "id": "home_menu",
+            "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_05",
+            "action": "account::homeMenuJoi"
           }
         ]
       ]

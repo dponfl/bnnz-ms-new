@@ -3,7 +3,7 @@
     {
       "id": "keyboard_id",
       "description": "XXX",
-      "initial": true,
+      "initial": false,
       "enabled": false,
       "previous": null,
       "next": null,

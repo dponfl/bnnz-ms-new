@@ -394,47 +394,32 @@
   },
   "keyboards": {
     "silverPersonal": {
-      "main": [
+      "help": [
         {
-          "id": "start",
-          "description": "Задача: поставить лайк",
-          "actionType": "inline_keyboard",
-          "initial": true,
-          "enabled": true,
+          "id": "make_post",
+          "description": "Instruction on making post",
+          "actionType": "video",
+          "initial": false,
+          "enabled": false,
+          "show_time": 0,
           "previous": null,
-          "show_time": "now",
           "next": null,
-          "shown": false,
+          "switchToFunnel": null,
           "beforeHelper": null,
           "afterHelper": null,
           "forcedHelper": null,
-          "callbackHelper": "tasks::callbackLikesJoi",
-          "blockModifyHelper": "tasks::blockModifyLikesJoi",
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "shown": false,
+          "done": false,
           "message": {
+            "video": "XXXXXXX",
             "html": [
               {
-                "text": "MSG_TASK_ACCOUNT",
-                "style": "b",
-                "cr": "DCR"
-              },
-              {
-                "text": "MSG_TASK_LIKE",
-                "style": "",
-                "cr": "DCR"
-              },
-              {
-                "text": "MSG_TASK",
+                "text": "XXXXXXX",
                 "style": "",
                 "cr": ""
               }
-            ],
-            "inline_keyboard": [
-              [
-                {
-                  "text": "MSG_TASK_POST_LINK_BTN",
-                  "url": "$PostLink$"
-                }
-              ]
             ]
           }
         }
