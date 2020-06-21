@@ -1006,10 +1006,10 @@
       "enabled": false,
       "show_time": 0,
       "previous": null,
-      "next": null,
-      "switchToFunnel": "main",
+      "next": "optin::optin_completed_video",
+      "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterOptinCompletedJoi",
+      "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1019,6 +1019,39 @@
         "html": [
           {
             "text": "BEHERO_OPTIN_COMPLETED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "optin_completed_video",
+      "description": "",
+      "actionType": "video",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::optin_completed",
+      "next": null,
+      "switchToFunnel": "main",
+      "beforeHelper": null,
+      "afterHelper": "optin::afterOptinCompletedVideoJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "video": "2020-06-21_make_post_test.mp4",
+        "html": [
+          {
+            "text": "BEHERO_OPTIN_COMPLETED_VIDEO_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_OPTIN_COMPLETED_VIDEO_02",
             "style": "",
             "cr": ""
           }

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-optin-completed-joi';
+const moduleName = 'funnel:silver-personal:optin:after-optin-completed-video-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-optin-completed-joi',
+  friendlyName: 'funnel:silver-personal:optin:after-optin-completed-video-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-optin-completed-joi',
+  description: 'funnel:silver-personal:optin:after-optin-completed-video-joi',
 
 
   inputs: {
@@ -59,9 +59,6 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       currentAccount.subscription_made = true;
       currentAccount.service_subscription_finalized = true;
