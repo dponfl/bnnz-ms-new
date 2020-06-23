@@ -50,6 +50,11 @@
           {
             "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_02",
             "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_03",
+            "style": "",
             "cr": ""
           }
         ]

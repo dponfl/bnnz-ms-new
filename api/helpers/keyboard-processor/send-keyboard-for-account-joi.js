@@ -43,6 +43,8 @@ module.exports = {
         .any()
         .description('client object')
         .required(),
+      additionalTokens: Joi
+        .any(),
     });
 
     let input;
@@ -104,6 +106,7 @@ module.exports = {
           client: input.client,
           messageData: activeKeyboard.message,
           keyboardData: activeKeyboard.buttons,
+          additionalTokens: input.additionalTokens,
         };
 
         const sendKeyboardJoiRaw = await sails.helpers.keyboardProcessor.sendKeyboardJoi(sendKeyboardParams);

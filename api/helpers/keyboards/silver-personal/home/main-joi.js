@@ -92,6 +92,12 @@ module.exports = {
 
       const sendKeyboardForAccountParams = {
         client: input.client,
+        additionalTokens: [
+          {
+            token: '$nextPostInTime$',
+            value: '2 часа 15 мин',
+          }
+        ],
       };
 
       const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
