@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const moment = require('moment');
 
 const moduleName = 'funnel:silver-personal:main:after-post-performed-joi';
 
@@ -104,13 +105,27 @@ module.exports = {
         createdBy: moduleName,
       });
 
+      const dropDailyCountersAtObj = sails.config.custom.config.general.dropDailyCountersAt;
+      const countersDropMoment = moment()
+        .startOf('day')
+        .add(1, 'days')
+        .add(dropDailyCountersAtObj.h, 'hours')
+        .add(dropDailyCountersAtObj.m, 'minutes')
+        .add(dropDailyCountersAtObj.s, 'seconds');
+      const currentMoment = moment();
+      const dropCountersDuration = moment.duration(countersDropMoment.diff(currentMoment));
+
       const sendKeyboardForAccountParams = {
         client: input.client,
         additionalTokens: [
           {
-            token: '$nextPostInTime$',
-            value: '2 часа 35 мин',
-          }
+            token: '$nextPostInTimeHours$',
+            value: dropCountersDuration.hours(),
+          },
+          {
+            token: '$nextPostInTimeMinutes$',
+            value: dropCountersDuration.minutes(),
+          },
         ],
       };
 

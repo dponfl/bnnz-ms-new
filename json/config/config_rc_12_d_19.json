@@ -1,7 +1,12 @@
 {
   "general": {
     "instagram_prefix": "https://www.instagram.com/",
-    "instagram_post_prefix": "https://www.instagram.com/p/"
+    "instagram_post_prefix": "https://www.instagram.com/p/",
+    "dropDailyCountersAt": {
+      "h": 0,
+      "m": 30,
+      "s": 0
+    }
   },
   "payments": {
     "telegram": {
@@ -1050,7 +1055,7 @@
         "BEHERO_KEYBOARD_PLACE_POST_BTN_01": ":point_right: ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ :point_left:",
         "BEHERO_KEYBOARD_PLACE_POST_BTN_02": "Главное меню :house:",
         "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_01": "Ты достиг суточного лимита отправки постов на текущем аккаунте (Instagram ник: $CurrentAccount$).",
-        "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_02": "На этом аккаунте ты сможешь загружать новый пост через $nextPostInTime$",
+        "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_02": "На этом аккаунте ты сможешь загружать новый пост через $nextPostInTimeHours$ часов $nextPostInTimeMinutes$ минут",
         "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_03": "Используй кнопку «Когда я могу отправить новый пост?» ниже для проверки возможности отправлять новые посты :point_down:",
         "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN_01": "Можно отправлять новый пост?",
         "BEHERO_KEYBOARD_MAIN_DAILY_POST_LIMIT_REACHED_BTN_02": "Главное меню",
