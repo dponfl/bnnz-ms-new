@@ -486,7 +486,7 @@ module.exports = {
            * we perform next actions based on the information provided by client
            */
 
-          if (_.includes(['text', 'img', 'video', 'doc'], block.actionType)) {
+          if (_.includes(['text', 'img', 'video', 'doc', 'sticker'], block.actionType)) {
 
             await sails.helpers.funnel.afterHelperGenericJoi({
               client: input.client,

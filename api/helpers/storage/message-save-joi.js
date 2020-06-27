@@ -61,13 +61,15 @@ module.exports = {
           sails.config.custom.enums.messageFormat.FORCED,
           sails.config.custom.enums.messageFormat.IMG,
           sails.config.custom.enums.messageFormat.VIDEO,
+          sails.config.custom.enums.messageFormat.STICKER,
           sails.config.custom.enums.messageFormat.DOC,
           sails.config.custom.enums.messageFormat.POSTBROADCAST,
           sails.config.custom.enums.messageFormat.PUSHSIMPLE,
           sails.config.custom.enums.messageFormat.PUSHCALLBACK,
           sails.config.custom.enums.messageFormat.PUSHFORCED,
           sails.config.custom.enums.messageFormat.PUSHIMG,
-          sails.config.custom.enums.messageFormat.PUSHVIDEO
+          sails.config.custom.enums.messageFormat.PUSHVIDEO,
+          sails.config.custom.enums.messageFormat.PUSHSTICKER,
         )
         .required(),
       messenger: Joi

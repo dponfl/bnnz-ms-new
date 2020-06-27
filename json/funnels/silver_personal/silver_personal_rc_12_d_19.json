@@ -1,13 +1,34 @@
 {
   "optin": [
     {
-      "id": "start",
+      "id": "start_sticker",
       "description": "",
-      "actionType": "text",
+      "actionType": "sticker",
       "initial": true,
       "enabled": true,
       "show_time": 0,
       "previous": null,
+      "next": "optin::start",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "sticker": "befame_sticker.webp"
+      }
+    },
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::start_sticker",
       "next": "optin::intro",
       "switchToFunnel": null,
       "beforeHelper": null,
