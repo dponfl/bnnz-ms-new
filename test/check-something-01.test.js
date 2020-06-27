@@ -118,6 +118,35 @@ describe.skip('Test sendMessage', function () {
 
 });
 
+describe.skip('Test sendSticker', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send one sticker message', async function () {
+
+    const client = await Client.findOne({
+      guid: 'c7be56f8-d293-4d3d-9606-93144a33e1d9'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    const chatId = client.chat_id;
+    const stickerPath = customConfig.cloudinaryImgUrl + `befame_sticker.webp`;
+
+    const res = await sails.helpers.mgw.telegram.stickerMessageJoi({
+      chatId,
+      stickerPath,
+    });
+
+  });
+
+});
+
 describe.skip('Test sendDocument with inline keyboard', function () {
 
   let customConfig;

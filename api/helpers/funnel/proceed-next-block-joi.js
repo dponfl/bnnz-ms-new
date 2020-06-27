@@ -243,6 +243,39 @@ module.exports = {
 
             break;
 
+          case 'sticker':
+
+            /**
+             * Send sticker message
+             */
+
+            let stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
+              chatId: input.client.chat_id,
+              stickerPath: sails.config.custom.cloudinaryImgUrl + block.message.sticker,
+            });
+
+            block.message_id = stickerRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSaveJoi({
+              message_id: stickerRes.payload.message_id || 0,
+              message: JSON.stringify({
+                sticker: sails.config.custom.cloudinaryImgUrl + block.message.sticker,
+              }),
+              message_format: sails.config.custom.enums.messageFormat.STICKER,
+              messenger: input.client.messenger,
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
+              client_id: input.client.id,
+              client_guid: input.client.guid
+            });
+
+            break;
+
           case 'doc':
 
             /**

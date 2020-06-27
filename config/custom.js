@@ -184,6 +184,7 @@ module.exports.custom = {
       FORCED: 'forced',
       IMG: 'img',
       VIDEO: 'video',
+      STICKER: 'sticker',
       DOC: 'doc',
       POSTBROADCAST: 'postBroadcast',
       PUSHSIMPLE: 'pushSimple',
@@ -191,6 +192,7 @@ module.exports.custom = {
       PUSHFORCED: 'pushForced',
       PUSHIMG: 'pushImg',
       PUSHVIDEO: 'pushVideo',
+      PUSHSTICKER: 'pushSticker',
     },
 
     messageOriginator: {
@@ -483,6 +485,7 @@ module.exports.custom = {
   KEYBOARD_REMOVE_SEND_ERROR: 'Keyboard remove send error',
   IMG_MESSAGE_SEND_ERROR: 'Img message send error',
   VIDEO_MESSAGE_SEND_ERROR: 'Video message send error',
+  STICKER_MESSAGE_SEND_ERROR: 'Sticker message send error',
   DOCUMENT_MESSAGE_SEND_ERROR: 'Document message send error',
 
   /**

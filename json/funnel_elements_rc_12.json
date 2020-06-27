@@ -171,6 +171,27 @@
       }
     },
     {
+      "id": "sticker",
+      "description": "",
+      "actionType": "sticker",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "sticker": "XXXXXXX"
+      }
+    },
+    {
       "id": "document",
       "description": "",
       "actionType": "doc",
