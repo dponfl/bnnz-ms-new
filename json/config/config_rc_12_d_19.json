@@ -222,7 +222,7 @@
     }
   },
   "parsers": {
-    "inst": "ninja"
+    "inst": "dummy"
   },
   "analytics": {
     "events_schedule": [
