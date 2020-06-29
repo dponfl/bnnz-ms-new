@@ -55,6 +55,10 @@ module.exports = {
 
     let input;
 
+    let profileExists = false;
+    let profileId = null;
+    let profilePic = null;
+
     try {
 
       input = await schema.validateAsync(inputs.params);
@@ -87,14 +91,26 @@ module.exports = {
 
         const activeParser = sails.config.custom.config.parsers.inst;
 
-        const profileExists = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
+        const checkProfileRaw = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
           instProfile,
         });
+
+        if (checkProfileRaw.status !== 'ok') {
+          throw new Error(`${moduleName}, parsers.inst.${activeParser}.checkProfileExistsJoi error:
+          instProfile: ${instProfile}
+          checkProfileRaw: ${JSON.stringify(checkProfileRaw, null, 3)}`);
+        }
+
+        profileExists = checkProfileRaw.payload.profileExists;
+        profileId = checkProfileRaw.payload.profileId;
+        profilePic = checkProfileRaw.payload.profilePic;
 
         if (profileExists) {
 
           input.client.inst_profile_tmp = instProfile;
           input.client.accounts[currentAccountInd].profile_provided = true;
+          input.client.accounts[currentAccountInd].inst_id = profileId;
+          input.client.accounts[currentAccountInd].inst_pic = profilePic;
 
           input.block.done = true;
           input.block.next = 'optin::confirm_profile';

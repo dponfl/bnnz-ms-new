@@ -222,7 +222,7 @@
     }
   },
   "parsers": {
-    "inst": "dummy"
+    "inst": "inapi"
   },
   "analytics": {
     "events_schedule": [

@@ -137,6 +137,16 @@ module.exports = {
       type: 'string',
     },
 
+    inst_id: {
+      type: 'string',
+      allowNull: true,
+    },
+
+    inst_pic: {
+      type: 'string',
+      allowNull: true,
+    },
+
     /**
      * количество постов сделанных с этого аккаунта в текущие сутки
      */

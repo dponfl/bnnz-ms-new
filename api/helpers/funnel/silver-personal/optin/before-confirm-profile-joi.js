@@ -62,9 +62,25 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const instProfile = sails.config.custom.config.general.instagram_prefix + _.trim(input.client.inst_profile_tmp);
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-      const resHtml = _.replace(input.payload.text, '$instagramProfile$', instProfile);
+      const instProfile = sails.config.custom.config.general.instagram_prefix + _.trim(input.client.inst_profile_tmp);
+      const instPic = currentAccount.inst_pic || '';
+
+      const resHtml = MessageProcessor.parseSpecialTokens({
+        client: input.client,
+        message: input.payload.text,
+        additionalTokens: [
+          {
+            token: '$instagramProfile$',
+            value: instProfile,
+          },
+          {
+            token: '$instagramProfilePic$',
+            value: instPic,
+          },
+        ],
+      });
 
       return exits.success({
         text: resHtml,
