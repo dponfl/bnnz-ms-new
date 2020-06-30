@@ -38,6 +38,7 @@ module.exports = {
     },
     keyboard_name: {
       type: 'string',
+      allowNull: true,
     },
     rooms: {
       type: 'number',
