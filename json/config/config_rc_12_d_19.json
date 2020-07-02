@@ -1099,10 +1099,16 @@
         "MSG_TASK_PERFORM_BTN": "ЗАДАНИЕ ВЫПОЛНЕНО :white_check_mark:",
         "MSG_TASK_LIKE_DONE": ":white_check_mark: Задание успешно выполнено. Спасибо! :wink:",
         "MSG_TASK_LIKE_COMMENT_DONE": ":white_check_mark: Задание успешно выполнено. Спасибо! :wink:",
-        "MSG_TASK_LIKE_NOT_DONE": ":x: Задание поставить лайк не выполнено",
-        "MSG_TASK_LIKE_COMMENT_NOT_DONE": ":x: Задание поставить лайк и оставить комментарий не выполнено",
-        "MSG_TASK_LIKE_COMMENT_NO_LIKE": ":x: Задание поставить лайк и оставить комментарий выполнено не полностью: ты забыл поставить лайк",
-        "MSG_TASK_LIKE_COMMENT_NO_COMMENT": ":x: Задание поставить лайк и оставить комментарий выполнено не полностью: ты забыл оставить комментарий (не меньше 4 слов)",
+        "MSG_TASK_LIKE_NOT_DONE": "Задание поставить лайк не выполнено :x:",
+        "MSG_TASK_LIKE_NOT_DONE_ACTION": "Когда выполнишь задание — нажми кнопку «ЗАДАНИЕ ВЫПОЛНЕНО» :point_down:",
+        "MSG_TASK_LIKE_COMMENT_NOT_DONE": "Задание поставить лайк  :heart: и оставить комментарий :speech_balloon: не выполнено :x:",
+        "MSG_TASK_LIKE_COMMENT_NOT_DONE_ACTION": "Когда выполнишь задание — нажми кнопку «ЗАДАНИЕ ВЫПОЛНЕНО» :point_down:",
+        "MSG_TASK_LIKE_COMMENT_NO_LIKE_01": "Задание выполнено не полностью :x:",
+        "MSG_TASK_LIKE_COMMENT_NO_LIKE_02": "Ты забыл поставить лайк :heart:",
+        "MSG_TASK_LIKE_COMMENT_NO_LIKE_ACTION": "Когда выполнишь задание полностью — нажми кнопку «ЗАДАНИЕ ВЫПОЛНЕНО» :point_down:",
+        "MSG_TASK_LIKE_COMMENT_NO_COMMENT_01": "Задание выполнено не полностью :x:",
+        "MSG_TASK_LIKE_COMMENT_NO_COMMENT_02": "Ты забыл оставить комментарий :speech_balloon: (не меньше 2 х слов)",
+        "MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION": "Когда выполнишь задание полностью — нажми кнопку «ЗАДАНИЕ ВЫПОЛНЕНО» :point_down:",
         "MSG_TASK_POST_LINK_BTN": "Открыть пост :eyes:"
       }
     }
