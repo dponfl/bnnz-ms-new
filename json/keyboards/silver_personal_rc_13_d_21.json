@@ -233,6 +233,89 @@
       ]
     }
   ],
+  "noRef": [
+    {
+      "id": "start",
+      "description": "Start block of NoRef keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KEYBOARD_NOREF_START_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_NOREF_START_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "join_ref",
+            "text": "BEHERO_KEYBOARD_NOREF_START_BTN_01",
+            "action": "noRef::joinRefJoi"
+          },
+          {
+            "id": "more_info",
+            "text": "BEHERO_KEYBOARD_NOREF_START_BTN_02",
+            "action": "noRef::moreInfoJoi"
+          }
+        ],
+        [
+          {
+            "id": "main_menu",
+            "text": "BEHERO_KEYBOARD_NOREF_START_BTN_03",
+            "action": "noRef::homeMenuJoi"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "after_info",
+      "description": "NoRef keyboard to show after more info provided",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KEYBOARD_NOREF_AFTER_INFO_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_KEYBOARD_NOREF_AFTER_INFO_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "join_ref",
+            "text": "BEHERO_KEYBOARD_NOREF_AFTER_INFO_BTN_01",
+            "action": "noRef::joinRefJoi"
+          }
+        ],
+        [
+          {
+            "id": "main_menu",
+            "text": "BEHERO_KEYBOARD_NOREF_AFTER_INFO_BTN_02",
+            "action": "noRef::homeMenuJoi"
+          }
+        ]
+      ]
+    }
+  ],
   "help": [
     {
       "id": "start",
