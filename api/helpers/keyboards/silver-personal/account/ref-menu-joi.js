@@ -53,8 +53,12 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-
-      currentAccount.keyboard = "ref::start";
+      
+      if (currentAccount.is_ref) {
+        currentAccount.keyboard = "ref::start";
+      } else {
+        currentAccount.keyboard = "noref::start";
+      }
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
