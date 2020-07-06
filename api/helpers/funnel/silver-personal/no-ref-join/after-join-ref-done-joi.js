@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'keyboards:silver-personal:account:ref-menu-joi';
+const moduleName = 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'keyboards:silver-personal:account:ref-menu-joi',
+  friendlyName: 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi',
 
 
-  description: 'keyboards:silver-personal:account:ref-menu-joi',
+  description: 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi',
 
 
   inputs: {
@@ -43,10 +43,16 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
+      block: Joi
+        .any()
+        .description('Current funnel block')
+        .required(),
+      msg: Joi
+        .any()
+        .description('Message received'),
     });
 
     let input;
-
 
     try {
 
@@ -54,15 +60,20 @@ module.exports = {
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-      if (currentAccount.is_ref) {
-        currentAccount.keyboard = "ref::start";
-      } else {
-        currentAccount.keyboard = "noRef::start";
-      }
+      input.client.current_funnel = '';
 
-      await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
+      currentAccount.keyboard = "ref::start";
+
+      input.block.done = true;
+      input.block.shown = true;
+
+      await sails.helpers.funnel.afterHelperGenericJoi({
+        client: input.client,
+        block: input.block,
+        msg: input.msg,
+        next: false,
+        previous: true,
+        switchFunnel: true,
         createdBy: moduleName,
       });
 
@@ -78,7 +89,6 @@ module.exports = {
         sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
       }
 
-
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
@@ -87,21 +97,17 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      const errorLocation = moduleName;
+      const errorMsg = `${moduleName}: General error`;
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      sails.log.error(errorLocation + ', error: ' + errorMsg);
+      sails.log.error(errorLocation + ', error details: ', e);
 
       throw {err: {
-          module: `${moduleName}`,
+          module: errorLocation,
           message: errorMsg,
           payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
+            error: e,
           },
         }
       };

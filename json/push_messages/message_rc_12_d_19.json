@@ -226,7 +226,7 @@
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -295,7 +295,7 @@
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "MSG_TASK_LIKE_COMMENT_NOT_DONE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -330,12 +330,17 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE",
+              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -370,12 +375,17 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT",
+              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION",
               "style": "",
               "cr": ""
             }
@@ -391,39 +401,5 @@
         }
       }
     ]
-  },
-  "keyboards": {
-    "silverPersonal": {
-      "help": [
-        {
-          "id": "make_post",
-          "description": "Instruction on making post",
-          "actionType": "video",
-          "initial": false,
-          "enabled": false,
-          "show_time": 0,
-          "previous": null,
-          "next": null,
-          "switchToFunnel": null,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "shown": false,
-          "done": false,
-          "message": {
-            "video": "XXXXXXX",
-            "html": [
-              {
-                "text": "XXXXXXX",
-                "style": "",
-                "cr": ""
-              }
-            ]
-          }
-        }
-      ]
-    }
   }
 }

@@ -53,6 +53,9 @@ module.exports = {
       disableWebPagePreview: Joi
         .boolean()
         .description('flag to disable web page preview at message'),
+      removeKeyboard: Joi
+        .boolean()
+        .description('flag to remove the current keyboard'),
     });
 
 
@@ -62,16 +65,22 @@ module.exports = {
 
       const disable_web_page_preview = input.disableWebPagePreview || false;
 
+      let optionalParams = {
+        parse_mode: 'HTML',
+        disable_web_page_preview,
+        reply_markup: {
+          inline_keyboard: input.inlineKeyboard,
+        }
+      };
+
+      if (input.removeKeyboard) {
+        optionalParams.reply_markup.remove_keyboard = true;
+      }
+
       let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
-        {
-          parse_mode: 'HTML',
-          disable_web_page_preview,
-          reply_markup: {
-            inline_keyboard: input.inlineKeyboard,
-          }
-        }
+        optionalParams,
       );
 
       return exits.success({

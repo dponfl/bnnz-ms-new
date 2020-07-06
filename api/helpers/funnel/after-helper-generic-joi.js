@@ -127,6 +127,7 @@ module.exports = {
           let previousBlock = _.find(input.client.funnels[previousFunnel], {id: previousId});
           if (previousBlock) {
             previousBlock.done = true;
+            previousBlock.shown = true;
           } else {
             throw new Error(`previousBlock not found: \ninput.client.funnels[previousFunnel]: ${JSON.stringify(input.client.funnels[previousFunnel], null, 3)} \npreviousId : ${previousId}`);
           }
