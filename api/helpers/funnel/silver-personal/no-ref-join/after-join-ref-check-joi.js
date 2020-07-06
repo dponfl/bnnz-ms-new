@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-join-ref-check-joi';
+const moduleName = 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-join-ref-check-joi',
+  friendlyName: 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-join-ref-check-joi',
+  description: 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi',
 
 
   inputs: {
@@ -66,9 +66,6 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       /**
        * формируем список профилей для проверки подписки на них
@@ -175,7 +172,7 @@ module.exports = {
          * Подписка на все профили была выполнена
          */
 
-        input.block.next = 'optin::join_ref_done';
+        input.block.next = 'noRefJoin::join_ref_done';
         input.block.done = true;
         input.block.shown = true;
 
@@ -200,7 +197,7 @@ module.exports = {
         if (getBlock) {
           getBlock.shown = false;
           getBlock.done = false;
-          getBlock.previous = 'optin::join_ref_check';
+          getBlock.previous = 'noRefJoin::join_ref_check';
         } else {
           throw new Error(`${moduleName}, error: block not found:
              updateBlock: ${updateBlock}
@@ -210,10 +207,10 @@ module.exports = {
         }
 
         /**
-         * Update 'optin::join_ref_missed_profiles' block
+         * Update 'noRefJoin::join_ref_missed_profiles' block
          */
 
-        updateBlock = 'optin::join_ref_missed_profiles';
+        updateBlock = 'noRefJoin::join_ref_missed_profiles';
 
         splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
         updateFunnel = splitRes[0];
@@ -230,7 +227,7 @@ module.exports = {
         if (getBlock) {
           getBlock.shown = true;
           getBlock.done = true;
-          getBlock.previous = 'optin::join_ref_check';
+          getBlock.previous = 'noRefJoin::join_ref_check';
         } else {
           throw new Error(`${moduleName}, error: block not found:
              updateBlock: ${updateBlock}
@@ -257,7 +254,7 @@ module.exports = {
          * Подписка была выполнена НЕ на все профили
          */
 
-        input.block.next = 'optin::join_ref_missed_profiles';
+        input.block.next = 'noRefJoin::join_ref_missed_profiles';
         input.block.done = true;
         input.block.shown = true;
 
@@ -282,7 +279,7 @@ module.exports = {
         if (getBlock) {
           getBlock.shown = false;
           getBlock.done = false;
-          getBlock.previous = 'optin::join_ref_check';
+          getBlock.previous = 'noRefJoin::join_ref_check';
           getBlock.next = null;
         } else {
           throw new Error(`${moduleName}, error: block not found:
