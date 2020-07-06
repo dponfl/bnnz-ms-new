@@ -1292,7 +1292,7 @@
       }
     },
     {
-      "id": "inline_keyboard",
+      "id": "join_ref_missed_profiles",
       "description": "",
       "actionType": "inline_keyboard",
       "initial": false,
@@ -1301,10 +1301,10 @@
       "previous": null,
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "noRefJoin::beforeJoinRefMissedProfilesJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "XXXXXXX::XXXXXXX",
+      "callbackHelper": "noRefJoin::callbackJoinRefMissedProfilesJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
