@@ -135,6 +135,7 @@ module.exports = {
             let simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlSimple,
+              removeKeyboard: block.removeKeyboard,
             });
 
             block.message_id = simpleRes.payload.message_id;
@@ -391,6 +392,7 @@ module.exports = {
             let forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
               chatId: input.client.chat_id,
               html: htmlForced,
+              removeKeyboard: block.removeKeyboard,
             });
 
             block.message_id = forcedRes.payload.message_id;
@@ -438,6 +440,7 @@ module.exports = {
               chatId: input.client.chat_id,
               html: htmlInline,
               inlineKeyboard,
+              removeKeyboard: block.removeKeyboard,
             });
 
             block.message_id = inlineRes.payload.message_id;

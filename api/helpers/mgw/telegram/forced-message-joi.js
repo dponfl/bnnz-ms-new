@@ -49,6 +49,9 @@ module.exports = {
         .string()
         .description('html code of the message')
         .required(),
+      removeKeyboard: Joi
+        .boolean()
+        .description('flag to remove the current keyboard'),
     });
 
 
@@ -56,15 +59,21 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      let optionalParams = {
+        parse_mode: 'HTML',
+        reply_markup: {
+          force_reply: true
+        }
+      };
+
+      if (input.removeKeyboard) {
+        optionalParams.reply_markup.remove_keyboard = true;
+      }
+
       let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
-        {
-          parse_mode: 'HTML',
-          reply_markup: {
-            force_reply: true
-          }
-        }
+        optionalParams,
       );
 
       return exits.success({
