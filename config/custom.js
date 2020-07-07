@@ -28,6 +28,9 @@ module.exports.custom = {
   cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
   cloudinaryDocUrl: process.env.CLOUDINARY_DOC_URL || '',
 
+  instParserUrl: process.env.INST_PARSER_URL || '',
+  instParserApiKey: process.env.INST_PARSER_API_KEY || '',
+
   apiUuid: process.env.API_UUID || '',
 
   postRegExp: process.env.POST_REGEXP || '\^\(http\|https\):\\/\\/www\\.instagram\\.com\\/p\\/(\\S+)',

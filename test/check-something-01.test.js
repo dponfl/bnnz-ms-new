@@ -991,4 +991,13 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
 });
 
+describe.only('Inapi request: getLimits', function () {
 
+  it('Check request result', async function () {
+
+    const res = await sails.helpers.parsers.inst.inapi.getLimitsJoi();
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+
+  });
+
+});
