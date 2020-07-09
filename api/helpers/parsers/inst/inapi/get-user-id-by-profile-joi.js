@@ -50,15 +50,14 @@ module.exports = {
         .required(),
     });
 
-    let userId = null;
-
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers[sails.config.custom.config.parsers.inst].getUserId,
+        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers[sails.config.custom.config.parsers.inst].paths.getUserId,
+        method: 'GET',
         qs: {
           api_key: sails.config.custom.instParserApiKey,
           username: input.instProfile,
@@ -66,21 +65,31 @@ module.exports = {
         json: true,
       };
 
-      rp(options)
-        .then((res) => {
+      const requestRes = await rp(options);
 
-        })
-        .catch((err) => {
-          throw new Error(`${moduleName}, REST API request error:
-          error: ${JSON.stringify(err, null, 3)}`);
-        });
+      const userPk = _.get(requestRes, 'response.instagram.user.pk', null);
+      const userName = _.get(requestRes, 'response.instagram.user.username', null);
+      const fullName = _.get(requestRes, 'response.instagram.user.full_name', null);
+      const isPrivate = _.get(requestRes, 'response.instagram.user.is_private', null);
+      const profilePicUrl = _.get(requestRes, 'response.instagram.user.profile_pic_url', null);
+      const profilePicId = _.get(requestRes, 'response.instagram.user.profile_pic_id', null);
+      const isVerified = _.get(requestRes, 'response.instagram.user.is_verified', null);
+      const hasAnonymousProfilePicture = _.get(requestRes, 'response.instagram.user.has_anonymous_profile_picture', null);
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
         payload: {
-          userId,
+          userPk,
+          userName,
+          fullName,
+          isPrivate,
+          profilePicUrl,
+          profilePicId,
+          isVerified,
+          hasAnonymousProfilePicture,
         },
+        raw: requestRes,
       })
 
 

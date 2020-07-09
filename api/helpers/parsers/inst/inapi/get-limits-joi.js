@@ -48,12 +48,16 @@ module.exports = {
 
       const requestRes = await rp(options);
 
+      const left = _.get(requestRes, 'response.api.left', null);
+      const history = _.get(requestRes, 'response.api.history', null);
+
+
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
         payload: {
-          left: requestRes.response.api.left,
-          history: requestRes.response.api.history,
+          left,
+          history,
         },
         raw: requestRes,
       })
