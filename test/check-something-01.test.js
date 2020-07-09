@@ -991,18 +991,26 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
 });
 
-describe.only('Inapi requests', function () {
+describe.skip('Inapi requests', function () {
 
   it.skip('Check request result: getLimitsJoi', async function () {
     const res = await sails.helpers.parsers.inst.inapi.getLimitsJoi();
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: getLimits', async function () {
+  it.skip('Check request result: getUserIdByProfileJoi', async function () {
     const params = {
       instProfile: 'dima_ponomarev1',
     };
     const res = await sails.helpers.parsers.inst.inapi.getUserIdByProfileJoi(params);
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: checkProfileExistsJoi', async function () {
+    const params = {
+      instProfile: 'dima_ponomarev1',
+    };
+    const res = await sails.helpers.parsers.inst.inapi.checkProfileExistsJoi(params);
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 

@@ -49,22 +49,29 @@ module.exports = {
     });
 
 
-    let profileExists = false;
-    let profileId = null;
-    let profilePic = null;
-
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
-      /**
-       * Заглушка (должна быть заменена на обращение к API парсера
-       */
+      const instProfile = input.instProfile;
 
-      profileExists = true;
+      const getUserIdByProfileJoiParams = {
+        instProfile,
+      };
 
+      const getUserIdByProfileJoiRes = await sails.helpers.parsers.inst.inapi.getUserIdByProfileJoi(getUserIdByProfileJoiParams);
 
-      return exits.success(profileExists);
+      if (getUserIdByProfileJoiRes.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong getUserIdByProfileJoi response
+        getUserIdByProfileJoiParams: ${JSON.stringify(getUserIdByProfileJoiParams, null, 3)}
+        getUserIdByProfileJoiRes: ${JSON.stringify(getUserIdByProfileJoiRes, null, 3)}`);
+      }
+
+      const userPk = _.get(getUserIdByProfileJoiRes, 'payload.userPk', false);
+      const profileExists = !!userPk;
+      const profileId = _.get(getUserIdByProfileJoiRes, 'payload.userPk', null);
+      const profileFullName = _.get(getUserIdByProfileJoiRes, 'payload.fullName', null);
+      const profilePicUrl = _.get(getUserIdByProfileJoiRes, 'payload.profilePicUrl', null);
 
       return exits.success({
         status: 'ok',
@@ -72,7 +79,8 @@ module.exports = {
         payload: {
           profileExists,
           profileId,
-          profilePic,
+          profileFullName,
+          profilePicUrl,
         },
       })
 
