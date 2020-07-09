@@ -51,7 +51,11 @@ module.exports = {
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
-        payload: requestRes,
+        payload: {
+          left: requestRes.response.api.left,
+          history: requestRes.response.api.history,
+        },
+        raw: requestRes,
       })
 
 
