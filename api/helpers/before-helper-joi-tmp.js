@@ -49,7 +49,7 @@ module.exports = {
         .required(),
       payload: Joi
         .any()
-        .description('{text, inline_keyboard} object')
+        .description('{text, inline_keyboard, img, video, doc} object')
         .required(),
       msg: Joi
         .any()
@@ -69,6 +69,9 @@ module.exports = {
       return exits.success({
         text: resHtml,
         inline_keyboard: inputs.payload.inline_keyboard,
+        img: inputs.payload.img,
+        video: inputs.payload.video,
+        doc: inputs.payload.doc,
       });
 
     } catch (e) {

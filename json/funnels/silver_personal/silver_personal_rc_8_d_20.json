@@ -147,7 +147,7 @@
     {
       "id": "confirm_profile",
       "description": "",
-      "actionType": "inline_keyboard",
+      "actionType": "img_inline_keyboard",
       "initial": false,
       "enabled": false,
       "show_time": 0,
@@ -162,6 +162,8 @@
       "shown": false,
       "done": false,
       "message": {
+        "img": "$profilePicUrl$",
+        "mediaLibrary": false,
         "html": [
           {
             "text": "BEHERO_CONFIRM_PROFILE_01",

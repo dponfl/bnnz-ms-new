@@ -146,6 +146,53 @@
       }
     },
     {
+      "id": "img_with_inline_keyboard",
+      "description": "",
+      "actionType": "img_inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "img": "XXXXXXX",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "XXXXXXX",
+              "callback_data": "XXXXXXX"
+            }
+          ],
+          [
+            {
+              "text": "XXXXXXX",
+              "url": "XXXXXXX"
+            },
+            {
+              "text": "XXXXXXX",
+              "url": "XXXXXXX"
+            }
+          ]
+        ]
+      }
+    },
+    {
       "id": "video",
       "description": "",
       "actionType": "video",

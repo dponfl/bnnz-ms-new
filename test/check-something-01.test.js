@@ -219,6 +219,78 @@ describe.skip('Test sendDocument with inline keyboard', function () {
 
 });
 
+describe('Test sendPhoto with inline keyboard', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send one img with inline keyboard', async function () {
+
+    const client = await Client.findOne({
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+    if (client.accounts.length === 0) {
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+      client.account_use = client.accounts[0].guid;
+
+    }
+
+    const chatId = client.chat_id;
+    const html = 'Красивая картинка)';
+    const inlineKeyboardRaw = [
+      [
+        {
+          "text": "BEHERO_CONFIRM_PROFILE_BTN_YES",
+          "callback_data": "yes"
+        }
+      ],
+      [
+        {
+          "text": "BEHERO_CONFIRM_PROFILE_BTN_NO",
+          "callback_data": "no"
+        }
+      ]
+    ];
+
+    const inlineKeyboard = MessageProcessor.mapDeep({
+      client: client,
+      data: inlineKeyboardRaw,
+    });
+
+    const imgPath = customConfig.cloudinaryImgUrl + 'v1549212141/sample.jpg';
+
+    const res = await sails.helpers.mgw.telegram.imgMessageJoi({
+      chatId,
+      imgPath,
+      html,
+      inlineKeyboard,
+    });
+
+  });
+
+});
+
 describe.skip('Test send few test text messages', function () {
 
   let customConfig;

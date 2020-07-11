@@ -55,6 +55,9 @@ module.exports = {
       html: Joi
         .string()
         .description('html code of the message'),
+      inlineKeyboard: Joi
+        .any()
+        .description('inline keyboard for the img message')
     });
 
 
@@ -68,6 +71,12 @@ module.exports = {
 
       if (input.html) {
         messageObj.caption = input.html;
+      }
+
+      if (input.inlineKeyboard) {
+        messageObj.reply_markup = {
+          inline_keyboard: input.inlineKeyboard,
+        };
       }
 
       let sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(

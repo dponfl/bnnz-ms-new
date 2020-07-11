@@ -52,7 +52,7 @@ module.exports = {
         .description('Message received'),
       payload: Joi
         .any()
-        .description('{text, inline_keyboard} object')
+        .description('{text, inline_keyboard, img, video, doc} object')
         .required(),
     });
 
@@ -65,7 +65,7 @@ module.exports = {
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       const instProfile = sails.config.custom.config.general.instagram_prefix + _.trim(input.client.inst_profile_tmp);
-      const instPic = currentAccount.inst_pic || '';
+      const instPic = currentAccount.inst_pic;
 
       const resHtml = MessageProcessor.parseSpecialTokens({
         client: input.client,
@@ -82,9 +82,23 @@ module.exports = {
         ],
       });
 
+      const img = MessageProcessor.parseSpecialTokens({
+        client: input.client,
+        message: input.payload.img,
+        additionalTokens: [
+          {
+            token: 'profilePicUrl',
+            value: instPic,
+          },
+        ],
+      });
+
       return exits.success({
         text: resHtml,
         inline_keyboard: input.payload.inline_keyboard,
+        img,
+        video: inputs.payload.video,
+        doc: inputs.payload.doc,
       });
 
     } catch (e) {

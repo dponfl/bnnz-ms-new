@@ -179,6 +179,7 @@ module.exports = {
       resultStr = _.replace(resultStr, '$BeHeroTitle$', `${priceConfigText.service_title.silver_personal.title}`);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
       const profileOfCurrentAccount = currentAccount.inst_profile;
       resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
 

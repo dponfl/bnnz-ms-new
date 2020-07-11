@@ -201,6 +201,63 @@ module.exports = {
 
             break;
 
+          case 'img_inline_keyboard':
+
+            /**
+             * Send img + inline keyboard message
+             */
+
+            let htmlImgInlineKeyboardRaw = MessageProcessor.parseMessageStyle({
+              client: input.client,
+              message: block.message,
+              additionalTokens: input.additionalTokens,
+            });
+
+            let {text: htmlImgInlineKeyboard, inline_keyboard: keyboardInlineImg, img: parsedImgPath} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgInlineKeyboardRaw);
+
+            const imgPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + parsedImgPath : parsedImgPath;
+
+            const imgMessageJoiParams = {
+              chatId: input.client.chat_id,
+              imgPath,
+              html: htmlImgInlineKeyboard,
+            };
+
+            if (keyboardInlineImg != null) {
+
+              imgMessageJoiParams.inlineKeyboard = MessageProcessor.mapDeep({
+                client: input.client,
+                data: keyboardInlineImg,
+                additionalTokens: input.additionalTokens,
+              });
+
+            }
+
+            let imgInlineKeyboardRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi'](imgMessageJoiParams);
+
+            block.message_id = imgInlineKeyboardRes.payload.message_id;
+
+            block.shown = true;
+
+            /**
+             * Save the sent message
+             */
+
+            await sails.helpers.storage.messageSaveJoi({
+              message_id: imgInlineKeyboardRes.payload.message_id || 0,
+              message: JSON.stringify({
+                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                html: htmlImgInlineKeyboard,
+              }),
+              message_format: sails.config.custom.enums.messageFormat.DOC,
+              messenger: input.client.messenger,
+              message_originator: sails.config.custom.enums.messageOriginator.BOT,
+              client_id: input.client.id,
+              client_guid: input.client.guid
+            });
+
+            break;
+
           case 'video':
 
             /**
@@ -644,6 +701,9 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
   let res = {
     text: htmlMsg,
     inline_keyboard: block.message.inline_keyboard || null,
+    img: block.message.img || null,
+    video: block.message.video || null,
+    doc: block.message.doc || null,
   };
 
   if (!_.isNil(block.beforeHelper)) {
