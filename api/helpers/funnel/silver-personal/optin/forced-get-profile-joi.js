@@ -103,14 +103,14 @@ module.exports = {
 
         profileExists = checkProfileRaw.payload.profileExists;
         profileId = checkProfileRaw.payload.profileId;
-        profilePic = checkProfileRaw.payload.profilePic;
+        profilePic = checkProfileRaw.payload.profilePicUrl;
 
         if (profileExists) {
 
           input.client.inst_profile_tmp = instProfile;
-          input.client.accounts[currentAccountInd].profile_provided = true;
-          input.client.accounts[currentAccountInd].inst_id = profileId;
-          input.client.accounts[currentAccountInd].inst_pic = profilePic;
+          currentAccount.profile_provided = true;
+          currentAccount.inst_id = profileId;
+          currentAccount.inst_pic = profilePic;
 
           input.block.done = true;
           input.block.next = 'optin::confirm_profile';

@@ -75,10 +75,6 @@ module.exports = {
             token: '$instagramProfile$',
             value: instProfile,
           },
-          {
-            token: '$instagramProfilePic$',
-            value: instPic,
-          },
         ],
       });
 
@@ -87,7 +83,7 @@ module.exports = {
         message: input.payload.img,
         additionalTokens: [
           {
-            token: 'profilePicUrl',
+            token: '$profilePicUrl$',
             value: instPic,
           },
         ],
@@ -97,8 +93,8 @@ module.exports = {
         text: resHtml,
         inline_keyboard: input.payload.inline_keyboard,
         img,
-        video: inputs.payload.video,
-        doc: inputs.payload.doc,
+        video: input.payload.video,
+        doc: input.payload.doc,
       });
 
     } catch (e) {
