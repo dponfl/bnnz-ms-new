@@ -58,7 +58,8 @@ module.exports = {
         throw new Error(`${moduleName}, Error: postLink has wrong format: ${input.postLink}`);
       }
 
-      postCode = postCodeRaw[2];
+      // postCode = postCodeRaw[2];
+      postCode = _.replace(postCodeRaw[2], '/', '');
 
       if (postCode === '') {
         throw new Error(`${moduleName}, Error: postCode is empty. postCodeRaw: \n${JSON.stringify(postCodeRaw, null, 3)}`);

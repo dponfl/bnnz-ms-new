@@ -2295,13 +2295,61 @@ describe.only('Inapi requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: checkProfileSubscriptionJoi', async function () {
+  it.skip('Check request result: getPostCodeJoi', async function () {
     const params = {
-      instProfile: 'dima_ponomarev1',
+      postLink: 'https://www.instagram.com/p/B7QmKU8FORo/',
     };
-    const res = await sails.helpers.parsers.inst.inapi.checkProfileSubscriptionJoi(params);
+
+    const res = await sails.helpers.general.getPostCodeJoi(params);
+
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
+
+  it.skip('Check request result: getMediaIdJoi', async function () {
+
+    this.timeout(30000);
+
+    const params = {
+      shortCode: 'BpZS90LBOwq',
+    };
+
+    const res = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(params);
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: getLikesJoi', async function () {
+
+    this.timeout(30000);
+
+    const params = {
+      mediaId: '1898632130658102314',
+    };
+
+    const res = await sails.helpers.parsers.inst.inapi.getLikesJoi(params);
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it('Check request result: checkLikesJoi', async function () {
+
+    this.timeout(30000);
+
+    // const params = {
+    //   instProfile: 'some_profile_123',
+    //   instPostCode: 'BpZS90LBOwq',
+    // };
+
+    const params = {
+      instProfile: 'krasheniinniikova',
+      instPostCode: 'BpZS90LBOwq',
+    };
+
+    const res = await sails.helpers.parsers.inst.inapi.checkLikesJoi(params);
+
+    const likeDone = _.get(res, 'payload.likeMade', 'none');
+
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
 
 
 });

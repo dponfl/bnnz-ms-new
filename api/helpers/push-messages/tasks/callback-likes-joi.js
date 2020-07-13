@@ -128,10 +128,26 @@ module.exports = {
 
       const activeParser = sails.config.custom.config.parsers.inst;
 
-      const likeDone = await sails.helpers.parsers.inst[activeParser].checkLikesJoi({
+      const checkLikesParams = {
         instProfile,
         instPostCode,
-      });
+      };
+
+      const checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+
+      if (checkLikesJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong checkLikesJoi response
+        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
+        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+      }
+
+      const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
+
+      if (likeDone === 'none') {
+        throw new Error(`${moduleName}, error: wrong checkLikesJoi response: no payload.likeMade
+        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
+        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+      }
 
       let taskData = {
         makeLikePerformed: taskRec.makeLikePerformed,
