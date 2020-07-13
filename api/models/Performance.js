@@ -1,26 +1,35 @@
-"use strict";
-
 /**
- * TelegramMsgQueue.js
+ * Logs.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
 module.exports = {
-  tableName: 'telegram-msg-queue',
+  tableName: 'performance',
   migrate: 'safe',
-
   attributes: {
-    chat_id: {
+
+    platform: {
       type: 'string',
     },
-    message_format: {
+    action: {
       type: 'string',
     },
-    message_data: {
-      type: 'json',
+    api: {
+      type: 'string',
     },
+    requestType: {
+      type: 'string',
+    },
+    requestDuration: {
+      type: 'number',
+    },
+    requestDepth: {
+      type: 'number',
+      allowNull: true,
+    },
+
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

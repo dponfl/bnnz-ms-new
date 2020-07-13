@@ -2,22 +2,29 @@
 
 const Joi = require('@hapi/joi');
 const rp = require('request-promise');
-const moment = require('moment');
 
 
-const moduleName = 'parsers:inst:inapi:get-limits-joi';
+const moduleName = 'parsers:inst:inapi:get-followings-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:inapi:get-limits-joi',
+  friendlyName: 'parsers:inst:inapi:get-followings-joi',
 
 
-  description: 'Получение остатка лимита по запросам',
+  description: 'Получение списка подписок профиля',
 
 
   inputs: {
+
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
+      type: 'ref',
+      required: true,
+    },
+
   },
 
 
@@ -36,19 +43,31 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const schema = Joi.object({
+      profilePk: Joi
+        .string()
+        .description('Instagram user PK')
+        .required(),
+      limit: Joi
+        .number()
+        .description('Limitation of response length: limit=1 means 50 records')
+        .integer()
+        .positive()
+        .required(),
+    });
+
+
     try {
 
-      const platform = 'Instagram';
-      const action = 'parsing';
-      const api = 'inapi';
-      const requestType = 'getLimits';
-      const momentStart = moment();
+      const input = await schema.validateAsync(inputs.params);
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers[sails.config.custom.config.parsers.inst].paths.getLimits,
+        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers[sails.config.custom.config.parsers.inst].paths.getFollowing,
         method: 'GET',
         qs: {
           api_key: sails.config.custom.instParserApiKey,
+          user_id: input.profilePk,
+          limit: input.limit,
         },
         json: true,
       };
@@ -64,30 +83,19 @@ module.exports = {
         request response: ${JSON.stringify(requestRes, null, 3)}`);
       }
 
-      const left = _.get(requestRes, 'response.api.left', null);
-      // const history = _.get(requestRes, 'response.api.history', null);
+      const users = _.get(requestRes, 'response.instagram.result.users', null);
 
-      const momentDone = moment();
-
-      const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-      const performanceCreateParams = {
-        platform,
-        action,
-        api,
-        requestType,
-        requestDuration,
-      };
-
-      await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
+      if (users == null) {
+        throw new Error(`${moduleName}, error => wrong parser response: no users
+        request params: ${JSON.stringify(options, null, 3)}
+        request response: ${JSON.stringify(requestRes, null, 3)}`);
+      }
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
         payload: {
-          left,
-          // history,
+          users,
         },
         raw: requestRes,
       })

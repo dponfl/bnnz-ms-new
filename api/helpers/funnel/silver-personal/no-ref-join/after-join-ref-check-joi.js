@@ -120,9 +120,8 @@ module.exports = {
 
       const checkProfileSubscriptionParams = {
         checkProfile: currentAccount.inst_profile,
+        profileId: currentAccount.inst_id,
         profilesList,
-        // TODO: позже этот параметр нужно исключить и здесь, и в самом checkProfileSubscriptionJoi хелпере
-        flag,
       };
 
       const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);

@@ -119,16 +119,15 @@ module.exports = {
         profilesList.push(elem.inst_profile);
       });
 
-      const flag = profilesList.length < 2 ? 0 : _.random(0, 3);
-
       const checkProfileSubscriptionParams = {
         checkProfile: currentAccount.inst_profile,
+        profileId: currentAccount.inst_id,
         profilesList,
-        // TODO: позже этот параметр нужно исключить и здесь, и в самом checkProfileSubscriptionJoi хелпере
-        flag,
       };
 
-      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+      const activeParser = sails.config.custom.config.parsers.inst;
+
+      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
 
       if (checkProfileSubscriptionResRaw.status !== 'ok') {
         throw new Error(`${moduleName}, error: wrong checkProfileSubscriptionJoi response:

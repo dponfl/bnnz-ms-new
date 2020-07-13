@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  tableName: 'tasks',
+  tableName: 'logs',
   migrate: 'safe',
   attributes: {
 
