@@ -2329,7 +2329,7 @@ describe.only('Inapi requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: checkLikesJoi', async function () {
+  it.skip('Check request result: checkLikesJoi', async function () {
 
     this.timeout(30000);
 
@@ -2350,6 +2350,49 @@ describe.only('Inapi requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
+  it.skip('Check request result: getCommentsJoi', async function () {
+
+    this.timeout(30000);
+
+    const params = {
+      mediaId: '1747317351232356320', // https://www.instagram.com/p/Bg_t9-OFL_g/
+    };
+
+    const res = await sails.helpers.parsers.inst.inapi.getCommentsJoi(params);
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: checkCommentsJoi', async function () {
+
+    this.timeout(30000);
+
+    const params = {
+      instProfile: 'some_profile_123',
+      instPostCode: 'Bg_t9-OFL_g',
+    };
+
+    // const params = {
+    //   instProfile: 'mantis_ch',
+    //   instPostCode: 'Bg_t9-OFL_g',
+    // };
+
+    // const params = {
+    //   instProfile: 'ahshzgj',
+    //   instPostCode: 'Bg_t9-OFL_g',
+    // };
+
+    // const params = {
+    //   instProfile: '__yuliya_0927__',
+    //   instPostCode: 'Bg_t9-OFL_g',
+    // };
+
+    const res = await sails.helpers.parsers.inst.inapi.checkCommentsJoi(params);
+
+    const commentDone = _.get(res, 'payload.commentMade', 'none');
+    const commentText = _.get(res, 'payload.commentText', 'none');
+
+    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
 
 
 });
