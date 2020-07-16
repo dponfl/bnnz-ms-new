@@ -128,6 +128,35 @@ module.exports = {
 
       const activeParser = sails.config.custom.config.parsers.inst;
 
+      const checkLikesParams = {
+        instProfile,
+        instPostCode,
+      };
+
+      const checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+
+      if (checkLikesJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong checkLikesJoi response
+        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
+        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+      }
+
+      const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
+
+      if (likeDone === 'none') {
+        throw new Error(`${moduleName}, error: wrong checkLikesJoi response: no payload.likeMade
+        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
+        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+      }
+
+
+
+
+
+
+
+
+
       const likeCommentDone = await sails.helpers.parsers.inst[activeParser].checkLikesCommentsJoi({
         instProfile,
         instPostCode,
@@ -145,7 +174,7 @@ module.exports = {
         allCommentsDone: postRec.allCommentsDone,
       };
 
-      if (likeCommentDone.likeMade) {
+      if (likeDone) {
 
         taskData.makeLikePerformed = true;
         postData.receivedLikes++;
@@ -162,7 +191,7 @@ module.exports = {
 
       }
 
-      if (likeCommentDone.likeMade || likeCommentDone.commentMade) {
+      if (likeDone || likeCommentDone.commentMade) {
 
         /**
          * Обновляем записи в таблицах Tasks & Posts
@@ -189,10 +218,10 @@ module.exports = {
         await sails.helpers.storage.accountUpdateJoi({
           criteria: {guid: account.guid},
           data: {
-            made_likes_day: likeCommentDone.likeMade
+            made_likes_day: likeDone
               ? ++account.made_likes_day
               : account.made_likes_day,
-            made_likes_total: likeCommentDone.likeMade
+            made_likes_total: likeDone
               ? ++account.made_likes_total
               : account.made_likes_total,
             made_comments_day: likeCommentDone.commentMade
@@ -215,7 +244,7 @@ module.exports = {
          * что задание успешно выполнено
          */
 
-        if (likeCommentDone.likeMade && likeCommentDone.commentMade) {
+        if (likeDone && likeCommentDone.commentMade) {
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
@@ -241,7 +270,7 @@ module.exports = {
          * задание в сообщение, что задание не было выполнено
          */
 
-        if (!likeCommentDone.likeMade && !likeCommentDone.commentMade) {
+        if (!likeDone && !likeCommentDone.commentMade) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0].message;
 
@@ -280,7 +309,7 @@ module.exports = {
          * сообщение, что задание было выполнено не полностью и необходимо оставить комментарий
          */
 
-        if (likeCommentDone.likeMade && !likeCommentDone.commentMade) {
+        if (likeDone && !likeCommentDone.commentMade) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0].message;
 
@@ -319,7 +348,7 @@ module.exports = {
          * сообщение, что задание было выполнено не полностью и необходимо поставить лайк
          */
 
-        if (!likeCommentDone.likeMade && likeCommentDone.commentMade) {
+        if (!likeDone && likeCommentDone.commentMade) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0].message;
 

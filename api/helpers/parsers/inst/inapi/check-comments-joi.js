@@ -47,6 +47,7 @@ module.exports = {
 
     let commentMade = false;
     let commentText = '';
+    let numberOfWords = 0;
 
     try {
 
@@ -101,7 +102,10 @@ module.exports = {
       const commentByProfile = _.find(getCommentsJoiRaw.payload.comments, {user: {username: input.instProfile}});
 
       if (commentByProfile != null) {
-        commentMade = true;
+        // const commentWords = _.words(commentByProfile.text, /\w+/g);
+        const commentWords = _.words(commentByProfile.text, /[a-zA-Zа-яА-Яα-ωΑ-Ω0-9_]+/g);
+        numberOfWords = commentWords.length;
+        commentMade = numberOfWords >= sails.config.custom.config.parsers.minWordsInComment;
         commentText = commentByProfile.text;
       }
 
@@ -125,6 +129,7 @@ module.exports = {
         payload: {
           commentMade,
           commentText,
+          numberOfWords,
         },
       })
 

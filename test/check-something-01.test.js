@@ -2366,10 +2366,10 @@ describe.only('Inapi requests', function () {
 
     this.timeout(30000);
 
-    const params = {
-      instProfile: 'some_profile_123',
-      instPostCode: 'Bg_t9-OFL_g',
-    };
+    // const params = {
+    //   instProfile: 'some_profile_123',
+    //   instPostCode: 'Bg_t9-OFL_g',
+    // };
 
     // const params = {
     //   instProfile: 'mantis_ch',
@@ -2386,10 +2386,16 @@ describe.only('Inapi requests', function () {
     //   instPostCode: 'Bg_t9-OFL_g',
     // };
 
+    const params = {
+      instProfile: 'artemvast',
+      instPostCode: 'BeQkuYDlTR8',
+    };
+
     const res = await sails.helpers.parsers.inst.inapi.checkCommentsJoi(params);
 
     const commentDone = _.get(res, 'payload.commentMade', 'none');
     const commentText = _.get(res, 'payload.commentText', 'none');
+    const numberOfWords = _.get(res, 'payload.numberOfWords', 0);
 
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
