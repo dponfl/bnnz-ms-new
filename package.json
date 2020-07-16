@@ -11,7 +11,7 @@
     "@sailshq/upgrade": "^1.0.9",
     "bluebird": "^3.5.3",
     "grunt": "1.0.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "node-telegram-bot-api": "^0.30.0",
     "request-promise": "^4.2.2",
     "sails": "^1.1.0",
