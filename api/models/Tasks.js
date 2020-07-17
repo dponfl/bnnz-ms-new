@@ -49,6 +49,10 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    commentNumberOfWords: {
+      type: 'number',
+      allowNull: true,
+    },
 
 
 

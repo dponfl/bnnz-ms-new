@@ -210,6 +210,7 @@ module.exports = {
 
         taskData.makeCommentPerformed = true;
         taskData.commentText = commentText;
+        taskData.commentNumberOfWords = numberOfWords;
         postData.receivedComments++;
         postData.allCommentsDone = postData.receivedComments >= postRec.requestedComments;
 
