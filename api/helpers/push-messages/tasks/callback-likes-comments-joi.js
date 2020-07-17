@@ -128,6 +128,10 @@ module.exports = {
 
       const activeParser = sails.config.custom.config.parsers.inst;
 
+      /**
+       * Проверяем лайки
+       */
+
       const checkLikesParams = {
         instProfile,
         instPostCode,
@@ -150,17 +154,37 @@ module.exports = {
       }
 
 
+      /**
+       * Проверяем комменты
+       */
 
 
-
-
-
-
-
-      const likeCommentDone = await sails.helpers.parsers.inst[activeParser].checkLikesCommentsJoi({
+      const checkCommentsParams = {
         instProfile,
         instPostCode,
-      });
+      };
+
+      const checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
+
+      if (checkCommentsJoiRaw.status !== 'ok') {
+        throw new Error(`${moduleName}, error: wrong checkCommentsJoi response
+        checkCommentsParams: ${JSON.stringify(checkCommentsParams, null, 3)}
+        checkCommentsJoiRaw: ${JSON.stringify(checkCommentsJoiRaw, null, 3)}`);
+      }
+
+      const commentDone = _.get(checkCommentsJoiRaw, 'payload.commentMade', 'none');
+      const commentText = _.get(checkCommentsJoiRaw, 'payload.commentText', 'none');
+      const numberOfWords = _.get(checkCommentsJoiRaw, 'payload.numberOfWords', 'none');
+
+      if (
+        commentDone === 'none'
+        || commentText === 'none'
+        || numberOfWords === 'none'
+      ) {
+        throw new Error(`${moduleName}, error: wrong checkCommentsJoi data in response
+        checkCommentsParams: ${JSON.stringify(checkCommentsParams, null, 3)}
+        checkCommentsJoiRaw: ${JSON.stringify(checkCommentsJoiRaw, null, 3)}`);
+      }
 
       let taskData = {
         makeLikePerformed: taskRec.makeLikePerformed,
@@ -182,16 +206,16 @@ module.exports = {
 
       }
 
-      if (likeCommentDone.commentMade) {
+      if (commentDone) {
 
         taskData.makeCommentPerformed = true;
-        taskData.commentText = likeCommentDone.commentText;
+        taskData.commentText = commentText;
         postData.receivedComments++;
         postData.allCommentsDone = postData.receivedComments >= postRec.requestedComments;
 
       }
 
-      if (likeDone || likeCommentDone.commentMade) {
+      if (likeDone || commentDone) {
 
         /**
          * Обновляем записи в таблицах Tasks & Posts
@@ -224,10 +248,10 @@ module.exports = {
             made_likes_total: likeDone
               ? ++account.made_likes_total
               : account.made_likes_total,
-            made_comments_day: likeCommentDone.commentMade
+            made_comments_day: commentDone
               ? ++account.made_comments_day
               : account.made_comments_day,
-            made_comments_total: likeCommentDone.commentMade
+            made_comments_total: commentDone
               ? ++account.made_comments_total
               : account.made_comments_total,
           },
@@ -244,7 +268,7 @@ module.exports = {
          * что задание успешно выполнено
          */
 
-        if (likeDone && likeCommentDone.commentMade) {
+        if (likeDone && commentDone) {
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
@@ -270,7 +294,7 @@ module.exports = {
          * задание в сообщение, что задание не было выполнено
          */
 
-        if (!likeDone && !likeCommentDone.commentMade) {
+        if (!likeDone && !commentDone) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0].message;
 
@@ -309,7 +333,7 @@ module.exports = {
          * сообщение, что задание было выполнено не полностью и необходимо оставить комментарий
          */
 
-        if (likeDone && !likeCommentDone.commentMade) {
+        if (likeDone && !commentDone) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0].message;
 
@@ -348,7 +372,7 @@ module.exports = {
          * сообщение, что задание было выполнено не полностью и необходимо поставить лайк
          */
 
-        if (!likeDone && likeCommentDone.commentMade) {
+        if (!likeDone && commentDone) {
 
           const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0].message;
 
