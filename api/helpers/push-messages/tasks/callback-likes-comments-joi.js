@@ -297,18 +297,25 @@ module.exports = {
 
         if (!likeDone && !commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0];
 
-          messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
-            [
-              [
-                {
-                  "text": "MSG_TASK_PERFORM_BTN",
-                  "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-                }
-              ]
-            ]
-          );
+          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
+          //   [
+          //     [
+          //       {
+          //         "text": "MSG_TASK_PERFORM_BTN",
+          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+          //       }
+          //     ]
+          //   ]
+          // );
+
+          messageData.message.inline_keyboard[1] = [
+            {
+              "text": "MSG_TASK_PERFORM_BTN",
+              "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+            }
+          ];
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
@@ -336,18 +343,25 @@ module.exports = {
 
         if (likeDone && !commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0];
 
-          messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
-            [
-              [
-                {
-                  "text": "MSG_TASK_PERFORM_BTN",
-                  "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-                }
-              ]
-            ]
-          );
+          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
+          //   [
+          //     [
+          //       {
+          //         "text": "MSG_TASK_PERFORM_BTN",
+          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+          //       }
+          //     ]
+          //   ]
+          // );
+
+          messageData.message.inline_keyboard[1] = [
+            {
+              "text": "MSG_TASK_PERFORM_BTN",
+              "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+            }
+          ];
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
@@ -375,18 +389,25 @@ module.exports = {
 
         if (!likeDone && commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0].message;
+          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0];
 
-          messageData.inline_keyboard = _.concat(messageData.inline_keyboard,
-            [
-              [
-                {
-                  "text": "MSG_TASK_PERFORM_BTN",
-                  "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-                }
-              ]
-            ]
-          );
+          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
+          //   [
+          //     [
+          //       {
+          //         "text": "MSG_TASK_PERFORM_BTN",
+          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+          //       }
+          //     ]
+          //   ]
+          // );
+
+          messageData.message.inline_keyboard[1] = [
+            {
+              "text": "MSG_TASK_PERFORM_BTN",
+              "callback_data": "push_msg_tsk_lc_" + taskRec.guid
+            }
+          ];
 
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,

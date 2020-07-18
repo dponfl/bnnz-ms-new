@@ -703,6 +703,75 @@ describe.skip('Ref system: link 20 accounts to ref system', function () {
 
 });
 
+describe.skip('Ref system: link 2 accounts to ref system', function () {
+
+  let customConfig;
+  let accounts = [];
+  let clients = [];
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    this.timeout(700000);
+
+    /**
+     * Создаём 2 клиентов по 1 аккаунту у каждого
+     */
+
+    for (let i=0; i<2; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+        is_ref: true,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+  });
+
+  it('should link accounts to ref system', async function () {
+
+    this.timeout(700000);
+
+    const linkedAccounts = [];
+
+    try {
+
+      for (let i = 0; i < 2; i++) {
+        const linkAccountToRefRaw = await sails.helpers.ref.linkAccountToRefJoi({
+          account: accounts[i],
+        });
+
+        linkedAccounts.push(linkAccountToRefRaw.payload);
+
+      }
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+    }
+
+
+  });
+
+});
+
 describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
   let customConfig;
@@ -1063,7 +1132,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
 });
 
-describe.only('Inapi requests', function () {
+describe.skip('Inapi requests', function () {
 
   it.skip('Check request result: getLimitsJoi', async function () {
     const res = await sails.helpers.parsers.inst.inapi.getLimitsJoi();
