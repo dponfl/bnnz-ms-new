@@ -55,18 +55,9 @@ module.exports = {
 
     let input;
 
-    let profileExists = false;
-    let profileId = null;
-    let profilePic = null;
-
     try {
 
       input = await schema.validateAsync(inputs.params);
-
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       if (_.trim(input.msg.text) === '') {
 
@@ -79,48 +70,16 @@ module.exports = {
 
       } else {
 
-        /**
-         * Парсером проверяем, что этот профиль существует в Instagram
-         */
-
-        let instProfile = _.trim(input.msg.text);
+        let instProfile = _.toLower(_.trim(input.msg.text));
 
         if (instProfile[0] === '@') {
           instProfile = _.replace(instProfile, '@', '');
         }
 
-        const activeParser = sails.config.custom.config.parsers.inst;
+        input.client.inst_profile_tmp = instProfile;
 
-        const checkProfileRaw = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
-          instProfile,
-        });
-
-        if (checkProfileRaw.status !== 'ok') {
-          throw new Error(`${moduleName}, parsers.inst.${activeParser}.checkProfileExistsJoi error:
-          instProfile: ${instProfile}
-          checkProfileRaw: ${JSON.stringify(checkProfileRaw, null, 3)}`);
-        }
-
-        profileExists = checkProfileRaw.payload.profileExists;
-        profileId = checkProfileRaw.payload.profileId;
-        profilePic = checkProfileRaw.payload.profilePicUrl;
-
-        if (profileExists) {
-
-          input.client.inst_profile_tmp = instProfile;
-          currentAccount.profile_provided = true;
-          currentAccount.inst_id = profileId;
-          currentAccount.inst_pic = profilePic;
-
-          input.block.done = true;
-          input.block.next = 'optin::confirm_profile';
-
-        } else {
-
-          input.block.done = true;
-          input.block.next = 'optin::wrong_profile';
-
-        }
+        input.block.done = true;
+        input.block.next = 'optin::check_profile';
 
       }
 

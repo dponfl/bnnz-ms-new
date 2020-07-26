@@ -22,12 +22,26 @@ module.exports = {
     requestType: {
       type: 'string',
     },
+    status: {
+      type: 'string',
+    },
+    clientGuid: {
+      type: 'string',
+      allowNull: true,
+    },
+    accountGuid: {
+      type: 'string',
+      allowNull: true,
+    },
     requestDuration: {
       type: 'number',
     },
     requestDepth: {
       type: 'number',
       allowNull: true,
+    },
+    comments: {
+      type: 'json',
     },
 
 

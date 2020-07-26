@@ -60,10 +60,12 @@ module.exports = {
       const action = 'parsing';
       const api = 'inapi';
       const requestType = 'getMediaId';
+      let status = '';
+
       const momentStart = moment();
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers[sails.config.custom.config.parsers.inst].paths.getMediaId,
+        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].paths.getMediaId,
         method: 'GET',
         qs: {
           api_key: sails.config.custom.instParserApiKey,
@@ -78,12 +80,43 @@ module.exports = {
       const responseStatusInner = _.get(requestRes, 'response.status', null);
 
       if (responseStatusMain !== 'success' || responseStatusInner !== 'success') {
-        throw new Error(`${moduleName}, error => wrong parser response:
-        request params: ${JSON.stringify(options, null, 3)}
-        request response: ${JSON.stringify(requestRes, null, 3)}`);
+        // throw new Error(`${moduleName}, error => wrong parser response:
+        // request params: ${JSON.stringify(options, null, 3)}
+        // request response: ${JSON.stringify(requestRes, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          comments: {
+            responseStatusMain,
+            responseStatusInner,
+            request_id: _.get(requestRes, 'request_id', null),
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {},
+          raw: requestRes,
+        })
+
       }
 
       const mediaId = _.get(requestRes, 'response.api.media.shortcode_media.id', null);
+
+      status = 'success';
 
       const momentDone = moment();
 
@@ -95,12 +128,18 @@ module.exports = {
         api,
         requestType,
         requestDuration,
+        status,
+        comments: {
+          responseStatusMain,
+          responseStatusInner,
+          request_id: _.get(requestRes, 'request_id', null),
+        },
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: `${moduleName} performed`,
         payload: {
           mediaId,

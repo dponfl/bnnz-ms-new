@@ -124,7 +124,7 @@ module.exports = {
         profilesList,
       };
 
-      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
 
       if (checkProfileSubscriptionResRaw.status !== 'ok') {
         throw new Error(`${moduleName}, error: wrong checkProfileSubscriptionJoi response:

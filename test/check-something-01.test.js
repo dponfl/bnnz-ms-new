@@ -772,7 +772,7 @@ describe.skip('Ref system: link 2 accounts to ref system', function () {
 
 });
 
-describe('Ref system: link 1 accounts to ref system', function () {
+describe.skip('Ref system: link 1 accounts to ref system', function () {
 
   let customConfig;
   let accounts = [];

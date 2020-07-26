@@ -126,7 +126,7 @@ module.exports = {
        * Проверка выполнения задания с использванием парсера
        */
 
-      const activeParser = sails.config.custom.config.parsers.inst;
+      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
       const checkLikesParams = {
         instProfile,

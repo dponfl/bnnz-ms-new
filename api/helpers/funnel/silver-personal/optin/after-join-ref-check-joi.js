@@ -125,7 +125,7 @@ module.exports = {
         profilesList,
       };
 
-      const activeParser = sails.config.custom.config.parsers.inst;
+      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
       const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
 

@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const moment = require('moment');
 
 const moduleName = 'parsers:inst:inapi:check-profile-exists-joi';
 
@@ -42,6 +43,10 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
+      client: Joi
+        .any()
+        .description('Client record')
+        .required(),
       instProfile: Joi
         .string()
         .description('Instagram profile')
@@ -53,6 +58,17 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      const clientGuid = input.client.guid;
+      const accountGuid = input.client.account_use;
+
+      const platform = 'Instagram';
+      const action = 'parsing';
+      const api = 'inapi';
+      const requestType = 'checkProfileExists';
+      let status = '';
+
+      const momentStart = moment();
+
       const instProfile = input.instProfile;
 
       const getUserIdByProfileJoiParams = {
@@ -61,10 +77,37 @@ module.exports = {
 
       const getUserIdByProfileJoiRes = await sails.helpers.parsers.inst.inapi.getUserIdByProfileJoi(getUserIdByProfileJoiParams);
 
-      if (getUserIdByProfileJoiRes.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong getUserIdByProfileJoi response
-        getUserIdByProfileJoiParams: ${JSON.stringify(getUserIdByProfileJoiParams, null, 3)}
-        getUserIdByProfileJoiRes: ${JSON.stringify(getUserIdByProfileJoiRes, null, 3)}`);
+      if (getUserIdByProfileJoiRes.status !== 'success') {
+        // throw new Error(`${moduleName}, error: wrong getUserIdByProfileJoi response
+        // getUserIdByProfileJoiParams: ${JSON.stringify(getUserIdByProfileJoiParams, null, 3)}
+        // getUserIdByProfileJoiRes: ${JSON.stringify(getUserIdByProfileJoiRes, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: getUserIdByProfileJoiRes.raw || {},
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {},
+          raw: getUserIdByProfileJoiRes,
+        })
+
       }
 
       const userPk = _.get(getUserIdByProfileJoiRes, 'payload.userPk', false);
@@ -74,7 +117,7 @@ module.exports = {
       const profilePicUrl = _.get(getUserIdByProfileJoiRes, 'payload.profilePicUrl', null);
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: `${moduleName} performed`,
         payload: {
           profileExists,

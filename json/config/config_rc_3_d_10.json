@@ -222,31 +222,37 @@
     }
   },
   "parsers": {
-    "inst": "inapi",
-    "checkSteps": {
-      "getFollowing": [1, 2, 3, 5, 8, 13, 21, 34, 1000000]
-    },
-    "minWordsInComment": 2,
-    "inapi": {
-      "paths": {
-        "getUserId": "/api/v1/people/getinfobyname",
-        "getFollowing": "/api/v1/people/getfollowing_v2",
-        "getFollowers": "/api/web1/people/getfollowers",
-        "getMediaId": "/api/web1/media/getpost",
-        "getLikes": "/api/v1/media/getlikers",
-        "getComments": "/api/v1/media/getcomments",
-        "getLimits": "/api/s1/others/info"
-      }
-    },
-    "otherProviderXXX": {
-      "paths": {
-        "getUserId": "XXX",
-        "getFollowing": "XXX",
-        "getFollowers": "XXX",
-        "getMediaId": "XXX",
-        "getLikes": "XXX",
-        "getComments": "XXX",
-        "getLimits": "XXX"
+    "inst": {
+      "activeParserName": "inapi",
+      "checkSteps": {
+        "getFollowing": [1, 2, 3, 5, 8, 13, 21, 34, 1000000]
+      },
+      "errorSteps": {
+        "intervalTime": 1000,
+        "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+      },
+      "minWordsInComment": 2,
+      "inapi": {
+        "paths": {
+          "getUserId": "/api/v1/people/getinfobyname",
+          "getFollowing": "/api/v1/people/getfollowing_v2",
+          "getFollowers": "/api/web1/people/getfollowers",
+          "getMediaId": "/api/web1/media/getpost",
+          "getLikes": "/api/v1/media/getlikers",
+          "getComments": "/api/v1/media/getcomments",
+          "getLimits": "/api/s1/others/info"
+        }
+      },
+      "otherProviderXXX": {
+        "paths": {
+          "getUserId": "XXX",
+          "getFollowing": "XXX",
+          "getFollowers": "XXX",
+          "getMediaId": "XXX",
+          "getLikes": "XXX",
+          "getComments": "XXX",
+          "getLimits": "XXX"
+        }
       }
     }
   },

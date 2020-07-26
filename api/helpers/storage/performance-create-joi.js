@@ -66,6 +66,21 @@ module.exports = {
         .integer()
         .positive()
         .description('requestDepth (valid for some requests)'),
+      status: Joi
+        .string()
+        .description('request status')
+        .required(),
+      comments: Joi
+        .any()
+        .description('additional data'),
+      clientGuid: Joi
+        .string()
+        .guid()
+        .description('client guid'),
+      accountGuid: Joi
+        .string()
+        .guid()
+        .description('account guid'),
     });
 
     let input;
@@ -82,6 +97,10 @@ module.exports = {
           requestType: input.requestType,
           requestDuration: input.requestDuration,
           requestDepth: input.requestDepth || null,
+          status: input.status,
+          clientGuid: input.clientGuid || null,
+          accountGuid: input.accountGuid || null,
+          comments: input.comments || '',
         })
         .fetch();
 
