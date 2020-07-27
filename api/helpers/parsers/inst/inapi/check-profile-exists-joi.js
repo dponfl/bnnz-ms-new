@@ -116,6 +116,27 @@ module.exports = {
       const profileFullName = _.get(getUserIdByProfileJoiRes, 'payload.fullName', null);
       const profilePicUrl = _.get(getUserIdByProfileJoiRes, 'payload.profilePicUrl', null);
 
+      status = 'success';
+
+      const momentDone = moment();
+
+      const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+      const performanceCreateParams = {
+        platform,
+        action,
+        api,
+        requestType,
+        requestDuration,
+        status,
+        clientGuid,
+        accountGuid,
+        comments: getUserIdByProfileJoiRes.raw || {},
+      };
+
+      await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+
       return exits.success({
         status: 'success',
         message: `${moduleName} performed`,

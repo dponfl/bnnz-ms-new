@@ -41,6 +41,10 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
+      client: Joi
+        .any()
+        .description('Client record')
+        .required(),
       mediaId: Joi
         .string()
         .description('Instagram media id')
@@ -51,6 +55,9 @@ module.exports = {
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      const clientGuid = input.client.guid;
+      const accountGuid = input.client.account_use;
 
       const platform = 'Instagram';
       const action = 'parsing';
@@ -92,6 +99,8 @@ module.exports = {
           requestType,
           requestDuration,
           status,
+          clientGuid,
+          accountGuid,
           comments: {
             responseStatusMain,
             responseStatusInner,
@@ -125,6 +134,8 @@ module.exports = {
         requestType,
         requestDuration,
         status,
+        clientGuid,
+        accountGuid,
         comments: {
           responseStatusMain,
           responseStatusInner,

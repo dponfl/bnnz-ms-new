@@ -1201,7 +1201,37 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
 });
 
-describe.skip('Inapi requests', function () {
+describe('Inapi requests', function () {
+
+  let customConfig;
+  let account;
+  let client;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    this.timeout(700000);
+
+    client = await clientSdk.createClientDB();
+
+    account = await accountSdk.createAccountDB({
+      client: client.id,
+      is_ref: true,
+    });
+
+    await clientSdk.updateClientDB(
+      {
+        guid: client.guid,
+      },
+      {
+        account_use: account.guid,
+      }
+    );
+
+    client.accounts = [account];
+
+  });
 
   it.skip('Check request result: getLimitsJoi', async function () {
     const res = await sails.helpers.parsers.inst.inapi.getLimitsJoi();
@@ -1214,6 +1244,7 @@ describe.skip('Inapi requests', function () {
 
     const params = {
       instProfile: 'dima_ponomarev1',
+      client,
     };
     const res = await sails.helpers.parsers.inst.inapi.getUserIdByProfileJoi(params);
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
@@ -1222,6 +1253,7 @@ describe.skip('Inapi requests', function () {
   it.skip('Check request result: checkProfileExistsJoi', async function () {
     const params = {
       instProfile: 'dima_ponomarev1',
+      client,
     };
     const res = await sails.helpers.parsers.inst.inapi.checkProfileExistsJoi(params);
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
@@ -1229,6 +1261,7 @@ describe.skip('Inapi requests', function () {
 
   it.skip('Check request result: getFollowingsJoi', async function () {
     const params = {
+      client,
       profilePk: '434396103',
       limit: 1,
     };
