@@ -58,6 +58,7 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      const client = input.client;
       const clientGuid = input.client.guid;
       const accountGuid = input.client.account_use;
 
@@ -72,6 +73,7 @@ module.exports = {
       const instProfile = input.instProfile;
 
       const getUserIdByProfileJoiParams = {
+        client,
         instProfile,
       };
 

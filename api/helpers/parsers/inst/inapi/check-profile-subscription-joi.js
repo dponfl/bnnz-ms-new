@@ -39,6 +39,10 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
+      client: Joi
+        .any()
+        .description('Client record')
+        .required(),
       checkProfile: Joi
         .string()
         .description('Instagram profile to check subscription')
@@ -68,28 +72,70 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      const client = input.client;
+      const clientGuid = input.client.guid;
+      const accountGuid = input.client.account_use;
+
+      const platform = 'Instagram';
+      const action = 'parsing';
+      const api = 'inapi';
+      const requestType = 'checkProfileSubscription';
+      let status = '';
+
+      const momentStart = moment();
+
       /**
        * Проверяем подписку парсером постепенно увеличивая глубину проверки, если
        * подписка всё ещё не подтверждена
        */
 
-      const checkSteps = sails.config.custom.config.parsers.checkSteps.getFollowing;
+      let getFollowingsJoiRes;
+
+      const checkSteps = sails.config.custom.config.parsers.inst.checkSteps.getFollowing;
 
       let i = 0;
 
       while (!allSubscribed && i < checkSteps.length) {
 
         const getFollowingsJoiParams = {
+          client,
           profilePk: input.profileId,
           limit: checkSteps[i],
         };
 
-        const getFollowingsJoiRes = await sails.helpers.parsers.inst.inapi.getFollowingsJoi(getFollowingsJoiParams);
+        getFollowingsJoiRes = await sails.helpers.parsers.inst.inapi.getFollowingsJoi(getFollowingsJoiParams);
 
-        if (getFollowingsJoiRes.status !== 'ok') {
-          throw new Error(`${moduleName}, error: wrong getFollowingsJoi response
-        getFollowingsJoiParams: ${JSON.stringify(getFollowingsJoiParams, null, 3)}
-        getFollowingsJoiRes: ${JSON.stringify(getFollowingsJoiRes, null, 3)}`);
+        if (getFollowingsJoiRes.status !== 'success') {
+          // throw new Error(`${moduleName}, error: wrong getFollowingsJoi response
+          // getFollowingsJoiParams: ${JSON.stringify(getFollowingsJoiParams, null, 3)}
+          // getFollowingsJoiRes: ${JSON.stringify(getFollowingsJoiRes, null, 3)}`);
+
+          status = 'error';
+          const momentDone = moment();
+
+          const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+          const performanceCreateParams = {
+            platform,
+            action,
+            api,
+            requestType,
+            requestDuration,
+            status,
+            clientGuid,
+            accountGuid,
+            comments: getFollowingsJoiRes.raw || {},
+          };
+
+          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+          return exits.success({
+            status: 'error',
+            message: `${moduleName} performed with error`,
+            payload: {},
+            raw: getFollowingsJoiRes,
+          })
+
         }
 
         const followingProfiles = [];
@@ -126,12 +172,16 @@ module.exports = {
         requestType,
         requestDuration,
         requestDepth,
+        status,
+        clientGuid,
+        accountGuid,
+        comments: getFollowingsJoiRes.raw || {},
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: `${moduleName} performed`,
         payload: result,
       })

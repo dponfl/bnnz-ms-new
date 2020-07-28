@@ -1234,6 +1234,9 @@ describe('Inapi requests', function () {
   });
 
   it.skip('Check request result: getLimitsJoi', async function () {
+
+    this.timeout(30000);
+
     const res = await sails.helpers.parsers.inst.inapi.getLimitsJoi();
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
@@ -1251,6 +1254,9 @@ describe('Inapi requests', function () {
   });
 
   it.skip('Check request result: checkProfileExistsJoi', async function () {
+
+    this.timeout(30000);
+
     const params = {
       instProfile: 'dima_ponomarev1',
       client,
@@ -1260,6 +1266,9 @@ describe('Inapi requests', function () {
   });
 
   it.skip('Check request result: getFollowingsJoi', async function () {
+
+    this.timeout(30000);
+
     const params = {
       client,
       profilePk: '434396103',
@@ -1270,6 +1279,9 @@ describe('Inapi requests', function () {
   });
 
   it.skip('Check request result: get necessary data from response', async function () {
+
+    this.timeout(30000);
+
     const response = {
       "status": "success",
       "request_id": 5446,
@@ -2446,11 +2458,12 @@ describe('Inapi requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: checkProfileSubscriptionJoi', async function () {
+  it('Check request result: checkProfileSubscriptionJoi', async function () {
 
     this.timeout(30000);
 
     const params = {
+      client,
       checkProfile: 'dima_ponomarev1',
       profileId: '434396103',
       profilesList: ['k_samorazvitie', 'bmwm_insta', 'sonofthe90s', 'victorymoroz', 'andreeasasu90'],
@@ -2467,6 +2480,9 @@ describe('Inapi requests', function () {
   });
 
   it.skip('Check request result: getPostCodeJoi', async function () {
+
+    this.timeout(30000);
+
     const params = {
       postLink: 'https://www.instagram.com/p/B7QmKU8FORo/',
     };
@@ -2481,6 +2497,7 @@ describe('Inapi requests', function () {
     this.timeout(30000);
 
     const params = {
+      client,
       shortCode: 'BpZS90LBOwq',
     };
 
@@ -2493,6 +2510,7 @@ describe('Inapi requests', function () {
     this.timeout(30000);
 
     const params = {
+      client,
       mediaId: '1898632130658102314',
     };
 
@@ -2526,6 +2544,7 @@ describe('Inapi requests', function () {
     this.timeout(30000);
 
     const params = {
+      client,
       mediaId: '1747317351232356320', // https://www.instagram.com/p/Bg_t9-OFL_g/
     };
 

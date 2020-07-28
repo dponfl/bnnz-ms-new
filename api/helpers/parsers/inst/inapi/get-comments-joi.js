@@ -105,6 +105,8 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
           },
         };
 

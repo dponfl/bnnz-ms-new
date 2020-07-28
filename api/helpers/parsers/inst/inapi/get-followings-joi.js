@@ -115,6 +115,9 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
+            error: 'wrong parser response',
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
           },
         };
 
@@ -154,7 +157,9 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
-            error: 'wrong parser response: no response.instagram.result.users'
+            error: 'wrong parser response: no response.instagram.result.users',
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
           },
         };
 
