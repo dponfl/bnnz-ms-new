@@ -100,7 +100,7 @@ module.exports = {
           status: input.status,
           clientGuid: input.clientGuid || null,
           accountGuid: input.accountGuid || null,
-          comments: input.comments || '',
+          comments: input.comments || {},
         })
         .fetch();
 

@@ -160,6 +160,8 @@ module.exports = {
         subscribed,
       };
 
+      status = 'success';
+
       const momentDone = moment();
 
       const requestDepth = checkSteps[i];
@@ -175,7 +177,7 @@ module.exports = {
         status,
         clientGuid,
         accountGuid,
-        comments: getFollowingsJoiRes.raw || {},
+        // comments: getFollowingsJoiRes.raw || {},
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);

@@ -2460,7 +2460,7 @@ describe('Inapi requests', function () {
 
   it('Check request result: checkProfileSubscriptionJoi', async function () {
 
-    this.timeout(30000);
+    this.timeout(300000);
 
     const params = {
       client,
@@ -2470,6 +2470,7 @@ describe('Inapi requests', function () {
     };
 
     // const params = {
+    //   client,
     //   checkProfile: 'dima_ponomarev1',
     //   profileId: '434396103',
     //   profilesList: ['k_samorazvitie', 'sonofthe90s'],

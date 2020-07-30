@@ -68,6 +68,8 @@ module.exports = {
       const clientGuid = input.client.guid;
       const accountGuid = input.client.account_use;
 
+      const requestDepth = input.limit;
+
       const platform = 'Instagram';
       const action = 'parsing';
       const api = 'inapi';
@@ -108,6 +110,7 @@ module.exports = {
           api,
           requestType,
           requestDuration,
+          requestDepth,
           status,
           clientGuid,
           accountGuid,
@@ -150,6 +153,7 @@ module.exports = {
           api,
           requestType,
           requestDuration,
+          requestDepth,
           status,
           clientGuid,
           accountGuid,
@@ -186,6 +190,7 @@ module.exports = {
         api,
         requestType,
         requestDuration,
+        requestDepth,
         status,
         clientGuid,
         accountGuid,
