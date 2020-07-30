@@ -61,12 +61,15 @@ module.exports = {
     let notSubscribed = [];
     let subscribed = [];
     let allSubscribed = false;
+    let requestDepth = 0;
 
     const platform = 'Instagram';
     const action = 'parsing';
     const api = 'inapi';
-    const requestType = 'getFollowings';
+    const requestType = 'checkProfileSubscription';
     const momentStart = moment();
+
+    let status = '';
 
     try {
 
@@ -76,13 +79,6 @@ module.exports = {
       const clientGuid = input.client.guid;
       const accountGuid = input.client.account_use;
 
-      const platform = 'Instagram';
-      const action = 'parsing';
-      const api = 'inapi';
-      const requestType = 'checkProfileSubscription';
-      let status = '';
-
-      const momentStart = moment();
 
       /**
        * Проверяем подписку парсером постепенно увеличивая глубину проверки, если
@@ -102,6 +98,8 @@ module.exports = {
           profilePk: input.profileId,
           limit: checkSteps[i],
         };
+
+        requestDepth = checkSteps[i];
 
         getFollowingsJoiRes = await sails.helpers.parsers.inst.inapi.getFollowingsJoi(getFollowingsJoiParams);
 
@@ -124,7 +122,10 @@ module.exports = {
             status,
             clientGuid,
             accountGuid,
-            comments: getFollowingsJoiRes.raw || {},
+            comments: {
+              error: 'wrong getFollowingsJoi response status',
+              response: getFollowingsJoiRes.raw || {},
+            },
           };
 
           await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
@@ -132,7 +133,9 @@ module.exports = {
           return exits.success({
             status: 'error',
             message: `${moduleName} performed with error`,
-            payload: {},
+            payload: {
+              error: 'wrong getFollowingsJoi response status',
+            },
             raw: getFollowingsJoiRes,
           })
 
@@ -164,7 +167,6 @@ module.exports = {
 
       const momentDone = moment();
 
-      const requestDepth = checkSteps[i];
       const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
       const performanceCreateParams = {

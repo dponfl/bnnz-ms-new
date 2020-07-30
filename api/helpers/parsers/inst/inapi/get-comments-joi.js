@@ -105,6 +105,7 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
+            error: 'wrong parser response status',
             requestParams: _.omit(options, 'qs.api_key'),
             rawResponse: requestRes,
           },
@@ -122,6 +123,48 @@ module.exports = {
       }
 
       const comments = _.get(requestRes, 'response.instagram.comments', null);
+
+      if (comments == null) {
+        // throw new Error(`${moduleName}, error => wrong parser response: no comments
+        // request params: ${JSON.stringify(options, null, 3)}
+        // request response: ${JSON.stringify(requestRes, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            responseStatusMain,
+            responseStatusInner,
+            request_id: _.get(requestRes, 'request_id', null),
+            error: 'wrong parser response: no response.instagram.comments',
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: 'wrong parser response: no response.instagram.comments',
+          },
+          raw: requestRes,
+        })
+
+      }
 
       status = 'success';
 

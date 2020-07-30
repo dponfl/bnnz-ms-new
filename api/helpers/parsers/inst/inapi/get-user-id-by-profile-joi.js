@@ -109,7 +109,7 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
-            error: 'wrong parser response',
+            error: 'wrong parser response status',
             requestParams: _.omit(options, 'qs.api_key'),
             rawResponse: requestRes,
           },
@@ -120,7 +120,9 @@ module.exports = {
         return exits.success({
           status: 'error',
           message: `${moduleName} performed with error`,
-          payload: {},
+          payload: {
+            error: 'wrong parser response status',
+          },
           raw: requestRes,
         })
 

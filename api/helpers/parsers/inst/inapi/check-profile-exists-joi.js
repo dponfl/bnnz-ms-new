@@ -98,7 +98,10 @@ module.exports = {
           status,
           clientGuid,
           accountGuid,
-          comments: getUserIdByProfileJoiRes.raw || {},
+          comments: {
+            error: 'wrong getUserIdByProfileJoi response status',
+            response: getUserIdByProfileJoiRes.raw || {},
+          },
         };
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
@@ -106,7 +109,9 @@ module.exports = {
         return exits.success({
           status: 'error',
           message: `${moduleName} performed with error`,
-          payload: {},
+          payload: {
+            error: 'wrong getUserIdByProfileJoi response status',
+          },
           raw: getUserIdByProfileJoiRes,
         })
 

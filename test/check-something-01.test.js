@@ -2458,7 +2458,7 @@ describe('Inapi requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: checkProfileSubscriptionJoi', async function () {
+  it.skip('Check request result: checkProfileSubscriptionJoi', async function () {
 
     this.timeout(300000);
 
@@ -2524,11 +2524,13 @@ describe('Inapi requests', function () {
     this.timeout(30000);
 
     // const params = {
+    //   client,
     //   instProfile: 'some_profile_123',
     //   instPostCode: 'BpZS90LBOwq',
     // };
 
     const params = {
+      client,
       instProfile: 'krasheniinniikova',
       instPostCode: 'BpZS90LBOwq',
     };

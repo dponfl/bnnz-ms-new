@@ -43,45 +43,122 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      instProfile: Joi.string().required(),
-      instPostCode: Joi.string().required(),
+      client: Joi
+        .any()
+        .description('Client record')
+        .required(),
+      instProfile: Joi.string()
+        .required(),
+      instPostCode: Joi.string()
+        .required(),
     });
 
 
     let likeMade = false;
 
+    const platform = 'Instagram';
+    const action = 'parsing';
+    const api = 'inapi';
+    const requestType = 'checkLikes';
+    const momentStart = moment();
+
+    let status = '';
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
-      const platform = 'Instagram';
-      const action = 'parsing';
-      const api = 'inapi';
-      const requestType = 'checkLikes';
-      const momentStart = moment();
+      const client = input.client;
+      const clientGuid = input.client.guid;
+      const accountGuid = input.client.account_use;
 
       /**
        * Получаем mediaId поста
        */
 
       const getMediaIdParams = {
+        client,
         shortCode: input.instPostCode,
       };
 
       const getMediaIdRaw = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(getMediaIdParams);
 
-      if (getMediaIdRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong getMediaIdJoi response
-        getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
-        getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
+      if (getMediaIdRaw.status !== 'success') {
+        // throw new Error(`${moduleName}, error: wrong getMediaIdJoi response
+        // getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
+        // getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: 'wrong getMediaIdJoi response status',
+            response: getMediaIdRaw.raw || {},
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: 'wrong getMediaIdJoi response status',
+          },
+          raw: getMediaIdRaw,
+        })
+
       }
 
       const mediaId = _.get(getMediaIdRaw, 'payload.mediaId', null);
 
       if (mediaId == null) {
-        throw new Error(`${moduleName}, error: getMediaIdJoi no payload.mediaId
-        getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
-        getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: getMediaIdJoi no payload.mediaId
+        // getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
+        // getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: 'getMediaIdJoi: no payload.mediaId',
+            response: getMediaIdRaw.raw || {},
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: 'getMediaIdJoi: no payload.mediaId',
+          },
+          raw: getMediaIdRaw,
+        })
+
       }
 
       /**
@@ -89,15 +166,48 @@ module.exports = {
        */
 
       const getLikesParams = {
+        client,
         mediaId,
       };
 
       const getLikesJoiRaw = await sails.helpers.parsers.inst.inapi.getLikesJoi(getLikesParams);
 
-      if (getLikesJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong getLikesJoi response
-        getLikesParams: ${JSON.stringify(getLikesParams, null, 3)}
-        getLikesJoiRaw: ${JSON.stringify(getLikesJoiRaw, null, 3)}`);
+      if (getLikesJoiRaw.status !== 'success') {
+        // throw new Error(`${moduleName}, error: wrong getLikesJoi response
+        // getLikesParams: ${JSON.stringify(getLikesParams, null, 3)}
+        // getLikesJoiRaw: ${JSON.stringify(getLikesJoiRaw, null, 3)}`);
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: 'wrong getLikesJoi response status',
+            response: getLikesJoiRaw.raw || {},
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: 'wrong getLikesJoi response status',
+          },
+          raw: getLikesJoiRaw,
+        })
+
       }
 
       const likeByProfile = _.find(getLikesJoiRaw.payload.users, {username: input.instProfile});
@@ -105,6 +215,8 @@ module.exports = {
       if (likeByProfile != null) {
         likeMade = true;
       }
+
+      status = 'success';
 
       const momentDone = moment();
 
@@ -116,6 +228,9 @@ module.exports = {
         api,
         requestType,
         requestDuration,
+        status,
+        clientGuid,
+        accountGuid,
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
