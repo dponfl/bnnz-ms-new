@@ -165,14 +165,23 @@ module.exports = {
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
 
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
+
+      return exits.success({
+        status: 'error',
+        module: errorLocation,
+        message: errorMsg,
+        payload: {
+          error: e,
+        },
+      })
 
     }
 

@@ -1201,7 +1201,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
 });
 
-describe('Inapi requests', function () {
+describe.skip('Inapi requests', function () {
 
   let customConfig;
   let account;
@@ -2580,6 +2580,7 @@ describe('Inapi requests', function () {
     // };
 
     const params = {
+      client,
       instProfile: 'artemvast',
       instPostCode: 'BeQkuYDlTR8',
     };

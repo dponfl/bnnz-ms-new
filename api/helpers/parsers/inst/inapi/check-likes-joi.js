@@ -236,7 +236,7 @@ module.exports = {
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: `${moduleName} performed`,
         payload: {
           likeMade,
@@ -251,14 +251,23 @@ module.exports = {
       sails.log.error(errorLocation + ', error: ' + errorMsg);
       sails.log.error(errorLocation + ', error details: ', e);
 
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
+
+      return exits.success({
+        status: 'error',
+        module: errorLocation,
+        message: errorMsg,
+        payload: {
+          error: e,
+        },
+      })
 
     }
 
