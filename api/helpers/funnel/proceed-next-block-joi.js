@@ -140,7 +140,7 @@ module.exports = {
 
             block.message_id = simpleRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -180,7 +180,7 @@ module.exports = {
 
             block.message_id = imgRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -237,7 +237,7 @@ module.exports = {
 
             block.message_id = imgInlineKeyboardRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -280,7 +280,7 @@ module.exports = {
 
             block.message_id = videoRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -314,7 +314,7 @@ module.exports = {
 
             block.message_id = stickerRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -356,7 +356,7 @@ module.exports = {
 
             block.message_id = docRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -411,7 +411,7 @@ module.exports = {
 
             block.message_id = docInlineKeyboardRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -454,7 +454,7 @@ module.exports = {
 
             block.message_id = forcedRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message
@@ -502,7 +502,7 @@ module.exports = {
 
             block.message_id = inlineRes.payload.message_id;
 
-            block.shown = true;
+            // block.shown = true;
 
             /**
              * Save the sent message

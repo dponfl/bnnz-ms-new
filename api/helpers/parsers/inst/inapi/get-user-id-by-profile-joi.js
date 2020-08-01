@@ -82,6 +82,7 @@ module.exports = {
       };
 
       const requestRes = await rp(options);
+      // const requestRes = {status: 'error'};
 
       const responseStatusMain = _.get(requestRes, 'status', null);
       const responseStatusInner = _.get(requestRes, 'response.status', null);

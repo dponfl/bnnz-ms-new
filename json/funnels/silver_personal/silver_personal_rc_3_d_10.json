@@ -118,6 +118,38 @@
       }
     },
     {
+      "id": "check_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::get_profile",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "optin::afterCheckProfileJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_CHECK_PROFILE_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEHERO_CHECK_PROFILE_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
       "id": "wrong_profile",
       "description": "",
       "actionType": "text",

@@ -102,7 +102,7 @@ module.exports = {
           if (nextBlock) {
             nextBlock.enabled = true;
           } else {
-            throw new Error(`nextBlock not found: \ninput.client.funnels[nextFunnel]: ${JSON.stringify(input.client.funnels[nextFunnel], null, 3)} \nnextId : ${nextId}`);
+            throw new Error(`nextBlock not found: \nnextFunnel : ${nextFunnel} \nnextId : ${nextId} \ninput.client.funnels[nextFunnel]: ${JSON.stringify(input.client.funnels[nextFunnel], null, 3)}`);
           }
 
         }

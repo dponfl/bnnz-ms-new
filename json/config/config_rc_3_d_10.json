@@ -229,6 +229,7 @@
       },
       "errorSteps": {
         "intervalTime": 1000,
+        "notificationInterval": 30000,
         "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
       },
       "minWordsInComment": 2,
@@ -1084,6 +1085,11 @@
         "BEHERO_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
         "BEHERO_OPTIN_COMPLETED_VIDEO_01": ":point_up_2: Это обучающее видео о том, как добавить ссылку на пост и запустить процесс продвижения публикации",
         "BEHERO_OPTIN_COMPLETED_VIDEO_02": "Чтобы ознакомиться с другими обучающими материалами о том, как пользоваться сервисом перейди в «ГЛАВНОЕ МЕНЮ»:point_right:«ПОМОЩЬ»",
+        "BEHERO_CHECK_PROFILE_MSG_01": "Отлично, система ищет твой профиль в Instagram :mag:",
+        "BEHERO_CHECK_PROFILE_MSG_02": "Это может занять некоторое время :hourglass_flowing_sand:",
+        "BEHERO_CHECK_PROFILE_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
+        "BEHERO_CHECK_PROFILE_ERROR_MSG_02": "Обработка запроса займет большее количество времени :clock4:",
+        "BEHERO_CHECK_PROFILE_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
         "$$$$$$$$$$$$$$$$$$$$$_BeHero_Main": "*** ТОКЕНЫ ДЛЯ BeHero Main ***",
         "BEHERO_KEYBOARD_PLACE_POST_MSG": "Чтобы начать продвижение отправь ссылку на новый пост, нажав кнопку: «ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ»",
         "BEHERO_KEYBOARD_PLACE_POST_BTN_01": ":point_right: ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ :point_left:",

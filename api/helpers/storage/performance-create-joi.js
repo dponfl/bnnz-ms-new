@@ -58,7 +58,7 @@ module.exports = {
       requestDuration: Joi
         .number()
         .integer()
-        .positive()
+        // .positive()
         .description('requestDuration')
         .required(),
       requestDepth: Joi

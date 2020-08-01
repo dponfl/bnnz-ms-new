@@ -1,6 +1,8 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
 
 const moduleName = 'funnel:silver-personal:optin:after-check-profile-joi';
 
@@ -59,6 +61,8 @@ module.exports = {
     let parserRequestPerformed = false;
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
+    let infoMessageWasSend = false;
 
     let profileExists = false;
     let profileId = null;
@@ -88,6 +92,8 @@ module.exports = {
 
       let i = 0;
 
+      const momentStart = moment();
+
       while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
 
         checkProfileRaw = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
@@ -95,8 +101,47 @@ module.exports = {
           instProfile,
         });
 
-        parserStatus = getUserIdByProfileJoiRes.status;
+        parserStatus = checkProfileRaw.status;
 
+        if (parserStatus !== 'success') {
+
+          /**
+           * Проверяем условие отправки информационного сообщения клиенту
+           * и логируем факт факапа парсера с фиксацией текущего интервала
+           */
+
+          const momentNow = moment();
+
+          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+
+            /**
+             * Отправляем информационное сообщение
+             */
+
+            const infoMessageParams = {
+              client,
+              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse,
+            };
+
+            const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
+
+            infoMessageWasSend = true;
+
+          }
+
+          /**
+           * Логируем ошибку парсера
+           */
+
+          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        }
+
+        i++;
       }
 
       if (parserStatus === 'success') {
