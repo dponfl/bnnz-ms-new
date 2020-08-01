@@ -58,7 +58,6 @@ module.exports = {
 
     let checkProfileRaw;
     let parserStatus = '';
-    let parserRequestPerformed = false;
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
     const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
@@ -68,12 +67,6 @@ module.exports = {
     let profileId = null;
     let profilePic = null;
 
-
-    let updateBlock;
-    let getBlock;
-    let splitRes;
-    let updateFunnel;
-    let updateId;
 
     try {
 
@@ -122,7 +115,7 @@ module.exports = {
 
             const infoMessageParams = {
               client,
-              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse,
+              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.checkProfile,
             };
 
             const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
@@ -183,6 +176,7 @@ module.exports = {
          * Успешный ответ от парсера так и не был получен
          */
 
+        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
         sails.log.error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
 
       }

@@ -1,6 +1,8 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
 
 const moduleName = 'funnel:silver-personal:optin:after-join-ref-check-joi';
 
@@ -54,6 +56,13 @@ module.exports = {
 
     let input;
 
+    let checkProfileSubscriptionResRaw;
+    let parserStatus = '';
+    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
+    const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
+    let infoMessageWasSend = false;
+
     try {
 
       let updateBlock;
@@ -66,9 +75,7 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+      const client = input.client;
 
       /**
        * формируем список профилей для проверки подписки на них
@@ -120,6 +127,7 @@ module.exports = {
       });
 
       const checkProfileSubscriptionParams = {
+        client,
         checkProfile: currentAccount.inst_profile,
         profileId: currentAccount.inst_id,
         profilesList,
@@ -127,13 +135,74 @@ module.exports = {
 
       const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
-      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+      let i = 0;
 
-      if (checkProfileSubscriptionResRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong checkProfileSubscriptionJoi response:
-        checkProfileSubscriptionParams: ${JSON.stringify(checkProfileSubscriptionParams, null, 3)}
-        checkProfileSubscriptionResRaw: ${JSON.stringify(checkProfileSubscriptionResRaw, null, 3)}`);
+      const momentStart = moment();
+
+      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
+
+        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+        parserStatus = checkProfileSubscriptionResRaw.status;
+
+        if (parserStatus !== 'success') {
+
+          /**
+           * Проверяем условие отправки информационного сообщения клиенту
+           * и логируем факт факапа парсера с фиксацией текущего интервала
+           */
+
+          const momentNow = moment();
+
+          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+
+            /**
+             * Отправляем информационное сообщение
+             */
+
+            const infoMessageParams = {
+              client,
+              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.joinRefCheck,
+            };
+
+            const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
+
+            infoMessageWasSend = true;
+
+          }
+
+          /**
+           * Логируем ошибку парсера
+           */
+
+          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        }
+
+        i++;
+
       }
+
+      if (parserStatus !== 'success') {
+
+        /**
+         * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+         */
+
+        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
+        sails.log.error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+
+        throw new Error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+
+      }
+
+      /**
+       * Корректный ответ от парсера БЫЛ ПОЛУЧЕН
+       */
 
       const checkProfileSubscriptionRes = checkProfileSubscriptionResRaw.payload;
 

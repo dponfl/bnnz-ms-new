@@ -82,6 +82,8 @@ module.exports = {
       };
 
       const requestRes = await rp(options);
+
+      // TODO: Убрать позже (использовалось для проверки работы при ошибке парсера)
       // const requestRes = {status: 'error'};
 
       const responseStatusMain = _.get(requestRes, 'status', null);

@@ -408,40 +408,79 @@
   "funnels": {
     "optin": {
       "instParserErrorResponse": {
-        "id": "check_profile_error",
-        "description": "",
-        "actionType": "text",
-        "initial": true,
-        "enabled": true,
-        "previous": null,
-        "show_time": "now",
-        "next": null,
-        "shown": false,
-        "beforeHelper": null,
-        "afterHelper": null,
-        "forcedHelper": null,
-        "callbackHelper": null,
-        "blockModifyHelper": null,
-        "message": {
-          "html": [
-            {
-              "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_01",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_02",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_03",
-              "style": "",
-              "cr": ""
-            }
-          ],
-          "inline_keyboard": [
-          ]
+        "checkProfile": {
+          "id": "check_profile_error",
+          "description": "",
+          "actionType": "text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_01",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_02",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_03",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+            ]
+          }
+        },
+        "joinRefCheck": {
+          "id": "join_ref_check_error",
+          "description": "",
+          "actionType": "text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": "now",
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_01",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_02",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+            ]
+          }
         }
       }
     }
