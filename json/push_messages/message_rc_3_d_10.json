@@ -401,8 +401,81 @@
         }
       }
     ],
-    "instParserErrorResponse": {
-
+    "onCheckButtonPressed": {
+      "id": "check_button_pressed",
+      "description": "Message on Check button pressed",
+      "actionType": "edit_message_text",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "show_time": "now",
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_TASK_LIKE_NOT_DONE",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_TASK_POST_LINK_BTN",
+              "url": "$PostLink$"
+            }
+          ]
+        ]
+      }
+    },
+    "onParserError": {
+      "id": "on_parser_error",
+      "description": "Message on parser error > configured interval",
+      "actionType": "edit_message_text",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "show_time": "now",
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "MSG_TASK_LIKE_NOT_DONE",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "MSG_TASK_POST_LINK_BTN",
+              "url": "$PostLink$"
+            }
+          ]
+        ]
+      }
     }
   },
   "funnels": {
