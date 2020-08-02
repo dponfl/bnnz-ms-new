@@ -66,6 +66,7 @@ module.exports = {
          */
 
         input.block.done = true;
+        input.block.shown = true;
         input.block.next = 'optin::wrong_profile';
 
       } else {
@@ -79,6 +80,7 @@ module.exports = {
         input.client.inst_profile_tmp = instProfile;
 
         input.block.done = true;
+        input.block.shown = true;
         input.block.next = 'optin::check_profile';
 
       }

@@ -143,6 +143,32 @@ module.exports = {
         throw new Error(`${moduleName}, error: could not find block with id: ${updateId} at: \n${input.client.funnels[updateFunnel]}`);
       }
 
+      /**
+       * Update optin::check_profile block
+       */
+
+      updateBlock = 'optin::check_profile';
+
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
+
+      if (_.isNil(updateFunnel)
+        || _.isNil(updateId)
+      ) {
+        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+      }
+
+      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.enabled = false;
+        getBlock.shown = false;
+        getBlock.done = false;
+      } else {
+        throw new Error(`${moduleName}, error: could not find block with id: ${updateId} at: \n${input.client.funnels[updateFunnel]}`);
+      }
+
       await sails.helpers.funnel.afterHelperGenericJoi({
         client: input.client,
         block: input.block,

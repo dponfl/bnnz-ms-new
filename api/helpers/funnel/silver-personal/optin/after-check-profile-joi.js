@@ -150,12 +150,14 @@ module.exports = {
           currentAccount.inst_pic = profilePic;
 
           input.block.done = true;
+          input.block.shown = true;
           input.block.next = 'optin::confirm_profile';
 
         } else {
 
           input.client.inst_profile_tmp = null;
           input.block.done = true;
+          input.block.shown = true;
           input.block.next = 'optin::wrong_profile';
 
         }
