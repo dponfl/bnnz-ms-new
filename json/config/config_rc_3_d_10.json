@@ -167,7 +167,7 @@
       "LIKE": "like",
       "LIKE_AND_COMMENT": "like_and_comment"
     },
-    "comments_ratio": 0.8,
+    "comments_ratio": 0.0001,
     "comments": {
       "check_period": {
         "unit": "hours",
@@ -1179,7 +1179,12 @@
         "MSG_TASK_LIKE_COMMENT_NO_COMMENT_01": "Задание выполнено не полностью :x:",
         "MSG_TASK_LIKE_COMMENT_NO_COMMENT_02": "Ты забыл оставить комментарий :speech_balloon: (не меньше 2 х слов)",
         "MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION": "Когда выполнишь задание полностью — нажми кнопку «ЗАДАНИЕ ВЫПОЛНЕНО» :point_down:",
-        "MSG_TASK_POST_LINK_BTN": "Открыть пост :eyes:"
+        "MSG_TASK_POST_LINK_BTN": "Открыть пост :eyes:",
+        "MSG_CHECK_BUTTON_PRESSED_MSG_01": "Отлично, система проверят твое задание :recycle:",
+        "MSG_CHECK_BUTTON_PRESSED_MSG_02": "Это может занять некоторое время :hourglass_flowing_sand:",
+        "MSG_ON_PARSER_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
+        "MSG_ON_PARSER_ERROR_MSG_02": "Проверка задания займет большее количество времени :clock4:",
+        "MSG_ON_PARSER_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:"
       }
     }
   }

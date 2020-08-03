@@ -214,17 +214,17 @@ module.exports = {
 
           }
 
+          /**
+           * Логируем ошибку парсера
+           */
+
+          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
+
+          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
         }
-
-        /**
-         * Логируем ошибку парсера
-         */
-
-        // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
-
-        sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
-
-        await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
         i++;
 

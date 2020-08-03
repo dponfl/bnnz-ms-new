@@ -215,7 +215,7 @@ module.exports = {
         // const commentWords = _.words(commentByProfile.text, /\w+/g);
         const commentWords = _.words(commentByProfile.text, /[a-zA-Zа-яА-Яα-ωΑ-Ω0-9_]+/g);
         numberOfWords = commentWords.length;
-        commentMade = numberOfWords >= sails.config.custom.config.parsers.minWordsInComment;
+        commentMade = numberOfWords >= sails.config.custom.config.parsers.inst.minWordsInComment;
         commentText = commentByProfile.text;
       }
 
@@ -234,6 +234,11 @@ module.exports = {
         status,
         clientGuid,
         accountGuid,
+        comments: {
+          commentMade,
+          commentText,
+          numberOfWords,
+        },
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);

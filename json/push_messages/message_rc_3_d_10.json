@@ -419,12 +419,12 @@
       "message": {
         "html": [
           {
-            "text": "MSG_TASK_LIKE_NOT_DONE",
+            "text": "MSG_CHECK_BUTTON_PRESSED_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
+            "text": "MSG_CHECK_BUTTON_PRESSED_MSG_02",
             "style": "",
             "cr": ""
           }
@@ -457,12 +457,17 @@
       "message": {
         "html": [
           {
-            "text": "MSG_TASK_LIKE_NOT_DONE",
+            "text": "MSG_ON_PARSER_ERROR_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
+            "text": "MSG_ON_PARSER_ERROR_MSG_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "MSG_ON_PARSER_ERROR_MSG_03",
             "style": "",
             "cr": ""
           }

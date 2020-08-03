@@ -231,6 +231,9 @@ module.exports = {
         status,
         clientGuid,
         accountGuid,
+        comments: {
+          likeMade,
+        },
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);

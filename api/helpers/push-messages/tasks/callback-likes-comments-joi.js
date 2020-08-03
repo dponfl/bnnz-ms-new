@@ -2,6 +2,8 @@
 
 const Joi = require('@hapi/joi');
 const uuid = require('uuid-apikey');
+const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
 
 const moduleName = 'push-messages:tasks:callback-likes-comments-joi';
 
@@ -44,22 +46,33 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      // messageData: Joi
-      //   .any()
-      //   .description('Message data object')
-      //   .required(),
       query: Joi
         .any()
         .description('Callback query received')
         .required(),
     });
 
+    let input;
+    let checkLikesJoiRaw;
+    let checkCommentsJoiRaw;
+    let taskPerformRes;
+
+    let parserStatus = '';
+    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
+    const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
+    let infoMessageWasSend = false;
+
+    let momentStart;
+    let i;
 
     try {
 
       let taskPerformRes;
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
+
+      const client = input.client;
 
       const queryDataRegExp = /push_msg_tsk_lc_(\S+)/;
 
@@ -123,6 +136,29 @@ module.exports = {
       const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
 
       /**
+       * Отправляем сообщение, что начинаем проверку задания и убираем кнопку проверки задания
+       */
+
+      const messageData = sails.config.custom.pushMessages.tasks.onCheckButtonPressed;
+
+      taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+        client: input.client,
+        messageData,
+        additionalTokens: [
+          {
+            token: '$PostLink$',
+            value: postRec.postLink,
+          },
+        ],
+        additionalParams: {
+          chat_id: input.client.chat_id,
+          message_id: taskRec.messageId,
+          disable_web_page_preview: true,
+        },
+      });
+
+
+      /**
        * Проверка выполнения задания с использванием парсера
        */
 
@@ -133,16 +169,87 @@ module.exports = {
        */
 
       const checkLikesParams = {
+        client,
         instProfile,
         instPostCode,
       };
 
-      const checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+      i = 0;
 
-      if (checkLikesJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong checkLikesJoi response
-        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
-        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+      momentStart = moment();
+
+      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
+
+        checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+
+        parserStatus = checkLikesJoiRaw.status;
+
+        if (parserStatus !== 'success') {
+
+          /**
+           * Проверяем условие отправки информационного сообщения клиенту
+           * и логируем факт факапа парсера с фиксацией текущего интервала
+           */
+
+          const momentNow = moment();
+
+          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+
+            /**
+             * Трансформируем блок в информационное сообщение о факапе API
+             */
+
+            const messageData = sails.config.custom.pushMessages.tasks.onParserError;
+
+            taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+              client: input.client,
+              messageData,
+              additionalTokens: [
+                {
+                  token: '$PostLink$',
+                  value: postRec.postLink,
+                },
+              ],
+              additionalParams: {
+                chat_id: input.client.chat_id,
+                message_id: taskRec.messageId,
+                disable_web_page_preview: true,
+              },
+            });
+
+            infoMessageWasSend = true;
+
+          }
+
+          /**
+           * Логируем ошибку парсера
+           */
+
+          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
+
+          sails.log.error(`${moduleName} Instagram parser error on likes check: enable interval: ${parserRequestIntervals[i]}`);
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        }
+
+        i++;
+
+      }
+
+      if (parserStatus !== 'success') {
+
+        /**
+         * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+         */
+
+        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
+        sails.log.error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
+
+        throw new Error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
+
       }
 
       const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
@@ -153,6 +260,7 @@ module.exports = {
         checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
       }
 
+      parserStatus = '';
 
       /**
        * Проверяем комменты
@@ -160,16 +268,87 @@ module.exports = {
 
 
       const checkCommentsParams = {
+        client,
         instProfile,
         instPostCode,
       };
 
-      const checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
+      i = 0;
 
-      if (checkCommentsJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong checkCommentsJoi response
-        checkCommentsParams: ${JSON.stringify(checkCommentsParams, null, 3)}
-        checkCommentsJoiRaw: ${JSON.stringify(checkCommentsJoiRaw, null, 3)}`);
+      momentStart = moment();
+
+      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
+
+        checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
+
+        parserStatus = checkCommentsJoiRaw.status;
+
+        if (parserStatus !== 'success') {
+
+          /**
+           * Проверяем условие отправки информационного сообщения клиенту
+           * и логируем факт факапа парсера с фиксацией текущего интервала
+           */
+
+          const momentNow = moment();
+
+          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+
+            /**
+             * Трансформируем блок в информационное сообщение о факапе API
+             */
+
+            const messageData = sails.config.custom.pushMessages.tasks.onParserError;
+
+            taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+              client: input.client,
+              messageData,
+              additionalTokens: [
+                {
+                  token: '$PostLink$',
+                  value: postRec.postLink,
+                },
+              ],
+              additionalParams: {
+                chat_id: input.client.chat_id,
+                message_id: taskRec.messageId,
+                disable_web_page_preview: true,
+              },
+            });
+
+            infoMessageWasSend = true;
+
+          }
+
+          /**
+           * Логируем ошибку парсера
+           */
+
+          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
+
+          sails.log.error(`${moduleName} Instagram parser error on comments check: enable interval: ${parserRequestIntervals[i]}`);
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        }
+
+        i++;
+
+      }
+
+      if (parserStatus !== 'success') {
+
+        /**
+         * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+         */
+
+        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
+        sails.log.error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
+
+        throw new Error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
+
       }
 
       const commentDone = _.get(checkCommentsJoiRaw, 'payload.commentMade', 'none');
