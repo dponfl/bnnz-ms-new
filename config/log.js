@@ -61,14 +61,6 @@ const customLogger = createLogger({
     new transports.Console({
       levels,
       level: 'verbose',
-      // format: combine(
-      //   all(),
-      //   label({ label: version}),
-      //   timestamp(),
-      //   colorize(),
-      //   align(),
-      //   printf(info => `${info.timestamp} [${info.label}] ${info.level}: ${formatObject(info.message)}`)
-      // )
     }),
     new PapertrailTransport(papertrailConnection, {
       colorize: true,
@@ -76,9 +68,6 @@ const customLogger = createLogger({
       level: 'debug',
       hostname: 'Bonanza-Test',
       program: 'Server',
-      // logFormat: (level, message) => {
-      //   return `${level}: ${message}`;
-      // },
     }),
   ]
 });
@@ -103,4 +92,3 @@ module.exports.log = {
 
 };
 
-// module.exports.log = customLogger;

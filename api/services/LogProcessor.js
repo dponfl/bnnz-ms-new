@@ -55,7 +55,7 @@ module.exports = {
 
       await sails.helpers.storage.errorCreateJoi(input);
 
-      sails.log.error(input.errorMessage, input);
+      sails.log.error(input.message, _.omit(input, 'message'));
 
     } catch (e) {
 
@@ -66,17 +66,6 @@ module.exports = {
       Error name: ${e.name || 'no name'}
       Error message: ${e.message || 'no message'}
       Error stack: ${e.stack || ''}`);
-
-      // throw {err: {
-      //     module: `${moduleName}:${methodName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
 
     }
 
@@ -98,7 +87,7 @@ module.exports = {
 
       await sails.helpers.storage.errorCreateJoi(input);
 
-      sails.log.warn(input.errorMessage, input);
+      sails.log.warn(input.message, _.omit(input, 'message'));
 
     } catch (e) {
 
@@ -110,16 +99,34 @@ module.exports = {
       Error message: ${e.message || 'no message'}
       Error stack: ${e.stack || ''}`);
 
-      // throw {err: {
-      //     module: `${moduleName}:${methodName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
+    }
+
+  },
+
+  debug: async function(params) {
+
+    const methodName = 'debug';
+
+    let input;
+
+    try {
+
+      const inputRaw = schema.validate(params);
+      input = inputRaw.value;
+
+      input.level = 'debug';
+
+      sails.log.debug(input.message, _.omit(input, 'message'));
+
+    } catch (e) {
+
+      const errorMsg = 'General error';
+
+      sails.log.error(`${moduleName}:${methodName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${e.stack || ''}`);
 
     }
 
@@ -138,7 +145,7 @@ module.exports = {
 
       input.level = 'info';
 
-      sails.log.info(input.errorMessage, input);
+      sails.log.info(input.message, _.omit(input, 'message'));
 
     } catch (e) {
 
@@ -149,17 +156,6 @@ module.exports = {
       Error name: ${e.name || 'no name'}
       Error message: ${e.message || 'no message'}
       Error stack: ${e.stack || ''}`);
-
-      // throw {err: {
-      //     module: `${moduleName}:${methodName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
 
     }
 
