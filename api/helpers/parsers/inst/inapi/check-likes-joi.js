@@ -53,6 +53,9 @@ module.exports = {
         .required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
 
     let likeMade = false;
 
@@ -69,8 +72,8 @@ module.exports = {
       const input = await schema.validateAsync(inputs.params);
 
       const client = input.client;
-      const clientGuid = input.client.guid;
-      const accountGuid = input.client.account_use;
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
       /**
        * Получаем mediaId поста
@@ -110,6 +113,18 @@ module.exports = {
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_STATUS.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_STATUS.name,
+          location: moduleName,
+          payload: requestRes,
+        });
+
+
         return exits.success({
           status: 'error',
           message: `${moduleName} performed with error`,
@@ -143,18 +158,30 @@ module.exports = {
           clientGuid,
           accountGuid,
           comments: {
-            error: 'getMediaIdJoi: no payload.mediaId',
+            error: 'wrong getMediaIdJoi response: no payload.mediaId',
             response: getMediaIdRaw.raw || {},
           },
         };
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE.name,
+          location: moduleName,
+          payload: requestRes,
+        });
+
+
         return exits.success({
           status: 'error',
           message: `${moduleName} performed with error`,
           payload: {
-            error: 'getMediaIdJoi: no payload.mediaId',
+            error: 'wrong getMediaIdJoi response: no payload.mediaId',
           },
           raw: getMediaIdRaw,
         })
@@ -198,6 +225,18 @@ module.exports = {
         };
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.name,
+          location: moduleName,
+          payload: requestRes,
+        });
+
 
         return exits.success({
           status: 'error',
@@ -251,24 +290,23 @@ module.exports = {
       const errorLocation = moduleName;
       const errorMsg = `${moduleName}: General error`;
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
+      await LogProcessor.error({
+        message: e.message || errorMsg,
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: e.name || 'none',
+        location: errorLocation,
+        payload: e.raw || {},
+      });
 
       return exits.success({
         status: 'error',
         module: errorLocation,
         message: errorMsg,
         payload: {
-          error: e,
+          error: e.raw || {},
         },
       })
 

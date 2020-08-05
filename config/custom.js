@@ -203,6 +203,13 @@ module.exports.custom = {
       BOT: 'bot',
     },
 
+    emergencyLevels: {
+      highest: 'highest',
+      high: 'high',
+      medium: 'medium',
+      low: 'low',
+    }
+
   },
 
   testClient: {},
@@ -620,6 +627,75 @@ module.exports.custom = {
   CHECKMAXPOSTS_GENERAL_ERROR: 'Send email general error',
   CHECKMAXPOSTS_OK: 'Max daily limit was not reached',
   CHECKMAXPOSTS_NOK: 'Max daily limit was reached',
+
+
+  /**
+   * ----------------------------
+   * Inst parser errors
+   * ----------------------------
+   */
+
+  INST_PARSER_WRONG_RESPONSE_STATUS: {
+    name: 'ERR_INST_PARSER_WRONG_RESPONSE_STATUS',
+    message: 'wrong parser response status',
+  },
+
+  INST_PARSER_NO_USERS: {
+    name: 'ERR_INST_PARSER_NO_USERS',
+    message: 'wrong parser response: no response.instagram.users',
+  },
+
+  INST_PARSER_NO_USERS_2: {
+    name: 'ERR_INST_PARSER_NO_USERS_2',
+    message: 'wrong parser response: no response.instagram.result.users',
+  },
+
+  INST_PARSER_NO_COMMENTS: {
+    name: 'ERR_INST_PARSER_NO_COMMENTS',
+    message: 'wrong parser response: no response.instagram.comments',
+  },
+
+  INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS: {
+    name: 'ERR_INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS',
+    message: 'wrong getFollowingsJoi response status',
+  },
+
+  INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS: {
+    name: 'INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS',
+    message: 'wrong getUserIdByProfileJoi response status',
+  },
+
+  INST_PARSER_WRONG_GET_MEDIA_ID_STATUS: {
+    name: 'INST_PARSER_WRONG_GET_MEDIA_ID_STATUS',
+    message: 'wrong getMediaIdJoi response status',
+  },
+
+  INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE: {
+    name: 'INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE',
+    message: 'wrong getMediaIdJoi response: no payload.mediaId',
+  },
+
+  INST_PARSER_WRONG_GET_LIKES_STATUS: {
+    name: 'INST_PARSER_WRONG_GET_LIKES_STATUS',
+    message: 'wrong getLikesJoi response status',
+  },
+
+  INST_PARSER_WRONG_GET_COMMENTS_STATUS: {
+    name: 'INST_PARSER_WRONG_GET_COMMENTS_STATUS',
+    message: 'wrong getCommentsJoi response status',
+  },
+
+  INST_PARSER_CHECK_PROFILE_EXISTS_ERROR: {
+    name: 'INST_PARSER_CHECK_PROFILE_EXISTS_ERROR',
+    message: 'Did not get expected response from checkProfileExistsJoi yet',
+  },
+
+  INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL: {
+    name: 'INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL',
+    message: 'COULD NOT GET EXPECTED RESPONSE FROM CHECKPROFILEEXISTSJOI',
+  },
+
+
 
 
 

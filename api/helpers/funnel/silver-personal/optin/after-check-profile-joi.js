@@ -54,14 +54,17 @@ module.exports = {
         .description('Message received'),
     });
 
+    let clientGuid;
+    let accountGuid;
+
     let input;
 
     let checkProfileRaw;
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
-    let infoMessageWasSend = false;
+    const checkNotifications = sails.config.custom.config.parsers.inst.errorSteps.notifications;
+    const notifications = _.clone(sails.config.custom.config.parsers.inst.errorSteps.notifications);
 
     let profileExists = false;
     let profileId = null;
@@ -72,11 +75,19 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const client = input.client;
 
       const instProfile = input.client.inst_profile_tmp;
       const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+
+      notifications.map((item) => {
+        item.clientNotified = false;
+        item.adminNotified = false;
+      });
 
       /**
        * Парсером проверяем, что этот профиль существует в Instagram
@@ -107,30 +118,73 @@ module.exports = {
 
           const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
 
-          if (requestDuration > notificationInterval && !infoMessageWasSend) {
-
-            /**
-             * Отправляем информационное сообщение
-             */
-
-            const infoMessageParams = {
-              client,
-              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.checkProfile,
-            };
-
-            const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
-
-            infoMessageWasSend = true;
-
-          }
-
           /**
            * Логируем ошибку парсера
            */
 
-          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
 
-          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
+          await LogProcessor.error({
+            message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+            location: moduleName,
+            payload: {
+              parserRequestInterval: parserRequestIntervals[i],
+            },
+          });
+
+          for (const elem of notifications) {
+
+            if (requestDuration > elem.notificationInterval * parserRequestIntervalTime
+            ) {
+
+              if (elem.sendMessageToClient && !elem.clientNotified) {
+
+                /**
+                 * Отправляем информационное сообщение клиенту
+                 */
+
+                const infoMessageParams = {
+                  client,
+                  messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.checkProfile,
+                };
+
+                const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
+
+                elem.clientNotified = true;
+
+              }
+
+              if (elem.sendMessageToAdmin && !elem.adminNotified) {
+
+                /**
+                 * Генерим сообщение о критической ошибке
+                 */
+
+                await LogProcessor.critical({
+                  message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+                  clientGuid,
+                  accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+                  location: moduleName,
+                  emergencyLevel: elem.emergencyLevel,
+                  payload: {
+                    parserRequestInterval: parserRequestIntervals[i],
+                  },
+                });
+
+                elem.adminNotified = true;
+
+              }
+
+            }
+
+          }
 
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
@@ -180,10 +234,23 @@ module.exports = {
          * Успешный ответ от парсера так и не был получен
          */
 
-        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
-        sails.log.error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+        await LogProcessor.critical({
+          message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.name,
+          location: moduleName,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.highest,
+          payload: {
+            parserRequestInterval: parserRequestIntervals[i],
+          },
+        });
 
       }
+
+      // "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
 
       return exits.success({
         status: 'ok',

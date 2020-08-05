@@ -57,6 +57,9 @@ module.exports = {
         .required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
     let result;
     let notSubscribed = [];
     let subscribed = [];
@@ -76,8 +79,8 @@ module.exports = {
       const input = await schema.validateAsync(inputs.params);
 
       const client = input.client;
-      const clientGuid = input.client.guid;
-      const accountGuid = input.client.account_use;
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
 
       /**
@@ -129,6 +132,18 @@ module.exports = {
           };
 
           await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+          await LogProcessor.error({
+            message: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.message,
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.name,
+            location: moduleName,
+            payload: getFollowingsJoiRes,
+          });
+
 
           return exits.success({
             status: 'error',
@@ -196,24 +211,23 @@ module.exports = {
       const errorLocation = moduleName;
       const errorMsg = `${moduleName}: General error`;
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
+      await LogProcessor.error({
+        message: e.message || errorMsg,
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: e.name || 'none',
+        location: errorLocation,
+        payload: e.raw || {},
+      });
 
       return exits.success({
         status: 'error',
         module: errorLocation,
         message: errorMsg,
         payload: {
-          error: e,
+          error: e.raw || {},
         },
       })
 

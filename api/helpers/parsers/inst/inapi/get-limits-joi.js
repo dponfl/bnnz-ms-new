@@ -86,6 +86,16 @@ module.exports = {
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.message,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.name,
+          location: moduleName,
+          payload: requestRes,
+        });
+
+
         return exits.success({
           status: 'error',
           message: `${moduleName} performed with error`,
@@ -137,14 +147,20 @@ module.exports = {
       const errorLocation = moduleName;
       const errorMsg = `${moduleName}: General error`;
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      await LogProcessor.error({
+        message: e.message || errorMsg,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: e.name || 'none',
+        location: errorLocation,
+        payload: e.raw || {},
+      });
 
       throw {err: {
           module: errorLocation,
           message: errorMsg,
           payload: {
-            error: e,
+            error: e.raw || {},
           },
         }
       };
