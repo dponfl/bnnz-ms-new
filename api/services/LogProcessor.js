@@ -29,6 +29,9 @@ const schema = Joi.object({
   location: Joi
     .string()
     .description('error location'),
+  emergencyLevel: Joi
+    .string()
+    .description('error emergency level'),
   payload: Joi
     .any()
     .description('payload'),
@@ -39,6 +42,44 @@ const moduleName = 'LogProcessor';
 
 
 module.exports = {
+
+  critical: async function(params) {
+
+    const methodName = 'critical';
+
+    let input;
+
+    try {
+
+      const inputRaw = schema.validate(params);
+      input = inputRaw.value;
+
+      input.level = 'critical';
+
+      await sails.helpers.storage.errorCreateJoi(input);
+
+      /**
+       * Информирование ответственных людей о возникновении критической ошибки
+       */
+
+      // TODO: Добавить вызов сервиса, который будет осуществлять информирование
+      // с учётом приоритетности проблемы и ролях (должно быть реализовано через конфиг)
+
+      sails.log.error(input.message, _.omit(input, 'message'));
+
+    } catch (e) {
+
+      const errorMsg = 'General error';
+
+      sails.log.error(`${moduleName}:${methodName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${e.stack || ''}`);
+
+    }
+
+  },
 
   error: async function(params) {
 

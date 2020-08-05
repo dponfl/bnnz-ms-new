@@ -12,6 +12,11 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
+    guid: {
+      type: 'string',
+      unique: true,
+    },
+
     clientGuid: {
       type: 'string',
     },
@@ -31,6 +36,10 @@ module.exports = {
     level: {
       type: 'string',
       required: true,
+    },
+
+    emergencyLevel: {
+      type: 'string',
     },
 
     errorName: {

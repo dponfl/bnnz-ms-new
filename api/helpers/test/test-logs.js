@@ -47,6 +47,21 @@ module.exports = {
         }
       });
 
+      await LogProcessor.critical({
+        message: 'Critical log message',
+        clientGuid: '1ee516d9-6280-43c8-8ff2-9802aac2f074',
+        accountGuid: '2f303457-e4f3-4535-aa61-1e9ced91407b',
+        requestId: '2f303457-e4f3-4535-aa61-1e9ced91407A',
+        childRequestId: '2f303457-e4f3-4535-aa61-1e9ced91407B',
+        errorName: 'ERROR_NAME',
+        location: moduleName,
+        emergencyLevel: 'high',
+        payload: {
+          keyOne: 5,
+          keyTwo: 'Critical error log message',
+        }
+      });
+
       await LogProcessor.error({
         message: 'Next Error log message',
         location: moduleName,

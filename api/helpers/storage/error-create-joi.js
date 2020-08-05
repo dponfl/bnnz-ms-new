@@ -71,6 +71,9 @@ module.exports = {
         .string()
         .description('error level')
         .required(),
+      emergencyLevel: Joi
+        .string()
+        .description('error emergency level'),
       payload: Joi
         .any()
         .description('payload'),
@@ -80,7 +83,10 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      const uuidApiKey = uuid.create();
+
       const errorRec = input;
+      errorRec.guid = uuidApiKey.uuid;
 
       await Errors.create(errorRec);
 
