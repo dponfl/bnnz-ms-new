@@ -8,23 +8,42 @@
  */
 
 module.exports = {
-  tableName: 'logerror',
+  tableName: 'errors',
   migrate: 'safe',
   attributes: {
 
-    client_guid: {
+    clientGuid: {
       type: 'string',
-      required: true,
     },
 
-    error_message: {
+    accountGuid: {
       type: 'string',
-      required: true,
+    },
+
+    requestId: {
+      type: 'string',
+    },
+
+    childRequestId: {
+      type: 'string',
     },
 
     level: {
       type: 'string',
       required: true,
+    },
+
+    errorName: {
+      type: 'string',
+    },
+
+    message: {
+      type: 'string',
+      required: true,
+    },
+
+    location: {
+      type: 'string',
     },
 
     payload: {

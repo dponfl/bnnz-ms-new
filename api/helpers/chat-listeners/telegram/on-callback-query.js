@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 
+const moduleName = 'chat-listeners:telegram:on-callback-query';
 
 module.exports = {
 
@@ -84,33 +85,23 @@ module.exports = {
 
       } catch (e) {
 
-        /**
-         * Make error log and return
-         */
 
-        sails.log.error('on-callback-query, error: ', e);
+        const errorLocation = moduleName;
+        const errorMsg = `${moduleName}: ${sails.config.custom.ON_CALLBACK_QUERY_ERROR}`;
 
-        try {
+        sails.log.error(errorLocation + ', error: ' + errorMsg);
+        sails.log.error(errorLocation + ', error details: ', e);
 
-          await sails.helpers.general.logError.with({
-            client_guid: 'none',
-            error_message: sails.config.custom.ON_CALLBACK_QUERY_ERROR,
-            level: 'critical',
+        throw {err: {
+            module: errorLocation,
+            message: errorMsg,
             payload: {
-              messenger: sails.config.custom.enums.messenger.TELEGRAM,
-              query: query,
               error: e,
-            }
-          });
-
-        } catch (err) {
-
-          sails.log.error(sails.config.custom.ON_CALLBACK_QUERY_ERROR + ', Error log create error: ', err);
-
-        }
+            },
+          }
+        };
 
       }
-
 
     });
 
