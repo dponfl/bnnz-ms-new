@@ -31,7 +31,13 @@ const schema = Joi.object({
     .description('error location'),
   emergencyLevel: Joi
     .string()
-    .description('error emergency level'),
+    .description('error emergency level')
+    .valid(
+      sails.config.custom.enums.emergencyLevels.LOW,
+      sails.config.custom.enums.emergencyLevels.MEDIUM,
+      sails.config.custom.enums.emergencyLevels.HIGH,
+      sails.config.custom.enums.emergencyLevels.HIGHEST,
+    ),
   payload: Joi
     .any()
     .description('payload'),

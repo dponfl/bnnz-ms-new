@@ -64,7 +64,7 @@ module.exports = {
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
     const checkNotifications = sails.config.custom.config.parsers.inst.errorSteps.notifications;
-    const notifications = _.clone(sails.config.custom.config.parsers.inst.errorSteps.notifications);
+    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.notifications);
 
     let profileExists = false;
     let profileId = null;
@@ -138,8 +138,7 @@ module.exports = {
 
           for (const elem of notifications) {
 
-            if (requestDuration > elem.notificationInterval * parserRequestIntervalTime
-            ) {
+            if (requestDuration > elem.notificationInterval * parserRequestIntervalTime) {
 
               if (elem.sendMessageToClient && !elem.clientNotified) {
 
@@ -242,15 +241,16 @@ module.exports = {
           // childRequestId: null,
           errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.name,
           location: moduleName,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.highest,
-          payload: {
-            parserRequestInterval: parserRequestIntervals[i],
-          },
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          payload: {},
         });
+
+        throw new Error(sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message);
 
       }
 
       // "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+
 
       return exits.success({
         status: 'ok',
@@ -260,21 +260,25 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      const errorLocation = moduleName;
+      const errorMsg = e.message || `General error`;
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      await LogProcessor.error({
+        message: errorMsg,
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: e.name || 'none',
+        location: errorLocation,
+        payload: e.raw || {},
+      });
 
       throw {err: {
-          module: `${moduleName}`,
+          module: errorLocation,
           message: errorMsg,
           payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
+            error: e.raw || {},
           },
         }
       };

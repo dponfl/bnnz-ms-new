@@ -66,8 +66,8 @@ const customLogger = createLogger({
       colorize: true,
       levels,
       level: 'debug',
-      hostname: 'Bonanza-Test',
-      program: 'Server',
+      hostname: process.env.PAPERTRAIL_HOSTNAME || 'Bonanza',
+      program: process.env.PAPERTRAIL_PROGRAM || 'Server',
     }),
   ]
 });

@@ -64,4 +64,5 @@ module.exports.bootstrap = async function() {
   // await sails.helpers.test.general.test();
 
   // await sails.helpers.test.testLogs();
+  await sails.helpers.test.testErrors();
 };

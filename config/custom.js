@@ -204,10 +204,15 @@ module.exports.custom = {
     },
 
     emergencyLevels: {
-      highest: 'highest',
-      high: 'high',
-      medium: 'medium',
-      low: 'low',
+      HIGHEST: 'highest',
+      HIGH: 'high',
+      MEDIUM: 'medium',
+      LOW: 'low',
+    },
+
+    errorType: {
+      ERROR: 'error',
+      CRITICAL: 'critical',
     }
 
   },
@@ -637,66 +642,73 @@ module.exports.custom = {
 
   INST_PARSER_WRONG_RESPONSE_STATUS: {
     name: 'ERR_INST_PARSER_WRONG_RESPONSE_STATUS',
-    message: 'wrong parser response status',
+    message: 'Wrong parser response status',
   },
 
   INST_PARSER_NO_USERS: {
     name: 'ERR_INST_PARSER_NO_USERS',
-    message: 'wrong parser response: no response.instagram.users',
+    message: 'Wrong parser response: no response.instagram.users',
   },
 
   INST_PARSER_NO_USERS_2: {
     name: 'ERR_INST_PARSER_NO_USERS_2',
-    message: 'wrong parser response: no response.instagram.result.users',
+    message: 'Wrong parser response: no response.instagram.result.users',
   },
 
   INST_PARSER_NO_COMMENTS: {
     name: 'ERR_INST_PARSER_NO_COMMENTS',
-    message: 'wrong parser response: no response.instagram.comments',
+    message: 'Wrong parser response: no response.instagram.comments',
   },
 
   INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS: {
     name: 'ERR_INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS',
-    message: 'wrong getFollowingsJoi response status',
+    message: 'Wrong getFollowingsJoi response status',
   },
 
   INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS: {
     name: 'INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS',
-    message: 'wrong getUserIdByProfileJoi response status',
+    message: 'Wrong getUserIdByProfileJoi response status',
   },
 
   INST_PARSER_WRONG_GET_MEDIA_ID_STATUS: {
     name: 'INST_PARSER_WRONG_GET_MEDIA_ID_STATUS',
-    message: 'wrong getMediaIdJoi response status',
+    message: 'Wrong getMediaIdJoi response status',
   },
 
   INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE: {
     name: 'INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE',
-    message: 'wrong getMediaIdJoi response: no payload.mediaId',
+    message: 'Wrong getMediaIdJoi response: no payload.mediaId',
   },
 
   INST_PARSER_WRONG_GET_LIKES_STATUS: {
     name: 'INST_PARSER_WRONG_GET_LIKES_STATUS',
-    message: 'wrong getLikesJoi response status',
+    message: 'Wrong getLikesJoi response status',
   },
 
   INST_PARSER_WRONG_GET_COMMENTS_STATUS: {
     name: 'INST_PARSER_WRONG_GET_COMMENTS_STATUS',
-    message: 'wrong getCommentsJoi response status',
+    message: 'Wrong getCommentsJoi response status',
   },
 
   INST_PARSER_CHECK_PROFILE_EXISTS_ERROR: {
     name: 'INST_PARSER_CHECK_PROFILE_EXISTS_ERROR',
-    message: 'Did not get expected response from checkProfileExistsJoi yet',
+    message: 'Unexpected response from checkProfileExistsJoi',
   },
 
   INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL: {
     name: 'INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL',
-    message: 'COULD NOT GET EXPECTED RESPONSE FROM CHECKPROFILEEXISTSJOI',
+    message: 'COULD NOT GET THE EXPECTED RESPONSE FROM CHECKPROFILEEXISTSJOI',
   },
 
+  INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR: {
+    name: 'INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR',
+    message: 'Unexpected response from checkProfileSubscriptionJoi',
+  },
 
-
+  INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR_FINAL: {
+    name: 'INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR_FINAL',
+    message: 'COULD NOT GET THE EXPECTED RESPONSE FROM CHECKPROFILESUBSCRIPTIONJOI',
+  },
 
 
 

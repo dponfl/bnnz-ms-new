@@ -37,7 +37,15 @@ module.exports = {
 
     err: {
       description: 'Error',
-    }
+    },
+
+    BFErrorExit: {
+      description: 'BF customized error type 01',
+    },
+
+    BFErrorDetectedExit: {
+      description: 'BF customized error type 02',
+    },
 
   },
 

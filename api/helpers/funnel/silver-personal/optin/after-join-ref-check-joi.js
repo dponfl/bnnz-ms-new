@@ -54,14 +54,17 @@ module.exports = {
         .description('Message received'),
     });
 
+    let clientGuid;
+    let accountGuid;
+
     let input;
 
     let checkProfileSubscriptionResRaw;
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
-    let infoMessageWasSend = false;
+    const checkNotifications = sails.config.custom.config.parsers.inst.errorSteps.notifications;
+    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.notifications);
 
     try {
 
@@ -73,6 +76,9 @@ module.exports = {
 
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const client = input.client;
@@ -126,6 +132,15 @@ module.exports = {
         profilesList.push(elem.inst_profile);
       });
 
+      notifications.map((item) => {
+        item.clientNotified = false;
+        item.adminNotified = false;
+      });
+
+      /**
+       * Парсером проверяем подписки профиля
+       */
+
       const checkProfileSubscriptionParams = {
         client,
         checkProfile: currentAccount.inst_profile,
@@ -156,30 +171,71 @@ module.exports = {
 
           const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
 
-          if (requestDuration > notificationInterval && !infoMessageWasSend) {
-
-            /**
-             * Отправляем информационное сообщение
-             */
-
-            const infoMessageParams = {
-              client,
-              messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.joinRefCheck,
-            };
-
-            const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
-
-            infoMessageWasSend = true;
-
-          }
-
           /**
            * Логируем ошибку парсера
            */
 
-          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
+          await LogProcessor.error({
+            message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+            location: moduleName,
+            payload: {
+              parserRequestInterval: parserRequestIntervals[i],
+            },
+          });
 
-          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
+          for (const elem of notifications) {
+
+            if (requestDuration > elem.notificationInterval * parserRequestIntervalTime) {
+
+              if (elem.sendMessageToClient && !elem.clientNotified) {
+
+                /**
+                 * Отправляем информационное сообщение
+                 */
+
+                const infoMessageParams = {
+                  client,
+                  messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.joinRefCheck,
+                };
+
+                const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
+
+                elem.clientNotified = true;
+
+              }
+
+              if (elem.sendMessageToAdmin && !elem.adminNotified) {
+
+                /**
+                 * Генерим сообщение о критической ошибке
+                 */
+
+                await LogProcessor.critical({
+                  message: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.message,
+                  clientGuid,
+                  accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.name,
+                  location: moduleName,
+                  emergencyLevel: elem.emergencyLevel,
+                  payload: {
+                    parserRequestInterval: parserRequestIntervals[i],
+                  },
+                });
+
+                elem.adminNotified = true;
+
+              }
+
+            }
+
+          }
 
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
@@ -195,10 +251,19 @@ module.exports = {
          * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
          */
 
-        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
-        sails.log.error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+        await LogProcessor.critical({
+          message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.name,
+          location: moduleName,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          payload: {},
+        });
 
-        throw new Error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+        throw new Error(sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message);
 
       }
 
@@ -385,16 +450,24 @@ module.exports = {
     } catch (e) {
 
       const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      const errorMsg = e.message || `General error`;
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      await LogProcessor.error({
+        message: errorMsg,
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: e.name || 'none',
+        location: errorLocation,
+        payload: e.raw || {},
+      });
 
       throw {err: {
           module: errorLocation,
           message: errorMsg,
           payload: {
-            error: e,
+            error: e.raw || {},
           },
         }
       };
