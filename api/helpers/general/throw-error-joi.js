@@ -104,39 +104,41 @@ module.exports = {
     const location = input.location;
     const message = input.message;
     const payload = input.payload || {};
-    const errorName = input.errorName || 'ERR_GENERAL';
-    const clientGuid = input.clientGuid || '';
-    const accountGuid = input.accountGuid || '';
-    const requestId = input.accountGuid || null;
-    const childRequestId = input.accountGuid || null;
-    const emergencyLevel = input.emergencyLevel || sails.config.custom.enums.emergencyLevels.LOW;
+
+    const errorParams = {
+      message,
+      location,
+      errorName: input.errorName || 'ERR_GENERAL',
+      payload,
+    };
+
+    if (input.clientGuid != null) {
+      errorParams.clientGuid = input.clientGuid;
+    }
+
+    if (input.accountGuid != null) {
+      errorParams.accountGuid = input.accountGuid;
+    }
+
+    if (input.requestId != null) {
+      errorParams.requestId = input.requestId;
+    }
+
+    if (input.childRequestId != null) {
+      errorParams.childRequestId = input.childRequestId;
+    }
+
+    if (input.emergencyLevel != null) {
+      errorParams.emergencyLevel = input.emergencyLevel || sails.config.custom.enums.emergencyLevels.LOW;
+    }
 
 
     switch (input.errorType) {
       case sails.config.custom.enums.errorType.ERROR:
-        await LogProcessor.error({
-          message,
-          clientGuid,
-          accountGuid,
-          requestId,
-          childRequestId,
-          errorName,
-          location,
-          payload,
-        });
+        await LogProcessor.error(errorParams);
         break;
       case sails.config.custom.enums.errorType.CRITICAL:
-        await LogProcessor.critical({
-          message,
-          clientGuid,
-          accountGuid,
-          requestId,
-          childRequestId,
-          errorName,
-          location,
-          emergencyLevel,
-          payload,
-        });
+        await LogProcessor.critical(errorParams);
         break;
     }
 

@@ -26,13 +26,13 @@ module.exports = {
       description: 'Error',
     },
 
-    BFErrorExit: {
-      description: 'BF customized error type 01',
-    },
-
-    BFErrorDetectedExit: {
-      description: 'BF customized error type 02',
-    },
+    // BFErrorExit: {
+    //   description: 'BF customized error type 01',
+    // },
+    //
+    // BFErrorDetectedExit: {
+    //   description: 'BF customized error type 02',
+    // },
 
   },
 

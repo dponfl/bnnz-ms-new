@@ -26,13 +26,13 @@ module.exports = {
       description: 'Error',
     },
 
-    BFErrorExit: {
-      description: 'BF customized error type 01',
-    },
-
-    BFErrorDetectedExit: {
-      description: 'BF customized error type 02',
-    },
+    // BFErrorExit: {
+    //   description: 'BF customized error type 01',
+    // },
+    //
+    // BFErrorDetectedExit: {
+    //   description: 'BF customized error type 02',
+    // },
 
   },
 
@@ -41,31 +41,16 @@ module.exports = {
 
     try {
 
-      const errorLocation = moduleName;
-      const errorMsg = 'Some error explanation message here...';
-      const payload = {
-        keyOne: 1,
-        keyTwo: 'one',
-      };
-      const errorName = 'ERROR_NAME';
-      const errorRaw = payload;
-      await LogProcessor.error({
-        message: errorMsg,
-        // clientGuid,
-        // accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName,
-        location: errorLocation,
-        payload: errorRaw,
-      });
-      throw {
-        BFErrorExit: {
-          location: errorLocation,
-          message: errorMsg,
-          payload,
-        }
-      };
+      // await sails.helpers.general.throwErrorJoi({
+      //   errorType: sails.config.custom.enums.errorType.ERROR,
+      //   location: moduleName,
+      //   message: 'Some error explanation message here...',
+      //   payload: {
+      //     keyOne: 1,
+      //     keyTwo: 'one',
+      //   },
+      //   errorName: 'ERROR_NAME',
+      // });
 
       // const some = `${undefinedProperty}`;
 
