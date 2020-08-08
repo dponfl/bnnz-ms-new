@@ -58,6 +58,10 @@ module.exports = {
         .string()
         .description('error location')
         .required(),
+      throwError: Joi
+        .boolean()
+        .description('true if we want to throw error further')
+        .required(),
       clientGuid: Joi
         .string()
         .description('client guid')
@@ -87,16 +91,22 @@ module.exports = {
       errorObj = input.error;
     }
     if (errorObj.code === 'BFErrorExit') {
-      throw {
-        BFErrorExit: errorObj.raw != null ? errorObj.raw : {}
+      if (input.throwError) {
+        throw {
+          BFErrorExit: errorObj.raw != null ? errorObj.raw : {}
+        }
       }
     } else if (errorObj.code === 'BFErrorDetectedExit') {
-      throw {
-        BFErrorDetectedExit: errorObj.raw != null ? errorObj.raw : {}
+      if (input.throwError) {
+        throw {
+          BFErrorDetectedExit: errorObj.raw != null ? errorObj.raw : {}
+        }
       }
     } else if (_.has(errorObj, 'BFErrorExit')) {
-      throw {
-        BFErrorExit: errorObj.BFErrorExit != null ? errorObj.BFErrorExit : {}
+      if (input.throwError) {
+        throw {
+          BFErrorExit: errorObj.BFErrorExit != null ? errorObj.BFErrorExit : {}
+        }
       }
     } else {
       const errorLocation = input.location;
@@ -127,11 +137,13 @@ module.exports = {
           errorStack,
         },
       });
-      throw {
-        BFErrorDetectedExit: {
-          error,
-        }
-      };
+      if (input.throwError) {
+        throw {
+          BFErrorDetectedExit: {
+            error,
+          }
+        };
+      }
     }
 
   }

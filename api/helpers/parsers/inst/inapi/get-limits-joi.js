@@ -144,26 +144,32 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // await LogProcessor.error({
+      //   message: e.message || errorMsg,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: e.name || 'none',
+      //   location: errorLocation,
+      //   payload: e.raw || {},
+      // });
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e.raw || {},
+      //     },
+      //   }
+      // };
 
-      await LogProcessor.error({
-        message: e.message || errorMsg,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: e.name || 'none',
-        location: errorLocation,
-        payload: e.raw || {},
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
       });
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e.raw || {},
-          },
-        }
-      };
 
     }
 

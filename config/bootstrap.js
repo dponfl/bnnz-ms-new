@@ -51,7 +51,7 @@ module.exports.bootstrap = async function() {
   await sails.helpers.chatListeners.telegram.onPreCheckoutQuery();
   await sails.helpers.chatListeners.telegram.onSuccessfulPayment();
 
-  await sails.helpers.general.pushPendingOnboarding();
+  await sails.helpers.general.bootstrapActions();
 
   // await sails.helpers.general.schedule.analyticsHourly();
   // await sails.helpers.general.schedule.analyticsDaily();
@@ -64,5 +64,5 @@ module.exports.bootstrap = async function() {
   // await sails.helpers.test.general.test();
 
   // await sails.helpers.test.testLogs();
-  await sails.helpers.test.testErrors();
+  // await sails.helpers.test.testErrors();
 };

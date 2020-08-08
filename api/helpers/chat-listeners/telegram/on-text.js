@@ -334,20 +334,26 @@ module.exports = {
 
       } catch (e) {
 
-        const errorLocation = moduleName;
-        const errorMsg = `${moduleName}: ${sails.config.custom.ON_MESSAGE_ERROR}`;
+        // const errorLocation = moduleName;
+        // const errorMsg = `${moduleName}: ${sails.config.custom.ON_MESSAGE_ERROR}`;
+        //
+        // sails.log.error(errorLocation + ', error: ' + errorMsg);
+        // sails.log.error(errorLocation + ', error details: ', e);
+        //
+        // throw {err: {
+        //     module: errorLocation,
+        //     message: errorMsg,
+        //     payload: {
+        //       error: e,
+        //     },
+        //   }
+        // };
 
-        sails.log.error(errorLocation + ', error: ' + errorMsg);
-        sails.log.error(errorLocation + ', error details: ', e);
-
-        throw {err: {
-            module: errorLocation,
-            message: errorMsg,
-            payload: {
-              error: e,
-            },
-          }
-        };
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
 
       }
 

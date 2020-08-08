@@ -41,16 +41,16 @@ module.exports = {
 
     try {
 
-      // await sails.helpers.general.throwErrorJoi({
-      //   errorType: sails.config.custom.enums.errorType.ERROR,
-      //   location: moduleName,
-      //   message: 'Some error explanation message here...',
-      //   payload: {
-      //     keyOne: 1,
-      //     keyTwo: 'one',
-      //   },
-      //   errorName: 'ERROR_NAME',
-      // });
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.ERROR,
+        location: moduleName,
+        message: 'Some error explanation message here...',
+        payload: {
+          keyOne: 1,
+          keyTwo: 'one',
+        },
+        errorName: 'ERROR_NAME',
+      });
 
       // const some = `${undefinedProperty}`;
 
@@ -110,6 +110,7 @@ module.exports = {
       return await sails.helpers.general.catchErrorJoi({
         error: e,
         location: moduleName,
+        throwError: true,
       });
 
     }

@@ -105,6 +105,8 @@ module.exports = {
     const message = input.message;
     const payload = input.payload || {};
 
+    payload.details = {};
+
     const errorParams = {
       message,
       location,
@@ -114,10 +116,12 @@ module.exports = {
 
     if (input.clientGuid != null) {
       errorParams.clientGuid = input.clientGuid;
+      _.assign(payload.details, {clientGuid: input.clientGuid})
     }
 
     if (input.accountGuid != null) {
       errorParams.accountGuid = input.accountGuid;
+      _.assign(payload.details, {accountGuid: input.accountGuid})
     }
 
     if (input.requestId != null) {

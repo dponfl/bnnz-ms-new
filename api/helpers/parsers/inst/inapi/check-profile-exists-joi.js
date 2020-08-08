@@ -83,9 +83,6 @@ module.exports = {
       const getUserIdByProfileJoiRes = await sails.helpers.parsers.inst.inapi.getUserIdByProfileJoi(getUserIdByProfileJoiParams);
 
       if (getUserIdByProfileJoiRes.status !== 'success') {
-        // throw new Error(`${moduleName}, error: wrong getUserIdByProfileJoi response
-        // getUserIdByProfileJoiParams: ${JSON.stringify(getUserIdByProfileJoiParams, null, 3)}
-        // getUserIdByProfileJoiRes: ${JSON.stringify(getUserIdByProfileJoiRes, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -174,28 +171,34 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // await LogProcessor.error({
+      //   message: e.message || errorMsg,
+      //   clientGuid,
+      //   accountGuid,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: e.name || 'none',
+      //   location: errorLocation,
+      //   payload: e.raw || {},
+      // });
+      //
+      // return exits.success({
+      //   status: 'error',
+      //   module: errorLocation,
+      //   message: errorMsg,
+      //   payload: {
+      //     error: e.raw || {},
+      //   },
+      // })
 
-      await LogProcessor.error({
-        message: e.message || errorMsg,
-        clientGuid,
-        accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: e.name || 'none',
-        location: errorLocation,
-        payload: e.raw || {},
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
       });
-
-      return exits.success({
-        status: 'error',
-        module: errorLocation,
-        message: errorMsg,
-        payload: {
-          error: e.raw || {},
-        },
-      })
 
     }
 

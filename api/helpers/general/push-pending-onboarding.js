@@ -88,34 +88,50 @@ module.exports = {
       }
 
 
-      return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: {},
-      })
+      // return exits.success({
+      //   status: 'ok',
+      //   message: `${moduleName} performed`,
+      //   payload: {},
+      // })
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
+      });
 
     }
+
+    /**
+     * The below return needed for normal functioning of config/bootstrap.js
+     */
+
+    return exits.success({
+      status: 'ok',
+      message: 'success',
+      payload: {}
+    });
 
   }
 

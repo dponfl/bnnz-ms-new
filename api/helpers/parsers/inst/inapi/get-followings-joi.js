@@ -101,9 +101,6 @@ module.exports = {
       const responseStatusInner = _.get(requestRes, 'response.status', null);
 
       if (responseStatusMain !== 'success' || responseStatusInner !== 'success') {
-        // throw new Error(`${moduleName}, error => wrong parser response:
-        // request params: ${JSON.stringify(options, null, 3)}
-        // request response: ${JSON.stringify(requestRes, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -158,9 +155,6 @@ module.exports = {
       const users = _.get(requestRes, 'response.instagram.result.users', null);
 
       if (users == null) {
-        // throw new Error(`${moduleName}, error => wrong parser response: no users
-        // request params: ${JSON.stringify(options, null, 3)}
-        // request response: ${JSON.stringify(requestRes, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -250,28 +244,34 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // await LogProcessor.error({
+      //   message: e.message || errorMsg,
+      //   clientGuid,
+      //   accountGuid,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: e.name || 'none',
+      //   location: errorLocation,
+      //   payload: e.raw || {},
+      // });
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e.raw || {},
+      //     },
+      //   }
+      // };
 
-      await LogProcessor.error({
-        message: e.message || errorMsg,
-        clientGuid,
-        accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: e.name || 'none',
-        location: errorLocation,
-        payload: e.raw || {},
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
       });
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e.raw || {},
-          },
-        }
-      };
 
     }
 

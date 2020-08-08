@@ -136,6 +136,7 @@ module.exports = {
       return await sails.helpers.general.catchErrorJoi({
         error: e,
         location: moduleName,
+        throwError: true,
       });
 
     }

@@ -63,7 +63,6 @@ module.exports = {
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const checkNotifications = sails.config.custom.config.parsers.inst.errorSteps.notifications;
     const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.notifications);
 
     try {
@@ -251,19 +250,30 @@ module.exports = {
          * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
          */
 
-        await LogProcessor.critical({
+        // await LogProcessor.critical({
+        //   message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message,
+        //   clientGuid,
+        //   accountGuid,
+        //   // requestId: null,
+        //   // childRequestId: null,
+        //   errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.name,
+        //   location: moduleName,
+        //   emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+        //   payload: {},
+        // });
+        //
+        // throw new Error(sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
           message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message,
           clientGuid,
           accountGuid,
-          // requestId: null,
-          // childRequestId: null,
           errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.name,
-          location: moduleName,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
           payload: {},
         });
-
-        throw new Error(sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL.message);
 
       }
 
@@ -449,28 +459,34 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = e.message || `General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = e.message || `General error`;
+      //
+      // await LogProcessor.error({
+      //   message: errorMsg,
+      //   clientGuid,
+      //   accountGuid,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: e.name || 'none',
+      //   location: errorLocation,
+      //   payload: e.raw || {},
+      // });
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e.raw || {},
+      //     },
+      //   }
+      // };
 
-      await LogProcessor.error({
-        message: errorMsg,
-        clientGuid,
-        accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: e.name || 'none',
-        location: errorLocation,
-        payload: e.raw || {},
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
       });
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e.raw || {},
-          },
-        }
-      };
 
     }
 

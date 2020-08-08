@@ -85,9 +85,6 @@ module.exports = {
       const getMediaIdRaw = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(getMediaIdParams);
 
       if (getMediaIdRaw.status !== 'success') {
-        // throw new Error(`${moduleName}, error: wrong getMediaIdJoi response
-        // getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
-        // getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -137,9 +134,6 @@ module.exports = {
       const mediaId = _.get(getMediaIdRaw, 'payload.mediaId', null);
 
       if (mediaId == null) {
-        // throw new Error(`${moduleName}, error: getMediaIdJoi no payload.mediaId
-        // getMediaIdParams: ${JSON.stringify(getMediaIdParams, null, 3)}
-        // getMediaIdRaw: ${JSON.stringify(getMediaIdRaw, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -198,9 +192,6 @@ module.exports = {
       const getCommentsJoiRaw = await sails.helpers.parsers.inst.inapi.getCommentsJoi(getCommentsParams);
 
       if (getCommentsJoiRaw.status !== 'success') {
-        // throw new Error(`${moduleName}, error: wrong getCommentsJoi response
-        // getCommentsParams: ${JSON.stringify(getCommentsParams, null, 3)}
-        // getCommentsJoiRaw: ${JSON.stringify(getCommentsJoiRaw, null, 3)}`);
 
         status = 'error';
         const momentDone = moment();
@@ -294,28 +285,34 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // await LogProcessor.error({
+      //   message: e.message || errorMsg,
+      //   clientGuid,
+      //   accountGuid,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: e.name || 'none',
+      //   location: errorLocation,
+      //   payload: e.raw || {},
+      // });
+      //
+      // return exits.success({
+      //   status: 'error',
+      //   module: errorLocation,
+      //   message: errorMsg,
+      //   payload: {
+      //     error: e.raw || {},
+      //   },
+      // })
 
-      await LogProcessor.error({
-        message: e.message || errorMsg,
-        clientGuid,
-        accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: e.name || 'none',
-        location: errorLocation,
-        payload: e.raw || {},
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
       });
-
-      return exits.success({
-        status: 'error',
-        module: errorLocation,
-        message: errorMsg,
-        payload: {
-          error: e.raw || {},
-        },
-      })
 
     }
 
