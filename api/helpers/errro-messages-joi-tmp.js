@@ -46,6 +46,40 @@ module.exports = {
     const e = 'XXX';
 
     /**
+     * Логирование сообщения (info/debug/warn/error)
+     */
+
+    await LogProcessor.error({
+      message: message,
+      clientGuid,
+      accountGuid,
+      // requestId: null,
+      // childRequestId: null,
+      errorName: errorName,
+      location: moduleName,
+      payload: payloadObj,
+    });
+
+
+    /**
+     * Логирование сообщения (critical)
+     */
+
+    await LogProcessor.error({
+      message: message,
+      clientGuid,
+      accountGuid,
+      // requestId: null,
+      // childRequestId: null,
+      errorName: errorName,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: moduleName,
+      payload: payloadObj,
+    });
+
+
+
+    /**
      * Ordinary error event
      */
 

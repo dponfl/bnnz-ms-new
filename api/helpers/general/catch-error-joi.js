@@ -146,6 +146,12 @@ module.exports = {
       }
     }
 
+    return exits.success({
+      status: 'ok',
+      message: `${moduleName} performed`,
+      payload: {},
+    });
+
   }
 
 };

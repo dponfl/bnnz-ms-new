@@ -294,11 +294,25 @@ module.exports = {
       //   }
       // };
 
-      return await sails.helpers.general.catchErrorJoi({
-        error: e,
-        location: moduleName,
-        throwError: false,
-      });
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

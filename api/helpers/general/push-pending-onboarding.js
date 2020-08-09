@@ -31,6 +31,11 @@ module.exports = {
 
     try {
 
+      await LogProcessor.info({
+        message: 'Checking pending onboarding accounts',
+        location: moduleName,
+      });
+
       const accountGetParams = {
         otherConditions: {
           service_subscription_finalized: false,
@@ -43,7 +48,74 @@ module.exports = {
 
         const pendingAccounts = pendingAccountsRaw.payload;
 
-        for (const account of pendingAccounts) {
+        if (pendingAccounts.length > 0) {
+          await LogProcessor.warn({
+            message: 'Pending onboarding accounts found',
+            location: moduleName,
+            payload: {
+              numberOfPendingAccounts: pendingAccounts.length,
+              accounts: pendingAccounts,
+            },
+          });
+        } else {
+          await LogProcessor.warn({
+            message: 'Pending onboarding accounts NOT FOUND',
+            location: moduleName,
+          });
+        }
+
+        /**
+         * Выполнение прохода по пендинг аккаунтам последовательно
+         */
+
+        // for (const account of pendingAccounts) {
+        //
+        //   const clientGetByCriteriaParams = {
+        //     criteria: {
+        //       id: account.client,
+        //     }
+        //   };
+        //
+        //   const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi(clientGetByCriteriaParams);
+        //
+        //   if (clientRaw.status != null && clientRaw.status === 'ok') {
+        //
+        //     const clientArray = clientRaw.payload;
+        //
+        //     if (clientArray.length === 0) {
+        //       // TODO: Выполнить логирование ошибки, что отсутствует клиентская запись для аккаунта
+        //     } else if (clientArray.length > 1) {
+        //       // TODO: Выполнить логирование ошибки, что существует больше одной клиентской записи
+        //     } else {
+        //
+        //       const client = clientArray[0];
+        //
+        //       /**
+        //        * Онбординг не завершен - толкаем выполнение текущей воронки
+        //        */
+        //
+        //       const initialBlock = _.find(client.funnels[client.current_funnel],
+        //         {initial: true});
+        //
+        //       await sails.helpers.funnel.proceedNextBlockJoi({
+        //         client,
+        //         funnelName: client.current_funnel,
+        //         blockId: initialBlock.id,
+        //         createdBy: moduleName,
+        //         throwError: false,
+        //       });
+        //
+        //     }
+        //
+        //   }
+        //
+        // }
+
+        /**
+         * Выполнение прохода по пендинг аккаунтам асинхронно
+         */
+
+        _.forEach(pendingAccounts, async (account) => {
 
           const clientGetByCriteriaParams = {
             criteria: {
@@ -77,13 +149,14 @@ module.exports = {
                 funnelName: client.current_funnel,
                 blockId: initialBlock.id,
                 createdBy: moduleName,
+                throwError: false,
               });
 
             }
 
           }
 
-        }
+        });
 
       }
 
@@ -115,10 +188,15 @@ module.exports = {
       //   }
       // };
 
-      return await sails.helpers.general.catchErrorJoi({
+      await sails.helpers.general.catchErrorJoi({
         error: e,
         location: moduleName,
         throwError: false,
+      });
+      return exits.success({
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: {},
       });
 
     }

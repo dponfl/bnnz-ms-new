@@ -70,15 +70,23 @@ module.exports = {
         .string()
         .description('source of update')
         .required(),
+      throwError: Joi
+        .boolean()
+        .description('true if we want to throw error further'),
     });
 
     let block = null;
     let funnel = null;
     let input;
+    let throwError = true;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      if (input.throwError === false) {
+        throwError = input.throwError;
+      }
 
       if (!_.has(input.client.funnels, input.funnelName)) {
         throw new Error(`funnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nfunnelName : ${input.funnelName}`);
@@ -682,11 +690,30 @@ module.exports = {
       //   }
       // };
 
-      return await sails.helpers.general.catchErrorJoi({
-        error: e,
-        location: moduleName,
-        throwError: false,
-      });
+      // return await sails.helpers.general.catchErrorJoi({
+      //   error: e,
+      //   location: moduleName,
+      //   throwError,
+      // });
+
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
