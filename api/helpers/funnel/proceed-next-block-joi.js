@@ -80,16 +80,38 @@ module.exports = {
     let input;
     let throwError = true;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
       if (input.throwError === false) {
         throwError = input.throwError;
       }
 
       if (!_.has(input.client.funnels, input.funnelName)) {
-        throw new Error(`funnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nfunnelName : ${input.funnelName}`);
+        // throw new Error(`funnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nfunnelName : ${input.funnelName}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'funnel not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            funnelName: input.funnelName,
+            inputClientFunnels: input.client.funnels,
+          },
+        });
+
       }
 
       funnel = input.client.funnels[input.funnelName];
@@ -97,7 +119,22 @@ module.exports = {
       block = _.find(funnel, {id: input.blockId});
 
       if (_.isNil(block)) {
-        throw new Error(`block not found, \nfunnelName: ${input.funnelName} \nblockId : ${input.blockId}`);
+        // throw new Error(`block not found, \nfunnelName: ${input.funnelName} \nblockId : ${input.blockId}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            blockId: input.blockId,
+            funnel,
+          },
+        });
+
       }
 
       if (
@@ -112,8 +149,8 @@ module.exports = {
          */
 
         await sails.helpers.storage.clientJourneyCreateJoi({
-          clientGuid: input.client.guid,
-          accountGuid: input.client.account_use,
+          clientGuid,
+          accountGuid,
           funnelName: input.funnelName,
           blockId: input.blockId,
         });
@@ -600,7 +637,21 @@ module.exports = {
              * Throw error: we could not parse the specified afterHelper
              */
 
-            throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR);
+            // throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                blockAfterHelper: block.afterHelper,
+              },
+            });
+
           }
 
         }
@@ -623,7 +674,23 @@ module.exports = {
         ) {
 
           if (!_.has(input.client.funnels, nextFunnelName)) {
-            throw new Error(`nextFunnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nnextFunnel : ${input.nextFunnel}`);
+            // throw new Error(`nextFunnel not found, \nfunnels: ${JSON.stringify(input.client.funnels, null, 3)} \n\nnextFunnel : ${input.nextFunnel}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'nextFunnel not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                blockNext: block.next,
+                nextFunnelName,
+                inputClientFunnels: input.client.funnels,
+              },
+            });
+
           }
 
           const nextFunnel = input.client.funnels[nextFunnelName];
@@ -631,7 +698,23 @@ module.exports = {
           const nextBlock = _.find(nextFunnel, {id: nextId});
 
           if (_.isNil(nextBlock)) {
-            throw new Error(`next block not found, \nnextFunnelName: ${nextFunnelName} \nnextId : ${nextId}`);
+            // throw new Error(`next block not found, \nnextFunnelName: ${nextFunnelName} \nnextId : ${nextId}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'next block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                nextId,
+                nextFunnelName,
+                nextFunnel,
+              },
+            });
+
           }
 
           const createdByRegexp = new RegExp(moduleName);
@@ -772,7 +855,20 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
        * Throw error: we could not parse the specified beforeHelper
        */
 
-      throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR);
+      // throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR);
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: moduleName,
+        message: sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR,
+        clientGuid: client.guid,
+        accountGuid: client.account_use,
+        errorName: sails.config.custom.FUNNELS_ERROR,
+        payload: {
+          blockBeforeHelper: block.beforeHelper,
+        },
+      });
 
     }
 
@@ -811,7 +907,20 @@ async function activateBlockModifyHelper(client, block) {
        * Throw error: we could not parse the specified blockModifyHelper
        */
 
-      throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR);
+      // throw new Error(sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR);
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: moduleName,
+        message: sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR,
+        clientGuid: client.guid,
+        accountGuid: client.account_use,
+        errorName: sails.config.custom.FUNNELS_ERROR,
+        payload: {
+          blockBlockModifyHelper: block.blockModifyHelper,
+        },
+      });
 
     }
 

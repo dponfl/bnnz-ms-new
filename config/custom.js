@@ -711,11 +711,15 @@ module.exports.custom = {
   },
 
   ANALITICS_ERROR: {
-    name: 'ERR_ANALITICS',
+    name: 'ERR_ANALITICS_GENERAL',
   },
 
   CHAT_LISTENER_TELEGRAM_ERROR: {
-    name: 'ERR_CHAT_LISTENER_TELEGRAM',
+    name: 'ERR_CHAT_LISTENER_TELEGRAM_GENERAL',
+  },
+
+  FUNNELS_ERROR: {
+    name: 'ERR_FUNNELS_GENERAL',
   },
 
 
