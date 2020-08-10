@@ -714,6 +714,10 @@ module.exports.custom = {
     name: 'ERR_ANALITICS',
   },
 
+  CHAT_LISTENER_TELEGRAM_ERROR: {
+    name: 'ERR_CHAT_LISTENER_TELEGRAM',
+  },
+
 
 
 };

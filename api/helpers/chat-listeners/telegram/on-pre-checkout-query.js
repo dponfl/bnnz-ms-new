@@ -42,10 +42,22 @@ module.exports = {
       try {
 
         if (_.isNil(msg.invoice_payload)) {
-          sails.log.error(`${moduleName}, error: no msg.invoice_payload:
-          ${JSON.stringify(msg, null, 3)}`);
-          throw new Error(`${moduleName}, error: no msg.invoice_payload:
-          ${JSON.stringify(msg, null, 3)}`);
+          // sails.log.error(`${moduleName}, error: no msg.invoice_payload:
+          // ${JSON.stringify(msg, null, 3)}`);
+          // throw new Error(`${moduleName}, error: no msg.invoice_payload:
+          // ${JSON.stringify(msg, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'No msg.invoice_payload',
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            payload: {
+              msg,
+            },
+          });
+
         }
 
         paymentGroupGuid = msg.invoice_payload;
@@ -61,13 +73,25 @@ module.exports = {
 
         if (clientRaw == null || clientRaw.status !== 'found') {
 
-          sails.log.error(`${moduleName}, error: client record not found:
-          msg: ${JSON.stringify(msg, null, 3)} 
-          messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
+          // sails.log.error(`${moduleName}, error: client record not found:
+          // msg: ${JSON.stringify(msg, null, 3)}
+          // messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
+          //
+          // throw new Error(`${moduleName}, error: client record not found:
+          // msg: ${JSON.stringify(msg, null, 3)}
+          // messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
 
-          throw new Error(`${moduleName}, error: client record not found:
-          msg: ${JSON.stringify(msg, null, 3)} 
-          messenger: ${sails.config.custom.enums.messenger.TELEGRAM}`);
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'client record not found',
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            payload: {
+              clientRaw,
+            },
+          });
+
         }
 
         const client = clientRaw.payload;
@@ -88,11 +112,23 @@ module.exports = {
             accountGuid: client.account_use,
           });
 
-          sails.log.error(`${moduleName}, error: no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}: 
-          config: ${JSON.stringify(sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM], null, 3)}`);
+          // sails.log.error(`${moduleName}, error: no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}:
+          // config: ${JSON.stringify(sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM], null, 3)}`);
+          //
+          // throw new Error(`${moduleName}, error: no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}:
+          // config: ${JSON.stringify(sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM], null, 3)}`);
 
-          throw new Error(`${moduleName}, error: no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}: 
-          config: ${JSON.stringify(sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM], null, 3)}`);
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+            location: moduleName,
+            message: `no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}`,
+            clientGuid: client.guid,
+            accountGuid: client.account_use,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            payload: sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM],
+          });
+
         }
 
         const checkInvoiceResult = await sails.helpers.mgw.telegram.checkPreCheckout.with({
@@ -108,60 +144,113 @@ module.exports = {
           });
 
           if (answerPreCheckoutQueryResult.status !== 'ok') {
-            sails.log.error(`answerPreCheckoutQueryResult not successful, answerPreCheckoutQueryResult: ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
-            throw new Error(`answerPreCheckoutQueryResult not successful, answerPreCheckoutQueryResult: ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
+            // sails.log.error(`answerPreCheckoutQueryResult not successful, answerPreCheckoutQueryResult: ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
+            // throw new Error(`answerPreCheckoutQueryResult not successful, answerPreCheckoutQueryResult: ${JSON.stringify(answerPreCheckoutQueryResult, null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'answerPreCheckoutQueryResult not successful',
+              clientGuid: client.guid,
+              accountGuid: client.account_use,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              payload: {
+                answerPreCheckoutQueryResult,
+              },
+            });
+
           }
 
         } else {
-          sails.log.error(`${moduleName}, error: checkInvoiceResult.status != ok:
-          ${JSON.stringify(checkInvoiceResult, null, 3)}`);
-          throw new Error(`${moduleName}, error: checkInvoiceResult.status != ok:
-          ${JSON.stringify(checkInvoiceResult, null, 3)}`);
+          // sails.log.error(`${moduleName}, error: checkInvoiceResult.status != ok:
+          // ${JSON.stringify(checkInvoiceResult, null, 3)}`);
+          // throw new Error(`${moduleName}, error: checkInvoiceResult.status != ok:
+          // ${JSON.stringify(checkInvoiceResult, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'checkInvoiceResult.status NOT ok',
+            clientGuid: client.guid,
+            accountGuid: client.account_use,
+            errorName: exports.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            payload: {
+              checkInvoiceResult,
+            },
+          });
+
         }
 
       } catch (e) {
 
-        const errorLocation = moduleName;
-        const errorMsg = `${moduleName}, error: ${sails.config.custom.ON_PRE_CHECKOUT_QUERY_ERROR}`;
+        // const errorLocation = moduleName;
+        // const errorMsg = `${moduleName}, error: ${sails.config.custom.ON_PRE_CHECKOUT_QUERY_ERROR}`;
+        //
+        // sails.log.error(errorLocation + ', error: ' + errorMsg);
+        // sails.log.error(errorLocation + ', error details: ', e);
+        //
+        // try {
+        //
+        //   await sails.helpers.general.processPaymentErrorJoi({
+        //     paymentGroupGuid,
+        //     chatId,
+        //     messenger: sails.config.custom.enums.messenger.TELEGRAM,
+        //   });
+        //
+        // } catch (ee) {
+        //
+        //   const errorLocation = moduleName;
+        //   const errorMsg = `${moduleName}: processPaymentErrorJoi call error`;
+        //
+        //   sails.log.error(errorLocation + ', error: ' + errorMsg);
+        //   sails.log.error(errorLocation + ', error details: ', ee);
+        //
+        //   throw {err: {
+        //       module: errorLocation,
+        //       message: errorMsg,
+        //       payload: {
+        //         error: ee,
+        //       },
+        //     }
+        //   };
+        //
+        // }
+        //
+        // throw {err: {
+        //     module: errorLocation,
+        //     message: errorMsg,
+        //     payload: {
+        //       error: e,
+        //     },
+        //   }
+        // };
 
-        sails.log.error(errorLocation + ', error: ' + errorMsg);
-        sails.log.error(errorLocation + ', error details: ', e);
 
-        try {
+        await sails.helpers.general.processPaymentErrorJoi({
+          paymentGroupGuid,
+          chatId,
+          messenger: sails.config.custom.enums.messenger.TELEGRAM,
+        });
 
-          await sails.helpers.general.processPaymentErrorJoi({
-            paymentGroupGuid,
-            chatId,
-            messenger: sails.config.custom.enums.messenger.TELEGRAM,
+        const throwError = true;
+        if (throwError) {
+          return await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: true,
           });
-
-        } catch (ee) {
-
-          const errorLocation = moduleName;
-          const errorMsg = `${moduleName}: processPaymentErrorJoi call error`;
-
-          sails.log.error(errorLocation + ', error: ' + errorMsg);
-          sails.log.error(errorLocation + ', error details: ', ee);
-
-          throw {err: {
-              module: errorLocation,
-              message: errorMsg,
-              payload: {
-                error: ee,
-              },
-            }
-          };
-
+        } else {
+          await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: false,
+          });
+          return exits.success({
+            status: 'ok',
+            message: `${moduleName} performed`,
+            payload: {},
+          });
         }
-
-        throw {err: {
-            module: errorLocation,
-            message: errorMsg,
-            payload: {
-              error: e,
-            },
-          }
-        };
 
       }
 

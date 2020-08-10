@@ -226,9 +226,23 @@ module.exports = {
             });
 
             if (checkDayPostsJoiRaw.status !== 'ok') {
-              throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
-              client: ${client}
-              checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+              // throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
+              // client: ${client}
+              // checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: 'Wrong checkDayPostsJoi reply',
+                clientGuid: client.guid,
+                accountGuid: client.account_use,
+                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+                payload: {
+                  checkDayPostsJoiRaw,
+                },
+              });
+
             }
 
             const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
@@ -264,9 +278,24 @@ module.exports = {
             const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
 
             if (sendKeyboardForAccountRaw.status !== 'ok') {
-              throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
-                sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
-                sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+              // throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
+              //   sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
+              //   sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: 'Wrong sendKeyboardForAccountJoi response',
+                clientGuid: client.guid,
+                accountGuid: client.account_use,
+                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+                payload: {
+                  sendKeyboardForAccountParams,
+                  sendKeyboardForAccountRaw,
+                },
+              });
+
             }
 
           } else {
@@ -316,9 +345,24 @@ module.exports = {
           if (checkAndPerformKeyboardActionsRaw.status === 'ok') {
             keyboardInUse = checkAndPerformKeyboardActionsRaw.payload.keyboardInUse;
           } else {
-            throw new Error(`${moduleName}, Critical error: wrong checkActiveKeyboardJoi response:
-            checkAndPerformKeyboardActionsJoiParams: ${JSON.stringify(checkAndPerformKeyboardActionsJoiParams, null, 3)}
-            checkAndPerformKeyboardActionsRaw: ${JSON.stringify(checkAndPerformKeyboardActionsRaw, null, 3)}`);
+            // throw new Error(`${moduleName}, Critical error: wrong checkActiveKeyboardJoi response:
+            // checkAndPerformKeyboardActionsJoiParams: ${JSON.stringify(checkAndPerformKeyboardActionsJoiParams, null, 3)}
+            // checkAndPerformKeyboardActionsRaw: ${JSON.stringify(checkAndPerformKeyboardActionsRaw, null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Wrong checkActiveKeyboardJoi response',
+              clientGuid: client.guid,
+              accountGuid: client.account_use,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              payload: {
+                checkAndPerformKeyboardActionsJoiParams,
+                checkAndPerformKeyboardActionsRaw,
+              },
+            });
+
           }
 
           if (!keyboardInUse) {
@@ -349,11 +393,25 @@ module.exports = {
         //   }
         // };
 
-        return await sails.helpers.general.catchErrorJoi({
-          error: e,
-          location: moduleName,
-          throwError: false,
-        });
+        const throwError = true;
+        if (throwError) {
+          return await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: true,
+          });
+        } else {
+          await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: false,
+          });
+          return exits.success({
+            status: 'ok',
+            message: `${moduleName} performed`,
+            payload: {},
+          });
+        }
 
       }
 
