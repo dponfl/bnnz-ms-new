@@ -231,19 +231,19 @@
         "intervalTime": 1000,
         "notifications": [
           {
-            "notificationInterval": 10,
+            "notificationInterval": 5,
             "emergencyLevel": "low",
             "sendMessageToClient": true,
             "sendMessageToAdmin": true
           },
           {
-            "notificationInterval": 20,
+            "notificationInterval": 10,
             "emergencyLevel": "medium",
             "sendMessageToClient": false,
             "sendMessageToAdmin": true
           },
           {
-            "notificationInterval": 30,
+            "notificationInterval": 15,
             "emergencyLevel": "high",
             "sendMessageToClient": false,
             "sendMessageToAdmin": true

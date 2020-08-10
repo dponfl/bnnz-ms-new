@@ -39,6 +39,8 @@ module.exports = {
       const accountGetParams = {
         otherConditions: {
           service_subscription_finalized: false,
+          deleted: false,
+          banned: false,
         },
       };
 
