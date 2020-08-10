@@ -53,10 +53,16 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
       /**
        * Save the received callback query message
@@ -141,7 +147,21 @@ module.exports = {
                * Throw error -> initial block was not found
                */
 
-              throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR}`);
+              // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR}`);
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR,
+                payload: {
+                  currentFunnel: input.client.funnels[input.client.current_funnel],
+                },
+              });
+
             }
 
             /**
@@ -159,34 +179,84 @@ module.exports = {
              * Throw error: we could not parse the specified callbackHelper
              */
 
-            throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR}`);
+            // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                blockCallbackHelper: block.callbackHelper,
+              },
+            });
+
           }
 
         } else {
-          throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR}
-          message_id: ${input.query.message.message_id}
-          current_funnel: ${input.client.current_funnel}
-          funnels: ${JSON.stringify(input.client.funnels, null, 3)}`);
+          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR}
+          // message_id: ${input.query.message.message_id}
+          // current_funnel: ${input.client.current_funnel}
+          // funnels: ${JSON.stringify(input.client.funnels, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR,
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              messageId: input.query.message.message_id,
+              currentFunnelName: input.client.current_funnel,
+              currentFunnel: input.client.funnels[input.client.current_funnel],
+            },
+          });
+
         }
 
       }
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR}`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_ERROR}`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

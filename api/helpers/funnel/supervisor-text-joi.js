@@ -52,9 +52,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       /**
        * Check if the message received is a reply to a forced message
@@ -114,12 +122,41 @@ module.exports = {
              * Throw error: we could not parse the specified forcedHelper
              */
 
-            throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR}`);
+            // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                forcedHelper: forcedReplyBlock.forcedHelper,
+              },
+            });
+
           }
 
         } else {
 
-          throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR}`);
+          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              currentFunnel: input.client.funnels[input.client.current_funnel],
+              messageId: input.msg.reply_to_message.message_id,
+            },
+          });
+
         }
 
       } else {
@@ -182,7 +219,21 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR}`);
+        // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            currentFunnel: input.client.funnels[input.client.current_funnel],
+          },
+        });
+
       }
 
     } catch (e) {
@@ -202,11 +253,25 @@ module.exports = {
       //   }
       // };
 
-      return await sails.helpers.general.catchErrorJoi({
-        error: e,
-        location: moduleName,
-        throwError: false,
-      });
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
