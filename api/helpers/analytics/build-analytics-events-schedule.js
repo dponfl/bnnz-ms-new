@@ -34,7 +34,21 @@ module.exports = {
     try {
 
       if (sails.config.custom.config.analytics.events_schedule == null) {
-        throw new Error('Critical error: Cannot get analytics events schedule config');
+        // throw new Error('Critical error: Cannot get analytics events schedule config');
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Critical error: Cannot get analytics events schedule config',
+          errorName: sails.config.custom.ANALITICS_ERROR.name,
+          payload: {
+            location: 'sails.config.custom.config.analytics',
+            key: 'events_schedule',
+            value: sails.config.custom.config.analytics.events_schedule,
+          },
+        });
+
       } else {
         sails.log.info('Analytics events schedule configuration loaded successfully');
       }
@@ -70,20 +84,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/analytics/build-events-schedule';
-      const errorMsg = 'api/helpers/analytics/build-events-schedule: General error';
+      // const errorLocation = 'api/helpers/analytics/build-events-schedule';
+      // const errorMsg = 'api/helpers/analytics/build-events-schedule: General error';
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

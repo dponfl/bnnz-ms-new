@@ -83,24 +83,39 @@ module.exports = {
         });
 
       } else {
-        throw new Error(`${moduleName}, error: No service with name="${serviceName}"`);
+        // throw new Error(`${moduleName}, error: No service with name="${serviceName}"`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: `No service with name="${serviceName}"`,
+          errorName: sails.config.custom.ANALITICS_ERROR.name,
+        });
+
       }
 
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.ERROR,
+        location: moduleName,
+        message: `No service with name="${serviceName}"`,
+        errorName: sails.config.custom.ANALITICS_ERROR.name,
+      });
 
     }
 
