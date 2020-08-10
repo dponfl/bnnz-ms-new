@@ -59,9 +59,17 @@ module.exports = {
     let input;
     let refUps;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       let resHtml = input.payload.text;
 
@@ -80,9 +88,23 @@ module.exports = {
         });
 
         if (RefDataRaw.status !== 'ok') {
-          throw new Error(`${moduleName}, error: wrong linkAccountToRefJoi response:
-        account: ${currentAccount}
-        RefDataRaw: ${JSON.stringify(RefDataRaw, null, 3)}`);
+        //   throw new Error(`${moduleName}, error: wrong linkAccountToRefJoi response:
+        // account: ${currentAccount}
+        // RefDataRaw: ${JSON.stringify(RefDataRaw, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong linkAccountToRefJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              currentAccount,
+              RefDataRaw,
+            },
+          });
+
         }
 
         /**
@@ -108,15 +130,43 @@ module.exports = {
         });
 
         if (refUpDataRaw.status !== 'ok') {
-          throw new Error(`${moduleName}, error: wrong refUpGetByCriteria response:
-        criteria: ${refUpGetCriteria}
-        refUpDataRaw: ${JSON.stringify(refUpDataRaw, null, 3)}`);
+        //   throw new Error(`${moduleName}, error: wrong refUpGetByCriteria response:
+        // criteria: ${refUpGetCriteria}
+        // refUpDataRaw: ${JSON.stringify(refUpDataRaw, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong refUpGetByCriteria response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              refUpGetCriteria,
+              refUpDataRaw,
+            },
+          });
+
         }
 
         if (refUpDataRaw.payload.length === 0) {
-          throw new Error(`${moduleName}, error: no refUp records found:
-        criteria: ${refUpGetCriteria}
-        refUpDataRaw.payload: ${JSON.stringify(refUpDataRaw.payload, null, 3)}`);
+        //   throw new Error(`${moduleName}, error: no refUp records found:
+        // criteria: ${refUpGetCriteria}
+        // refUpDataRaw.payload: ${JSON.stringify(refUpDataRaw.payload, null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No refUp records found',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              refUpGetCriteria,
+              refUpDataRawPayload: refUpDataRaw.payload,
+            },
+          });
+
         }
 
         refUps = refUpDataRaw.payload;
@@ -137,15 +187,43 @@ module.exports = {
       const refAccountRecRaw = await sails.helpers.storage.accountGetJoi(refAccountRecRawParams);
 
       if (refAccountRecRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: accountGetJoi error response:
-          params: ${JSON.stringify(refAccountRecRawParams, null, 3)}
-          refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: accountGetJoi error response:
+        //   params: ${JSON.stringify(refAccountRecRawParams, null, 3)}
+        //   refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong accountGetJoi error response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            refAccountRecRawParams,
+            refAccountRecRaw,
+          },
+        });
+
       }
 
       if (refAccountRecRaw.payload.length === 0) {
-        throw new Error(`${moduleName}, error: no accounts found:
-          params: ${JSON.stringify(refAccountRecRawParams, null, 3)}
-          refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: no accounts found:
+        //   params: ${JSON.stringify(refAccountRecRawParams, null, 3)}
+        //   refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No accounts found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            refAccountRecRawParams,
+            refAccountRecRaw,
+          },
+        });
+
       }
 
       const refAccounts =  refAccountRecRaw.payload;
@@ -178,20 +256,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
