@@ -71,14 +71,38 @@ module.exports = {
       });
 
       if (accountRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: Unknown accountGuid="${input.accountGuid}"`);
+        // throw new Error(`${moduleName}, error: Unknown accountGuid="${input.accountGuid}"`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Unknown accountGuid',
+          accountGuid: input.accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR,
+          payload: {
+            accountGuid: input.accountGuid,
+          },
+        });
+
       }
 
       const account = accountRaw.payload[0] || null;
 
       if (account == null) {
-        throw new Error(`${moduleName}, error: Unexpected result:
-        accountRaw.payload: ${JSON.stringify(accountRaw.payload, null, 3)}`);
+        // throw new Error(`${moduleName}, error: Unexpected result:
+        // accountRaw.payload: ${JSON.stringify(accountRaw.payload, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No accounts found',
+          accountGuid: input.accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR,
+          payload: {
+            accountRaw,
+          },
+        });
+
       }
 
       const roomsNum = account.service.rooms;
@@ -101,20 +125,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
   }
@@ -182,7 +226,20 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         });
         break;
 
-      default: throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
+      default:
+        // throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Unknown account category',
+          accountGuid: accountRec.guid,
+          errorName: sails.config.custom.GENERAL_ERROR,
+          payload: {
+            accountCategory,
+          },
+        });
+
     }
 
 
@@ -299,21 +356,40 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
   } catch (e) {
 
-    const errorLocation = moduleName + ':' + methodName;
-    const errorMsg = `${moduleName}:${methodName}: General error`;
+    // const errorLocation = moduleName + ':' + methodName;
+    // const errorMsg = `${moduleName}:${methodName}: General error`;
+    //
+    // sails.log.error(errorLocation + ', error: ' + errorMsg);
+    // sails.log.error(errorLocation + ', error details: ', e);
+    //
+    // throw {err: {
+    //     module: errorLocation,
+    //     message: errorMsg,
+    //     payload: {
+    //       error: e,
+    //     },
+    //   }
+    // };
 
-    sails.log.error(errorLocation + ', error: ' + errorMsg);
-    sails.log.error(errorLocation + ', error details: ', e);
-
-    throw {err: {
-        module: errorLocation,
-        message: errorMsg,
-        payload: {
-          error: e,
-        },
-      }
-    };
-
+    const throwError = true;
+    if (throwError) {
+      return await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: true,
+      });
+    } else {
+      await sails.helpers.general.catchErrorJoi({
+        error: e,
+        location: moduleName,
+        throwError: false,
+      });
+      return exits.success({
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: {},
+      });
+    }
 
   }
 }

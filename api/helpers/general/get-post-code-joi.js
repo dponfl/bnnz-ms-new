@@ -55,34 +55,76 @@ module.exports = {
       const postCodeRaw = regExp.exec(input.postLink);
 
       if (postCodeRaw.length !== 3) {
-        throw new Error(`${moduleName}, Error: postLink has wrong format: ${input.postLink}`);
+        // throw new Error(`${moduleName}, Error: postLink has wrong format: ${input.postLink}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.WARN,
+          location: moduleName,
+          message: 'postLink has wrong format',
+          errorName: sails.config.custom.GENERAL_ERROR,
+          payload: {
+            postLink: input.postLink,
+          },
+        });
+
       }
 
       // postCode = postCodeRaw[2];
       postCode = _.replace(postCodeRaw[2], '/', '');
 
       if (postCode === '') {
-        throw new Error(`${moduleName}, Error: postCode is empty. postCodeRaw: \n${JSON.stringify(postCodeRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, Error: postCode is empty. postCodeRaw: \n${JSON.stringify(postCodeRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.WARN,
+          location: moduleName,
+          message: 'postCode is empty',
+          errorName: sails.config.custom.GENERAL_ERROR,
+          payload: {
+            postCodeRaw,
+          },
+        });
+
       }
 
       return exits.success(postCode);
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

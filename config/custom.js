@@ -211,6 +211,7 @@ module.exports.custom = {
     },
 
     errorType: {
+      WARN: 'warn',
       ERROR: 'error',
       CRITICAL: 'critical',
     }
@@ -720,6 +721,10 @@ module.exports.custom = {
 
   FUNNELS_ERROR: {
     name: 'ERR_FUNNELS_GENERAL',
+  },
+
+  GENERAL_ERROR: {
+    name: 'ERR_GENERAL_GENERAL',
   },
 
 
