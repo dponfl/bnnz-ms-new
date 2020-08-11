@@ -263,6 +263,7 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
+              block: input.block,
               nextBlock: input.block.next,
             },
           });
@@ -291,9 +292,8 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
-              updateBlock,
-              updateFunnel,
               updateId,
+              updateFunnel,
               funnel: input.client.funnels[updateFunnel],
             },
           });
@@ -406,6 +406,7 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
+              block: input.block,
               updateBlock,
             },
           });

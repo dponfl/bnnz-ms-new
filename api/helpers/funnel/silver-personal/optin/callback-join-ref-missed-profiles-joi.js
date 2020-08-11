@@ -55,14 +55,19 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
 
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
+
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       switch (input.query.data) {
         case 'check':
@@ -76,7 +81,22 @@ module.exports = {
           if (_.isNil(blockFunnel)
             || _.isNil(blockId)
           ) {
-            throw new Error(`${moduleName}, error: parsing error of ${blockName}`);
+            // throw new Error(`${moduleName}, error: parsing error of ${blockName}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block parsing error',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                blockName,
+                block: input.block,
+              },
+            });
+
           }
 
           const blockData = _.find(input.client.funnels[blockFunnel], {id: blockId});
@@ -88,16 +108,46 @@ module.exports = {
             blockData.previous = 'optin::join_ref_missed_profiles';
 
           } else {
-            throw new Error(`${moduleName}, error: block not found:
-             blockName: ${blockName}
-             blockFunnel: ${blockFunnel}
-             blockId: ${blockId}
-             input.client.funnels[blockFunnel]: ${JSON.stringify(input.client.funnels[blockFunnel], null, 3)}`);
+            // throw new Error(`${moduleName}, error: block not found:
+            //  blockName: ${blockName}
+            //  blockFunnel: ${blockFunnel}
+            //  blockId: ${blockId}
+            //  input.client.funnels[blockFunnel]: ${JSON.stringify(input.client.funnels[blockFunnel], null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR,
+              payload: {
+                blockId,
+                blockFunnel,
+                funnel: input.client.funnels[blockFunnel],
+              },
+            });
+
           }
 
           break;
         default:
-          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
+          // throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Wrong callback data',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              inputQueryData: input.query.data,
+            },
+          });
+
       }
 
       input.block.done = true;
@@ -120,20 +170,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

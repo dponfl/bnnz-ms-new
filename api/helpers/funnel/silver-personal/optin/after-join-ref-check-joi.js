@@ -96,9 +96,23 @@ module.exports = {
       const refUpRecsRaw = await sails.helpers.storage.refUpGetJoi(refUpGetJoiParams);
 
       if (refUpRecsRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong refUpGetJoi response:
-        refUpGetJoiParams: ${JSON.stringify(refUpGetJoiParams, null, 3)}
-        refUpRecsRaw: ${JSON.stringify(refUpRecsRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong refUpGetJoi response:
+        // refUpGetJoiParams: ${JSON.stringify(refUpGetJoiParams, null, 3)}
+        // refUpRecsRaw: ${JSON.stringify(refUpRecsRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong refUpGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            refUpGetJoiParams,
+            refUpRecsRaw,
+          },
+        });
+
       }
 
       const refUpGuids = [];
@@ -114,15 +128,43 @@ module.exports = {
       const refAccountRecRaw = await sails.helpers.storage.accountGetJoi(accountGetJoiParams);
 
       if (refAccountRecRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong accountGetJoi response:
-        accountGetJoiParams: ${JSON.stringify(accountGetJoiParams, null, 3)}
-        refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong accountGetJoi response:
+        // accountGetJoiParams: ${JSON.stringify(accountGetJoiParams, null, 3)}
+        // refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong accountGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            accountGetJoiParams,
+            refAccountRecRaw,
+          },
+        });
+
       }
 
       if (refAccountRecRaw.payload.length !== refUpGuids.length) {
-        throw new Error(`${moduleName}, error: wrong amount of records found:
-        accountGetJoiParams: ${JSON.stringify(accountGetJoiParams, null, 3)}
-        refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong amount of records found:
+        // accountGetJoiParams: ${JSON.stringify(accountGetJoiParams, null, 3)}
+        // refAccountRecRaw: ${JSON.stringify(refAccountRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong amount of records found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            accountGetJoiParams,
+            refAccountRecRaw,
+          },
+        });
+
       }
 
       const profilesList = [];
@@ -337,7 +379,22 @@ module.exports = {
         if (_.isNil(updateFunnel)
           || _.isNil(updateId)
         ) {
-          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block parsing error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              block: input.block,
+              updateBlock,
+            },
+          });
+
         }
 
         getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
@@ -347,11 +404,27 @@ module.exports = {
           getBlock.done = false;
           getBlock.previous = 'optin::join_ref_check';
         } else {
-          throw new Error(`${moduleName}, error: block not found:
-             updateBlock: ${updateBlock}
-             updateFunnel: ${updateFunnel}
-             updateId: ${updateId}
-             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+          // throw new Error(`${moduleName}, error: block not found:
+          //    updateBlock: ${updateBlock}
+          //    updateFunnel: ${updateFunnel}
+          //    updateId: ${updateId}
+          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block not found',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              updateId,
+              updateFunnel,
+              funnel: input.client.funnels[updateFunnel],
+            },
+          });
+
         }
 
         /**
@@ -367,7 +440,21 @@ module.exports = {
         if (_.isNil(updateFunnel)
           || _.isNil(updateId)
         ) {
-          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block parsing error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              updateBlock,
+            },
+          });
+
         }
 
         getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
@@ -377,11 +464,27 @@ module.exports = {
           getBlock.done = true;
           getBlock.previous = 'optin::join_ref_check';
         } else {
-          throw new Error(`${moduleName}, error: block not found:
-             updateBlock: ${updateBlock}
-             updateFunnel: ${updateFunnel}
-             updateId: ${updateId}
-             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+          // throw new Error(`${moduleName}, error: block not found:
+          //    updateBlock: ${updateBlock}
+          //    updateFunnel: ${updateFunnel}
+          //    updateId: ${updateId}
+          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block not found',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              updateId,
+              updateFunnel,
+              funnel: input.client.funnels[updateFunnel],
+            },
+          });
+
         }
 
 
@@ -419,7 +522,22 @@ module.exports = {
         if (_.isNil(updateFunnel)
           || _.isNil(updateId)
         ) {
-          throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block parsing error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              updateBlock,
+              block: input.block,
+            },
+          });
+
         }
 
         getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
@@ -430,11 +548,27 @@ module.exports = {
           getBlock.previous = 'optin::join_ref_check';
           getBlock.next = null;
         } else {
-          throw new Error(`${moduleName}, error: block not found:
-             updateBlock: ${updateBlock}
-             updateFunnel: ${updateFunnel}
-             updateId: ${updateId}
-             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+          // throw new Error(`${moduleName}, error: block not found:
+          //    updateBlock: ${updateBlock}
+          //    updateFunnel: ${updateFunnel}
+          //    updateId: ${updateId}
+          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block not found',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR,
+            payload: {
+              updateId,
+              updateFunnel,
+              funnel: input.client.funnels[updateFunnel],
+            },
+          });
+
         }
 
         await sails.helpers.funnel.afterHelperGenericJoi({

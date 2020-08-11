@@ -94,6 +94,7 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.FUNNELS_ERROR,
               payload: {
+                block: input.block,
                 blockName,
               },
             });
