@@ -118,7 +118,7 @@ module.exports = {
               message: 'account record not found for account guid',
               clientGuid: client.guid,
               accountGuid: client.account_use,
-              errorName: exports.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
               payload: {
                 accountGuid: client.account_use,
               },

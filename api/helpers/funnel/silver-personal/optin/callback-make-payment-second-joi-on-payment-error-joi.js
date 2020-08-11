@@ -55,9 +55,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       /**
        * Устанавливаем значение для следующего блока в 'optin::payment_error'
@@ -113,7 +121,22 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        throw new Error(`${moduleName}, error: initial block was not found`);
+        // throw new Error(`${moduleName}, error: initial block was not found`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Initial block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            currentFunnelName: input.client.current_funnel,
+            currentFunnel: input.client.funnels[input.client.current_funnel],
+          },
+        });
+
       }
 
       return exits.success({
@@ -124,20 +147,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

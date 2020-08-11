@@ -173,7 +173,7 @@ module.exports = {
             message: 'checkInvoiceResult.status NOT ok',
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            errorName: exports.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
             payload: {
               checkInvoiceResult,
             },

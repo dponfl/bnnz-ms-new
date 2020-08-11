@@ -98,7 +98,7 @@ module.exports = {
             message: 'Wrong linkAccountToRefJoi response',
             clientGuid,
             accountGuid,
-            errorName: exports.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
               currentAccount,
               RefDataRaw,
@@ -140,7 +140,7 @@ module.exports = {
             message: 'Wrong refUpGetByCriteria response',
             clientGuid,
             accountGuid,
-            errorName: exports.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
               refUpGetCriteria,
               refUpDataRaw,
@@ -160,7 +160,7 @@ module.exports = {
             message: 'No refUp records found',
             clientGuid,
             accountGuid,
-            errorName: exports.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
               refUpGetCriteria,
               refUpDataRaw,
@@ -197,7 +197,7 @@ module.exports = {
           message: 'Wrong accountGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: exports.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR,
           payload: {
             refAccountRecRawParams,
             refAccountRecRaw,
@@ -217,7 +217,7 @@ module.exports = {
           message: 'No accounts found',
           clientGuid,
           accountGuid,
-          errorName: exports.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR,
           payload: {
             refAccountRecRawParams,
             refAccountRecRaw,

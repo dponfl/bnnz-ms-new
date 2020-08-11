@@ -102,7 +102,7 @@ module.exports = {
           message: 'Wrong refUpGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: exports.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR,
           payload: {
             refUpGetJoiParams,
             refUpRecsRaw,
@@ -132,7 +132,7 @@ module.exports = {
           message: 'Wrong accountGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: exports.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,
@@ -152,7 +152,7 @@ module.exports = {
           message: 'No accounts found',
           clientGuid,
           accountGuid,
-          errorName: exports.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,

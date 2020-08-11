@@ -54,6 +54,10 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     let updateBlock;
     let getBlock;
     let splitRes;
@@ -63,6 +67,10 @@ module.exports = {
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       /**
        * Update xxx::xxx block

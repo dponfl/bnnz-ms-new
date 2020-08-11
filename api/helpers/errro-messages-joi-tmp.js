@@ -120,7 +120,7 @@ module.exports = {
       message: 'Wrong XXX response',
       clientGuid,
       accountGuid,
-      errorName: exports.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR,
       payload: {
         xxx,
       },
@@ -143,6 +143,28 @@ module.exports = {
         inputQueryData: input.query.data,
       },
     });
+
+
+    /**
+     * Initial block not found
+     */
+
+
+    await sails.helpers.general.throwErrorJoi({
+      errorType: sails.config.custom.enums.errorType.CRITICAL,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: moduleName,
+      message: 'Initial block not found',
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.FUNNELS_ERROR,
+      payload: {
+        currentFunnelName: input.client.current_funnel,
+        currentFunnel: input.client.funnels[input.client.current_funnel],
+      },
+    });
+
+
 
 
 

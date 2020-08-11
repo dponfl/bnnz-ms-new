@@ -47,10 +47,18 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const currentAccountInd = _.findIndex(input.client.accounts, (o) => {

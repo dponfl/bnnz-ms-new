@@ -55,6 +55,10 @@ module.exports = {
     });
 
     let input;
+
+    let clientGuid;
+    let accountGuid;
+
     let splitRes;
     let updateFunnel;
     let updateId;
@@ -63,6 +67,10 @@ module.exports = {
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
@@ -89,9 +97,23 @@ module.exports = {
       const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
 
       if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
-        reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
-        reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
+        // reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
+        // reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong reallocateRoomsToAccountJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            reallocateRoomsToAccountJoiParams,
+            reallocateRoomsToAccountJoiRaw,
+          },
+        });
+
       }
 
       /**
@@ -148,7 +170,22 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        throw new Error(`${moduleName}, error: initial block was not found`);
+        // throw new Error(`${moduleName}, error: initial block was not found`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Initial block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR,
+          payload: {
+            currentFunnelName: input.client.current_funnel,
+            currentFunnel: input.client.funnels[input.client.current_funnel],
+          },
+        });
+
       }
 
 
@@ -160,20 +197,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
