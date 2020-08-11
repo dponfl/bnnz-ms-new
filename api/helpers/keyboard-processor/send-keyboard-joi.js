@@ -58,9 +58,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       const html = KeyboardProcessor.parseMessageStyle({
         client: input.client,
@@ -88,24 +96,44 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

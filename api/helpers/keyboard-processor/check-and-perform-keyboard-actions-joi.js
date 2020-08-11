@@ -51,6 +51,10 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
+
     let keyboards;
     let activeKeyboard;
     let keyboardName;
@@ -59,10 +63,11 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
+
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       if (currentAccount.keyboard == null) {
 
@@ -78,8 +83,21 @@ module.exports = {
 
       if (currentAccount.service.keyboard_name == null) {
 
-        throw new Error(`${moduleName}, error: service has no keyboard_name:
-        (currentAccount.service: ${JSON.stringify(currentAccount.service, null, 3)}`);
+        // throw new Error(`${moduleName}, error: service has no keyboard_name:
+        // (currentAccount.service: ${JSON.stringify(currentAccount.service, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Service has no keyboard_name',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          payload: {
+            service: currentAccount.service,
+          },
+        });
 
       }
 
@@ -96,9 +114,23 @@ module.exports = {
       const keyboardGetRaw = await sails.helpers.storage.keyboardGetJoi(keyboardGetParams);
 
       if (keyboardGetRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong keyboardGetJoi response
-        keyboardGetParams: ${JSON.stringify(keyboardGetParams, null, 3)}
-        keyboardGetRaw: ${JSON.stringify(keyboardGetRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong keyboardGetJoi response
+        // keyboardGetParams: ${JSON.stringify(keyboardGetParams, null, 3)}
+        // keyboardGetRaw: ${JSON.stringify(keyboardGetRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong keyboardGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          payload: {
+            keyboardGetParams,
+            keyboardGetRaw,
+          },
+        });
+
       }
 
       keyboards = keyboardGetRaw.payload;
@@ -109,20 +141,51 @@ module.exports = {
 
       if (keyboardBlock == null || keyboardId == null) {
 
-        throw new Error(`${moduleName}, error: account.keyboard parsing error:
-        currentAccount.keyboard: ${currentAccount.keyboard}
-        keyboardBlock: ${keyboardBlock}
-        keyboardId: ${keyboardId}`);
+        // throw new Error(`${moduleName}, error: account.keyboard parsing error:
+        // currentAccount.keyboard: ${currentAccount.keyboard}
+        // keyboardBlock: ${keyboardBlock}
+        // keyboardId: ${keyboardId}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'account.keyboard parsing error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          payload: {
+            keyboardId,
+            keyboardBlock,
+            currentAccountKeyboard: currentAccount.keyboard,
+          },
+        });
 
       }
 
       activeKeyboard = _.find(keyboards[keyboardBlock], {id: keyboardId});
 
       if (activeKeyboard == null) {
-        throw new Error(`${moduleName}, error: keyboard not found:
-          keyboards: ${JSON.stringify(keyboards, null, 3)}
-          keyboardBlock: ${keyboardBlock}
-          keyboardId: ${keyboardId}`);
+        // throw new Error(`${moduleName}, error: keyboard not found:
+        //   keyboards: ${JSON.stringify(keyboards, null, 3)}
+        //   keyboardBlock: ${keyboardBlock}
+        //   keyboardId: ${keyboardId}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'keyboard not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          payload: {
+            keyboardId,
+            keyboardBlock,
+            keyboards,
+          },
+        });
+
       }
 
       const buttonsAndActions = KeyboardProcessor.parseButtonActions({
@@ -199,8 +262,22 @@ module.exports = {
              * Throw error: we could not parse the specified actionHelper
              */
 
-            throw new Error(`${moduleName}, error: could not parse action helper:
-          activatedButton.action: ${activatedButton.action}`);
+          //   throw new Error(`${moduleName}, error: could not parse action helper:
+          // activatedButton.action: ${activatedButton.action}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Cannot parse action helper',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+              payload: {
+                activatedButtonAction: activatedButton.action,
+              },
+            });
+
           }
 
         }
@@ -217,24 +294,44 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
