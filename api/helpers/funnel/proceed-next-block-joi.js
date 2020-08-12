@@ -169,7 +169,7 @@ module.exports = {
              * Send simple text message
              */
 
-            let htmlSimpleRaw = MessageProcessor.parseMessageStyle({
+            let htmlSimpleRaw = await MessageProcessor.parseMessageStyle({
                 client: input.client,
                 message: block.message,
                 additionalTokens: input.additionalTokens,
@@ -209,7 +209,7 @@ module.exports = {
              * Send img message
              */
 
-            let htmlImgRaw = MessageProcessor.parseMessageStyle({
+            let htmlImgRaw = await MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
               additionalTokens: input.additionalTokens,
@@ -252,7 +252,7 @@ module.exports = {
              * Send img + inline keyboard message
              */
 
-            let htmlImgInlineKeyboardRaw = MessageProcessor.parseMessageStyle({
+            let htmlImgInlineKeyboardRaw = await MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
               additionalTokens: input.additionalTokens,
@@ -270,7 +270,7 @@ module.exports = {
 
             if (keyboardInlineImg != null) {
 
-              imgMessageJoiParams.inlineKeyboard = MessageProcessor.mapDeep({
+              imgMessageJoiParams.inlineKeyboard = await MessageProcessor.mapDeep({
                 client: input.client,
                 data: keyboardInlineImg,
                 additionalTokens: input.additionalTokens,
@@ -309,7 +309,7 @@ module.exports = {
              * Send video message
              */
 
-            let htmlVideoRaw = MessageProcessor.parseMessageStyle({
+            let htmlVideoRaw = await MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
               additionalTokens: input.additionalTokens,
@@ -385,7 +385,7 @@ module.exports = {
              * Send document message
              */
 
-            let htmlDocRaw = MessageProcessor.parseMessageStyle({
+            let htmlDocRaw = await MessageProcessor.parseMessageStyle({
                 client: input.client,
                 message: block.message,
                 additionalTokens: input.additionalTokens,
@@ -428,7 +428,7 @@ module.exports = {
              * Send document + inline keyboard message
              */
 
-            let htmlDocInlineKeyboardRaw = MessageProcessor.parseMessageStyle({
+            let htmlDocInlineKeyboardRaw = await MessageProcessor.parseMessageStyle({
                 client: input.client,
                 message: block.message,
                 additionalTokens: input.additionalTokens,
@@ -444,7 +444,7 @@ module.exports = {
 
             if (keyboardInlineDoc != null) {
 
-              docMessageJoiParams.inlineKeyboard = MessageProcessor.mapDeep({
+              docMessageJoiParams.inlineKeyboard = await MessageProcessor.mapDeep({
                 client: input.client,
                 data: keyboardInlineDoc,
                 additionalTokens: input.additionalTokens,
@@ -483,7 +483,7 @@ module.exports = {
              * Send forced reply message
              */
 
-            let htmlForcedRaw = MessageProcessor.parseMessageStyle({
+            let htmlForcedRaw = await MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
               additionalTokens: input.additionalTokens,
@@ -523,7 +523,7 @@ module.exports = {
              * Send inline keyboard message
              */
 
-            let htmlInlineRaw = MessageProcessor.parseMessageStyle({
+            let htmlInlineRaw = await MessageProcessor.parseMessageStyle({
               client: input.client,
               message: block.message,
               additionalTokens: input.additionalTokens,
@@ -531,7 +531,7 @@ module.exports = {
 
             let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(input.client, block, input.msg || null, htmlInlineRaw);
 
-            const inlineKeyboard = MessageProcessor.mapDeep({
+            const inlineKeyboard = await MessageProcessor.mapDeep({
               client: input.client,
               data: keyboardInline,
               additionalTokens: input.additionalTokens,

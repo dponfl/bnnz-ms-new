@@ -272,7 +272,7 @@ module.exports = {
           //
           // }
           //
-          // const title = MessageProcessor.parseStr({
+          // const title = await MessageProcessor.parseStr({
           //   client: input.client,
           //   token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
           //   additionalTokens: [
@@ -283,7 +283,7 @@ module.exports = {
           //   ]
           // });
           //
-          // const description = MessageProcessor.parseStr({
+          // const description = await MessageProcessor.parseStr({
           //   client: input.client,
           //   token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
           //   additionalTokens: [
@@ -296,7 +296,7 @@ module.exports = {
           //
           // const currency = 'RUB';
           //
-          // const item01Description = MessageProcessor.parseStr({
+          // const item01Description = await MessageProcessor.parseStr({
           // client: input.client,
           // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
           //   additionalTokens: [
@@ -307,7 +307,7 @@ module.exports = {
           //   ]
           // });
           //
-          // const item02Description = MessageProcessor.parseStr({
+          // const item02Description = await MessageProcessor.parseStr({
           // client: input.client,
           // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
           // });

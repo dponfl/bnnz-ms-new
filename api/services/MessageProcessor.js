@@ -12,7 +12,7 @@ const moduleName = 'MessageProcessor';
 
 module.exports = {
 
-  parseMessageStyle: function (params) {
+  parseMessageStyle: async function (params) {
 
     const methodName = 'parseMessageStyle';
 
@@ -47,7 +47,7 @@ module.exports = {
             : '');
       }
 
-      resultHtml = MessageProcessor.parseSpecialTokens({
+      resultHtml = await MessageProcessor.parseSpecialTokens({
         client: input.client,
         message: resultHtml,
         additionalTokens: input.additionalTokens,
@@ -80,18 +80,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -100,7 +100,7 @@ module.exports = {
 
   },
 
-  parseStr: function(params) {
+  parseStr: async function(params) {
 
     const methodName = 'parseStr';
 
@@ -124,7 +124,7 @@ module.exports = {
 
       let resStr = t(input.client.lang, input.token);
 
-      resStr = MessageProcessor.parseSpecialTokens({
+      resStr = await MessageProcessor.parseSpecialTokens({
         client: input.client,
         message: resStr,
         additionalTokens: input.additionalTokens,
@@ -157,18 +157,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -177,7 +177,7 @@ module.exports = {
 
   },
 
-  parseSpecialTokens: function (params) {
+  parseSpecialTokens: async function (params) {
 
     const methodName = 'parseSpecialTokens';
 
@@ -269,18 +269,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -289,7 +289,7 @@ module.exports = {
 
   },
 
-  mapDeep: function mapDeep(params) {
+  mapDeep: async function mapDeep(params) {
 
     const methodName = 'mapDeep';
 
@@ -312,19 +312,24 @@ module.exports = {
       input = inputRaw.value;
 
       if (_.isArray(input.data)) {
-        const arr = input.data.map((innerObj) => mapDeep({
-          client: input.client,
-          data: innerObj,
-          additionalTokens: input.additionalTokens,
-        }));
+        const arr = input.data.map(async (innerObj) => await mapDeep({
+            client: input.client,
+            data: innerObj,
+            additionalTokens: input.additionalTokens,
+          }));
 
-        return arr;
+        return Promise.all(arr)
+          .then(res => {
+            return res;
+          });
+
+        // return arr;
 
       } else if (_.isObject(input.data)) {
         const ob = {};
-        _.forEach(input.data, (val, key) => {
+        _.forEach(input.data, async (val, key) => {
           if (key === 'text' || key === 'url') {
-            ob[key] = MessageProcessor.parseSpecialTokens({
+            ob[key] = await MessageProcessor.parseSpecialTokens({
               client: input.client,
               message: t(input.client.lang, val),
               additionalTokens: input.additionalTokens,
@@ -363,18 +368,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }

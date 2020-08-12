@@ -201,7 +201,7 @@ describe.skip('Test sendDocument with inline keyboard', function () {
       ]
     ];
 
-    const inlineKeyboard = MessageProcessor.mapDeep({
+    const inlineKeyboard = await MessageProcessor.mapDeep({
       client: client,
       data: inlineKeyboardRaw,
     });
@@ -273,7 +273,7 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
       ]
     ];
 
-    const inlineKeyboard = MessageProcessor.mapDeep({
+    const inlineKeyboard = await MessageProcessor.mapDeep({
       client: client,
       data: inlineKeyboardRaw,
     });
@@ -546,12 +546,12 @@ describe.skip('Test sendInvoce', function () {
         throw new Error(`Error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
       }
 
-      const title = MessageProcessor.parseStr({
+      const title = await MessageProcessor.parseStr({
         client,
         token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
       });
 
-      const description = MessageProcessor.parseStr({
+      const description = await MessageProcessor.parseStr({
         client,
         token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
         additionalTokens: [
@@ -898,7 +898,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
     try {
 
-      const res = KeyboardProcessor.parseButtonActions({
+      const res = await KeyboardProcessor.parseButtonActions({
         client,
         buttons,
       });
@@ -955,7 +955,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
     try {
 
-      const res = KeyboardProcessor.mapButtonsDeep({
+      const res = await KeyboardProcessor.mapButtonsDeep({
         client,
         buttons,
       });
@@ -1012,7 +1012,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
 
     try {
 
-      const buttons = KeyboardProcessor.mapButtonsDeep({
+      const buttons = await KeyboardProcessor.mapButtonsDeep({
         client,
         buttons: buttonsObj,
       });

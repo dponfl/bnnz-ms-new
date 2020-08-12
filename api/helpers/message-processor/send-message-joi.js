@@ -109,7 +109,7 @@ module.exports = {
            * Send simple text message
            */
 
-          const htmlSimple = MessageProcessor.parseMessageStyle({
+          const htmlSimple = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: messageData.message,
             additionalTokens: input.additionalTokens,
@@ -153,7 +153,7 @@ module.exports = {
            * Send img message
            */
 
-          const htmlImg = MessageProcessor.parseMessageStyle({
+          const htmlImg = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -192,7 +192,7 @@ module.exports = {
            * Send video message
            */
 
-          const htmlVideo = MessageProcessor.parseMessageStyle({
+          const htmlVideo = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -262,7 +262,7 @@ module.exports = {
            * Send document message
            */
 
-          let htmlDoc = MessageProcessor.parseMessageStyle({
+          let htmlDoc = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -301,7 +301,7 @@ module.exports = {
            * Send forced reply message
            */
 
-          const htmlForced = MessageProcessor.parseMessageStyle({
+          const htmlForced = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -336,13 +336,13 @@ module.exports = {
            * Send inline keyboard message
            */
 
-          const htmlInline = MessageProcessor.parseMessageStyle({
+          const htmlInline = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
           });
 
-          const inlineKeyboard = MessageProcessor.mapDeep({
+          const inlineKeyboard = await MessageProcessor.mapDeep({
             client: input.client,
             data: input.messageData.message.inline_keyboard,
             additionalTokens: input.additionalTokens,
@@ -380,7 +380,7 @@ module.exports = {
            * Edit message text
            */
 
-          const htmlEditMessageText = MessageProcessor.parseMessageStyle({
+          const htmlEditMessageText = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens: input.additionalTokens,
@@ -397,7 +397,7 @@ module.exports = {
             && input.messageData.message.inline_keyboard.length > 0
           ) {
 
-            const editMessageInlineKeyboard = MessageProcessor.mapDeep({
+            const editMessageInlineKeyboard = await MessageProcessor.mapDeep({
               client: input.client,
               data: input.messageData.message.inline_keyboard,
               additionalTokens: input.additionalTokens,

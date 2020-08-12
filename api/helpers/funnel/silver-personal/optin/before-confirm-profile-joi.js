@@ -75,7 +75,7 @@ module.exports = {
       const instProfile = sails.config.custom.config.general.instagram_prefix + _.trim(input.client.inst_profile_tmp);
       const instPic = currentAccount.inst_pic;
 
-      const resHtml = MessageProcessor.parseSpecialTokens({
+      const resHtml = await MessageProcessor.parseSpecialTokens({
         client: input.client,
         message: input.payload.text,
         additionalTokens: [
@@ -86,7 +86,7 @@ module.exports = {
         ],
       });
 
-      const img = MessageProcessor.parseSpecialTokens({
+      const img = await MessageProcessor.parseSpecialTokens({
         client: input.client,
         message: input.payload.img,
         additionalTokens: [

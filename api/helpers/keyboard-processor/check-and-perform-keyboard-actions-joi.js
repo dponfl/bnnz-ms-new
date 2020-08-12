@@ -188,7 +188,7 @@ module.exports = {
 
       }
 
-      const buttonsAndActions = KeyboardProcessor.parseButtonActions({
+      const buttonsAndActions = await KeyboardProcessor.parseButtonActions({
         client: input.client,
         buttons: activeKeyboard.buttons,
       });

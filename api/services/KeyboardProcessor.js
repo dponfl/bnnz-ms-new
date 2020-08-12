@@ -11,7 +11,7 @@ const moduleName = 'KeyboardProcessor';
 
 module.exports = {
 
-  parseMessageStyle: function (params) {
+  parseMessageStyle: async function (params) {
 
     const methodName = 'parseMessageStyle';
 
@@ -44,7 +44,7 @@ module.exports = {
             : '');
       }
 
-      resultHtml = KeyboardProcessor.parseSpecialTokens({
+      resultHtml = await KeyboardProcessor.parseSpecialTokens({
         client: input.client,
         message: resultHtml,
         additionalTokens: input.additionalTokens,
@@ -77,18 +77,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -97,7 +97,7 @@ module.exports = {
 
   },
 
-  parseStr: function(params) {
+  parseStr: async function(params) {
 
     const methodName = 'parseStr';
 
@@ -121,7 +121,7 @@ module.exports = {
 
       let resStr = t(input.client.lang, input.token);
 
-      resStr = KeyboardProcessor.parseSpecialTokens({
+      resStr = await KeyboardProcessor.parseSpecialTokens({
         client: input.client,
         message: resStr,
         additionalTokens: input.additionalTokens,
@@ -154,18 +154,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -174,7 +174,7 @@ module.exports = {
 
   },
 
-  parseSpecialTokens: function (params) {
+  parseSpecialTokens: async function (params) {
 
     const methodName = 'parseSpecialTokens';
 
@@ -265,18 +265,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -285,7 +285,7 @@ module.exports = {
 
   },
 
-  mapButtonsDeep: function mapButtonsDeep(params) {
+  mapButtonsDeep: async function mapButtonsDeep(params) {
 
     const methodName = 'mapButtonsDeep';
 
@@ -308,19 +308,24 @@ module.exports = {
       input = inputRaw.value;
 
       if (_.isArray(input.buttons)) {
-        const arr = input.buttons.map((innerObj) => mapButtonsDeep({
+        const arr = input.buttons.map(async (innerObj) => await mapButtonsDeep({
           client: input.client,
           buttons: innerObj,
           additionalTokens: input.additionalTokens,
         }));
 
-        return arr;
+        return Promise.all(arr)
+          .then(res => {
+            return res;
+          });
+
+        // return arr;
 
       } else if (_.isObject(input.buttons)) {
         let buttonText = '';
-        _.forEach(input.buttons, (val, key) => {
+        _.forEach(input.buttons, async (val, key) => {
           if (key === 'text') {
-            buttonText = MessageProcessor.parseSpecialTokens({
+            buttonText = await MessageProcessor.parseSpecialTokens({
               client: input.client,
               message: t(input.client.lang, val),
               additionalTokens: input.additionalTokens,
@@ -357,18 +362,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }
@@ -377,7 +382,7 @@ module.exports = {
 
   },
 
-  parseButtonActions: function (params) {
+  parseButtonActions: async function (params) {
 
     const methodName = 'parseButtonActions';
 
@@ -407,9 +412,9 @@ module.exports = {
       flattenButtons.map((elem) => {
 
         const ob = {};
-        _.forEach(elem, (val, key) => {
+        _.forEach(elem, async (val, key) => {
           if (key === 'text') {
-            ob[key] = KeyboardProcessor.parseSpecialTokens({
+            ob[key] = await KeyboardProcessor.parseSpecialTokens({
               client: input.client,
               message: t(input.client.lang, val),
               additionalTokens: input.additionalTokens,
@@ -450,18 +455,18 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${moduleName}:${methodName}`,
           throwError: false,
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName}:${methodName} performed`,
           payload: {},
         });
       }

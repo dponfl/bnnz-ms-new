@@ -60,7 +60,7 @@ module.exports = {
             },
           });
         } else {
-          await LogProcessor.warn({
+          await LogProcessor.info({
             message: 'Pending onboarding accounts NOT FOUND',
             location: moduleName,
           });

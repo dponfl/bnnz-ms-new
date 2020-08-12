@@ -67,7 +67,7 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      const html = KeyboardProcessor.parseMessageStyle({
+      const html = await KeyboardProcessor.parseMessageStyle({
         client: input.client,
         message: input.messageData,
         additionalTokens: input.additionalTokens,
