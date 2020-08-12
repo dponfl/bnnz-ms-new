@@ -743,6 +743,10 @@ module.exports.custom = {
     name: 'ERR_MGW_TELEGRAM_GENERAL',
   },
 
+  PGW_ERROR: {
+    name: 'ERR_PGW_GENERAL',
+  },
+
 
 
 

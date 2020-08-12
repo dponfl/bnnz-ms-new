@@ -71,10 +71,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       const messenger = input.client.messenger;
       const chatId = input.client.chat_id;
@@ -167,8 +174,21 @@ module.exports = {
       });
 
       if (paymentGroupRecRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: payment group record create error:
-        ${JSON.stringify(paymentGroupRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: payment group record create error:
+        // ${JSON.stringify(paymentGroupRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Payment group record create error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PGW_ERROR,
+          payload: {
+            paymentGroupRecRaw,
+          },
+        });
+
       }
 
       const sendInvoiceRaw = await sails.helpers.mgw[messenger]['sendInvoiceJoi']({
@@ -187,8 +207,21 @@ module.exports = {
       });
 
       if (sendInvoiceRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: messenger sendInvoiceJoi error response:
-        ${JSON.stringify(sendInvoiceRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: messenger sendInvoiceJoi error response:
+        // ${JSON.stringify(sendInvoiceRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'sendInvoiceJoi error response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PGW_ERROR,
+          payload: {
+            sendInvoiceRaw,
+          },
+        });
+
       }
 
       return exits.success({
@@ -199,20 +232,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
