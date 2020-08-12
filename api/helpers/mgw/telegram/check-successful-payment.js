@@ -40,7 +40,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No invoice_payload',
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             paymentResponse: inputs.paymentResponse,
           },
@@ -62,7 +62,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No invoice found',
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             invoiceRaw,
           },

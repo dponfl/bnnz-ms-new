@@ -120,7 +120,7 @@ module.exports = {
       message: 'Wrong XXX response',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR.name,
       payload: {
         xxx,
       },
@@ -138,7 +138,7 @@ module.exports = {
       message: 'Wrong callback data',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR.name,
       payload: {
         inputQueryData: input.query.data,
       },
@@ -157,7 +157,7 @@ module.exports = {
       message: 'Initial block not found',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR.name,
       payload: {
         currentFunnelName: input.client.current_funnel,
         currentFunnel: input.client.funnels[input.client.current_funnel],
@@ -181,7 +181,7 @@ module.exports = {
       message: 'Block not found',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR.name,
       payload: {
         updateId,
         updateFunnel,
@@ -203,7 +203,7 @@ module.exports = {
       message: 'Block parsing error',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR,
+      errorName: sails.config.custom.FUNNELS_ERROR.name,
       payload: {
         updateBlock,
         block: input.block,

@@ -183,7 +183,7 @@ module.exports = {
           message: 'Payment group record create error',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PGW_ERROR,
+          errorName: sails.config.custom.PGW_ERROR.name,
           payload: {
             paymentGroupRecRaw,
           },
@@ -216,7 +216,7 @@ module.exports = {
           message: 'sendInvoiceJoi error response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PGW_ERROR,
+          errorName: sails.config.custom.PGW_ERROR.name,
           payload: {
             sendInvoiceRaw,
           },

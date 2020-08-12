@@ -42,7 +42,7 @@ module.exports = {
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
           location: moduleName,
           message: 'Cannot get payment provider from config',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             messenger: inputs.messenger,
           },
@@ -62,7 +62,7 @@ module.exports = {
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
           location: moduleName,
           message: 'Cannot get payment provider token value',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             paymentProvider,
           },

@@ -93,7 +93,7 @@ module.exports = {
           message: 'Service has no keyboard_name',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
           payload: {
             service: currentAccount.service,
           },
@@ -124,7 +124,7 @@ module.exports = {
           message: 'Wrong keyboardGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
           payload: {
             keyboardGetParams,
             keyboardGetRaw,
@@ -153,7 +153,7 @@ module.exports = {
           message: 'account.keyboard parsing error',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
           payload: {
             keyboardId,
             keyboardBlock,
@@ -178,7 +178,7 @@ module.exports = {
           message: 'keyboard not found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
           payload: {
             keyboardId,
             keyboardBlock,
@@ -272,7 +272,7 @@ module.exports = {
               message: 'Cannot parse action helper',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+              errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
               payload: {
                 activatedButtonAction: activatedButton.action,
               },

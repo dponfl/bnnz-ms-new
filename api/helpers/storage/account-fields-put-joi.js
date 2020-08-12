@@ -56,9 +56,15 @@ module.exports = {
 
     let input;
 
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      accountGuid = input.accountGuid;
+
 
       const accountFieldsData = _.pick(input.data, [
         'guid',
@@ -111,7 +117,19 @@ module.exports = {
       });
 
       if (!accountRec) {
-        throw new Error(`No account record found for the conditions provided, input.accountGuid: ${input.accountGuid}`);
+        // throw new Error(`No account record found for the conditions provided, input.accountGuid: ${input.accountGuid}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No account record found for accountGuid',
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            accountGuid: input.accountGuid,
+          },
+        });
+
       }
 
       _.forEach(accountFieldsData, async (accountFieldValue, accountFieldKey) => {
@@ -143,20 +161,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.ACCOUNTFIELDSPUT_ERROR}`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: ${sails.config.custom.ACCOUNTFIELDSPUT_ERROR}`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

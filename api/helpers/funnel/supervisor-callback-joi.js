@@ -156,7 +156,7 @@ module.exports = {
                 message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
                 clientGuid,
                 accountGuid,
-                errorName: sails.config.custom.FUNNELS_ERROR,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
                 payload: {
                   currentFunnel: input.client.funnels[input.client.current_funnel],
                 },
@@ -188,7 +188,7 @@ module.exports = {
               message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 blockCallbackHelper: block.callbackHelper,
               },
@@ -209,7 +209,7 @@ module.exports = {
             message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR,
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               messageId: input.query.message.message_id,
               currentFunnelName: input.client.current_funnel,

@@ -52,7 +52,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
             location: moduleName,
             message: 'No msg.invoice_payload',
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: {
               msg,
             },
@@ -86,7 +86,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
             location: moduleName,
             message: 'client record not found',
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: {
               clientRaw,
             },
@@ -125,7 +125,7 @@ module.exports = {
             message: `no payment provider for ${sails.config.custom.enums.messenger.TELEGRAM}`,
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: sails.config.custom.config.payments[sails.config.custom.enums.messenger.TELEGRAM],
           });
 
@@ -153,7 +153,7 @@ module.exports = {
               message: 'answerPreCheckoutQueryResult not successful',
               clientGuid: client.guid,
               accountGuid: client.account_use,
-              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
               payload: {
                 answerPreCheckoutQueryResult,
               },
@@ -173,7 +173,7 @@ module.exports = {
             message: 'checkInvoiceResult.status NOT ok',
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: {
               checkInvoiceResult,
             },

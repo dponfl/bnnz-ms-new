@@ -111,7 +111,7 @@ module.exports = {
               message: 'funnel not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 inputBlockNext: input.block.next,
                 nextFunnel,
@@ -134,7 +134,7 @@ module.exports = {
               message: 'nextBlock not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 nextId,
                 inputClientFunnelsNextFunnel: input.client.funnels[nextFunnel],
@@ -168,7 +168,7 @@ module.exports = {
               message: 'funnel not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 inputBlockPrevious: input.block.previous,
                 previousFunnel,
@@ -192,7 +192,7 @@ module.exports = {
               message: 'previousBlock not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 previousId,
                 inputClientFunnelsNextFunnel: input.client.funnels[previousFunnel],
@@ -221,7 +221,7 @@ module.exports = {
             message: 'funnel not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               inputBlockSwitchToFunnel: input.block.switchToFunnel,
               inputClientFunnels: input.client.funnels,

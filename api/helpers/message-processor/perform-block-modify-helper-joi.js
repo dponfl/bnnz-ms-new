@@ -133,7 +133,7 @@ module.exports = {
           message: 'Cannot parse callback helper name',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.MESSAGE_PROCESSOR_ERROR,
+          errorName: sails.config.custom.MESSAGE_PROCESSOR_ERROR.name,
           payload: {
             blockModifyHelper: input.messageData.blockModifyHelper,
             blockModifyHelperBlock,

@@ -61,7 +61,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.WARN,
           location: moduleName,
           message: 'postLink has wrong format',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             postLink: input.postLink,
           },
@@ -79,7 +79,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.WARN,
           location: moduleName,
           message: 'postCode is empty',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             postCodeRaw,
           },

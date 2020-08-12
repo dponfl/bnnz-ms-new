@@ -54,7 +54,7 @@ module.exports = {
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
           location: moduleName,
           message: 'Cannot get push messages data',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             pushMessagesRaw,
           },
@@ -70,7 +70,7 @@ module.exports = {
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
           location: moduleName,
           message: 'Cannot get config',
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {},
         });
 

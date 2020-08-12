@@ -44,7 +44,7 @@ module.exports = {
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
             message: 'No msg.successful_payment.invoice_payload',
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: {
               msg,
             },
@@ -70,7 +70,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
             location: moduleName,
             message: 'client record not found',
-            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+            errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
             payload: {
               msg,
             },
@@ -118,7 +118,7 @@ module.exports = {
               message: 'account record not found for account guid',
               clientGuid: client.guid,
               accountGuid: client.account_use,
-              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
               payload: {
                 accountGuid: client.account_use,
               },

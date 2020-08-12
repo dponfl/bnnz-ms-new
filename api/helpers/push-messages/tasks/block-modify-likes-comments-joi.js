@@ -80,7 +80,7 @@ module.exports = {
           message: 'input.additionalParams.taskGuid is not a valid UUID',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
           payload: {
             taskGuid: input.additionalParams.taskGuid,
           },

@@ -86,7 +86,7 @@ module.exports = {
           message: 'Wrong keyboardGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
           payload: {
             keyboardGetParams,
             keyboardGetRaw,
@@ -117,7 +117,7 @@ module.exports = {
             message: 'account.keyboard parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
             payload: {
               keyboardId,
               keyboardBlock,
@@ -142,7 +142,7 @@ module.exports = {
             message: 'keyboard not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
             payload: {
               keyboardId,
               keyboardBlock,
@@ -172,7 +172,7 @@ module.exports = {
             message: 'Wrong sendKeyboardJoi response',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR,
+            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
             payload: {
               sendKeyboardParams,
               sendKeyboardJoiRaw,

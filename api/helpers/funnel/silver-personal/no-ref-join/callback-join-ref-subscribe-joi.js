@@ -92,7 +92,7 @@ module.exports = {
               message: 'Block parsing error',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 block: input.block,
                 blockName,
@@ -123,7 +123,7 @@ module.exports = {
               message: 'Block not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 blockId,
                 blockFunnel,
@@ -144,7 +144,7 @@ module.exports = {
             message: 'Wrong callback data',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               inputQueryData: input.query.data,
             },

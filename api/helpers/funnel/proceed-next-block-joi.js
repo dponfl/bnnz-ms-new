@@ -105,7 +105,7 @@ module.exports = {
           message: 'funnel not found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             funnelName: input.funnelName,
             inputClientFunnels: input.client.funnels,
@@ -128,7 +128,7 @@ module.exports = {
           message: 'block not found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             blockId: input.blockId,
             funnel,
@@ -646,7 +646,7 @@ module.exports = {
               message: sails.config.custom.PROCEED_NEXT_BLOCK_AFTERHELPER_PARSE_ERROR,
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 blockAfterHelper: block.afterHelper,
               },
@@ -683,7 +683,7 @@ module.exports = {
               message: 'nextFunnel not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 blockNext: block.next,
                 nextFunnelName,
@@ -707,7 +707,7 @@ module.exports = {
               message: 'next block not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 nextId,
                 nextFunnelName,
@@ -864,7 +864,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
         message: sails.config.custom.PROCEED_NEXT_BLOCK_BEFOREHELPER_PARSE_ERROR,
         clientGuid: client.guid,
         accountGuid: client.account_use,
-        errorName: sails.config.custom.FUNNELS_ERROR,
+        errorName: sails.config.custom.FUNNELS_ERROR.name,
         payload: {
           blockBeforeHelper: block.beforeHelper,
         },
@@ -916,7 +916,7 @@ async function activateBlockModifyHelper(client, block) {
         message: sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR,
         clientGuid: client.guid,
         accountGuid: client.account_use,
-        errorName: sails.config.custom.FUNNELS_ERROR,
+        errorName: sails.config.custom.FUNNELS_ERROR.name,
         payload: {
           blockBlockModifyHelper: block.blockModifyHelper,
         },

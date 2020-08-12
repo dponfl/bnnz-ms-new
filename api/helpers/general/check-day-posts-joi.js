@@ -72,7 +72,7 @@ module.exports = {
           message: 'Cannot find account by client.account_use',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             account_use: input.client.account_use,
             accounts: input.client.accounts,

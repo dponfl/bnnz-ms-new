@@ -237,7 +237,7 @@ module.exports = {
                 message: 'Wrong checkDayPostsJoi reply',
                 clientGuid: client.guid,
                 accountGuid: client.account_use,
-                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
                 payload: {
                   checkDayPostsJoiRaw,
                 },
@@ -289,7 +289,7 @@ module.exports = {
                 message: 'Wrong sendKeyboardForAccountJoi response',
                 clientGuid: client.guid,
                 accountGuid: client.account_use,
-                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
                 payload: {
                   sendKeyboardForAccountParams,
                   sendKeyboardForAccountRaw,
@@ -356,7 +356,7 @@ module.exports = {
               message: 'Wrong checkActiveKeyboardJoi response',
               clientGuid: client.guid,
               accountGuid: client.account_use,
-              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR,
+              errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
               payload: {
                 checkAndPerformKeyboardActionsJoiParams,
                 checkAndPerformKeyboardActionsRaw,

@@ -83,7 +83,7 @@ module.exports = {
           message: 'Wrong checkDayPostsJoi reply',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             checkDayPostsJoiRaw,
           },
@@ -156,7 +156,7 @@ module.exports = {
           message: 'Wrong sendKeyboardForAccountJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             sendKeyboardForAccountParams,
             sendKeyboardForAccountRaw,

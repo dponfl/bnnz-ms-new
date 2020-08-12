@@ -103,7 +103,7 @@ module.exports = {
           message: 'Wrong sendKeyboardForAccountJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             sendKeyboardForAccountParams,
             sendKeyboardForAccountRaw,

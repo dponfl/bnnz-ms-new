@@ -372,7 +372,7 @@ module.exports = {
           message: 'Wrong checkLikesJoi response: no payload.likeMade',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
           payload: {
             checkLikesParams,
             checkLikesJoiRaw,

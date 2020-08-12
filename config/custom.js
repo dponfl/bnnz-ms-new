@@ -755,6 +755,10 @@ module.exports.custom = {
     name: 'ERR_REF_GENERAL',
   },
 
+  STORAGE_ERROR: {
+    name: 'ERR_STORAGE_GENERAL',
+  },
+
 
 
 

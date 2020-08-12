@@ -78,7 +78,7 @@ module.exports = {
           location: moduleName,
           message: 'Unknown accountGuid',
           accountGuid: input.accountGuid,
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             accountGuid: input.accountGuid,
           },
@@ -97,7 +97,7 @@ module.exports = {
           location: moduleName,
           message: 'No accounts found',
           accountGuid: input.accountGuid,
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             accountRaw,
           },
@@ -234,7 +234,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           location: moduleName,
           message: 'Unknown account category',
           accountGuid: accountRec.guid,
-          errorName: sails.config.custom.GENERAL_ERROR,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             accountCategory,
           },

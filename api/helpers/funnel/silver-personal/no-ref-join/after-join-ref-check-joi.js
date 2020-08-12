@@ -99,7 +99,7 @@ module.exports = {
           message: 'Wrong refUpGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             refUpGetJoiParams,
             refUpRecsRaw,
@@ -131,7 +131,7 @@ module.exports = {
           message: 'Wrong accountGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,
@@ -151,7 +151,7 @@ module.exports = {
           message: 'Wrong amount of records found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,
@@ -187,7 +187,7 @@ module.exports = {
           message: 'Wrong checkProfileSubscriptionJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             checkProfileSubscriptionParams,
             checkProfileSubscriptionResRaw,
@@ -261,7 +261,7 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               block: input.block,
               nextBlock: input.block.next,
@@ -290,7 +290,7 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateId,
               updateFunnel,
@@ -322,7 +322,7 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateBlock,
             },
@@ -350,7 +350,7 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateId,
               updateFunnel,
@@ -404,7 +404,7 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               block: input.block,
               updateBlock,
@@ -434,7 +434,7 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateBlock,
               updateFunnel,

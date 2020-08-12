@@ -87,7 +87,7 @@ module.exports = {
           message: 'Wrong loadInitialFunnelsJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARDS_ERROR,
+          errorName: sails.config.custom.KEYBOARDS_ERROR.name,
           payload: {
             loadInitialFunnelsJoiParams,
             loadInitialFunnelsJoiRaw,

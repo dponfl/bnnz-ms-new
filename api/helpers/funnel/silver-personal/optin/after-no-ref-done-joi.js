@@ -93,7 +93,7 @@ module.exports = {
           message: 'Block parsing error',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             updateBlock,
             block: input.block,

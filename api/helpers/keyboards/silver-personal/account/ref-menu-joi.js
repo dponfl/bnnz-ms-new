@@ -91,7 +91,7 @@ module.exports = {
           message: 'Wrong sendKeyboardForAccountJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARDS_ERROR,
+          errorName: sails.config.custom.KEYBOARDS_ERROR.name,
           payload: {
             sendKeyboardForAccountParams,
             sendKeyboardForAccountRaw,

@@ -146,7 +146,7 @@ module.exports = {
             message: 'Cannot get payment provider token',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+            errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
             payload: {
               inputQueryData: input.query.data,
             },

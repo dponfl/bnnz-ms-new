@@ -77,7 +77,7 @@ module.exports = {
           message: 'No inputs.preCheckoutQuery.invoice_payload',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             preCheckoutQuery: inputs.preCheckoutQuery,
           },

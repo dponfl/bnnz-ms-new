@@ -42,7 +42,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No invoice_payload',
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             paymentResponse: inputs.paymentResponse,
           },
@@ -65,7 +65,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No invoice found',
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             invoiceRaw,
           },
@@ -88,7 +88,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'Pre_checkout response does not corresponds invoice',
-          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR.name,
           payload: {
             invoice,
             paymentResponse: inputs.paymentResponse,

@@ -72,6 +72,8 @@ module.exports = {
         client: inputs.account.client || null,
       };
 
+      const accountGuid = accountRec.guid;
+
       // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Data for create account: ', accountRec);
 
       let account = await Account.create(accountRec).fetch();
@@ -90,18 +92,39 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/account-create';
-      const errorMsg = sails.config.custom.ACCOUNTCREATE_ERROR;
+      // const errorLocation = 'api/helpers/storage/account-create';
+      // const errorMsg = sails.config.custom.ACCOUNTCREATE_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
 
   }
