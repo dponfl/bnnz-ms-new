@@ -739,6 +739,10 @@ module.exports.custom = {
     name: 'ERR_MESSAGE_PROCESSOR_GENERAL',
   },
 
+  MGW_TELEGRAM_ERROR: {
+    name: 'ERR_MGW_TELEGRAM_GENERAL',
+  },
+
 
 
 

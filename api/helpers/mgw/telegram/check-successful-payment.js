@@ -34,7 +34,18 @@ module.exports = {
     try {
 
       if (inputs.paymentResponse.successful_payment.invoice_payload == null) {
-        throw new Error(`checkSuccessfulPayment, No invoice_payload: ${inputs.paymentResponse}`);
+        // throw new Error(`checkSuccessfulPayment, No invoice_payload: ${inputs.paymentResponse}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No invoice_payload',
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          payload: {
+            paymentResponse: inputs.paymentResponse,
+          },
+        });
+
       }
 
       const paymentId = inputs.paymentResponse.successful_payment.invoice_payload;
@@ -45,7 +56,18 @@ module.exports = {
       });
 
       if (invoiceRaw.status !== 'ok') {
-        throw new Error(`checkSuccessfulPayment, No invoice found: ${invoiceRaw}`);
+        // throw new Error(`checkSuccessfulPayment, No invoice found: ${invoiceRaw}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No invoice found',
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          payload: {
+            invoiceRaw,
+          },
+        });
+
       }
 
       const invoice = invoiceRaw.payload;
@@ -85,21 +107,41 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: ${sails.config.custom.CHECK_SUCCESSFUL_PAYMENT_ERROR}`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: ${sails.config.custom.CHECK_SUCCESSFUL_PAYMENT_ERROR}`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {
+      //   err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {
-        err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

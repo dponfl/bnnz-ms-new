@@ -94,10 +94,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.clientGuid;
+      accountGuid = input.accountGuid;
+
 
       const paymentProviderTokenResponseRaw = await sails.helpers.general.getPaymentToken('telegram');
 
@@ -130,7 +137,21 @@ module.exports = {
             accountGuid: input.accountGuid,
           });
 
-          throw new Error('sendInvoice, Error: Cannot get payment provider token');
+          // throw new Error('sendInvoice, Error: Cannot get payment provider token');
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Cannot get payment provider token',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+            payload: {
+              inputQueryData: input.query.data,
+            },
+          });
+
         }
 
         const sendInvoiceResult = await sails.config.custom.telegramBot.sendInvoice(
@@ -176,20 +197,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

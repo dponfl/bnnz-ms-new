@@ -47,7 +47,15 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
+
+      clientGuid = inputs.client.guid;
+      accountGuid = inputs.client.account_use;
+
 
       const answerPreCheckoutQueryResult = await sails.config.custom.telegramBot.answerPreCheckoutQuery(
         inputs.preCheckoutQuery.id || '',
@@ -58,10 +66,23 @@ module.exports = {
         );
 
       if (_.isNil(inputs.preCheckoutQuery.invoice_payload)) {
-        sails.log.error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
-          ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
-        throw new Error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
-          ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
+        // sails.log.error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
+        //   ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
+        // throw new Error(`${moduleName}, error: no inputs.preCheckoutQuery.invoice_payload:
+        //   ${JSON.stringify(inputs.preCheckoutQuery, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No inputs.preCheckoutQuery.invoice_payload',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.MGW_TELEGRAM_ERROR,
+          payload: {
+            preCheckoutQuery: inputs.preCheckoutQuery,
+          },
+        });
+
       }
 
       const paymentGroupGuid = inputs.preCheckoutQuery.invoice_payload;
@@ -117,20 +138,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}, error: ${sails.config.custom.ANSWER_PRE_CHECKOUT_QUERY_ERROR}`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}, error: ${sails.config.custom.ANSWER_PRE_CHECKOUT_QUERY_ERROR}`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
