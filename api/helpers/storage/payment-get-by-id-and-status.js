@@ -69,18 +69,38 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/payment-get-by-id-and-status';
-      const errorMsg = sails.config.custom.PAYMENT_GET_BY_PAYMENT_ID_ERROR;
+      // const errorLocation = 'api/helpers/storage/payment-get-by-id-and-status';
+      // const errorMsg = sails.config.custom.PAYMENT_GET_BY_PAYMENT_ID_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
 
     }
 

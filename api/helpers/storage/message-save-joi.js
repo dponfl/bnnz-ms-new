@@ -124,21 +124,42 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/message-save-joi';
-      const errorMsg = sails.config.custom.MESSAGESAVE_ERROR;
+      // const errorLocation = 'api/helpers/storage/message-save-joi';
+      // const errorMsg = sails.config.custom.MESSAGESAVE_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //       messageRec: messageRec,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-            messageRec: messageRec,
-          },
-        }
-      };
     }
 
   }

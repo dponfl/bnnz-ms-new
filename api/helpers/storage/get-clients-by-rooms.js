@@ -114,14 +114,34 @@ module.exports = {
 
     } catch (e) {
 
-      sails.log.error('api/helpers/storage/get-clients-by-rooms, error: ', e);
+      // sails.log.error('api/helpers/storage/get-clients-by-rooms, error: ', e);
+      //
+      // throw {err: {
+      //     module: 'api/helpers/storage/get-clients-by-rooms',
+      //     message: sails.config.custom.GENERAL_HELPER_ERROR,
+      //     payload: {},
+      //   }
+      // };
 
-      throw {err: {
-          module: 'api/helpers/storage/get-clients-by-rooms',
-          message: sails.config.custom.GENERAL_HELPER_ERROR,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
 
     }
 

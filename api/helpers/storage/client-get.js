@@ -73,15 +73,26 @@ module.exports = {
 
       // sails.log.error('clientGet, no chat id in the message, input.msg: ', inputs.msg);
 
-      throw {err: {
-          module: 'api/helpers/storage/get-client',
-          message: sails.config.custom.NO_CHAT_ID,
-          payload: {
-            messenger: inputs.messenger,
-            msg: inputs.msg,
-          },
-        }
-      };
+      // throw {err: {
+      //     module: 'api/helpers/storage/get-client',
+      //     message: sails.config.custom.NO_CHAT_ID,
+      //     payload: {
+      //       messenger: inputs.messenger,
+      //       msg: inputs.msg,
+      //     },
+      //   }
+      // };
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.ERROR,
+        location: moduleName,
+        message: 'No chat id in the message',
+        errorName: sails.config.custom.STORAGE_ERROR.name,
+        payload: {
+          msg: inputs.msg,
+        },
+      });
+
 
     }
 
@@ -161,18 +172,39 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/get-client';
-      const errorMsg = sails.config.custom.CLIENT_GENERAL_ERROR;
+      // const errorLocation = 'api/helpers/storage/get-client';
+      // const errorMsg = sails.config.custom.CLIENT_GENERAL_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
 
   }

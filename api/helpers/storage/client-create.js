@@ -47,7 +47,15 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
+
+      clientGuid = inputs.client.guid;
+      accountGuid = inputs.client.account_use;
+
 
       const uuidApiKey = uuid.create();
 
@@ -93,18 +101,39 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/client-create';
-      const errorMsg = sails.config.custom.CLIENTCREATE_ERROR;
+      // const errorLocation = 'api/helpers/storage/client-create';
+      // const errorMsg = sails.config.custom.CLIENTCREATE_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
 
   }

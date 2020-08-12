@@ -52,53 +52,89 @@ module.exports = {
 
     let serviceRefRecord;
     let updatedServiceRefRec;
+    let serviceRefParams;
 
     try {
 
-      serviceRefRecord = await ServiceRef.findOne({
+      serviceRefParams = {
         key: inputs.serviceKey,
         used: false,
         deleted: false,
-      });
+      };
+
+      serviceRefRecord = await ServiceRef.findOne(serviceRefParams);
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_GENERAL_ERROR;
+      // const errorLocation = 'api/helpers/storage/get-service-ref';
+      // const errorMsg = sails.config.custom.SERVICEREF_GENERAL_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
 
     // sails.log.info('ServiceRef.findOne, serviceRefRecord: ', serviceRefRecord);
 
-    if (!serviceRefRecord) {
+    if (serviceRefRecord == null) {
 
       /**
        * record for the specified criteria was not found
        */
 
-      const errorLocation = 'api/helpers/storage/get-service-ref';
-      const errorMsg = sails.config.custom.SERVICEREF_NOT_FOUND;
+      // const errorLocation = 'api/helpers/storage/get-service-ref';
+      // const errorMsg = sails.config.custom.SERVICEREF_NOT_FOUND;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', {
+      //   params: inputs,
+      // });
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', {
-        params: inputs,
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.ERROR,
+        location: moduleName,
+        message: 'serviceRef for the specified criteria was not found',
+        errorName: sails.config.custom.STORAGE_ERROR.name,
+        payload: {
+          serviceRefParams,
+          serviceRefRecord,
+        },
       });
 
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {},
-        }
-      };
 
     } else {
 
@@ -131,18 +167,39 @@ module.exports = {
 
       } catch (e) {
 
-        const errorLocation = 'api/helpers/storage/get-service-ref';
-        const errorMsg = sails.config.custom.SERVICEREF_UPDATE_ERROR;
+        // const errorLocation = 'api/helpers/storage/get-service-ref';
+        // const errorMsg = sails.config.custom.SERVICEREF_UPDATE_ERROR;
+        //
+        // sails.log.error(errorLocation + ', error: ' + errorMsg);
+        // sails.log.error(errorLocation + ', error details: ', e);
+        //
+        // throw {err: {
+        //     module: errorLocation,
+        //     message: errorMsg,
+        //     payload: {},
+        //   }
+        // };
 
-        sails.log.error(errorLocation + ', error: ' + errorMsg);
-        sails.log.error(errorLocation + ', error details: ', e);
-
-        throw {err: {
-            module: errorLocation,
-            message: errorMsg,
+        const throwError = true;
+        if (throwError) {
+          return await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: true,
+          });
+        } else {
+          await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: false,
+          });
+          return exits.success({
+            status: 'ok',
+            message: `${moduleName} performed`,
             payload: {},
-          }
-        };
+          });
+        }
+
       }
 
     }
