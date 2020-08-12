@@ -55,12 +55,20 @@ module.exports = {
         .required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
+
     let accountsListDraft = [];
     let accountsList = [];
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       /**
        * Получаем текущий аккаунт клиента
@@ -69,10 +77,23 @@ module.exports = {
       const account = _.find(input.client.accounts, {guid: input.client.account_use});
 
       if (account == null) {
-        sails.log.error(`${moduleName}, error: Cannot get account in use from client record:
-        ${JSON.stringify(input.client)}`);
-        throw new Error(`${moduleName}, error: Cannot get account in use from client record:
-        ${JSON.stringify(input.client)}`);
+        // sails.log.error(`${moduleName}, error: Cannot get account in use from client record:
+        // ${JSON.stringify(input.client)}`);
+        // throw new Error(`${moduleName}, error: Cannot get account in use from client record:
+        // ${JSON.stringify(input.client)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Cannot get account by account_use from client record',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.TASKS_ERROR.name,
+          payload: {
+            inputClient: input.client,
+          },
+        });
+
       }
 
       /**
@@ -80,10 +101,23 @@ module.exports = {
        */
 
       if (!account.subscription_active) {
-        sails.log.error(`${moduleName}, error: Account has no active subscription:
-        account: ${JSON.stringify(account)}`);
-        throw new Error(`${moduleName}, error: Account has not active subscription:
-        account: ${JSON.stringify(account)}`);
+        // sails.log.error(`${moduleName}, error: Account has no active subscription:
+        // account: ${JSON.stringify(account)}`);
+        // throw new Error(`${moduleName}, error: Account has not active subscription:
+        // account: ${JSON.stringify(account)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Account has no active subscription',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.TASKS_ERROR.name,
+          payload: {
+            account,
+          },
+        });
+
       }
 
       /**
@@ -91,12 +125,26 @@ module.exports = {
        */
 
       if (account.posts_made_day >= account.service.max_outgoing_posts_day) {
-        sails.log.error(`${moduleName}, error: Max amount of outgoing posts reached:
-          posts_made_day: ${account.posts_made_day},
-          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
-        throw new Error(`${moduleName}, error: Max amount of outgoing posts reached:
-          posts_made_day: ${account.posts_made_day},
-          max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
+        // sails.log.error(`${moduleName}, error: Max amount of outgoing posts reached:
+        //   posts_made_day: ${account.posts_made_day},
+        //   max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
+        // throw new Error(`${moduleName}, error: Max amount of outgoing posts reached:
+        //   posts_made_day: ${account.posts_made_day},
+        //   max_outgoing_posts_per_day: ${account.service.max_outgoing_posts_day}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.INFO,
+          location: moduleName,
+          message: 'Max amount of outgoing posts reached',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.TASKS_ERROR.name,
+          payload: {
+            postsMadeDay: account.posts_made_day,
+            maxOutgoingPostsDay:  account.service.max_outgoing_posts_day,
+          },
+        });
+
       }
 
       /**
@@ -153,8 +201,22 @@ module.exports = {
       if (pushMessagesRaw.status === 'ok') {
         sails.config.custom.pushMessages = pushMessagesRaw.payload;
       } else {
-        throw new Error(`${moduleName}, Critical error: Cannot get push messages data:
-        pushMessagesRaw: ${JSON.stringify(pushMessagesRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, Critical error: Cannot get push messages data:
+        // pushMessagesRaw: ${JSON.stringify(pushMessagesRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'Cannot get push messages data',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.TASKS_ERROR.name,
+          payload: {
+            pushMessagesRaw,
+          },
+        });
+
       }
 
       /**
@@ -234,7 +296,20 @@ module.exports = {
             });
             break;
           default:
-            throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
+            // throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Unknown task type',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.TASKS_ERROR.name,
+              payload: {
+                taskType,
+              },
+            });
+
         }
 
         await sails.helpers.storage.tasksUpdateJoi({
@@ -282,20 +357,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

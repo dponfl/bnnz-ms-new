@@ -211,6 +211,7 @@ module.exports.custom = {
     },
 
     errorType: {
+      INFO: 'info',
       WARN: 'warn',
       ERROR: 'error',
       CRITICAL: 'critical',
@@ -757,6 +758,10 @@ module.exports.custom = {
 
   STORAGE_ERROR: {
     name: 'ERR_STORAGE_GENERAL',
+  },
+
+  TASKS_ERROR: {
+    name: 'ERR_TASKS_GENERAL',
   },
 
 

@@ -54,6 +54,7 @@ module.exports = {
         .string()
         .description('error type')
         .valid(
+          sails.config.custom.enums.errorType.INFO,
           sails.config.custom.enums.errorType.WARN,
           sails.config.custom.enums.errorType.ERROR,
           sails.config.custom.enums.errorType.CRITICAL,
@@ -139,6 +140,9 @@ module.exports = {
 
 
     switch (input.errorType) {
+      case sails.config.custom.enums.errorType.INFO:
+        await LogProcessor.info(errorParams);
+        break;
       case sails.config.custom.enums.errorType.WARN:
         await LogProcessor.warn(errorParams);
         break;
