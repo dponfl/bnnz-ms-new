@@ -731,6 +731,10 @@ module.exports.custom = {
     name: 'ERR_KEYBOARD_PROCESSOR_GENERAL',
   },
 
+  KEYBOARDS_ERROR: {
+    name: 'ERR_KEYBOARDS_GENERAL',
+  },
+
 
 
 };

@@ -48,10 +48,17 @@ module.exports = {
 
     let input;
 
+    let clientGuid;
+    let accountGuid;
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
@@ -60,9 +67,22 @@ module.exports = {
       });
 
       if (checkDayPostsJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
-          client: ${input.client}
-          checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+        // throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
+        //   client: ${input.client}
+        //   checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong checkDayPostsJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARDS_ERROR,
+          payload: {
+            checkDayPostsJoiRaw,
+          },
+        });
+
       }
 
       const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
@@ -118,9 +138,23 @@ module.exports = {
       const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
 
       if (sendKeyboardForAccountRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
-        sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
-        sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
+        // sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
+        // sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong sendKeyboardForAccountJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARDS_ERROR,
+          payload: {
+            sendKeyboardForAccountParams,
+            sendKeyboardForAccountRaw,
+          },
+        });
+
       }
 
 
@@ -132,24 +166,44 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

@@ -46,11 +46,18 @@ module.exports = {
     });
 
     let input;
+
+    let clientGuid;
+    let accountGuid;
+
     let currentAccount;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
 
       currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
@@ -70,9 +77,23 @@ module.exports = {
       const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsJoi(loadInitialFunnelsJoiParams);
 
       if (loadInitialFunnelsJoiRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong loadInitialFunnelsJoi response:
-              loadInitialFunnelsJoiParams: ${JSON.stringify(loadInitialFunnelsJoiParams, null, 3)}
-              loadInitialFunnelsJoiRaw: ${JSON.stringify(loadInitialFunnelsJoiRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong loadInitialFunnelsJoi response:
+        //       loadInitialFunnelsJoiParams: ${JSON.stringify(loadInitialFunnelsJoiParams, null, 3)}
+        //       loadInitialFunnelsJoiRaw: ${JSON.stringify(loadInitialFunnelsJoiRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong loadInitialFunnelsJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARDS_ERROR,
+          payload: {
+            loadInitialFunnelsJoiParams,
+            loadInitialFunnelsJoiRaw,
+          },
+        });
+
       }
 
       input.client = loadInitialFunnelsJoiRaw.payload.client;
@@ -109,24 +130,44 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
 
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 
