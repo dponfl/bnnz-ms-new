@@ -47,9 +47,17 @@ module.exports = {
       messageData: Joi.any().required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       let splitCallbackHelperRes = _.split(input.messageData.callbackHelper, sails.config.custom.JUNCTION, 2);
       let callbackHelperBlock = splitCallbackHelperRes[0];
@@ -67,9 +75,25 @@ module.exports = {
         });
 
       } else {
-        throw new Error(`${moduleName}, critical error: could not parse callback helper name: 
-            callbackHelperBlock: ${callbackHelperBlock}
-            callbackHelperName: ${callbackHelperName}`);
+        // throw new Error(`${moduleName}, critical error: could not parse callback helper name:
+        //     callbackHelperBlock: ${callbackHelperBlock}
+        //     callbackHelperName: ${callbackHelperName}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Could not parse callback helper name',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            inputMessageDataCallbackHelper: input.messageData.callbackHelper,
+            callbackHelperBlock,
+            callbackHelperName,
+          },
+        });
+
       }
 
       return exits.success({
@@ -80,20 +104,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

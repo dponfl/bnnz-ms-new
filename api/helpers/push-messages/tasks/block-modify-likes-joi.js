@@ -54,16 +54,37 @@ module.exports = {
       }).required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       let resBlock = input.messageData;
       let messageInlineKeyboard = [];
       messageInlineKeyboard.push(resBlock.message.inline_keyboard[0]);
 
       if (!uuid.isUUID(input.additionalParams.taskGuid)) {
-        throw new Error(`Received input.additionalParams.taskGuid is not a valid UUID: ${input.additionalParams.taskGuid}`);
+        // throw new Error(`Received input.additionalParams.taskGuid is not a valid UUID: ${input.additionalParams.taskGuid}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'input.additionalParams.taskGuid is not a valid UUID',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR,
+          payload: {
+            taskGuid: input.additionalParams.taskGuid,
+          },
+        });
+
       }
 
       messageInlineKeyboard = _.concat(messageInlineKeyboard,
@@ -82,20 +103,41 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
     }
   }
 };

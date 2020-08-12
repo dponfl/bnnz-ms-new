@@ -53,6 +53,10 @@ module.exports = {
     });
 
     let input;
+
+    let clientGuid;
+    let accountGuid;
+
     let checkLikesJoiRaw;
     let checkCommentsJoiRaw;
     let taskPerformRes;
@@ -72,6 +76,10 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
+
       const client = input.client;
 
       const queryDataRegExp = /push_msg_tsk_lc_(\S+)/;
@@ -79,13 +87,39 @@ module.exports = {
       const queryData = queryDataRegExp.exec(input.query.data);
 
       if (queryData == null || queryData.length !== 2) {
-        throw new Error(`${moduleName}, Error: query.data has wrong format: ${input.query.data}`);
+        // throw new Error(`${moduleName}, Error: query.data has wrong format: ${input.query.data}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'query.data has wrong format',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            queryData: input.query.data,
+          },
+        });
+
       }
 
       const taskGuid = queryData[1];
 
       if (!uuid.isUUID(taskGuid)) {
-        throw new Error(`${moduleName}, Error: query.data task code is not a guid: ${taskGuid}`);
+        // throw new Error(`${moduleName}, Error: query.data task code is not a guid: ${taskGuid}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'query.data task code is not a guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskGuid,
+          },
+        });
+
       }
 
       /**
@@ -97,13 +131,40 @@ module.exports = {
       });
 
       if (taskRecRaw.payload.length > 1) {
-        throw new Error(`${moduleName}, Error: Several tasks with the same guid: 
-        guid: ${taskGuid}
-        tasks: ${JSON.stringify(taskRecRaw.payload, null, 3)}`);
+        // throw new Error(`${moduleName}, Error: Several tasks with the same guid:
+        // guid: ${taskGuid}
+        // tasks: ${JSON.stringify(taskRecRaw.payload, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Several tasks with the same guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskGuid,
+            taskRecRaw,
+          },
+        });
+
       }
 
       if (taskRecRaw.payload.length === 0) {
-        throw new Error(`${moduleName}, Error: No tasks for this guid: ${taskGuid}`);
+        // throw new Error(`${moduleName}, Error: No tasks for this guid: ${taskGuid}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No tasks for this guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskGuid,
+          },
+        });
+
       }
 
       const taskRec = taskRecRaw.payload[0];
@@ -111,7 +172,20 @@ module.exports = {
       const account = _.find(input.client.accounts, {guid: taskRec.accountGuid});
 
       if (account == null) {
-        throw new Error(`${moduleName}, Error: No account found for this guid: ${taskRec.accountGuid}`);
+        // throw new Error(`${moduleName}, Error: No account found for this guid: ${taskRec.accountGuid}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No account found for this guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskRecAccountGuid: taskRec.accountGuid,
+          },
+        });
+
       }
 
       const instProfile = account.inst_profile;
@@ -122,11 +196,39 @@ module.exports = {
         _.isArray(postRecRaw.payload)
         && postRecRaw.payload.length === 0
       ) {
-        throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No post found for this guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskRecPostGuid: taskRec.postGuid,
+            postRecRaw,
+          },
+        });
+
       }
 
       if (postRecRaw.payload.length !== 1) {
-        throw new Error(`${moduleName}, Error: More than one record for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, Error: More than one record for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'More than one record for this guid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            taskRecPostGuid: taskRec.postGuid,
+            postRecRaw,
+          },
+        });
+
       }
 
       const postRec = postRecRaw.payload[0];
@@ -245,19 +347,44 @@ module.exports = {
          * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
          */
 
-        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
-        sails.log.error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
+        // sails.log.error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
+        //
+        // throw new Error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
 
-        throw new Error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Likes check: Successful response WAS NOT RECEIVED from parser',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {},
+        });
+
 
       }
 
       const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
 
       if (likeDone === 'none') {
-        throw new Error(`${moduleName}, error: wrong checkLikesJoi response: no payload.likeMade
-        checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
-        checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong checkLikesJoi response: no payload.likeMade
+        // checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
+        // checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong checkLikesJoi response: no payload.likeMade',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR,
+          payload: {
+            checkLikesParams,
+            checkLikesJoiRaw,
+          },
+        });
+
       }
 
       parserStatus = '';
@@ -344,10 +471,21 @@ module.exports = {
          * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
          */
 
-        // TODO: Здесь должно быть применено логирование для серьёзных ошибок
-        sails.log.error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
+        // sails.log.error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
+        //
+        // throw new Error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
 
-        throw new Error(`${moduleName}: Comments check: Успешный ответ от парсера так и не был получен`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Comments check: Successful response WAS NOT RECEIVED from parser',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {},
+        });
+
 
       }
 
@@ -360,9 +498,23 @@ module.exports = {
         || commentText === 'none'
         || numberOfWords === 'none'
       ) {
-        throw new Error(`${moduleName}, error: wrong checkCommentsJoi data in response
-        checkCommentsParams: ${JSON.stringify(checkCommentsParams, null, 3)}
-        checkCommentsJoiRaw: ${JSON.stringify(checkCommentsJoiRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: wrong checkCommentsJoi data in response
+        // checkCommentsParams: ${JSON.stringify(checkCommentsParams, null, 3)}
+        // checkCommentsJoiRaw: ${JSON.stringify(checkCommentsJoiRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong checkCommentsJoi data in response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            checkCommentsParams,
+            checkCommentsJoiRaw,
+          },
+        });
+
       }
 
       let taskData = {
@@ -618,20 +770,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

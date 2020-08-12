@@ -45,9 +45,17 @@ module.exports = {
       query: Joi.any().required(),
     });
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
+
+      clientGuid = input.client.guid;
+      accountGuid = input.client.account_use;
+
 
       /**
        * Save the received callback query message
@@ -87,11 +95,39 @@ module.exports = {
            */
 
           if (!_.has(sails.config.custom.pushMessages, 'tasks.likes')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes property`);
+            // throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes property`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config has no tasks.likes property',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessages: sails.config.custom.pushMessages,
+              },
+            });
+
           }
 
           if (sails.config.custom.pushMessages.tasks.likes[0].callbackHelper == null) {
-            throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
+            // throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config tasks.likes has no callbackHelper',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes[0],
+              },
+            });
+
           }
 
           /**
@@ -114,7 +150,21 @@ module.exports = {
             });
 
           } else {
-            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes, null, 3)}`);
+            // throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes, null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages (tasks.likes): initial block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes,
+              },
+            });
+
           }
 
 
@@ -125,11 +175,39 @@ module.exports = {
            */
 
           if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments')) {
-            throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
+            // throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config has no tasks.likes_comments property',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessages: sails.config.custom.pushMessages,
+              },
+            });
+
           }
 
           if (sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper == null) {
-            throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
+            // throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config tasks.likes_comments has no callbackHelper',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes_comments[0],
+              },
+            });
+
           }
 
           /**
@@ -152,15 +230,55 @@ module.exports = {
             });
 
           } else {
-            throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes_comments, null, 3)}`);
+            // throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes_comments, null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages (tasks.likes_comments): initial block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes_comments,
+              },
+            });
+
           }
 
         } else {
-          throw new Error(`${moduleName}: unknown task category, query.data: ${input.query.data}`);
+          // throw new Error(`${moduleName}: unknown task category, query.data: ${input.query.data}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Unknown task category',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+            payload: {
+              queryData: input.query.data,
+            },
+          });
+
         }
 
       } else {
-        throw new Error(`${moduleName}: unknown callback prefix, query.data: ${input.query.data}`);
+        // throw new Error(`${moduleName}: unknown callback prefix, query.data: ${input.query.data}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Unknown callback prefix',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+          payload: {
+            queryData: input.query.data,
+          },
+        });
+
       }
 
       return exits.success({
@@ -171,20 +289,40 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

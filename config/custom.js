@@ -747,6 +747,10 @@ module.exports.custom = {
     name: 'ERR_PGW_GENERAL',
   },
 
+  PUSH_MESSAGES_ERROR: {
+    name: 'ERR_PUSH_MESSAGES_GENERAL',
+  },
+
 
 
 
