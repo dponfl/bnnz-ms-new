@@ -751,6 +751,10 @@ module.exports.custom = {
     name: 'ERR_PUSH_MESSAGES_GENERAL',
   },
 
+  REF_ERROR: {
+    name: 'ERR_REF_GENERAL',
+  },
+
 
 
 
