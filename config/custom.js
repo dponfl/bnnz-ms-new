@@ -652,11 +652,6 @@ module.exports.custom = {
     message: 'Wrong parser response: no response.instagram.users',
   },
 
-  INST_PARSER_NO_USERS_2: {
-    name: 'ERR_INST_PARSER_NO_USERS_2',
-    message: 'Wrong parser response: no response.instagram.result.users',
-  },
-
   INST_PARSER_NO_COMMENTS: {
     name: 'ERR_INST_PARSER_NO_COMMENTS',
     message: 'Wrong parser response: no response.instagram.comments',

@@ -89,20 +89,28 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const performanceRec = await Performance
-        .create({
-          platform: input.platform,
-          action: input.action,
-          api: input.api,
-          requestType: input.requestType,
-          requestDuration: input.requestDuration,
-          requestDepth: input.requestDepth || null,
-          status: input.status,
-          clientGuid: input.clientGuid || null,
-          accountGuid: input.accountGuid || null,
-          comments: input.comments || {},
-        })
-        .fetch();
+      const performanceRec = {
+        platform: input.platform,
+        action: input.action,
+        api: input.api,
+        requestType: input.requestType,
+        requestDuration: input.requestDuration,
+        requestDepth: input.requestDepth || null,
+        status: input.status,
+        clientGuid: input.clientGuid || null,
+        accountGuid: input.accountGuid || null,
+        comments: input.comments || {},
+      };
+
+      if (input.comments != null) {
+        if (_.isObject(input.comments)) {
+          performanceRec.comments = await MessageProcessor.clearStr(JSON.stringify(input.comments));
+        } else {
+          performanceRec.comments = await MessageProcessor.clearStr(input.comments);
+        }
+      }
+
+      await Performance.create(performanceRec);
 
       return exits.success({
         status: 'ok',

@@ -88,6 +88,14 @@ module.exports = {
       const errorRec = input;
       errorRec.guid = uuidApiKey.uuid;
 
+      if (input.payload != null) {
+        if (_.isObject(input.payload)) {
+          errorRec.payload = await MessageProcessor.clearStr(JSON.stringify(input.payload));
+        } else {
+          errorRec.payload = await MessageProcessor.clearStr(input.payload);
+        }
+      }
+
       await Errors.create(errorRec);
 
       return exits.success({

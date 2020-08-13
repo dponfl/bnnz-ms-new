@@ -62,8 +62,6 @@ module.exports = {
 
       input.level = 'critical';
 
-      await sails.helpers.storage.errorCreateJoi(input);
-
       /**
        * Информирование ответственных людей о возникновении критической ошибки
        */
@@ -72,6 +70,8 @@ module.exports = {
       // с учётом приоритетности проблемы и ролях (должно быть реализовано через конфиг)
 
       sails.log.error(input.message, _.omit(input, 'message'));
+
+      await sails.helpers.storage.errorCreateJoi(input);
 
     } catch (e) {
 
@@ -100,9 +100,9 @@ module.exports = {
 
       input.level = 'error';
 
-      await sails.helpers.storage.errorCreateJoi(input);
-
       sails.log.error(input.message, _.omit(input, 'message'));
+
+      await sails.helpers.storage.errorCreateJoi(input);
 
     } catch (e) {
 
@@ -132,9 +132,9 @@ module.exports = {
 
       input.level = 'warn';
 
-      await sails.helpers.storage.errorCreateJoi(input);
-
       sails.log.warn(input.message, _.omit(input, 'message'));
+
+      await sails.helpers.storage.errorCreateJoi(input);
 
     } catch (e) {
 

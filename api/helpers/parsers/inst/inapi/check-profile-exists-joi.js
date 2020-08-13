@@ -89,6 +89,17 @@ module.exports = {
 
         const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.name,
+          location: moduleName,
+          payload: getUserIdByProfileJoiRes,
+        });
+
         const performanceCreateParams = {
           platform,
           action,
@@ -105,18 +116,6 @@ module.exports = {
         };
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.message,
-          clientGuid,
-          accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.name,
-          location: moduleName,
-          payload: getUserIdByProfileJoiRes,
-        });
-
 
         return exits.success({
           status: 'error',
@@ -194,11 +193,31 @@ module.exports = {
       //   },
       // })
 
-      return await sails.helpers.general.catchErrorJoi({
-        error: e,
-        location: moduleName,
-        throwError: false,
-      });
+      // return await sails.helpers.general.catchErrorJoi({
+      //   error: e,
+      //   location: moduleName,
+      //   throwError: false,
+      // });
+
+      const throwError = false;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

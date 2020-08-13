@@ -114,6 +114,24 @@ module.exports = {
         message_originator: input.message_originator,
       };
 
+      // TODO: Если в таблице "messages" будем для полей message & message_buttons менять тип BLOB на TEXT, то нужно будет разкомментить
+
+      // if (input.message != null) {
+      //   if (_.isObject(input.message)) {
+      //     messageRec.message = await MessageProcessor.clearStr(JSON.stringify(input.message));
+      //   } else {
+      //     messageRec.message = await MessageProcessor.clearStr(input.message);
+      //   }
+      // }
+      //
+      // if (input.message_buttons != null) {
+      //   if (_.isObject(input.message_buttons)) {
+      //     messageRec.message_buttons = await MessageProcessor.clearStr(JSON.stringify(input.message_buttons));
+      //   } else {
+      //     messageRec.message_buttons = await MessageProcessor.clearStr(input.message_buttons);
+      //   }
+      // }
+
       await Messages.create(messageRec);
 
       return exits.success({

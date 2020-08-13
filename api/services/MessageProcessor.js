@@ -388,4 +388,58 @@ module.exports = {
 
   },
 
+  clearStr: async function(str) {
+
+    const methodName = 'clearStr';
+
+    try {
+
+      return str.replace(/(?![a-zA-Z]|[а-яА-ЯёЁ]|[0-9]|[_\s-\(\),<>\|\!@#$%^&"№;:?*\[\]{}'\\\/\.])./g, '*');
+
+    } catch (e) {
+
+      // const errorMsg = 'General error';
+      //
+      // sails.log.error(`${moduleName}:${methodName}, Error details:
+      // Platform error message: ${errorMsg}
+      // Error name: ${e.name || 'no name'}
+      // Error message: ${e.message || 'no message'}
+      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
+      //
+      // throw {err: {
+      //     module: `${moduleName}:${methodName}`,
+      //     message: errorMsg,
+      //     payload: {
+      //       error_name: e.name || 'no name',
+      //       error_message: e.message || 'no message',
+      //       error_stack: e.stack || {},
+      //     },
+      //   }
+      // };
+
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: `${moduleName}:${methodName}`,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: `${moduleName}:${methodName}`,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName}:${methodName} performed`,
+          payload: {},
+        });
+      }
+
+    }
+
+  },
+
+
 };
