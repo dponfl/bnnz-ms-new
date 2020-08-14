@@ -322,18 +322,20 @@ module.exports = {
         // return arr;
 
       } else if (_.isObject(input.buttons)) {
-        let buttonText = '';
+        const ob = {};
         _.forEach(input.buttons, async (val, key) => {
           if (key === 'text') {
-            buttonText = await MessageProcessor.parseSpecialTokens({
+            ob[key] = await KeyboardProcessor.parseSpecialTokens({
               client: input.client,
               message: t(input.client.lang, val),
               additionalTokens: input.additionalTokens,
             });
+          } else {
+            ob[key] = val;
           }
         });
 
-        return buttonText;
+        return ob;
 
       }
 
