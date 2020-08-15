@@ -78,6 +78,9 @@ module.exports = {
         .string()
         .description('child request guid')
         .guid(),
+      errorPayloadAdditional: Joi
+        .any()
+        .description('error payload additional')
     });
 
     const input = await schema.validateAsync(inputs.params);
@@ -110,6 +113,7 @@ module.exports = {
       }
     } else {
       const errorLocation = input.location;
+      const errorPayloadAdditional = input.errorPayloadAdditional;
       const errorMsg = errorObj.message != null ? errorObj.message : 'No error message';
       const errorName = errorObj.name != null ? errorObj.name : 'No error name';
       const errorPayload = errorObj.raw != null ? errorObj.raw : {};
@@ -117,12 +121,18 @@ module.exports = {
         length: 500,
         omission: ' [...]',
       }) : 'No error stack';
+
+      if (errorObj.code === 'EPARSE' || errorObj.code === 'ETELEGRAM') {
+        errorPayloadAdditional.response = (errorObj.response != null && errorObj.response.body != null) ? errorObj.response.body : {};
+      }
+
       const error = {
         errorLocation,
         errorMsg,
         errorName,
         errorPayload,
         errorStack,
+        errorPayloadAdditional,
       };
       await LogProcessor.error({
         message: errorMsg,
@@ -135,6 +145,7 @@ module.exports = {
         payload: {
           errorPayload,
           errorStack,
+          errorPayloadAdditional,
         },
       });
       if (input.throwError) {

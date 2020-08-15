@@ -217,6 +217,7 @@ module.exports = {
           responseStatusMain,
           responseStatusInner,
           request_id: _.get(requestRes, 'request_id', null),
+          users,
         },
       };
 

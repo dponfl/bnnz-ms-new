@@ -291,6 +291,55 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
 
 });
 
+describe('Test sendVideo with inline keyboard', function () {
+
+  let customConfig;
+  let client;
+
+  before(async function () {
+
+    this.timeout(700000);
+
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    client = await Client.findOne({
+      chat_id: '372204823'
+    });
+
+    client.accounts = await Account.find({client: client.id});
+
+  });
+
+  it('should send one video with inline keyboard', async function () {
+
+    this.timeout(700000);
+
+    const chatId = client.chat_id;
+
+    // const videoPath = customConfig.cloudinaryVideoUrl + 'v1597401314/BeFame_Dev/INFO_How_Make_Post_v001_001.mp4';
+    // const videoPath = customConfig.cloudinaryVideoUrl + 'v1597401420/BeFame_Dev/INFO_How_Perform_Task_v001_001.mp4';
+    // const videoPath = './media/INFO_How_Perform_Task_v001_001.mp4';
+    const videoPath = './media/INFO_How_Make_Post_v001_001.mp4';
+    // const videoPath = 'BAACAgQAAxkDAAIKgV82xzYNE1aTNY_cKpfo6lqeD5QiAAIwBwAC3Ie5UbFY66eyWPS6GgQ';
+    // const videoPath = 'BAACAgQAAxkDAAIKgl82yRQ9Z4TSDYoB8SlUI0VWbiv1AAIxBwAC3Ie5UWrU07Iv8NbJGgQ';
+
+    let videoRes = await sails.helpers.mgw.telegram.videoMessageJoi({
+      chatId,
+      videoPath,
+      html: 'Test big video having media type ...',
+      fileOptions: {
+        mime_type: "video/mp4",
+        // supports_streaming: true,
+      }
+    });
+
+    const ttt = 1;
+
+  });
+
+});
+
 describe.skip('Test send few test text messages', function () {
 
   let customConfig;

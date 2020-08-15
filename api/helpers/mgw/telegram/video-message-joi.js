@@ -50,13 +50,18 @@ module.exports = {
       videoPath: Joi
         .string()
         .description('video url')
-        .uri()
+        // .uri()
         .required(),
       html: Joi
         .string()
         .description('html code of the message'),
+      fileOptions: Joi
+        .any()
+        .description('fileOptions'),
     });
 
+    let sendVideoParams = {};
+    let sendMessageRes;
 
     try {
 
@@ -70,11 +75,27 @@ module.exports = {
         messageObj.caption = input.html;
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendVideo(
-        input.chatId,
-        input.videoPath,
-        messageObj
-      );
+      sendVideoParams = {
+        chatId: input.chatId,
+        videoPath: input.videoPath,
+        messageObj,
+      };
+
+      if (input.fileOptions != null) {
+        sendMessageRes = await sails.config.custom.telegramBot.sendVideo(
+          input.chatId,
+          input.videoPath,
+          messageObj,
+          input.fileOptions
+        );
+      } else {
+        sendMessageRes = await sails.config.custom.telegramBot.sendVideo(
+          input.chatId,
+          input.videoPath,
+          messageObj
+        );
+      }
+
 
       return exits.success({
         status: 'ok',
@@ -105,12 +126,14 @@ module.exports = {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
+          errorPayloadAdditional: sendVideoParams,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
+          errorPayloadAdditional: sendVideoParams,
           throwError: false,
         });
         return exits.success({
