@@ -108,7 +108,7 @@ module.exports = {
               message: 'Wrong reallocateRoomsToAccountJoi response',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 reallocateRoomsToAccountJoiParams,
                 reallocateRoomsToAccountJoiRaw,
@@ -193,7 +193,7 @@ module.exports = {
               message: 'Payment group record create error',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 paymentGroupRecRaw,
               },
@@ -224,7 +224,7 @@ module.exports = {
           //     message: 'No payment provider config for messenger',
           //     clientGuid,
           //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR,
+          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
           //     payload: {
           //       inputClientMessenger: input.client.messenger,
           //     },
@@ -247,7 +247,7 @@ module.exports = {
           //     message: 'No text price config found (missing config.lang[useLang].price)',
           //     clientGuid,
           //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR,
+          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
           //     payload: {
           //       useLang,
           //     },
@@ -265,7 +265,7 @@ module.exports = {
           //     message: 'No text price config found (missing config.price)',
           //     clientGuid,
           //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR,
+          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
           //     payload: {},
           //   });
           //
@@ -351,7 +351,7 @@ module.exports = {
           //     message: 'Wrong sendInvoice response',
           //     clientGuid,
           //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR,
+          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
           //     payload: {
           //       sendInvoiceResultRaw,
           //     },
@@ -372,7 +372,7 @@ module.exports = {
           //     message: 'account not found',
           //     clientGuid,
           //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR,
+          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
           //     payload: {
           //       account_use: input.client.account_use,
           //       accounts: input.client.accounts,
@@ -395,7 +395,7 @@ module.exports = {
             message: 'Wrong callback data',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               inputQueryData: input.query.data,
             },

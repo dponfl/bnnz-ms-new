@@ -85,7 +85,21 @@ module.exports = {
       if (_.isNil(updateFunnel)
         || _.isNil(updateId)
       ) {
-        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block parsing error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            updateBlock,
+            block: input.block,
+          },
+        });
+
       }
 
       getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
@@ -95,11 +109,22 @@ module.exports = {
         getBlock.done = false;
         getBlock.next = null;
       } else {
-        throw new Error(`${moduleName}, error: block not found:
-             updateBlock: ${updateBlock}
-             updateFunnel: ${updateFunnel}
-             updateId: ${updateId}
-             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            updateId,
+            updateFunnel,
+            funnel: input.client.funnels[updateFunnel],
+          },
+        });
+
       }
 
       await sails.helpers.funnel.afterHelperGenericJoi({
@@ -120,24 +145,25 @@ module.exports = {
 
     } catch (e) {
 
-      const errorMsg = 'General error';
-
-      sails.log.error(`${moduleName}, Error details:
-      Platform error message: ${errorMsg}
-      Error name: ${e.name || 'no name'}
-      Error message: ${e.message || 'no message'}
-      Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-
-      throw {err: {
-          module: `${moduleName}`,
-          message: errorMsg,
-          payload: {
-            error_name: e.name || 'no name',
-            error_message: e.message || 'no message',
-            error_stack: e.stack || {},
-          },
-        }
-      };
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

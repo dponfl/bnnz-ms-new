@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'scheduler:pending-actions:push-pending-ref-subscriptions-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'scheduler:pending-actions:push-pending-ref-subscriptions-joi',
 
 
-  description: 'module:helper',
+  description: 'scheduler:pending-actions:push-pending-ref-subscriptions-joi',
 
 
   inputs: {
@@ -39,21 +39,17 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      client: Joi
+      someOne: Joi
         .any()
-        .description('Client record')
+        .description('XXX')
         .required(),
-      block: Joi
+      someTwo: Joi
         .any()
-        .description('Current funnel block')
+        .description('XXX')
         .required(),
-      payload: Joi
+      someThree: Joi
         .any()
-        .description('{text, inline_keyboard, img, video, doc} object')
-        .required(),
-      msg: Joi
-        .any()
-        .description('Message received'),
+        .description('XXX'),
     });
 
     let input;
@@ -69,18 +65,18 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-
-      let resHtml = input.payload.text;
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
 
       throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
 
       return exits.success({
-        text: resHtml,
-        inline_keyboard: inputs.payload.inline_keyboard,
-        img: inputs.payload.img,
-        video: inputs.payload.video,
-        doc: inputs.payload.doc,
-      });
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: {},
+      })
 
     } catch (e) {
 

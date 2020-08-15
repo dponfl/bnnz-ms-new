@@ -40,16 +40,30 @@ module.exports.bootstrap = async function() {
     }
   });
 
+  /**
+   * Load global config
+   */
+
   await sails.helpers.general.getConfig();
 
-  // await sails.helpers.general.activateSchedule();
+  /**
+   * Activate scheduler
+   */
 
-  // await sails.helpers.chatListeners.telegram.test();
+  // await sails.helpers.scheduler.activateSchedule();
 
+
+  /**
+   * Start Telegram listeners
+   */
   await sails.helpers.chatListeners.telegram.onText();
   await sails.helpers.chatListeners.telegram.onCallbackQuery();
   await sails.helpers.chatListeners.telegram.onPreCheckoutQuery();
   await sails.helpers.chatListeners.telegram.onSuccessfulPayment();
+
+  /**
+   * Activate general actions on bootstrap
+   */
 
   await sails.helpers.general.bootstrapActions();
 
@@ -65,4 +79,7 @@ module.exports.bootstrap = async function() {
 
   // await sails.helpers.test.testLogs();
   // await sails.helpers.test.testErrors();
+
+  // await sails.helpers.chatListeners.telegram.test();
+
 };

@@ -957,16 +957,9 @@
   },
   "schedule": [
     {
-      "rule": "*/1 */1 * * * *",
+      "rule": "*/3 * * * *",
+      "location": "pendingActions",
       "action": "helperOne"
-    },
-    {
-      "rule": "*/3 */1 * * * *",
-      "action": "helperThree"
-    },
-    {
-      "rule": "*/5 */1 * * * *",
-      "action": "helperFive"
     }
   ],
   "price": {

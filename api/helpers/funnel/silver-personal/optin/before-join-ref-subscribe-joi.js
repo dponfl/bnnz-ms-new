@@ -239,6 +239,15 @@ module.exports = {
 
       }
 
+      const pendingActionsCreateParams = {
+        clientGuid,
+        accountGuid,
+        pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
+        payload: accountAndInstProfilePairs,
+      };
+
+      await sails.helpers.storage.pendingActionsCreateJoi(pendingActionsCreateParams);
+
       let refProfilesList = '';
 
       for (const refListElem of accountAndInstProfilePairs) {

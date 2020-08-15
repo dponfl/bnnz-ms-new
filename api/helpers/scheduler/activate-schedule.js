@@ -60,14 +60,27 @@ module.exports = {
 
         for (let i=0; i < scheduleConfig.length; i++) {
 
-          if (!(_.has(scheduleConfig[i], 'rule') && _.has(scheduleConfig[i], 'action'))) {
+          if (!(_.has(scheduleConfig[i], 'rule')
+            && _.has(scheduleConfig[i], 'action')
+            && _.has(scheduleConfig[i], 'location')
+          )) {
 
-            sails.log.error('ERROR: Wrong schedule config format: ', scheduleConfig[i]);
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+              location: moduleName,
+              message: 'Wrong schedule config format',
+              errorName: sails.config.custom.SCHEDULER_ERROR.name,
+              payload: {
+                scheduleConfig: scheduleConfig[i],
+              },
+            });
+
 
           } else {
 
             schedules[i] = schedule.scheduleJob(scheduleConfig[i].rule, async function () {
-              await sails.helpers.general.schedule[scheduleConfig[i].action]();
+              await sails.helpers.scheduler[scheduleConfig[i].location][scheduleConfig[i].action]();
             });
 
           }
@@ -123,4 +136,27 @@ module.exports = {
 
 
 };
+
+
+/**
+ * Test config data
+ */
+
+// "schedule": [
+//   {
+//     "rule": "*/1 */1 * * * *",
+//     "location": "test",
+//     "action": "helperOne"
+//   },
+//   {
+//     "rule": "*/3 */1 * * * *",
+//     "location": "test",
+//     "action": "helperThree"
+//   },
+//   {
+//     "rule": "*/5 */1 * * * *",
+//     "location": "test",
+//     "action": "helperFive"
+//   }
+// ],
 

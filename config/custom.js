@@ -215,6 +215,10 @@ module.exports.custom = {
       WARN: 'warn',
       ERROR: 'error',
       CRITICAL: 'critical',
+    },
+
+    pendingActionsNames: {
+      REF_PROFILES_SUBSCRIPTION: 'ref_profiles_subscription',
     }
 
   },
@@ -757,6 +761,10 @@ module.exports.custom = {
 
   TASKS_ERROR: {
     name: 'ERR_TASKS_GENERAL',
+  },
+
+  SCHEDULER_ERROR: {
+    name: 'ERR_SCHEDULER_GENERAL',
   },
 
 

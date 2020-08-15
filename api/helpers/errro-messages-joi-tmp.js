@@ -55,7 +55,7 @@ module.exports = {
       accountGuid,
       // requestId: null,
       // childRequestId: null,
-      errorName: errorName,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       location: moduleName,
       payload: payloadObj,
     });
@@ -71,7 +71,7 @@ module.exports = {
       accountGuid,
       // requestId: null,
       // childRequestId: null,
-      errorName: errorName,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
       location: moduleName,
       payload: payloadObj,
@@ -89,7 +89,7 @@ module.exports = {
       message: message,
       clientGuid,
       accountGuid,
-      errorName: errorName,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: payloadObj,
     });
 
@@ -104,7 +104,7 @@ module.exports = {
       message: message,
       clientGuid,
       accountGuid,
-      errorName: errorName,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: payloadObj,
     });
 
@@ -120,7 +120,7 @@ module.exports = {
       message: 'Wrong XXX response',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR.name,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: {
         xxx,
       },
@@ -138,7 +138,7 @@ module.exports = {
       message: 'Wrong callback data',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR.name,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: {
         inputQueryData: input.query.data,
       },
@@ -157,7 +157,7 @@ module.exports = {
       message: 'Initial block not found',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR.name,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: {
         currentFunnelName: input.client.current_funnel,
         currentFunnel: input.client.funnels[input.client.current_funnel],
@@ -181,7 +181,7 @@ module.exports = {
       message: 'Block not found',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR.name,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: {
         updateId,
         updateFunnel,
@@ -203,7 +203,7 @@ module.exports = {
       message: 'Block parsing error',
       clientGuid,
       accountGuid,
-      errorName: sails.config.custom.FUNNELS_ERROR.name,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
       payload: {
         updateBlock,
         block: input.block,

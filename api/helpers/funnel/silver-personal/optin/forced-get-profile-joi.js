@@ -58,6 +58,11 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
 
     try {
 
@@ -90,6 +95,61 @@ module.exports = {
         input.block.done = true;
         input.block.shown = true;
         input.block.next = 'optin::check_profile';
+
+        /**
+         * Update next block
+         */
+
+        updateBlock = input.block.next;
+
+        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+        updateFunnel = splitRes[0];
+        updateId = splitRes[1];
+
+        if (_.isNil(updateFunnel)
+          || _.isNil(updateId)
+        ) {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block parsing error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              updateBlock,
+              block: input.block,
+            },
+          });
+
+        }
+
+        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+        if (getBlock) {
+          getBlock.shown = false;
+          getBlock.done = false;
+          getBlock.next = null;
+        } else {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Block not found',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              updateId,
+              updateFunnel,
+              funnel: input.client.funnels[updateFunnel],
+            },
+          });
+
+        }
 
       }
 
