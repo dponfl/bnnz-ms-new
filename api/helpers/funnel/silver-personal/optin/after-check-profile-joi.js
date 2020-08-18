@@ -61,9 +61,9 @@ module.exports = {
 
     let checkProfileRaw;
     let parserStatus = '';
-    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
+    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkProfile.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.notifications);
+    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkProfile.notifications);
 
     let profileExists = false;
     let profileId = null;

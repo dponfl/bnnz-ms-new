@@ -229,27 +229,98 @@
       },
       "errorSteps": {
         "intervalTime": 1000,
-        "notifications": [
-          {
-            "notificationInterval": 30,
-            "emergencyLevel": "low",
-            "sendMessageToClient": true,
-            "sendMessageToAdmin": true
-          },
-          {
-            "notificationInterval": 300,
-            "emergencyLevel": "medium",
-            "sendMessageToClient": false,
-            "sendMessageToAdmin": true
-          },
-          {
-            "notificationInterval": 3600,
-            "emergencyLevel": "high",
-            "sendMessageToClient": false,
-            "sendMessageToAdmin": true
-          }
-        ],
-        "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+        "checkProfile": {
+          "notifications": [
+            {
+              "notificationInterval": 30,
+              "emergencyLevel": "low",
+              "sendMessageToClient": true,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 300,
+              "emergencyLevel": "medium",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 3600,
+              "emergencyLevel": "high",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            }
+          ],
+          "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+        },
+        "checkRefSubscription": {
+          "notifications": [
+            {
+              "notificationInterval": 30,
+              "emergencyLevel": "low",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": false
+            },
+            {
+              "notificationInterval": 300,
+              "emergencyLevel": "medium",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": false
+            },
+            {
+              "notificationInterval": 3600,
+              "emergencyLevel": "high",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": false
+            }
+          ],
+          "intervals": [1, 1, 2, 3, 5, 8, 13]
+        },
+        "checkLikes": {
+          "notifications": [
+            {
+              "notificationInterval": 30,
+              "emergencyLevel": "low",
+              "sendMessageToClient": true,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 300,
+              "emergencyLevel": "medium",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 3600,
+              "emergencyLevel": "high",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            }
+          ],
+          "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+        },
+        "checkComments": {
+          "notifications": [
+            {
+              "notificationInterval": 30,
+              "emergencyLevel": "low",
+              "sendMessageToClient": true,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 300,
+              "emergencyLevel": "medium",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            },
+            {
+              "notificationInterval": 3600,
+              "emergencyLevel": "high",
+              "sendMessageToClient": false,
+              "sendMessageToAdmin": true
+            }
+          ],
+          "intervals": [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269]
+        }
       },
       "minWordsInComment": 2,
       "inapi": {
@@ -955,13 +1026,18 @@
       }
     ]
   },
-  "schedule": [
-    {
-      "rule": "*/3 * * * *",
-      "location": "pendingActions",
-      "action": "helperOne"
-    }
-  ],
+  "schedule": {
+    "timing": {
+      "processPendingRefSubscription": 60000
+    },
+    "rules": [
+      {
+        "rule": "*/3 * * * *",
+        "location": "pendingActions",
+        "action": "pushPendingRefSubscriptionsJoi"
+      }
+    ]
+  },
   "price": {
     "payment_periods": {
       "period_01": {
@@ -1091,6 +1167,10 @@
         "BEHERO_JOIN_REF_MORE_INFO_SECOND": "Презентация реферальной программы",
         "BEHERO_JOIN_REF_MORE_INFO_SECOND_BTN_01": "Принять участие :ok_hand:",
         "BEHERO_JOIN_REF_MORE_INFO_SECOND_BTN_02": "Не интересно",
+        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
+        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_02": "Обработка запроса займет большее количество времени :clock4:",
+        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
+        "BEHERO_JOIN_REF_WITH_ERROR_MSG": "Пока система проверяем твою подписку, ты можешь выкладывать посты и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры), личную поддержку от команды экспертов, актуальные знания по продвижению и много других полезных функций :sunglasses:",
         "BEHERO_NO_REF_DONE": "Поздравляю! Теперь ты можешь выкладывать посты в BeFame и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры), личную поддержку от команды экспертов, актуальные знания по продвижению и много других полезных функций :sunglasses:",
         "BEHERO_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (аудит аккаунта, хэштеги и геотеги) будут готовы в течении 1-7 рабочих дней :calendar:",
         "BEHERO_OPTIN_COMPLETED_BTN_01": "Пресеты :sunrise:",
@@ -1102,9 +1182,6 @@
         "BEHERO_CHECK_PROFILE_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
         "BEHERO_CHECK_PROFILE_ERROR_MSG_02": "Обработка запроса займет большее количество времени :clock4:",
         "BEHERO_CHECK_PROFILE_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
-        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
-        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_02": "Обработка запроса займет большее количество времени :clock4:",
-        "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
         "$$$$$$$$$$$$$$$$$$$$$_BeHero_Main": "*** ТОКЕНЫ ДЛЯ BeHero Main ***",
         "BEHERO_KEYBOARD_PLACE_POST_MSG": "Чтобы начать продвижение отправь ссылку на новый пост, нажав кнопку: «ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ»",
         "BEHERO_KEYBOARD_PLACE_POST_BTN_01": ":point_right: ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ :point_left:",
@@ -1173,6 +1250,9 @@
         "BEHERO_KEYBOARD_HELP_START_BTN_01": "Как отправить пост :question:",
         "BEHERO_KEYBOARD_HELP_START_BTN_02": "Как выполнять задания :question:",
         "BEHERO_KEYBOARD_HELP_START_BTN_03": "Вернуться к ГЛАВНОЕ МЕНЮ :house:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeHero_Ref_Subscription": "*** ТОКЕНЫ ДЛЯ BeHero Ref Subscription Scheduler активностей ***",
+        "BEHERO_PM_DONE_MSG_01": "Результаты проверки подписок для участия в реферальной программе :clipboard:",
+        "BEHERO_PM_DONE_MSG_02": "Проверка прошла успешно! :tada: Теперь ты участвуешь в реферальной программе. Твоя реферальная ссылка доступна в разделе ГЛАВНОЕ МЕНЮ => ЛИЧНЫЙ КАБИНЕТ => РЕФЕРАЛЬНАЯ ПРОГРАММА",
         "$$$$$$$$$$$$$$$$$$$$$_Tasks": "*** ТОКЕНЫ ДЛЯ ЗАДАЧ ***",
         "MSG_TASK_ACCOUNT": ":calling: Задание для профиля «$CurrentAccount$»",
         "MSG_TASK_LIKE": "Поставь лайк :heart: на пост. Для перехода на пост — нажми кнопку «Открыть пост»:eyes: :point_down:",

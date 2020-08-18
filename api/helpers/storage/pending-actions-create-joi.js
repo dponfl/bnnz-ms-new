@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'storage:pending-actions-create-joi';
 
@@ -62,13 +63,11 @@ module.exports = {
         .description('name of pending action')
         .required(),
       done: Joi
-        .string()
-        .description('done flag')
-        .boolean(),
+        .boolean()
+        .description('done flag'),
       deleted: Joi
-        .string()
-        .description('deleted flag')
-        .boolean(),
+        .boolean()
+        .description('deleted flag'),
       payload: Joi
         .any()
         .description('payload'),

@@ -106,3 +106,9 @@ module.exports = {
 
 };
 
+async function processPendingRefSubscription(client, account, pendingSubscription) {
+
+
+
+}
+

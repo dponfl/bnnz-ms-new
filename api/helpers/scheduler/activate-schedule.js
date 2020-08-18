@@ -54,15 +54,15 @@ module.exports = {
 
     try {
 
-      if (_.has(sails.config.custom.config, 'schedule')) {
+      if (_.has(sails.config.custom.config, 'schedule.rules')) {
 
-        let scheduleConfig = sails.config.custom.config.schedule;
+        let scheduleConfigRules = sails.config.custom.config.schedule.rules;
 
-        for (let i=0; i < scheduleConfig.length; i++) {
+        for (let i=0; i < scheduleConfigRules.length; i++) {
 
-          if (!(_.has(scheduleConfig[i], 'rule')
-            && _.has(scheduleConfig[i], 'action')
-            && _.has(scheduleConfig[i], 'location')
+          if (!(_.has(scheduleConfigRules[i], 'rule')
+            && _.has(scheduleConfigRules[i], 'action')
+            && _.has(scheduleConfigRules[i], 'location')
           )) {
 
             await sails.helpers.general.throwErrorJoi({
@@ -72,20 +72,33 @@ module.exports = {
               message: 'Wrong schedule config format',
               errorName: sails.config.custom.SCHEDULER_ERROR.name,
               payload: {
-                scheduleConfig: scheduleConfig[i],
+                scheduleConfigRules: scheduleConfigRules[i],
               },
             });
 
 
           } else {
 
-            schedules[i] = schedule.scheduleJob(scheduleConfig[i].rule, async function () {
-              await sails.helpers.scheduler[scheduleConfig[i].location][scheduleConfig[i].action]();
+            schedules[i] = schedule.scheduleJob(scheduleConfigRules[i].rule, async function () {
+              await sails.helpers.scheduler[scheduleConfigRules[i].location][scheduleConfigRules[i].action]();
             });
 
           }
 
         }
+
+      } else {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Wrong schedule config format: no "schedule.rules"',
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          payload: {
+            scheduleConfig: sails.config.custom.config.schedule,
+          },
+        });
 
       }
 

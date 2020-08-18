@@ -62,9 +62,9 @@ module.exports = {
     let taskPerformRes;
 
     let parserStatus = '';
-    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
+    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
+    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notificationInterval;
     let infoMessageWasSend = false;
 
     try {

@@ -38,6 +38,14 @@ module.exports = {
       required: true,
     },
 
+    /**
+     * Кол-во попыток выполнить целевое действие
+     */
+
+    actionsPerformed: {
+      type: 'number',
+    },
+
     done: {
       type: 'boolean',
     },
@@ -47,6 +55,10 @@ module.exports = {
     },
 
     payload: {
+      type: 'json',
+    },
+
+    payloadResponse: {
       type: 'json',
     },
 

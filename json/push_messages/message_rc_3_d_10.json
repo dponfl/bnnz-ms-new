@@ -91,7 +91,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -136,7 +136,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -181,7 +181,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -210,7 +210,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -250,7 +250,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -279,7 +279,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -319,7 +319,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -364,7 +364,7 @@
         "initial": true,
         "enabled": true,
         "previous": null,
-        "show_time": "now",
+        "show_time": 0,
         "next": null,
         "shown": false,
         "beforeHelper": null,
@@ -408,7 +408,7 @@
       "initial": true,
       "enabled": true,
       "previous": null,
-      "show_time": "now",
+      "show_time": 0,
       "next": null,
       "shown": false,
       "beforeHelper": null,
@@ -446,7 +446,7 @@
       "initial": true,
       "enabled": true,
       "previous": null,
-      "show_time": "now",
+      "show_time": 0,
       "next": null,
       "shown": false,
       "beforeHelper": null,
@@ -493,7 +493,7 @@
           "initial": true,
           "enabled": true,
           "previous": null,
-          "show_time": "now",
+          "show_time": 0,
           "next": null,
           "shown": false,
           "beforeHelper": null,
@@ -522,43 +522,47 @@
             "inline_keyboard": [
             ]
           }
-        },
+        }
+      }
+    },
+    "noRefJoin": {
+      "instParserErrorResponse": {
         "joinRefCheck": {
-          "id": "join_ref_check_error",
-          "description": "",
-          "actionType": "text",
-          "initial": true,
-          "enabled": true,
-          "previous": null,
-          "show_time": "now",
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-            "html": [
-              {
-                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_01",
-                "style": "",
-                "cr": "DCR"
-              },
-              {
-                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_02",
-                "style": "",
-                "cr": "DCR"
-              },
-              {
-                "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03",
-                "style": "",
-                "cr": ""
-              }
-            ],
-            "inline_keyboard": [
-            ]
-          }
+
+        }
+      }
+    }
+  },
+  "scheduller": {
+    "refProfileSubscriptionCheck": {
+      "joinRefDone": {
+        "id": "done",
+        "description": "",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "BEHERO_PM_DONE_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "BEHERO_PM_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
         }
       }
     }

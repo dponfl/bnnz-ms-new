@@ -65,7 +65,7 @@ module.exports = {
      * Логирование сообщения (critical)
      */
 
-    await LogProcessor.error({
+    await LogProcessor.critical({
       message: message,
       clientGuid,
       accountGuid,

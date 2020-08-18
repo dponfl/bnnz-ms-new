@@ -62,9 +62,12 @@ module.exports = {
     let taskPerformRes;
 
     let parserStatus = '';
-    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.intervals;
+    const parserRequestIntervalsLikes = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
+    const notificationIntervalLikes = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notificationInterval;
+    const parserRequestIntervalsComments = sails.config.custom.config.parsers.inst.errorSteps.checkComments.intervals;
+    const notificationIntervalComments = sails.config.custom.config.parsers.inst.errorSteps.checkComments.notificationInterval;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.notificationInterval;
+
     let infoMessageWasSend = false;
 
     let momentStart;
@@ -280,7 +283,7 @@ module.exports = {
 
       momentStart = moment();
 
-      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
+      while (parserStatus !== 'success' && i < parserRequestIntervalsLikes.length) {
 
         checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
 
@@ -297,7 +300,7 @@ module.exports = {
 
           const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
 
-          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+          if (requestDuration > notificationIntervalLikes && !infoMessageWasSend) {
 
             /**
              * Трансформируем блок в информационное сообщение о факапе API
@@ -331,9 +334,9 @@ module.exports = {
 
           // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
 
-          sails.log.error(`${moduleName} Instagram parser error on likes check: enable interval: ${parserRequestIntervals[i]}`);
+          sails.log.error(`${moduleName} Instagram parser error on likes check: enable interval: ${parserRequestIntervalsLikes[i]}`);
 
-          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+          await sleep(parserRequestIntervalsLikes[i] * parserRequestIntervalTime);
 
         }
 
@@ -404,7 +407,7 @@ module.exports = {
 
       momentStart = moment();
 
-      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
+      while (parserStatus !== 'success' && i < parserRequestIntervalsComments.length) {
 
         checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
 
@@ -421,7 +424,7 @@ module.exports = {
 
           const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
 
-          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+          if (requestDuration > notificationIntervalComments && !infoMessageWasSend) {
 
             /**
              * Трансформируем блок в информационное сообщение о факапе API
@@ -455,9 +458,9 @@ module.exports = {
 
           // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
 
-          sails.log.error(`${moduleName} Instagram parser error on comments check: enable interval: ${parserRequestIntervals[i]}`);
+          sails.log.error(`${moduleName} Instagram parser error on comments check: enable interval: ${parserRequestIntervalsComments[i]}`);
 
-          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+          await sleep(parserRequestIntervalsComments[i] * parserRequestIntervalTime);
 
         }
 
