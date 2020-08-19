@@ -1,6 +1,8 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
 
 const moduleName = 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi';
 
@@ -56,6 +58,12 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+
+    let checkProfileSubscriptionResRaw;
+    let parserStatus = '';
+    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
+    const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.notifications);
 
 
     try {
@@ -166,7 +174,16 @@ module.exports = {
         profilesList.push(elem.inst_profile);
       });
 
-      const flag = profilesList.length < 2 ? 0 : _.random(0, 3);
+      notifications.map((item) => {
+        item.clientNotified = false;
+        item.adminNotified = false;
+      });
+
+      /**
+       * Парсером проверяем подписки профиля
+       */
+
+      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
       const checkProfileSubscriptionParams = {
         checkProfile: currentAccount.inst_profile,
@@ -174,68 +191,98 @@ module.exports = {
         profilesList,
       };
 
-      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+      let i = 0;
 
-      if (checkProfileSubscriptionResRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: wrong checkProfileSubscriptionJoi response:
-        // checkProfileSubscriptionParams: ${JSON.stringify(checkProfileSubscriptionParams, null, 3)}
-        // checkProfileSubscriptionResRaw: ${JSON.stringify(checkProfileSubscriptionResRaw, null, 3)}`);
+      const momentStart = moment();
 
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'Wrong checkProfileSubscriptionJoi response',
+      while (parserStatus !== 'success'
+        && i < parserRequestIntervals.length
+        ) {
+
+        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+        parserStatus = checkProfileSubscriptionResRaw.status;
+
+        if (parserStatus !== 'success') {
+
+          /**
+           * Проверяем условие отправки информационного сообщения клиенту
+           * и логируем факт факапа парсера с фиксацией текущего интервала
+           */
+
+          const momentNow = moment();
+
+          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+          /**
+           * Логируем ошибку парсера
+           */
+
+          await LogProcessor.error({
+            message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+            location: moduleName,
+            payload: {
+              parserRequestInterval: parserRequestIntervals[i],
+              requestDuration,
+            },
+          });
+
+          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        }
+
+        i++;
+
+      }
+
+      if (parserStatus !== 'success') {
+
+        /**
+         * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+         */
+
+        /**
+         * Создаём запись для последующей обработки шедуллером
+         */
+
+        const pendingActionsCreateParams = {
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR.name,
-          payload: {
-            checkProfileSubscriptionParams,
-            checkProfileSubscriptionResRaw,
-          },
-        });
+          pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
+          actionsPerformed: 1,
+          payload: profilesList,
+        };
 
-      }
+        const pendingActionsCreateRaw = await sails.helpers.storage.pendingActionsCreateJoi(pendingActionsCreateParams);
 
-      const checkProfileSubscriptionRes = checkProfileSubscriptionResRaw.payload;
+        if (pendingActionsCreateRaw.status == null || pendingActionsCreateRaw.status !== 'ok') {
 
-      /**
-       * устанавливаем в RefUp статус signed для аккаунтов профилей, на которые осуществлена подписка
-       */
+          await LogProcessor.critical({
+            message: 'PendingAction record create error',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+            location: moduleName,
+            payload: {
+              pendingActionsCreateRaw,
+            },
+          });
 
-      if (checkProfileSubscriptionRes.subscribed.length > 0) {
-
-        const signedAccountGuid = [];
-
-        _.forEach(checkProfileSubscriptionRes.subscribed, (profile) => {
-
-          const refListRec = _.find(refAccountRecRaw.payload, {inst_profile: profile});
-
-          if (refListRec) {
-            signedAccountGuid.push(refListRec.guid);
-          }
-
-        });
-
-        await sails.helpers.storage.refUpUpdateJoi({
-          criteria: {
-            account_guid: currentAccount.guid,
-            ref_account_guid: signedAccountGuid,
-          },
-          data: {
-            signed: true,
-          },
-          createdBy: moduleName,
-        });
-
-      }
-
-      if (checkProfileSubscriptionRes.allSubscribed) {
+        }
 
         /**
-         * Подписка на все профили была выполнена
+         * Выполняем переход на соответствующий блок воронки
          */
 
-        input.block.next = 'noRefJoin::join_ref_done';
+        input.block.next = 'noRefJoin::join_ref_check_error';
         input.block.done = true;
         input.block.shown = true;
 
@@ -252,7 +299,6 @@ module.exports = {
         if (_.isNil(updateFunnel)
           || _.isNil(updateId)
         ) {
-          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
 
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
@@ -261,153 +307,10 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
-            payload: {
-              block: input.block,
-              nextBlock: input.block.next,
-            },
-          });
-
-        }
-
-        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-        if (getBlock) {
-          getBlock.shown = false;
-          getBlock.done = false;
-          getBlock.previous = 'noRefJoin::join_ref_check';
-        } else {
-          // throw new Error(`${moduleName}, error: block not found:
-          //    updateBlock: ${updateBlock}
-          //    updateFunnel: ${updateFunnel}
-          //    updateId: ${updateId}
-          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-            location: moduleName,
-            message: 'Block not found',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
-            payload: {
-              updateId,
-              updateFunnel,
-              funnel: input.client.funnels[updateFunnel],
-            },
-          });
-
-        }
-
-        /**
-         * Update 'noRefJoin::join_ref_missed_profiles' block
-         */
-
-        updateBlock = 'noRefJoin::join_ref_missed_profiles';
-
-        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-        updateFunnel = splitRes[0];
-        updateId = splitRes[1];
-
-        if (_.isNil(updateFunnel)
-          || _.isNil(updateId)
-        ) {
-          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-            location: moduleName,
-            message: 'Block parsing error',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
               updateBlock,
-            },
-          });
-
-        }
-
-        getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-        if (getBlock) {
-          getBlock.shown = true;
-          getBlock.done = true;
-          getBlock.previous = 'noRefJoin::join_ref_check';
-        } else {
-          // throw new Error(`${moduleName}, error: block not found:
-          //    updateBlock: ${updateBlock}
-          //    updateFunnel: ${updateFunnel}
-          //    updateId: ${updateId}
-          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-            location: moduleName,
-            message: 'Block not found',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
-            payload: {
-              updateId,
-              updateFunnel,
-              funnel: input.client.funnels[updateFunnel],
-            },
-          });
-
-        }
-
-
-        await sails.helpers.funnel.afterHelperGenericJoi({
-          client: input.client,
-          block: input.block,
-          msg: input.msg,
-          next: true,
-          previous: true,
-          switchFunnel: true,
-          createdBy: moduleName,
-        });
-
-
-      } else {
-
-        /**
-         * Подписка была выполнена НЕ на все профили
-         */
-
-        input.block.next = 'noRefJoin::join_ref_missed_profiles';
-        input.block.done = true;
-        input.block.shown = true;
-
-        /**
-         * Update input.block.next block
-         */
-
-        updateBlock = input.block.next;
-
-        splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-        updateFunnel = splitRes[0];
-        updateId = splitRes[1];
-
-        if (_.isNil(updateFunnel)
-          || _.isNil(updateId)
-        ) {
-          // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-            location: moduleName,
-            message: 'Block parsing error',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
-            payload: {
               block: input.block,
-              updateBlock,
             },
           });
 
@@ -421,11 +324,6 @@ module.exports = {
           getBlock.previous = 'noRefJoin::join_ref_check';
           getBlock.next = null;
         } else {
-          // throw new Error(`${moduleName}, error: block not found:
-          //    updateBlock: ${updateBlock}
-          //    updateFunnel: ${updateFunnel}
-          //    updateId: ${updateId}
-          //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
 
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
@@ -434,9 +332,9 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            errorName: sails.config.custom.FUNNELS_ERROR,
             payload: {
-              updateBlock,
+              updateId,
               updateFunnel,
               funnel: input.client.funnels[updateFunnel],
             },
@@ -449,11 +347,276 @@ module.exports = {
           block: input.block,
           msg: input.msg,
           next: true,
-          previous: false,
+          previous: true,
           switchFunnel: true,
           createdBy: moduleName,
         });
 
+      } else {
+
+        /**
+         * Корректный ответ от парсера БЫЛ ПОЛУЧЕН
+         */
+
+        const checkProfileSubscriptionRes = checkProfileSubscriptionResRaw.payload;
+
+        /**
+         * устанавливаем в RefUp статус signed для аккаунтов профилей, на которые осуществлена подписка
+         */
+
+        if (checkProfileSubscriptionRes.subscribed.length > 0) {
+
+          const signedAccountGuid = [];
+
+          _.forEach(checkProfileSubscriptionRes.subscribed, (profile) => {
+
+            const refListRec = _.find(refAccountRecRaw.payload, {inst_profile: profile});
+
+            if (refListRec) {
+              signedAccountGuid.push(refListRec.guid);
+            }
+
+          });
+
+          await sails.helpers.storage.refUpUpdateJoi({
+            criteria: {
+              account_guid: currentAccount.guid,
+              ref_account_guid: signedAccountGuid,
+            },
+            data: {
+              signed: true,
+            },
+            createdBy: moduleName,
+          });
+
+        }
+
+        if (checkProfileSubscriptionRes.allSubscribed) {
+
+          /**
+           * Подписка на все профили была выполнена
+           */
+
+          input.block.next = 'noRefJoin::join_ref_done';
+          input.block.done = true;
+          input.block.shown = true;
+
+          /**
+           * Update input.block.next block
+           */
+
+          updateBlock = input.block.next;
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          if (_.isNil(updateFunnel)
+            || _.isNil(updateId)
+          ) {
+            // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block parsing error',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                block: input.block,
+                nextBlock: input.block.next,
+              },
+            });
+
+          }
+
+          getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.shown = false;
+            getBlock.done = false;
+            getBlock.previous = 'noRefJoin::join_ref_check';
+          } else {
+            // throw new Error(`${moduleName}, error: block not found:
+            //    updateBlock: ${updateBlock}
+            //    updateFunnel: ${updateFunnel}
+            //    updateId: ${updateId}
+            //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                updateId,
+                updateFunnel,
+                funnel: input.client.funnels[updateFunnel],
+              },
+            });
+
+          }
+
+          /**
+           * Update 'noRefJoin::join_ref_missed_profiles' block
+           */
+
+          updateBlock = 'noRefJoin::join_ref_missed_profiles';
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          if (_.isNil(updateFunnel)
+            || _.isNil(updateId)
+          ) {
+            // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block parsing error',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                updateBlock,
+              },
+            });
+
+          }
+
+          getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.shown = true;
+            getBlock.done = true;
+            getBlock.previous = 'noRefJoin::join_ref_check';
+          } else {
+            // throw new Error(`${moduleName}, error: block not found:
+            //    updateBlock: ${updateBlock}
+            //    updateFunnel: ${updateFunnel}
+            //    updateId: ${updateId}
+            //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                updateId,
+                updateFunnel,
+                funnel: input.client.funnels[updateFunnel],
+              },
+            });
+
+          }
+
+
+          await sails.helpers.funnel.afterHelperGenericJoi({
+            client: input.client,
+            block: input.block,
+            msg: input.msg,
+            next: true,
+            previous: true,
+            switchFunnel: true,
+            createdBy: moduleName,
+          });
+
+
+        } else {
+
+          /**
+           * Подписка была выполнена НЕ на все профили
+           */
+
+          input.block.next = 'noRefJoin::join_ref_missed_profiles';
+          input.block.done = true;
+          input.block.shown = true;
+
+          /**
+           * Update input.block.next block
+           */
+
+          updateBlock = input.block.next;
+
+          splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+          updateFunnel = splitRes[0];
+          updateId = splitRes[1];
+
+          if (_.isNil(updateFunnel)
+            || _.isNil(updateId)
+          ) {
+            // throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block parsing error',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                block: input.block,
+                updateBlock,
+              },
+            });
+
+          }
+
+          getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+          if (getBlock) {
+            getBlock.shown = false;
+            getBlock.done = false;
+            getBlock.previous = 'noRefJoin::join_ref_check';
+            getBlock.next = null;
+          } else {
+            // throw new Error(`${moduleName}, error: block not found:
+            //    updateBlock: ${updateBlock}
+            //    updateFunnel: ${updateFunnel}
+            //    updateId: ${updateId}
+            //    input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                updateBlock,
+                updateFunnel,
+                funnel: input.client.funnels[updateFunnel],
+              },
+            });
+
+          }
+
+          await sails.helpers.funnel.afterHelperGenericJoi({
+            client: input.client,
+            block: input.block,
+            msg: input.msg,
+            next: true,
+            previous: false,
+            switchFunnel: true,
+            createdBy: moduleName,
+          });
+
+        }
 
       }
 
