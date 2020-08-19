@@ -7,6 +7,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -40,6 +41,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -85,6 +87,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -132,6 +135,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -189,6 +193,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -241,6 +246,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -284,6 +290,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -324,6 +331,7 @@
       "enabled": false,
       "previous": null,
       "next": null,
+      "beforeHelper": null,
       "message": {
         "html": [
           {
@@ -361,5 +369,33 @@
       ]
     }
   ],
-  "refProfileSubscriptionCheck": []
+  "refProfileSubscriptionCheck": [
+    {
+      "id": "start",
+      "description": "",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "beforeHelper": "refProfileSubscriptionCheck::beforeCheckProfilesSubscriptionJoi",
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "XXX",
+            "text": "XXX",
+            "action": null
+          }
+        ]
+      ]
+    }
+  ]
 }

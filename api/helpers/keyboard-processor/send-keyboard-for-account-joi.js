@@ -45,6 +45,9 @@ module.exports = {
         .required(),
       additionalTokens: Joi
         .any(),
+      additionalData: Joi
+        .any()
+        .description('additional data to pass to beforeHelper'),
     });
 
     let input;
@@ -154,10 +157,15 @@ module.exports = {
 
         const sendKeyboardParams = {
           client: input.client,
+          keyboard: activeKeyboard,
           messageData: activeKeyboard.message,
           keyboardData: activeKeyboard.buttons,
           additionalTokens: input.additionalTokens,
         };
+
+        if (input.additionalData != null) {
+          sendKeyboardParams.additionalData = input.additionalData;
+        }
 
         const sendKeyboardJoiRaw = await sails.helpers.keyboardProcessor.sendKeyboardJoi(sendKeyboardParams);
 

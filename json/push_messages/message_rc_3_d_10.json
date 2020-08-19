@@ -533,10 +533,10 @@
       }
     }
   },
-  "scheduller": {
+  "scheduler": {
     "refProfileSubscriptionCheck": {
       "joinRefDone": {
-        "id": "done",
+        "id": "join_ref_done",
         "description": "",
         "actionType": "text",
         "initial": true,
