@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'keyboards:silver-personal:ref-profile-subscription-check:before-check-profiles-subscription-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'keyboards:silver-personal:ref-profile-subscription-check:before-check-profiles-subscription-joi',
 
 
-  description: 'module:helper',
+  description: 'keyboards:silver-personal:ref-profile-subscription-check:before-check-profiles-subscription-joi',
 
 
   inputs: {
@@ -43,13 +43,23 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
+      keyboard: Joi
+        .any()
+        .description('keyboard')
+        .required(),
+      payload: Joi
+        .any()
+        .description('{text} object')
+        .required(),
+      additionalData: Joi
+        .any()
+        .description('additional data'),
     });
 
     let input;
 
     let clientGuid;
     let accountGuid;
-
 
 
     try {
@@ -60,37 +70,23 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+      const profiles = input.additionalData.profiles;
 
-      currentAccount.keyboard = "***";
+      let resHtml = input.payload.text;
 
-      await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
-        createdBy: moduleName,
-      });
+      let refProfilesList = '';
 
-      const sendKeyboardForAccountParams = {
-        client: input.client,
-      };
-
-      const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
-
-      if (sendKeyboardForAccountRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
-        sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
-        sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+      for (const refListElem of profiles) {
+        refProfilesList = refProfilesList + `<a href="${sails.config.custom.config.general.instagram_prefix}${refListElem}">${refListElem}</a>${sails.config.custom.SCR}`;
       }
 
+      refProfilesList = refProfilesList + sails.config.custom.SCR;
+
+      resHtml = _.replace(resHtml, '$RefMissedProfilesList$', refProfilesList);
 
       return exits.success({
-        status: 'ok',
-        message: `${moduleName} performed`,
-        payload: {},
-      })
+        text: resHtml,
+      });
 
     } catch (e) {
 

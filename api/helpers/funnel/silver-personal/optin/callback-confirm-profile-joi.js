@@ -94,7 +94,7 @@ module.exports = {
             message: 'Wrong callback data',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               inputQueryData: input.query.data,
             },

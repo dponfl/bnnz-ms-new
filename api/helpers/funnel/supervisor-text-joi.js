@@ -131,7 +131,7 @@ module.exports = {
               message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 forcedHelper: forcedReplyBlock.forcedHelper,
               },
@@ -150,7 +150,7 @@ module.exports = {
             message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR,
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               currentFunnel: input.client.funnels[input.client.current_funnel],
               messageId: input.msg.reply_to_message.message_id,
@@ -228,7 +228,7 @@ module.exports = {
           message: sails.config.custom.SUPERVISORTEXTHELPER_INITIAL_BLOCK_FIND_ERROR,
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             currentFunnel: input.client.funnels[input.client.current_funnel],
           },

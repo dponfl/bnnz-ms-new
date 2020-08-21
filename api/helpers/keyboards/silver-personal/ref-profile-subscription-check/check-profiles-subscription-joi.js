@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'keyboards:silver-personal:no-ref:join-ref-joi';
+const moduleName = 'keyboards:silver-personal:ref-profile-subscription-check:check-profiles-subscription-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'keyboards:silver-personal:no-ref:join-ref-joi',
+  friendlyName: 'keyboards:silver-personal:ref-profile-subscription-check:check-profiles-subscription-joi',
 
 
-  description: 'keyboards:silver-personal:no-ref:join-ref-joi',
+  description: 'keyboards:silver-personal:ref-profile-subscription-check:check-profiles-subscription-joi',
 
 
   inputs: {
@@ -41,7 +41,7 @@ module.exports = {
     const schema = Joi.object({
       client: Joi
         .any()
-        .description('client object')
+        .description('Client record')
         .required(),
     });
 
@@ -50,7 +50,7 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
-    let currentAccount;
+
 
     try {
 
@@ -59,27 +59,25 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
         return o.guid === currentAccount.guid;
       });
 
       /**
-       * Update noRefJoin funnel to the initial state to enable the client to perform it again
+       * Update refProfileSubscriptionCheck funnel to the initial state to enable the client to perform it again
        */
 
       const loadInitialFunnelsJoiParams = {
         client: input.client,
         clientCategory: input.client.accounts[currentAccountInd]['service']['funnel_name'],
-        funnelName: 'noRefJoin',
+        funnelName: 'refProfileSubscriptionCheck',
       };
 
       const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsJoi(loadInitialFunnelsJoiParams);
 
       if (loadInitialFunnelsJoiRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: wrong loadInitialFunnelsJoi response:
-        //       loadInitialFunnelsJoiParams: ${JSON.stringify(loadInitialFunnelsJoiParams, null, 3)}
-        //       loadInitialFunnelsJoiRaw: ${JSON.stringify(loadInitialFunnelsJoiRaw, null, 3)}`);
 
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
@@ -101,10 +99,10 @@ module.exports = {
       currentAccount.keyboard = null;
 
       /**
-       * Установить в client, что выполняется воронка "noRefJoin"
+       * Установить в client, что выполняется воронка "refProfileSubscriptionCheck"
        */
 
-      input.client.current_funnel = 'noRefJoin';
+      input.client.current_funnel = 'refProfileSubscriptionCheck';
 
       const initialBlock = _.find(input.client.funnels[input.client.current_funnel],
         {initial: true});
@@ -114,7 +112,7 @@ module.exports = {
       await sails.helpers.funnel.proceedNextBlockJoi({
         client: input.client,
         funnelName: input.client.current_funnel,
-        blockId: "join_ref_prepare_list",
+        blockId: "join_ref_check",
         createdBy: moduleName,
       });
 
@@ -128,37 +126,26 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorMsg = 'General error';
-      //
-      // sails.log.error(`${moduleName}, Error details:
-      // Platform error message: ${errorMsg}
-      // Error name: ${e.name || 'no name'}
-      // Error message: ${e.message || 'no message'}
-      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-      //
-      // throw {err: {
-      //     module: `${moduleName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          }
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          }
         });
         return exits.success({
           status: 'ok',

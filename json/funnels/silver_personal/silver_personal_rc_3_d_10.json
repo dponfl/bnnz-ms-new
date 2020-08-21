@@ -1486,7 +1486,35 @@
       }
     }
   ],
-  "refProfileSubscriptionCheck": [],
+  "refProfileSubscriptionCheck": [
+    {
+      "id": "join_ref_check",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "refProfileSubscriptionCheck::afterSubscriptionCheckJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KB_JOIN_REF_CHECK_MSG",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
   "noRefInfo": [
     {
       "id": "more_info_one",

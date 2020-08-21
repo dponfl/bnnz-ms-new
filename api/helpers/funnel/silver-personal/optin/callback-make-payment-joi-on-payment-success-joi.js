@@ -107,7 +107,7 @@ module.exports = {
           message: 'Wrong reallocateRoomsToAccountJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             reallocateRoomsToAccountJoiParams,
             reallocateRoomsToAccountJoiRaw,
@@ -195,7 +195,7 @@ module.exports = {
           message: 'Initial block not found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             currentFunnelName: input.client.current_funnel,
             currentFunnel: input.client.funnels[input.client.current_funnel],

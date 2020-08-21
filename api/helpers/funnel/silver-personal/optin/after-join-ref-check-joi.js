@@ -106,7 +106,7 @@ module.exports = {
           message: 'Wrong refUpGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             refUpGetJoiParams,
             refUpRecsRaw,
@@ -138,7 +138,7 @@ module.exports = {
           message: 'Wrong accountGetJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,
@@ -158,7 +158,7 @@ module.exports = {
           message: 'Wrong amount of records found',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             accountGetJoiParams,
             refAccountRecRaw,
@@ -168,15 +168,20 @@ module.exports = {
       }
 
       const profilesList = [];
+      const listProfilesAndAccountGuids = [];
 
       _.forEach(refAccountRecRaw.payload, (elem) => {
         profilesList.push(elem.inst_profile);
+        listProfilesAndAccountGuids.push({
+          profile: elem.inst_profile,
+          accountGuid: elem.guid,
+        });
       });
 
-      notifications.map((item) => {
-        item.clientNotified = false;
-        item.adminNotified = false;
-      });
+      // notifications.map((item) => {
+      //   item.clientNotified = false;
+      //   item.adminNotified = false;
+      // });
 
       /**
        * Парсером проверяем подписки профиля
@@ -206,8 +211,7 @@ module.exports = {
         if (parserStatus !== 'success') {
 
           /**
-           * Проверяем условие отправки информационного сообщения клиенту
-           * и логируем факт факапа парсера с фиксацией текущего интервала
+           * Логируем факт факапа парсера с фиксацией текущего интервала
            */
 
           const momentNow = moment();
@@ -304,7 +308,10 @@ module.exports = {
           accountGuid,
           pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
           actionsPerformed: 1,
-          payload: profilesList,
+          payload: {
+            profiles: profilesList,
+            listProfilesAndAccountGuids,
+          },
         };
 
         const pendingActionsCreateRaw = await sails.helpers.storage.pendingActionsCreateJoi(pendingActionsCreateParams);
@@ -356,7 +363,7 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateBlock,
               block: input.block,
@@ -381,7 +388,7 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateId,
               updateFunnel,
@@ -473,7 +480,7 @@ module.exports = {
               message: 'Block parsing error',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 block: input.block,
                 updateBlock,
@@ -502,7 +509,7 @@ module.exports = {
               message: 'Block not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 updateId,
                 updateFunnel,
@@ -534,7 +541,7 @@ module.exports = {
               message: 'Block parsing error',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 updateBlock,
               },
@@ -562,7 +569,7 @@ module.exports = {
               message: 'Block not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 updateId,
                 updateFunnel,
@@ -616,7 +623,7 @@ module.exports = {
               message: 'Block parsing error',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 updateBlock,
                 block: input.block,
@@ -646,7 +653,7 @@ module.exports = {
               message: 'Block not found',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
                 updateId,
                 updateFunnel,

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'funnel:next-block-activation-generic-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'funnel:next-block-activation-generic-joi',
 
 
-  description: 'module:helper',
+  description: 'funnel:next-block-activation-generic-joi',
 
 
   inputs: {
@@ -41,15 +41,70 @@ module.exports = {
     const schema = Joi.object({
       client: Joi
         .any()
-        .description('Client record')
+        .description('client record')
+        .required(),
+      account: Joi
+        .any()
+        .description('current account record')
         .required(),
       block: Joi
         .any()
         .description('Current funnel block')
         .required(),
+      updateCurrentBlock: Joi
+        .boolean()
+        .description('flag if to update block')
+        .default(true),
+      currentBlockDone: Joi
+        .boolean()
+        .description('flag if to set block.done = true')
+        .default(true),
+      currentBlockShown: Joi
+        .boolean()
+        .description('flag if to set block.shown = true')
+        .default(true),
+      updateElement: Joi
+        .string()
+        .descirption('block element to be updated, e.g. "next"')
+        .required(),
+      updateElementValue: Joi
+        .string()
+        .description('new value for the block element')
+        .required(),
+      updateElementDone: Joi
+        .boolean()
+        .description('flag if to set "updateElement".done = false')
+        .default(false),
+      updateElementShown: Joi
+        .boolean()
+        .description('flag if to set "updateElement".shown = false')
+        .default(false),
+      updateElementPreviousValue: Joi
+        .string()
+        .description('value to set "updateElement".previous'),
+      createdBy: Joi
+        .string()
+        .description('source of update')
+        .required(),
+      afterHelperNext: Joi
+        .boolean()
+        .description('value to set for afterHelperGenericJoi "next" parameter')
+        .default(true),
+      afterHelperPrevious: Joi
+        .boolean()
+        .description('value to set for afterHelperGenericJoi "previous" parameter')
+        .default(true),
+      afterHelperSwitchFunnel: Joi
+        .boolean()
+        .description('value to set for afterHelperGenericJoi "switchFunnel" parameter')
+        .default(true),
       msg: Joi
         .any()
         .description('Message received'),
+      callAfterHelperGeneric: Joi
+        .boolean()
+        .description('flag to call  afterHelperGenericJoi')
+        .default(true),
     });
 
     let input;
@@ -57,12 +112,12 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
-
     let updateBlock;
     let getBlock;
     let splitRes;
     let updateFunnel;
     let updateId;
+
 
     try {
 
@@ -71,12 +126,23 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-
       /**
-       * Update xxx::xxx block
+       * Выполняем переход на input.updateElementValue
        */
 
-      updateBlock = 'xxx::xxx';
+      if (input.updateCurrentBlock) {
+
+        input.block[input.updateElement] = input.updateElementValue;
+        input.block.done = input.currentBlockDone;
+        input.block.shown = input.currentBlockShown;
+
+      }
+
+      /**
+       * Update input.block[input.updateElement] block
+       */
+
+      updateBlock = input.block[input.updateElement];
 
       splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
       updateFunnel = splitRes[0];
@@ -105,9 +171,11 @@ module.exports = {
       getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.shown = false;
-        getBlock.done = false;
-        getBlock.next = null;
+        getBlock.shown = input.updateElementShown;
+        getBlock.done = input.updateElementDone;
+        if (input.updateElementPreviousValue) {
+          getBlock.previous = input.updateElementPreviousValue;
+        }
       } else {
 
         await sails.helpers.general.throwErrorJoi({
@@ -127,15 +195,20 @@ module.exports = {
 
       }
 
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.msg,
-        next: true,
-        previous: true,
-        switchFunnel: true,
-        createdBy: moduleName,
-      });
+      if (input.callAfterHelperGeneric) {
+
+        await sails.helpers.funnel.afterHelperGenericJoi({
+          client: input.client,
+          block: input.block,
+          msg: input.msg,
+          next: input.afterHelperNext,
+          previous: input.afterHelperPrevious,
+          switchFunnel: input.afterHelperSwitchFunnel,
+          createdBy: `${input.createdBy} => ${moduleName}`,
+        });
+
+      }
+
 
       return exits.success({
         status: 'ok',
@@ -154,6 +227,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
+            input,
           }
         });
       } else {
@@ -164,6 +238,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
+            input,
           }
         });
         return exits.success({

@@ -169,14 +169,14 @@ module.exports = {
       }
 
       const profilesList = [];
+      const listProfilesAndAccountGuids = [];
 
       _.forEach(refAccountRecRaw.payload, (elem) => {
         profilesList.push(elem.inst_profile);
-      });
-
-      notifications.map((item) => {
-        item.clientNotified = false;
-        item.adminNotified = false;
+        listProfilesAndAccountGuids.push({
+          profile: elem.inst_profile,
+          accountGuid: elem.guid,
+        });
       });
 
       /**
@@ -199,15 +199,14 @@ module.exports = {
         && i < parserRequestIntervals.length
         ) {
 
-        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
 
         parserStatus = checkProfileSubscriptionResRaw.status;
 
         if (parserStatus !== 'success') {
 
           /**
-           * Проверяем условие отправки информационного сообщения клиенту
-           * и логируем факт факапа парсера с фиксацией текущего интервала
+           * Логируем факт факапа парсера с фиксацией текущего интервала
            */
 
           const momentNow = moment();
@@ -255,7 +254,10 @@ module.exports = {
           accountGuid,
           pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
           actionsPerformed: 1,
-          payload: profilesList,
+          payload: {
+            profiles: profilesList,
+            listProfilesAndAccountGuids,
+          },
         };
 
         const pendingActionsCreateRaw = await sails.helpers.storage.pendingActionsCreateJoi(pendingActionsCreateParams);
@@ -307,7 +309,7 @@ module.exports = {
             message: 'Block parsing error',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateBlock,
               block: input.block,
@@ -332,7 +334,7 @@ module.exports = {
             message: 'Block not found',
             clientGuid,
             accountGuid,
-            errorName: sails.config.custom.FUNNELS_ERROR,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               updateId,
               updateFunnel,

@@ -1,17 +1,18 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
-const moduleName = 'scheduler:pending-actions:push-pending-ref-subscriptions-joi';
+const moduleName = 'storage:pending-actions-get-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'scheduler:pending-actions:push-pending-ref-subscriptions-joi',
+  friendlyName: 'storage:pending-actions-get-joi',
 
 
-  description: 'scheduler:pending-actions:push-pending-ref-subscriptions-joi',
+  description: 'storage:pending-actions-get-joi',
 
 
   inputs: {
@@ -39,42 +40,28 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     const schema = Joi.object({
-      someOne: Joi
+      criteria: Joi
         .any()
-        .description('XXX')
+        .description('search criteria')
         .required(),
-      someTwo: Joi
-        .any()
-        .description('XXX')
-        .required(),
-      someThree: Joi
-        .any()
-        .description('XXX'),
     });
 
     let input;
 
-    let clientGuid;
-    let accountGuid;
-
+    let pendingActionsRecs;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
-
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
+      pendingActionsRecs = await PendingActions.find({
+        where: input.criteria,
       });
-
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
-        payload: {},
+        payload: pendingActionsRecs,
       })
 
     } catch (e) {
@@ -85,12 +72,18 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            criteria: input.criteria,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            criteria: input.criteria,
+          },
         });
         return exits.success({
           status: 'ok',
@@ -104,10 +97,4 @@ module.exports = {
   }
 
 };
-
-async function processPendingRefSubscription(client, account, pendingSubscription) {
-
-
-
-}
 
