@@ -565,29 +565,50 @@ module.exports = {
                * Подписка на все профили была выполнена
                */
 
+              /**
+               * Выполняем переход на join_ref_done
+               */
+
+              const nextBlockActivationGenericParams = {
+                client: input.client,
+                account: currentAccount,
+                block: input.block,
+                updateElement: 'next',
+                updateElementValue: 'refProfileSubscriptionCheck::join_ref_done',
+                updateElementPreviousValue: 'refProfileSubscriptionCheck::join_ref_check',
+                createdBy: moduleName,
+                msg: input.msg,
+              };
+
+              await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
 
 
             } else {
 
+              /**
+               * Подписка была выполнена НЕ на все профили
+               */
 
+              const moveToKeyboardGenericParams = {
+
+                client: input.client,
+                block: input.block,
+                keyboardName: 'refProfileSubscriptionCheck::start',
+                afterHelperNext: false,
+                msg: input.msg,
+                createdBy: moduleName,
+
+              };
+
+              await sails.helpers.funnel.moveToKeyboardGenericJoi(moveToKeyboardGenericParams);
 
             }
-
-
-
 
           }
 
         }
 
       }
-
-
-
-
-
-
-
 
 
       return exits.success({
@@ -607,6 +628,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
+            input,
           }
         });
       } else {
@@ -617,6 +639,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
+            input,
           }
         });
         return exits.success({
