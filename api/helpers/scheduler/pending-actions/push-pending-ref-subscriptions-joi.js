@@ -512,13 +512,109 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
        * Клиент находится в какой-то клавиатуре без активный действий
        */
 
-      if (_.get(pendingSubscription, 'payloadResponse.allSubscribed', false)) {
+      if (!_.has(pendingSubscription, 'payloadResponse.allSubscribed')) {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No "payloadResponse.allSubscribed" at pendingSubscription',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          payload: {
+            pendingSubscription,
+          },
+        });
+
+      }
+
+      if (pendingSubscription.payloadResponse.allSubscribed) {
 
         /**
          * Подписка на все требуемые профили ВЫПОЛНЕНА
          */
 
+        const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+          client,
+          messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.joinRefDone,
+        });
 
+        await sails.helpers.storage.pendingActionsUpdateJoi({
+          criteria: {
+            guid: pendingSubscription.guid,
+          },
+          data: {
+            done: true,
+          }
+        });
+
+        account.keyboard = 'home::start';
+
+        await sails.helpers.storage.clientUpdateJoi({
+          criteria: {guid: client.guid},
+          data: client,
+          createdBy: moduleName,
+        });
+
+        const sendKeyboardForAccountParams = {
+          client,
+        };
+
+        const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+
+        if (sendKeyboardForAccountRaw.status !== 'ok') {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong sendKeyboardForAccountJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              sendKeyboardForAccountParams,
+              sendKeyboardForAccountRaw,
+            },
+          });
+
+        }
+
+      } else {
+
+        /**
+         * Подписка на все требуемые профили НЕ ВЫПОЛНЕНА
+         */
+
+        account.keyboard = 'refProfileSubscriptionCheck::start';
+
+        await sails.helpers.storage.clientUpdateJoi({
+          criteria: {guid: client.guid},
+          data: client,
+          createdBy: moduleName,
+        });
+
+        const sendKeyboardForAccountParams = {
+          client,
+        };
+
+        const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+
+        if (sendKeyboardForAccountRaw.status !== 'ok') {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong sendKeyboardForAccountJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              sendKeyboardForAccountParams,
+              sendKeyboardForAccountRaw,
+            },
+          });
+
+        }
 
       }
 
