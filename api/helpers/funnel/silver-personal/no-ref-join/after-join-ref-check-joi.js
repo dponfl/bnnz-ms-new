@@ -63,7 +63,7 @@ module.exports = {
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.notifications);
+    // const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.notifications);
 
 
     try {
@@ -197,7 +197,7 @@ module.exports = {
 
       while (parserStatus !== 'success'
         && i < parserRequestIntervals.length
-        ) {
+      ) {
 
         checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
 

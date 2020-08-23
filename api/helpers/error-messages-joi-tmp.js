@@ -240,7 +240,7 @@ module.exports = {
         }
       });
       return exits.success({
-        status: 'ok',
+        status: 'error',
         message: `${moduleName} performed`,
         payload: {},
       });

@@ -1027,7 +1027,7 @@
     ]
   },
   "schedule": {
-    "timing": {
+    "intervals": {
       "processPendingRefSubscription": 60000
     },
     "rules": [

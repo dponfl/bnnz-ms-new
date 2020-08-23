@@ -1,6 +1,9 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
+
 
 const moduleName = 'scheduler:pending-actions:push-pending-ref-subscriptions-joi';
 
@@ -248,6 +251,11 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
   let clientGuid;
   let accountGuid;
 
+  let checkProfileSubscriptionResRaw;
+  let parserStatus = '';
+  const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
+  const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+
 
   try {
 
@@ -277,9 +285,247 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
      * В этом случае нужно проверить подписку парсером
      */
 
+    const profilesList = _.get(pendingSubscription, 'payload.profiles', null);
+
+    if (profilesList == null) {
+
+      /**
+       * По какой-то причине в записи pendingSubscription нет списка профилей
+       */
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.ERROR,
+        location: moduleName,
+        message: 'No "payload.profiles" at pendingSubscription',
+        clientGuid,
+        accountGuid,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        payload: {
+          pendingSubscription,
+        },
+      });
+
+    }
+
+    const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+
+    const checkProfileSubscriptionParams = {
+      checkProfile: account.inst_profile,
+      profileId: account.inst_id,
+      profilesList,
+    };
+
+    let i = 0;
+
+    const momentStart = moment();
+
+    while (parserStatus !== 'success'
+      && i < parserRequestIntervals.length
+    ) {
+
+      checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+      parserStatus = checkProfileSubscriptionResRaw.status;
+
+      if (parserStatus !== 'success') {
+
+        /**
+         * Логируем факт факапа парсера с фиксацией текущего интервала
+         */
+
+        const momentNow = moment();
+
+        const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+        /**
+         * Логируем ошибку парсера
+         */
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+          location: moduleName,
+          payload: {
+            parserRequestInterval: parserRequestIntervals[i],
+            requestDuration,
+          },
+        });
+
+        await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+      }
+
+      i++;
+
+    }
+
+    if (parserStatus !== 'success') {
+
+      /**
+       * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+       */
+
+      /**
+       * Обновляем запись для последующей обработки её шедуллером
+       */
+
+      pendingSubscription.actionsPerformed++;
+
+      await sails.helpers.storage.pendingActionsUpdateJoi({
+        criteria: {
+          guid: pendingSubscription.guid,
+        },
+        data: {
+          actionsPerformed: pendingSubscription.actionsPerformed,
+        }
+      });
+
+      return true;
+
+    } else {
+
+      /**
+       * Корректный ответ от парсера БЫЛ ПОЛУЧЕН
+       */
+
+      const checkProfileSubscriptionRes = _.get(checkProfileSubscriptionResRaw, 'payload', null);
+
+      if (checkProfileSubscriptionRes == null) {
+
+        /**
+         * По какой-то причине в checkProfileSubscriptionResRaw нет payload
+         */
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No "payload" at checkProfileSubscriptionResRaw',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          payload: {
+            checkProfileSubscriptionResRaw,
+          },
+        });
+
+      }
+
+      /**
+       * Сохраняем результат проверки в pendingSubscription и соответствующей записи
+       */
+
+      pendingSubscription.payloadResponse = checkProfileSubscriptionRes;
+
+      await sails.helpers.storage.pendingActionsUpdateJoi({
+        criteria: {
+          guid: pendingSubscription.guid,
+        },
+        data: {
+          payloadResponse: pendingSubscription.payloadResponse,
+        }
+      });
+
+      if (_.toString(account.keyboard) === '') {
+
+        /**
+         * Клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)
+         */
+
+        const sleepInterval = _.get(sails.config.custom.config, 'schedule.intervals.processPendingRefSubscription', null);
+
+        if (sleepInterval == null) {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'No "schedule.intervals.processPendingRefSubscription" at config',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              configSchedule: sails.config.custom.config.schedule.intervals,
+            },
+          });
+
+        }
+
+        await sleep(sleepInterval);
+
+        const getAccountRaw = await sails.helpers.storage.accountGetJoi({
+          accountGuids: account.guid,
+        });
+
+        if (getAccountRaw.status !== 'ok') {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong accountGetJoi response: status',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              accountGuids: account.guid,
+              getAccountRaw,
+            },
+          });
+
+        }
+
+        if (getAccountRaw.payload.length > 1) {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong accountGetJoi response: payload length > 1',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              accountGuids: account.guid,
+              getAccountRaw,
+            },
+          });
+
+        }
+
+        account = getAccountRaw.payload[0];
+
+        if (_.toString(account.keyboard) === '') {
+
+          /**
+           * Клиент по прежнему находится в воронке - выходим
+           */
+
+          return true;
+
+        }
+
+      }
+
+      /**
+       * Клиент находится в какой-то клавиатуре без активный действий
+       */
+
+      if (_.get(pendingSubscription, 'payloadResponse.allSubscribed', false)) {
+
+        /**
+         * Подписка на все требуемые профили ВЫПОЛНЕНА
+         */
 
 
-    
+
+      }
+
+    }
+
+    return true;
+
   } catch (e) {
 
     const throwError = false;
@@ -306,7 +552,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         }
       });
       return exits.success({
-        status: 'ok',
+        status: 'error',
         message: `${moduleName} performed`,
         payload: {},
       });
