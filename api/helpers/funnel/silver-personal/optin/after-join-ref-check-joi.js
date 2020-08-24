@@ -378,7 +378,6 @@ module.exports = {
           getBlock.shown = false;
           getBlock.done = false;
           getBlock.previous = 'optin::join_ref_check';
-          getBlock.next = null;
         } else {
 
           await sails.helpers.general.throwErrorJoi({

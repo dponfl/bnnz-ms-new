@@ -90,7 +90,7 @@ module.exports = {
 
       const res = await sails.helpers.mgw.telegram.keyboardMessageJoi({
         chatId: input.client.chat_id,
-        htmlSimple,
+        html: htmlSimple,
         keyboard,
       });
 

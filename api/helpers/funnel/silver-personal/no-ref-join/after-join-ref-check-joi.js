@@ -186,6 +186,7 @@ module.exports = {
       const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
       const checkProfileSubscriptionParams = {
+        client: input.client,
         checkProfile: currentAccount.inst_profile,
         profileId: currentAccount.inst_id,
         profilesList,

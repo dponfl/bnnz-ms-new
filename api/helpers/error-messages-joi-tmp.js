@@ -60,6 +60,18 @@ module.exports = {
       payload: payloadObj,
     });
 
+    // TODO: Delete after QA
+    await LogProcessor.info({
+      message: message,
+      clientGuid,
+      accountGuid,
+      // requestId: null,
+      // childRequestId: null,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
+      location: moduleName,
+      payload: payloadObj,
+    });
+
 
     /**
      * Логирование сообщения (critical)

@@ -50,7 +50,7 @@ module.exports.bootstrap = async function() {
    * Activate scheduler
    */
 
-  // await sails.helpers.scheduler.activateSchedule();
+  await sails.helpers.scheduler.activateSchedule();
 
 
   /**

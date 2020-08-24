@@ -102,6 +102,20 @@ module.exports = {
 
       }
 
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Найдены записи для отложенной проверки подписки',
+        // clientGuid,
+        // accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          pendingRefSubscriptions,
+        },
+      });
+
       _.forEach(pendingRefSubscriptions, async (pendingRefSubscription) => {
 
         /**
@@ -199,6 +213,20 @@ module.exports = {
         clientGuid = client.guid;
         accountGuid = account.guid;
 
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: 'запискаем процесс обработки кейса',
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          location: moduleName,
+          payload: {
+            pendingRefSubscription
+          },
+        });
+
         await processPendingRefSubscription(client, account, pendingRefSubscription);
 
       });
@@ -268,6 +296,20 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
        * Подписка на все профили уже выполнена. Обновляем запись и выходим.
        */
 
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Подписка на все профили уже выполнена. Обновляем запись и выходим',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          pendingSubscription,
+        },
+      });
+
       await sails.helpers.storage.pendingActionsUpdateJoi({
         criteria: {
           guid: pendingSubscription.guid,
@@ -284,6 +326,22 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
     /**
      * В этом случае нужно проверить подписку парсером
      */
+
+    // TODO: Delete after QA
+    await LogProcessor.info({
+      message: 'В этом случае нужно проверить подписку парсером',
+      clientGuid,
+      accountGuid,
+      // requestId: null,
+      // childRequestId: null,
+      errorName: sails.config.custom.SCHEDULER_ERROR.name,
+      location: moduleName,
+      payload: {
+        pendingSubscription,
+      },
+    });
+
+
 
     const profilesList = _.get(pendingSubscription, 'payload.profiles', null);
 
@@ -310,6 +368,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
     const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
     const checkProfileSubscriptionParams = {
+      client,
       checkProfile: account.inst_profile,
       profileId: account.inst_id,
       profilesList,
@@ -369,9 +428,38 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
        * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
        */
 
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          checkProfileSubscriptionResRaw,
+        },
+      });
+
+
       /**
        * Обновляем запись для последующей обработки её шедуллером
        */
+
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Обновляем запись для последующей обработки её шедуллером',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          pendingSubscription,
+        },
+      });
 
       pendingSubscription.actionsPerformed++;
 
@@ -391,6 +479,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
       /**
        * Корректный ответ от парсера БЫЛ ПОЛУЧЕН
        */
+
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Корректный ответ от парсера БЫЛ ПОЛУЧЕН',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          checkProfileSubscriptionResRaw,
+        },
+      });
+
 
       const checkProfileSubscriptionRes = _.get(checkProfileSubscriptionResRaw, 'payload', null);
 
@@ -418,6 +521,22 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
        * Сохраняем результат проверки в pendingSubscription и соответствующей записи
        */
 
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Сохраняем результат проверки в pendingSubscription и соответствующей записи',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          checkProfileSubscriptionRes,
+          pendingSubscription,
+        },
+      });
+
+
       pendingSubscription.payloadResponse = checkProfileSubscriptionRes;
 
       await sails.helpers.storage.pendingActionsUpdateJoi({
@@ -434,6 +553,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         /**
          * Клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)
          */
+
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: 'Клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)',
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          location: moduleName,
+          payload: {
+            account,
+          },
+        });
+
 
         const sleepInterval = _.get(sails.config.custom.config, 'schedule.intervals.processPendingRefSubscription', null);
 
@@ -502,6 +636,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
            * Клиент по прежнему находится в воронке - выходим
            */
 
+          // TODO: Delete after QA
+          await LogProcessor.info({
+            message: 'Клиент по прежнему находится в воронке - выходим',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            location: moduleName,
+            payload: {
+              account,
+            },
+          });
+
+
           return true;
 
         }
@@ -511,6 +660,22 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
       /**
        * Клиент находится в какой-то клавиатуре без активный действий
        */
+
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'Клиент находится в какой-то клавиатуре без активный действий',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        location: moduleName,
+        payload: {
+          account,
+          pendingSubscription,
+        },
+      });
+
 
       if (!_.has(pendingSubscription, 'payloadResponse.allSubscribed')) {
 
@@ -533,6 +698,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         /**
          * Подписка на все требуемые профили ВЫПОЛНЕНА
          */
+
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: 'Подписка на все требуемые профили ВЫПОЛНЕНА',
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          location: moduleName,
+          payload: {
+            pendingSubscription,
+          },
+        });
+
 
         const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
           client,
@@ -584,6 +764,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         /**
          * Подписка на все требуемые профили НЕ ВЫПОЛНЕНА
          */
+
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: 'Подписка на все требуемые профили НЕ ВЫПОЛНЕНА',
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          location: moduleName,
+          payload: {
+            pendingSubscription,
+          },
+        });
+
 
         account.keyboard = 'refProfileSubscriptionCheck::start';
 

@@ -62,6 +62,11 @@ module.exports = {
         .string()
         .description('name of pending action')
         .required(),
+      actionsPerformed: Joi
+        .number()
+        .description('number or actions attempts performed')
+        .integer()
+        .positive(),
       done: Joi
         .boolean()
         .description('done flag'),
@@ -71,6 +76,9 @@ module.exports = {
       payload: Joi
         .any()
         .description('payload'),
+      payloadResponse: Joi
+        .any()
+        .description('payloadResponse'),
     });
 
     let input;
