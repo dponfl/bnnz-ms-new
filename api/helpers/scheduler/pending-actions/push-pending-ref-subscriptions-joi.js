@@ -102,134 +102,139 @@ module.exports = {
 
       }
 
-      // TODO: Delete after QA
-      await LogProcessor.info({
-        message: 'Найдены записи для отложенной проверки подписки',
-        // clientGuid,
-        // accountGuid,
-        // requestId: null,
-        // childRequestId: null,
-        errorName: sails.config.custom.SCHEDULER_ERROR.name,
-        location: moduleName,
-        payload: {
-          pendingRefSubscriptions,
-        },
-      });
-
-      _.forEach(pendingRefSubscriptions, async (pendingRefSubscription) => {
-
-        /**
-         * Для коммуникации выбираем клиентов, у которых account_use == pendingRefSubscription.accountGuid
-         */
-
-        const clientGetParams = {
-
-          criteria: {
-            guid: pendingRefSubscription.clientGuid,
-            account_use: pendingRefSubscription.accountGuid
-          }
-
-        };
-
-        const clientsGetRaw = await sails.helpers.storage.clientGetByCriteriaJoi(clientGetParams);
-
-        if (clientsGetRaw.status !== 'ok') {
-
-          await LogProcessor.error({
-            message: 'Wrong "clientGetByCriteriaJoi" response: status',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.SCHEDULER_ERROR.name,
-            location: moduleName,
-            payload: {
-              clientGetParams,
-              clientsGetRaw,
-            },
-          });
-
-          return exits.success({
-            status: 'error',
-            message: `${moduleName} performed`,
-            payload: {},
-          })
-
-        }
-
-        const clients = _.get(clientsGetRaw, 'payload', null);
-
-        if (clients == null) {
-
-          await LogProcessor.error({
-            message: 'Wrong "clientGetByCriteriaJoi" response: payload',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.SCHEDULER_ERROR.name,
-            location: moduleName,
-            payload: {
-              clientGetParams,
-              clientsGetRaw,
-            },
-          });
-
-          return exits.success({
-            status: 'error',
-            message: `${moduleName} performed`,
-            payload: {},
-          })
-
-        }
-
-        if (clients.length > 1) {
-
-          await LogProcessor.error({
-            message: 'Wrong "clientGetByCriteriaJoi" response: more then one record found',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.SCHEDULER_ERROR.name,
-            location: moduleName,
-            payload: {
-              clientGetParams,
-              clientsGetRaw,
-            },
-          });
-
-          return exits.success({
-            status: 'error',
-            message: `${moduleName} performed`,
-            payload: {},
-          })
-
-        }
-
-        const client = clients[0];
-        const account = _.find(client.accounts, {guid: client.account_use});
-
-        clientGuid = client.guid;
-        accountGuid = account.guid;
+      if (pendingRefSubscriptions.length > 0) {
 
         // TODO: Delete after QA
         await LogProcessor.info({
-          message: 'запискаем процесс обработки кейса',
-          clientGuid,
-          accountGuid,
+          message: 'Найдены записи для отложенной проверки подписки',
+          // clientGuid,
+          // accountGuid,
           // requestId: null,
           // childRequestId: null,
           errorName: sails.config.custom.SCHEDULER_ERROR.name,
           location: moduleName,
           payload: {
-            pendingRefSubscription
+            pendingRefSubscriptions,
           },
         });
 
-        await processPendingRefSubscription(client, account, pendingRefSubscription);
+        _.forEach(pendingRefSubscriptions, async (pendingRefSubscription) => {
 
-      });
+          /**
+           * Для коммуникации выбираем клиентов, у которых account_use == pendingRefSubscription.accountGuid
+           */
+
+          const clientGetParams = {
+
+            criteria: {
+              guid: pendingRefSubscription.clientGuid,
+              account_use: pendingRefSubscription.accountGuid
+            }
+
+          };
+
+          const clientsGetRaw = await sails.helpers.storage.clientGetByCriteriaJoi(clientGetParams);
+
+          if (clientsGetRaw.status !== 'ok') {
+
+            await LogProcessor.error({
+              message: 'Wrong "clientGetByCriteriaJoi" response: status',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              errorName: sails.config.custom.SCHEDULER_ERROR.name,
+              location: moduleName,
+              payload: {
+                clientGetParams,
+                clientsGetRaw,
+              },
+            });
+
+            return exits.success({
+              status: 'error',
+              message: `${moduleName} performed`,
+              payload: {},
+            })
+
+          }
+
+          const clients = _.get(clientsGetRaw, 'payload', null);
+
+          if (clients == null) {
+
+            await LogProcessor.error({
+              message: 'Wrong "clientGetByCriteriaJoi" response: payload',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              errorName: sails.config.custom.SCHEDULER_ERROR.name,
+              location: moduleName,
+              payload: {
+                clientGetParams,
+                clientsGetRaw,
+              },
+            });
+
+            return exits.success({
+              status: 'error',
+              message: `${moduleName} performed`,
+              payload: {},
+            })
+
+          }
+
+          if (clients.length > 1) {
+
+            await LogProcessor.error({
+              message: 'Wrong "clientGetByCriteriaJoi" response: more then one record found',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              errorName: sails.config.custom.SCHEDULER_ERROR.name,
+              location: moduleName,
+              payload: {
+                clientGetParams,
+                clientsGetRaw,
+              },
+            });
+
+            return exits.success({
+              status: 'error',
+              message: `${moduleName} performed`,
+              payload: {},
+            })
+
+          }
+
+          const client = clients[0];
+          const account = _.find(client.accounts, {guid: client.account_use});
+
+          clientGuid = client.guid;
+          accountGuid = account.guid;
+
+          // TODO: Delete after QA
+          await LogProcessor.info({
+            message: 'запискаем процесс обработки кейса',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            location: moduleName,
+            payload: {
+              pendingRefSubscription
+            },
+          });
+
+          await processPendingRefSubscription(client, account, pendingRefSubscription);
+
+        });
+
+
+      }
 
 
       return exits.success({
@@ -293,12 +298,136 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
     if (_.get(pendingSubscription, 'payloadResponse.allSubscribed', false)) {
 
       /**
-       * Подписка на все профили уже выполнена. Обновляем запись и выходим.
+       * Подписка на все профили уже выполнена. Информируем клиента, обновляем запись и выходим.
        */
 
       // TODO: Delete after QA
+      // await LogProcessor.info({
+      //   message: 'Подписка на все профили уже выполнена. Обновляем запись и выходим',
+      //   clientGuid,
+      //   accountGuid,
+      //   // requestId: null,
+      //   // childRequestId: null,
+      //   errorName: sails.config.custom.SCHEDULER_ERROR.name,
+      //   location: moduleName,
+      //   payload: {
+      //     pendingSubscription,
+      //   },
+      // });
+
+      if (_.toString(account.keyboard) === '') {
+
+        /**
+         * Клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)
+         */
+
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: 'Подписка на все профили уже выполнена, но клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)',
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          location: moduleName,
+          payload: {
+            account,
+          },
+        });
+
+
+        const sleepInterval = _.get(sails.config.custom.config, 'schedule.intervals.processPendingRefSubscription', null);
+
+        if (sleepInterval == null) {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'No "schedule.intervals.processPendingRefSubscription" at config',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              configSchedule: sails.config.custom.config.schedule.intervals,
+            },
+          });
+
+        }
+
+        await sleep(sleepInterval);
+
+        const getAccountRaw = await sails.helpers.storage.accountGetJoi({
+          accountGuids: account.guid,
+        });
+
+        if (getAccountRaw.status !== 'ok') {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong accountGetJoi response: status',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              accountGuids: account.guid,
+              getAccountRaw,
+            },
+          });
+
+        }
+
+        if (getAccountRaw.payload.length > 1) {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong accountGetJoi response: payload length > 1',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            payload: {
+              accountGuids: account.guid,
+              getAccountRaw,
+            },
+          });
+
+        }
+
+        account = getAccountRaw.payload[0];
+
+        if (_.toString(account.keyboard) === '') {
+
+          /**
+           * Клиент по прежнему находится в воронке - выходим
+           */
+
+          // TODO: Delete after QA
+          await LogProcessor.info({
+            message: 'Клиент по прежнему находится в воронке - выходим',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.SCHEDULER_ERROR.name,
+            location: moduleName,
+            payload: {
+              account,
+            },
+          });
+
+
+          return true;
+
+        }
+
+      }
+
+
+      // TODO: Delete after QA
       await LogProcessor.info({
-        message: 'Подписка на все профили уже выполнена. Обновляем запись и выходим',
+        message: 'Подписка на все требуемые профили уже ВЫПОЛНЕНА: информируем клиента, обновляем запись и выходим',
         clientGuid,
         accountGuid,
         // requestId: null,
@@ -308,6 +437,12 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         payload: {
           pendingSubscription,
         },
+      });
+
+
+      const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+        client,
+        messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.joinRefDone,
       });
 
       await sails.helpers.storage.pendingActionsUpdateJoi({
@@ -548,6 +683,37 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         }
       });
 
+      /**
+       * устанавливаем в RefUp статус signed для аккаунтов профилей, на которые осуществлена подписка
+       */
+
+      if (checkProfileSubscriptionRes.subscribed.length > 0) {
+
+        const signedAccountGuid = [];
+
+        _.forEach(checkProfileSubscriptionRes.subscribed, (profile) => {
+
+          const refListRec = _.find(pendingSubscription.payload.listProfilesAndAccountGuids, {profile: profile});
+
+          if (refListRec) {
+            signedAccountGuid.push(refListRec.accountGuid);
+          }
+
+        });
+
+        await sails.helpers.storage.refUpUpdateJoi({
+          criteria: {
+            account_guid: accountGuid,
+            ref_account_guid: signedAccountGuid,
+          },
+          data: {
+            signed: true,
+          },
+          createdBy: moduleName,
+        });
+
+      }
+
       if (_.toString(account.keyboard) === '') {
 
         /**
@@ -728,36 +894,36 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           }
         });
 
-        account.keyboard = 'home::start';
-
-        await sails.helpers.storage.clientUpdateJoi({
-          criteria: {guid: client.guid},
-          data: client,
-          createdBy: moduleName,
-        });
-
-        const sendKeyboardForAccountParams = {
-          client,
-        };
-
-        const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
-
-        if (sendKeyboardForAccountRaw.status !== 'ok') {
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'Wrong sendKeyboardForAccountJoi response',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.SCHEDULER_ERROR.name,
-            payload: {
-              sendKeyboardForAccountParams,
-              sendKeyboardForAccountRaw,
-            },
-          });
-
-        }
+        // account.keyboard = 'home::start';
+        //
+        // await sails.helpers.storage.clientUpdateJoi({
+        //   criteria: {guid: client.guid},
+        //   data: client,
+        //   createdBy: moduleName,
+        // });
+        //
+        // const sendKeyboardForAccountParams = {
+        //   client,
+        // };
+        //
+        // const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+        //
+        // if (sendKeyboardForAccountRaw.status !== 'ok') {
+        //
+        //   await sails.helpers.general.throwErrorJoi({
+        //     errorType: sails.config.custom.enums.errorType.ERROR,
+        //     location: moduleName,
+        //     message: 'Wrong sendKeyboardForAccountJoi response',
+        //     clientGuid,
+        //     accountGuid,
+        //     errorName: sails.config.custom.SCHEDULER_ERROR.name,
+        //     payload: {
+        //       sendKeyboardForAccountParams,
+        //       sendKeyboardForAccountRaw,
+        //     },
+        //   });
+        //
+        // }
 
       } else {
 

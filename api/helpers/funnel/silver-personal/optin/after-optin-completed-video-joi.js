@@ -73,6 +73,8 @@ module.exports = {
       currentAccount.subscription_active = true;
       currentAccount.keyboard = "main::place_post";
 
+      input.client.current_funnel = '';
+
       input.block.shown = true;
       input.block.done = true;
 

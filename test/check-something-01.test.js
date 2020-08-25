@@ -291,7 +291,7 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
 
 });
 
-describe('Test sendVideo with inline keyboard', function () {
+describe.skip('Test sendVideo with inline keyboard', function () {
 
   let customConfig;
   let client;

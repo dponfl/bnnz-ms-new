@@ -799,6 +799,11 @@
           {
             "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03",
             "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_04",
+            "style": "",
             "cr": ""
           }
         ]

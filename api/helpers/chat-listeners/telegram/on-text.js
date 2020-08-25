@@ -265,6 +265,8 @@ module.exports = {
 
             }
 
+            client.current_funnel = '';
+
             await sails.helpers.storage.clientUpdateJoi({
               criteria: {guid: client.guid},
               data: client,
