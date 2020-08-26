@@ -104,6 +104,22 @@ module.exports = {
 
         requestDepth = checkSteps[i];
 
+        // TODO: Delete after QA
+        await LogProcessor.info({
+          message: `Проверяем подписки, глубина: ${requestDepth}`,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.name,
+          location: moduleName,
+          payload: {
+            profile: input.profileId,
+            requestDepth,
+          },
+        });
+
+
         getFollowingsJoiRes = await sails.helpers.parsers.inst.inapi.getFollowingsJoi(getFollowingsJoiParams);
 
         if (getFollowingsJoiRes.status !== 'success') {

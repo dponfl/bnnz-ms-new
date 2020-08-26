@@ -91,6 +91,7 @@ module.exports = {
           clientGuid,
           accountGuid,
           pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
+          checkInProgress: true,
           done: false,
           deleted: false,
         }
@@ -591,14 +592,15 @@ module.exports = {
                */
 
               const moveToKeyboardGenericParams = {
-
                 client: input.client,
                 block: input.block,
                 keyboardName: 'refProfileSubscriptionCheck::start',
                 afterHelperNext: false,
+                additionalData: {
+                  profiles: checkProfileSubscriptionRes.notSubscribed,
+                },
                 msg: input.msg,
                 createdBy: moduleName,
-
               };
 
               await sails.helpers.funnel.moveToKeyboardGenericJoi(moveToKeyboardGenericParams);

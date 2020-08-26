@@ -83,6 +83,9 @@ module.exports = {
         .boolean()
         .description('value to set for afterHelperGenericJoi "switchFunnel" parameter')
         .default(true),
+      additionalData: Joi
+        .any()
+        .description('additional data'),
       msg: Joi
         .any()
         .description('Message received'),
@@ -136,6 +139,10 @@ module.exports = {
       const sendKeyboardForAccountParams = {
         client: input.client,
       };
+
+      if (input.additionalData != null) {
+        sendKeyboardForAccountParams.additionalData = input.additionalData;
+      }
 
       const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
 

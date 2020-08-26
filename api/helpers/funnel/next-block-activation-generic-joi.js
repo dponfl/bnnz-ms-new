@@ -65,7 +65,7 @@ module.exports = {
         .default(true),
       updateElement: Joi
         .string()
-        .descirption('block element to be updated, e.g. "next"')
+        .description('block element to be updated, e.g. "next"')
         .required(),
       updateElementValue: Joi
         .string()

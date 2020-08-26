@@ -53,7 +53,8 @@ module.exports = {
         .required(),
       additionalData: Joi
         .any()
-        .description('additional data'),
+        .description('additional data')
+        .required(),
     });
 
     let input;
@@ -77,10 +78,14 @@ module.exports = {
       let refProfilesList = '';
 
       for (const refListElem of profiles) {
-        refProfilesList = refProfilesList + `<a href="${sails.config.custom.config.general.instagram_prefix}${refListElem}">${refListElem}</a>${sails.config.custom.SCR}`;
+        refProfilesList = refProfilesList + `<a href="${sails.config.custom.config.general.instagram_prefix}${refListElem}">:point_right: ${refListElem}</a>${sails.config.custom.SCR}`;
       }
 
       refProfilesList = refProfilesList + sails.config.custom.SCR;
+
+      refProfilesList = await KeyboardProcessor.parseEmoji({
+        str: refProfilesList,
+      });
 
       resHtml = _.replace(resHtml, '$RefMissedProfilesList$', refProfilesList);
 

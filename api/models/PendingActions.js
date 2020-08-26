@@ -46,6 +46,10 @@ module.exports = {
       type: 'number',
     },
 
+    checkInProgress: {
+      type: 'boolean',
+    },
+
     done: {
       type: 'boolean',
     },

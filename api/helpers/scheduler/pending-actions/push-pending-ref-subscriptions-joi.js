@@ -45,6 +45,7 @@ module.exports = {
       const getPendingRefSubscriptionsParams = {
         criteria: {
           pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
+          checkInProgress: false,
           done: false,
           deleted: false,
         }
@@ -295,6 +296,23 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
     clientGuid = client.guid;
     accountGuid = account.guid;
 
+    /**
+     * Устанавливаем флаг, что запись взята в работу
+     */
+
+    pendingSubscription.actionsPerformed++;
+
+    await sails.helpers.storage.pendingActionsUpdateJoi({
+      criteria: {
+        guid: pendingSubscription.guid,
+      },
+      data: {
+        actionsPerformed: pendingSubscription.actionsPerformed,
+        checkInProgress: true,
+      }
+    });
+
+
     if (_.get(pendingSubscription, 'payloadResponse.allSubscribed', false)) {
 
       /**
@@ -340,6 +358,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         if (sleepInterval == null) {
 
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
+
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -363,6 +394,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         if (getAccountRaw.status !== 'ok') {
 
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
+
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
@@ -380,6 +424,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         if (getAccountRaw.payload.length > 1) {
 
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
+
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
@@ -395,9 +452,9 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         }
 
-        account = getAccountRaw.payload[0];
+        const accountUpdated = getAccountRaw.payload[0];
 
-        if (_.toString(account.keyboard) === '') {
+        if (_.toString(accountUpdated.keyboard) === '') {
 
           /**
            * Клиент по прежнему находится в воронке - выходим
@@ -413,8 +470,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
             errorName: sails.config.custom.SCHEDULER_ERROR.name,
             location: moduleName,
             payload: {
-              account,
+              accountUpdated,
             },
+          });
+
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
           });
 
 
@@ -451,6 +521,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         },
         data: {
           done: true,
+          checkInProgress: false,
         }
       });
 
@@ -485,6 +556,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
       /**
        * По какой-то причине в записи pendingSubscription нет списка профилей
        */
+
+      /**
+       * Устанавливаем флаг, что запись не находится в обработке
+       */
+
+      await sails.helpers.storage.pendingActionsUpdateJoi({
+        criteria: {
+          guid: pendingSubscription.guid,
+        },
+        data: {
+          checkInProgress: false,
+        }
+      });
 
       await sails.helpers.general.throwErrorJoi({
         errorType: sails.config.custom.enums.errorType.ERROR,
@@ -596,14 +680,13 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         },
       });
 
-      pendingSubscription.actionsPerformed++;
 
       await sails.helpers.storage.pendingActionsUpdateJoi({
         criteria: {
           guid: pendingSubscription.guid,
         },
         data: {
-          actionsPerformed: pendingSubscription.actionsPerformed,
+          checkInProgress: false,
         }
       });
 
@@ -637,6 +720,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         /**
          * По какой-то причине в checkProfileSubscriptionResRaw нет payload
          */
+
+        /**
+         * Устанавливаем флаг, что запись не находится в обработке
+         */
+
+        await sails.helpers.storage.pendingActionsUpdateJoi({
+          criteria: {
+            guid: pendingSubscription.guid,
+          },
+          data: {
+            checkInProgress: false,
+          }
+        });
 
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
@@ -714,7 +810,73 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
       }
 
-      if (_.toString(account.keyboard) === '') {
+      const getAccountRaw = await sails.helpers.storage.accountGetJoi({
+        accountGuids: account.guid,
+      });
+
+      if (getAccountRaw.status !== 'ok') {
+
+        /**
+         * Устанавливаем флаг, что запись не находится в обработке
+         */
+
+        await sails.helpers.storage.pendingActionsUpdateJoi({
+          criteria: {
+            guid: pendingSubscription.guid,
+          },
+          data: {
+            checkInProgress: false,
+          }
+        });
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong accountGetJoi response: status',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          payload: {
+            accountGuids: account.guid,
+            getAccountRaw,
+          },
+        });
+
+      }
+
+      if (getAccountRaw.payload.length > 1) {
+
+        /**
+         * Устанавливаем флаг, что запись не находится в обработке
+         */
+
+        await sails.helpers.storage.pendingActionsUpdateJoi({
+          criteria: {
+            guid: pendingSubscription.guid,
+          },
+          data: {
+            checkInProgress: false,
+          }
+        });
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong accountGetJoi response: payload length > 1',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.SCHEDULER_ERROR.name,
+          payload: {
+            accountGuids: account.guid,
+            getAccountRaw,
+          },
+        });
+
+      }
+
+      const accountUpdated = getAccountRaw.payload[0];
+
+      if (_.toString(accountUpdated.keyboard) === '') {
 
         /**
          * Клиент находится в какой-то воронке (нужно немного подождать и попробовать снова)
@@ -730,7 +892,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           errorName: sails.config.custom.SCHEDULER_ERROR.name,
           location: moduleName,
           payload: {
-            account,
+            accountUpdated,
           },
         });
 
@@ -738,6 +900,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         const sleepInterval = _.get(sails.config.custom.config, 'schedule.intervals.processPendingRefSubscription', null);
 
         if (sleepInterval == null) {
+
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
 
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
@@ -762,6 +937,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         if (getAccountRaw.status !== 'ok') {
 
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
+
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
@@ -779,6 +967,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         if (getAccountRaw.payload.length > 1) {
 
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
+
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
@@ -794,9 +995,9 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         }
 
-        account = getAccountRaw.payload[0];
+        const accountUpdated = getAccountRaw.payload[0];
 
-        if (_.toString(account.keyboard) === '') {
+        if (_.toString(accountUpdated.keyboard) === '') {
 
           /**
            * Клиент по прежнему находится в воронке - выходим
@@ -812,8 +1013,21 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
             errorName: sails.config.custom.SCHEDULER_ERROR.name,
             location: moduleName,
             payload: {
-              account,
+              accountUpdated,
             },
+          });
+
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
           });
 
 
@@ -844,6 +1058,19 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
 
       if (!_.has(pendingSubscription, 'payloadResponse.allSubscribed')) {
+
+        /**
+         * Устанавливаем флаг, что запись не находится в обработке
+         */
+
+        await sails.helpers.storage.pendingActionsUpdateJoi({
+          criteria: {
+            guid: pendingSubscription.guid,
+          },
+          data: {
+            checkInProgress: false,
+          }
+        });
 
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
@@ -891,6 +1118,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           },
           data: {
             done: true,
+            checkInProgress: false,
           }
         });
 
@@ -945,6 +1173,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           },
         });
 
+        client.current_funnel = '';
 
         account.keyboard = 'refProfileSubscriptionCheck::start';
 
@@ -956,11 +1185,27 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         const sendKeyboardForAccountParams = {
           client,
+          additionalData: {
+            profiles: pendingSubscription.payloadResponse.notSubscribed,
+          }
         };
 
         const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
 
         if (sendKeyboardForAccountRaw.status !== 'ok') {
+
+          /**
+           * Устанавливаем флаг, что запись не находится в обработке
+           */
+
+          await sails.helpers.storage.pendingActionsUpdateJoi({
+            criteria: {
+              guid: pendingSubscription.guid,
+            },
+            data: {
+              checkInProgress: false,
+            }
+          });
 
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
@@ -976,6 +1221,20 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           });
 
         }
+
+        /**
+         * Устанавливаем флаг, что запись не находится в обработке
+         */
+
+        // await sails.helpers.storage.pendingActionsUpdateJoi({
+        //   criteria: {
+        //     guid: pendingSubscription.guid,
+        //   },
+        //   data: {
+        //     checkInProgress: false,
+        //   }
+        // });
+
 
       }
 

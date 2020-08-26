@@ -170,7 +170,7 @@ async function activateBeforeHelper(client, keyboard, htmlMsg, data) {
 
       let beforeHelperParams = {
         client: client,
-        block: keyboard,
+        keyboard,
         payload: res,
       };
 
