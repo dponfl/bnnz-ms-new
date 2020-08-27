@@ -67,6 +67,7 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let res;
 
     try {
 
@@ -88,11 +89,55 @@ module.exports = {
         buttons: input.keyboardData,
       });
 
-      const res = await sails.helpers.mgw.telegram.keyboardMessageJoi({
-        chatId: input.client.chat_id,
-        html: htmlSimple,
-        keyboard,
-      });
+      const keyboardType = _.get(input.keyboard, 'actionType', null);
+
+      if (keyboardType == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Keyboard has no actionType',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
+          payload: {
+            keyboard: input.keyboard,
+            keyboardType,
+          },
+        });
+      }
+
+      switch (keyboardType) {
+        case 'show_keyboard':
+          res = await sails.helpers.mgw.telegram.keyboardMessageJoi({
+            chatId: input.client.chat_id,
+            html: htmlSimple,
+            keyboard,
+          });
+          break;
+
+        case 'delete_keyboard':
+          res = await sails.helpers.mgw.telegram.keyboardRemoveJoi({
+            chatId: input.client.chat_id,
+            html: htmlSimple,
+          });
+          break;
+
+        default:
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Unknown keyboard actionType',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.KEYBOARD_PROCESSOR_ERROR.name,
+            payload: {
+              keyboard: input.keyboard,
+              keyboardType,
+            },
+          });
+      }
 
 
       return exits.success({
@@ -128,15 +173,23 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          }
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          }
         });
         return exits.success({
-          status: 'ok',
+          status: 'error',
           message: `${moduleName} performed`,
           payload: {},
         });

@@ -3,6 +3,7 @@
     {
       "id": "place_post",
       "description": "allows to place post link",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -37,6 +38,7 @@
     {
       "id": "check_post_limit",
       "description": "check possibility place a post link",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -83,6 +85,7 @@
     {
       "id": "start",
       "description": "Home menu",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -131,6 +134,7 @@
     {
       "id": "start",
       "description": "Account menu",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -189,6 +193,7 @@
     {
       "id": "start",
       "description": "Ref Menu",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -242,6 +247,7 @@
     {
       "id": "start",
       "description": "Start block of NoRef keyboard",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -286,6 +292,7 @@
     {
       "id": "after_info",
       "description": "NoRef keyboard to show after more info provided",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -327,6 +334,7 @@
     {
       "id": "start",
       "description": "Help menu",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -372,7 +380,8 @@
   "refProfileSubscriptionCheck": [
     {
       "id": "start",
-      "description": "",
+      "description": "Start of ref profile subscription re-check",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -411,6 +420,26 @@
           }
         ]
       ]
+    },
+    {
+      "id": "delete_keyboard",
+      "description": "Delete active keyboard",
+      "actionType": "delete_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "beforeHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_KB_DELETE_KBD_MSG",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": []
     }
   ]
 }

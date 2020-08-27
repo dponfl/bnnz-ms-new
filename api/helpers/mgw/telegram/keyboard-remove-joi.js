@@ -48,7 +48,8 @@ module.exports = {
         .required(),
       disableWebPagePreview: Joi
         .boolean()
-        .description('flag to disable web page preview at message'),
+        .description('flag to disable web page preview at message')
+        .default(false),
     });
 
 
@@ -56,7 +57,7 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
-      const disable_web_page_preview = input.disableWebPagePreview || false;
+      const disable_web_page_preview = input.disableWebPagePreview;
 
       let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,

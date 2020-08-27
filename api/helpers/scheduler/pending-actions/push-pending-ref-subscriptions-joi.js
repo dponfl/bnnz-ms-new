@@ -285,6 +285,10 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
   let clientGuid;
   let accountGuid;
 
+  let accountUpdated;
+
+  let checkProfileSubscriptionParams;
+
   let checkProfileSubscriptionResRaw;
   let parserStatus = '';
   const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
@@ -452,7 +456,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         }
 
-        const accountUpdated = getAccountRaw.payload[0];
+        accountUpdated = getAccountRaw.payload[0];
 
         if (_.toString(accountUpdated.keyboard) === '') {
 
@@ -586,7 +590,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
     const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
 
-    const checkProfileSubscriptionParams = {
+    checkProfileSubscriptionParams = {
       client,
       checkProfile: account.inst_profile,
       profileId: account.inst_id,
@@ -632,6 +636,12 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
             requestDuration,
           },
         });
+
+        /**
+         * Передаём параметр для определения стартовой глубины поиска для повторной проверки
+         */
+
+        checkProfileSubscriptionParams.checkRenewIndex = checkProfileSubscriptionResRaw.payload.checkRenewIndex || 0;
 
         await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
@@ -768,14 +778,14 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
       });
 
 
-      pendingSubscription.payloadResponse = checkProfileSubscriptionRes;
-
       await sails.helpers.storage.pendingActionsUpdateJoi({
         criteria: {
           guid: pendingSubscription.guid,
         },
         data: {
-          payloadResponse: pendingSubscription.payloadResponse,
+          payloadResponse: checkProfileSubscriptionRes,
+          checkInProgress: false,
+          done: true,
         }
       });
 
@@ -874,7 +884,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
       }
 
-      const accountUpdated = getAccountRaw.payload[0];
+      accountUpdated = getAccountRaw.payload[0];
 
       if (_.toString(accountUpdated.keyboard) === '') {
 
@@ -995,7 +1005,7 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
         }
 
-        const accountUpdated = getAccountRaw.payload[0];
+        accountUpdated = getAccountRaw.payload[0];
 
         if (_.toString(accountUpdated.keyboard) === '') {
 

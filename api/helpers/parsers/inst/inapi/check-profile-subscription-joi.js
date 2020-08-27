@@ -55,6 +55,10 @@ module.exports = {
         .any()
         .description('list of Instagram profile to check subscription on')
         .required(),
+      checkRenewIndex: Joi
+        .number()
+        .description('index to define depth on check renew')
+        .integer(),
     });
 
     let clientGuid;
@@ -92,7 +96,7 @@ module.exports = {
 
       const checkSteps = sails.config.custom.config.parsers.inst.checkSteps.getFollowing;
 
-      let i = 0;
+      let i = input.checkRenewIndex || 0;
 
       while (!allSubscribed && i < checkSteps.length) {
 
@@ -114,7 +118,7 @@ module.exports = {
           errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.name,
           location: moduleName,
           payload: {
-            profile: input.profileId,
+            profileId: input.profileId,
             requestDepth,
           },
         });
@@ -162,6 +166,7 @@ module.exports = {
             message: `${moduleName} performed with error`,
             payload: {
               error: 'wrong getFollowingsJoi response status',
+              checkRenewIndex: i,
             },
             raw: getFollowingsJoiRes,
           })

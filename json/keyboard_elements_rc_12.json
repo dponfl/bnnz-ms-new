@@ -1,8 +1,9 @@
 {
   "main": [
     {
-      "id": "keyboard_id",
+      "id": "show_keyboard_id",
       "description": "XXX",
+      "actionType": "show_keyboard",
       "initial": false,
       "enabled": false,
       "previous": null,
@@ -26,6 +27,26 @@
           }
         ]
       ]
+    },
+    {
+      "id": "delete_keyboard_id",
+      "description": "XXX",
+      "actionType": "delete_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "beforeHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": []
     }
   ]
 }

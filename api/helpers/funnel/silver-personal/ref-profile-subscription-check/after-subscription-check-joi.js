@@ -66,11 +66,6 @@ module.exports = {
 
     let pendingActionsRec;
 
-    let updateBlock;
-    let getBlock;
-    let splitRes;
-    let updateFunnel;
-    let updateId;
 
     try {
 
@@ -80,6 +75,111 @@ module.exports = {
       accountGuid = input.client.account_use;
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
+      const keyboardName = currentAccount.service.keyboard_name;
+
+      /**
+       * Удаляем кастомную клавиатуру
+       */
+
+      /**
+       * Достаём данные по активной клавиатуре
+       */
+
+      const keyboardGetParams = {
+        keyboardName,
+      };
+
+      const keyboardGetRaw = await sails.helpers.storage.keyboardGetJoi(keyboardGetParams);
+
+      if (keyboardGetRaw.status !== 'ok') {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong keyboardGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            keyboardGetParams,
+            keyboardGetRaw,
+          },
+        });
+
+      }
+
+      const keyboards = keyboardGetRaw.payload;
+
+      const activateKeyboardName = 'refProfileSubscriptionCheck::delete_keyboard';
+
+      let splitKeyboardRes = _.split(activateKeyboardName, sails.config.custom.JUNCTION, 2);
+      let keyboardBlock = splitKeyboardRes[0];
+      let keyboardId = splitKeyboardRes[1];
+
+      if (keyboardBlock == null || keyboardId == null) {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: `${activateKeyboardName} parsing error`,
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            keyboardId,
+            keyboardBlock,
+            activateKeyboardName,
+          },
+        });
+
+      }
+
+      const activateKeyboard = _.find(keyboards[keyboardBlock], {id: keyboardId});
+
+      if (activateKeyboard == null) {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'keyboard not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            keyboardId,
+            keyboardBlock,
+            keyboards,
+          },
+        });
+
+      }
+
+      const sendKeyboardParams = {
+        client: input.client,
+        keyboard: activateKeyboard,
+        messageData: activateKeyboard.message,
+        keyboardData: activateKeyboard.buttons,
+      };
+
+      const sendKeyboardJoiRaw = await sails.helpers.keyboardProcessor.sendKeyboardJoi(sendKeyboardParams);
+
+      if (sendKeyboardJoiRaw.status !== 'ok') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong sendKeyboardJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            sendKeyboardParams,
+            sendKeyboardJoiRaw,
+          },
+        });
+      }
 
       /**
        * формируем список профилей для проверки подписки на них
