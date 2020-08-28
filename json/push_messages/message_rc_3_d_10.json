@@ -564,6 +564,31 @@
             }
           ]
         }
+      },
+      "disableMainMenu": {
+        "id": "disable_main_menu",
+        "description": "",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "BEHERO_PM_DISABLE_MAIN_MENU_MSG",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
       }
     }
   }

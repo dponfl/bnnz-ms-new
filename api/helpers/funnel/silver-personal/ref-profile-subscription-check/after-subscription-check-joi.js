@@ -505,6 +505,12 @@ module.exports = {
                 },
               });
 
+              /**
+               * Передаём параметр для определения стартовой глубины поиска для повторной проверки
+               */
+
+              checkProfileSubscriptionParams.checkRenewIndex = checkProfileSubscriptionResRaw.payload.checkRenewIndex || 0;
+
               await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
             }
@@ -531,6 +537,7 @@ module.exports = {
               },
               data: {
                 actionsPerformed: pendingActionsRec.actionsPerformed,
+                checkInProgress: false,
               }
             });
 
@@ -666,6 +673,17 @@ module.exports = {
               /**
                * Подписка на все профили была выполнена
                */
+
+              await sails.helpers.storage.pendingActionsUpdateJoi({
+                criteria: {
+                  guid: pendingActionsRec.guid,
+                },
+                data: {
+                  done: true,
+                  checkInProgress: false,
+                }
+              });
+
 
               /**
                * Выполняем переход на join_ref_done

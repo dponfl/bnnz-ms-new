@@ -218,7 +218,7 @@ module.exports = {
 
           // TODO: Delete after QA
           await LogProcessor.info({
-            message: 'запискаем процесс обработки кейса',
+            message: 'запускаем процесс обработки кейса',
             clientGuid,
             accountGuid,
             // requestId: null,
@@ -784,10 +784,12 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         },
         data: {
           payloadResponse: checkProfileSubscriptionRes,
-          checkInProgress: false,
-          done: true,
+          // checkInProgress: false,
+          // done: true,
         }
       });
+
+      pendingSubscription.payloadResponse = checkProfileSubscriptionRes;
 
       /**
        * устанавливаем в RefUp статус signed для аккаунтов профилей, на которые осуществлена подписка

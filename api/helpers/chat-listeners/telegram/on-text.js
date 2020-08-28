@@ -217,86 +217,108 @@ module.exports = {
           if (currentAccount.service_subscription_finalized) {
 
             /**
-             * Проверяем достижение дневного лимита отправки постов
-             * и в зависимости от этого показываем соответствующую клавиатуру
+             * Если клиент находится в клавиатуре повторной проверки подписки
+             * на список реферальных профилей, то он должен завершить подписку
+             * прежде чем выходить в другие клавиатуры
              */
 
-            const checkDayPostsJoiRaw = await sails.helpers.general.checkDayPostsJoi({
-              client,
-            });
-
-            if (checkDayPostsJoiRaw.status !== 'ok') {
-              // throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
-              // client: ${client}
-              // checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
-
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.CRITICAL,
-                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-                location: moduleName,
-                message: 'Wrong checkDayPostsJoi reply',
-                clientGuid: client.guid,
-                accountGuid: client.account_use,
-                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
-                payload: {
-                  checkDayPostsJoiRaw,
-                },
-              });
-
-            }
-
-            const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
-
-            if (dayPostsReached) {
+            if (_.toString(currentAccount.keyboard) === 'refProfileSubscriptionCheck::start'
+            ) {
 
               /**
-               * Дневной лимит отправки постов достигнут
+               * Отправляем сообщение о необходимости завершить подписку
                */
 
-              currentAccount.keyboard = "main::check_post_limit";
+              const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+                client,
+                messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.disableMainMenu,
+              });
 
             } else {
 
               /**
-               * Дневной лимит отправки постов НЕ достигнут
+               * Проверяем достижение дневного лимита отправки постов
+               * и в зависимости от этого показываем соответствующую клавиатуру
                */
 
-              currentAccount.keyboard = "main::place_post";
-
-            }
-
-            client.current_funnel = '';
-
-            await sails.helpers.storage.clientUpdateJoi({
-              criteria: {guid: client.guid},
-              data: client,
-              createdBy: moduleName,
-            });
-
-            const sendKeyboardForAccountParams = {
-              client,
-            };
-
-            const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
-
-            if (sendKeyboardForAccountRaw.status !== 'ok') {
-              // throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
-              //   sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
-              //   sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
-
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.CRITICAL,
-                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-                location: moduleName,
-                message: 'Wrong sendKeyboardForAccountJoi response',
-                clientGuid: client.guid,
-                accountGuid: client.account_use,
-                errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
-                payload: {
-                  sendKeyboardForAccountParams,
-                  sendKeyboardForAccountRaw,
-                },
+              const checkDayPostsJoiRaw = await sails.helpers.general.checkDayPostsJoi({
+                client,
               });
+
+              if (checkDayPostsJoiRaw.status !== 'ok') {
+                // throw new Error(`${moduleName}, error: wrong checkDayPostsJoi reply:
+                // client: ${client}
+                // checkDayPostsJoiRaw: ${checkDayPostsJoiRaw}`);
+
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                  location: moduleName,
+                  message: 'Wrong checkDayPostsJoi reply',
+                  clientGuid: client.guid,
+                  accountGuid: client.account_use,
+                  errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
+                  payload: {
+                    checkDayPostsJoiRaw,
+                  },
+                });
+
+              }
+
+              const dayPostsReached =  checkDayPostsJoiRaw.payload.dayPostsReached;
+
+              if (dayPostsReached) {
+
+                /**
+                 * Дневной лимит отправки постов достигнут
+                 */
+
+                currentAccount.keyboard = "main::check_post_limit";
+
+              } else {
+
+                /**
+                 * Дневной лимит отправки постов НЕ достигнут
+                 */
+
+                currentAccount.keyboard = "main::place_post";
+
+              }
+
+              client.current_funnel = '';
+
+              await sails.helpers.storage.clientUpdateJoi({
+                criteria: {guid: client.guid},
+                data: client,
+                createdBy: moduleName,
+              });
+
+              const sendKeyboardForAccountParams = {
+                client,
+              };
+
+              const sendKeyboardForAccountRaw = await sails.helpers.keyboardProcessor.sendKeyboardForAccountJoi(sendKeyboardForAccountParams);
+
+              if (sendKeyboardForAccountRaw.status !== 'ok') {
+                // throw new Error(`${moduleName}, error: wrong sendKeyboardForAccountJoi response
+                //   sendKeyboardForAccountParams: ${JSON.stringify(sendKeyboardForAccountParams, null, 3)}
+                //   sendKeyboardForAccountRaw: ${JSON.stringify(sendKeyboardForAccountRaw, null, 3)}`);
+
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                  location: moduleName,
+                  message: 'Wrong sendKeyboardForAccountJoi response',
+                  clientGuid: client.guid,
+                  accountGuid: client.account_use,
+                  errorName: sails.config.custom.CHAT_LISTENER_TELEGRAM_ERROR.name,
+                  payload: {
+                    sendKeyboardForAccountParams,
+                    sendKeyboardForAccountRaw,
+                  },
+                });
+
+              }
 
             }
 
