@@ -1499,6 +1499,7 @@
       "initial": true,
       "enabled": false,
       "show_time": 0,
+      "removeKeyboard": true,
       "previous": null,
       "next": null,
       "switchToFunnel": null,
