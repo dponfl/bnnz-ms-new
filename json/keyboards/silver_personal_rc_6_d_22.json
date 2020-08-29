@@ -108,22 +108,29 @@
       "buttons": [
         [
           {
-            "id": "place_post",
+            "id": "account_menu",
             "text": "BEHERO_KEYBOARD_HOME_START_BTN_01",
             "action": "home::accountJoi"
           }
         ],
         [
           {
-            "id": "place_post",
+            "id": "univer_menu",
             "text": "BEHERO_KEYBOARD_HOME_START_BTN_02",
+            "action": "home::univerJoi"
+          }
+        ],
+        [
+          {
+            "id": "help_menu",
+            "text": "BEHERO_KEYBOARD_HOME_START_BTN_03",
             "action": "home::helpJoi"
           }
         ],
         [
           {
-            "id": "place_post",
-            "text": "BEHERO_KEYBOARD_HOME_START_BTN_03",
+            "id": "main_menu",
+            "text": "BEHERO_KEYBOARD_HOME_START_BTN_04",
             "action": "home::mainJoi"
           }
         ]
@@ -184,6 +191,36 @@
             "id": "home_menu",
             "text": "BEHERO_KEYBOARD_ACCOUNT_START_BTN_05",
             "action": "account::homeMenuJoi"
+          }
+        ]
+      ]
+    }
+  ],
+  "univer": [
+    {
+      "id": "start",
+      "description": "BeFame University Menu",
+      "actionType": "show_keyboard",
+      "initial": false,
+      "enabled": false,
+      "previous": null,
+      "next": null,
+      "beforeHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "XXXXXXX",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      },
+      "buttons": [
+        [
+          {
+            "id": "XXX",
+            "text": "XXX",
+            "action": null
           }
         ]
       ]
