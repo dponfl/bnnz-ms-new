@@ -18,7 +18,8 @@
       "shown": false,
       "done": false,
       "message": {
-        "sticker": "befame_sticker.webp"
+        "sticker": "befame_sticker.webp",
+        "mediaLibrary": true
       }
     },
     {
@@ -325,6 +326,7 @@
       "done": false,
       "message": {
         "doc": "v1595085603/BeFame_Dev/BeFame_About_v001_001.pdf",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "BEHERO_TERMS_DOC",
@@ -984,6 +986,7 @@
       "done": false,
       "message": {
         "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST",
@@ -1072,6 +1075,7 @@
       "done": false,
       "message": {
         "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND",
@@ -1182,6 +1186,7 @@
       "done": false,
       "message": {
         "video": "v1597490269/BeFame_Dev/INFO_How_Make_Post_v001_002.mp4",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "BEHERO_OPTIN_COMPLETED_VIDEO_01",
@@ -1658,6 +1663,7 @@
       "done": false,
       "message": {
         "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "BEHERO_NOREFINFO_MORE_INFO_TWO_MSG",

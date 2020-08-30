@@ -219,7 +219,7 @@ module.exports = {
 
             let imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
               chatId: input.client.chat_id,
-              imgPath: sails.config.custom.cloudinaryImgUrl + block.message.img,
+              imgPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.img : block.message.img,
               html: htmlImg,
             });
 
@@ -319,7 +319,7 @@ module.exports = {
 
             let videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
               chatId: input.client.chat_id,
-              videoPath: sails.config.custom.cloudinaryVideoUrl + block.message.video,
+              videoPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + block.message.video : block.message.video,
               html: htmlVideo,
             });
 
@@ -354,7 +354,7 @@ module.exports = {
 
             let stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
               chatId: input.client.chat_id,
-              stickerPath: sails.config.custom.cloudinaryImgUrl + block.message.sticker,
+              stickerPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.sticker : block.message.sticker,
             });
 
             block.message_id = stickerRes.payload.message_id;
@@ -395,7 +395,7 @@ module.exports = {
 
             let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
               chatId: input.client.chat_id,
-              docPath: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+              docPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc,
               html: htmlDoc,
             });
 
@@ -438,7 +438,7 @@ module.exports = {
 
             const docMessageJoiParams = {
               chatId: input.client.chat_id,
-              docPath: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+              docPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc,
               html: htmlDocInlineKeyboard,
             };
 

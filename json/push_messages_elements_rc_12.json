@@ -1,10 +1,103 @@
 {
-  "tasks": {
-    "task_name": [
+  "push_messages_examples": {
+    "push_messages": [
       {
-        "id": "task_id",
+        "id": "text",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "forced",
+        "description": "***",
+        "actionType": "forced",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": "XXXXXXX::XXXXXXX",
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "inline_keyboard",
         "description": "***",
         "actionType": "inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "XXXXXXX::XXXXXXX",
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "XXXXXXX",
+                "callback_data": "XXXXXXX"
+              }
+            ],
+            [
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              },
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "edit_message_text",
+        "description": "***",
+        "actionType": "edit_message_text",
         "initial": true,
         "enabled": true,
         "show_time": 0,
@@ -25,13 +118,108 @@
             }
           ],
           "inline_keyboard": [
-            [
-              {
-                "text": "***",
-                "url": "***"
-              }
-            ]
           ]
+        }
+      },
+      {
+        "id": "img",
+        "description": "***",
+        "actionType": "img",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "img": "XXXXXXX",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "video",
+        "description": "***",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "XXXXXXX",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "doc",
+        "description": "***",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "XXXXXXX",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "sticker",
+        "description": "***",
+        "actionType": "sticker",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "sticker": "XXXXXXX",
+          "mediaLibrary": true
         }
       }
     ]

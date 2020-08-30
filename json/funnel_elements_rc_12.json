@@ -136,6 +136,7 @@
       "done": false,
       "message": {
         "img": "XXXXXXX",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "XXXXXXX",
@@ -211,6 +212,7 @@
       "done": false,
       "message": {
         "video": "XXXXXXX",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "XXXXXXX",
@@ -238,7 +240,8 @@
       "shown": false,
       "done": false,
       "message": {
-        "sticker": "XXXXXXX"
+        "sticker": "XXXXXXX",
+        "mediaLibrary": true
       }
     },
     {
@@ -260,6 +263,7 @@
       "done": false,
       "message": {
         "doc": "XXXXXXX",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "XXXXXXX",
@@ -288,6 +292,7 @@
       "done": false,
       "message": {
         "doc": "XXXXXXX",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "XXXXXXX",

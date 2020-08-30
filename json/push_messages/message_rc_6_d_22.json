@@ -524,11 +524,118 @@
           }
         }
       }
-    },
-    "noRefJoin": {
-      "instParserErrorResponse": {
-        "joinRefCheck": {
-
+    }
+  },
+  "keyboards": {
+    "univer": {
+      "silverPersonal": {
+        "lesson01": {
+          "id": "lesson_01",
+          "description": "Lesson 01",
+          "actionType": "doc",
+          "initial": true,
+          "enabled": true,
+          "show_time": 0,
+          "previous": null,
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "doc": "v1598800867/BeFame_Dev/Univer/UNIVER_Lesson_01_sample_V000_000.pdf",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "BEHERO_PM_UNIVER_LESSON_01_MSG_01",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        "lesson02": {
+          "id": "lesson_02",
+          "description": "Lesson 02",
+          "actionType": "doc",
+          "initial": true,
+          "enabled": true,
+          "show_time": 0,
+          "previous": null,
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_02_sample_V000_000.pdf",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "BEHERO_PM_UNIVER_LESSON_02_MSG_01",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        "lesson03": {
+          "id": "lesson_03",
+          "description": "Lesson 03",
+          "actionType": "doc",
+          "initial": true,
+          "enabled": true,
+          "show_time": 0,
+          "previous": null,
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_03_sample_V000_000.pdf",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "BEHERO_PM_UNIVER_LESSON_03_MSG_01",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        },
+        "lesson04": {
+          "id": "lesson_04",
+          "description": "Lesson 04",
+          "actionType": "doc",
+          "initial": true,
+          "enabled": true,
+          "show_time": 0,
+          "previous": null,
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "doc": "v1598800870/BeFame_Dev/Univer/UNIVER_Lesson_04_sample_V000_000.pdf",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "BEHERO_PM_UNIVER_LESSON_04_MSG_01",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
         }
       }
     }
