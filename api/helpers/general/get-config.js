@@ -42,25 +42,25 @@ module.exports = {
        * Load push messages data
        */
 
-      const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
-
-      if (pushMessagesRaw.status === 'ok') {
-        sails.config.custom.pushMessages = pushMessagesRaw.payload;
-      } else {
-        // throw new Error('Critical error: Cannot get push messages data');
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
-          location: moduleName,
-          message: 'Cannot get push messages data',
-          errorName: sails.config.custom.GENERAL_ERROR.name,
-          payload: {
-            pushMessagesRaw,
-          },
-        });
-
-      }
+      // const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
+      //
+      // if (pushMessagesRaw.status === 'ok') {
+      //   sails.config.custom.pushMessages = pushMessagesRaw.payload;
+      // } else {
+      //   // throw new Error('Critical error: Cannot get push messages data');
+      //
+      //   await sails.helpers.general.throwErrorJoi({
+      //     errorType: sails.config.custom.enums.errorType.CRITICAL,
+      //     emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+      //     location: moduleName,
+      //     message: 'Cannot get push messages data',
+      //     errorName: sails.config.custom.GENERAL_ERROR.name,
+      //     payload: {
+      //       pushMessagesRaw,
+      //     },
+      //   });
+      //
+      // }
 
       if (sails.config.custom.config == null) {
         // throw new Error('Critical error: Cannot get config');
@@ -79,6 +79,18 @@ module.exports = {
         await sails.helpers.analytics.buildAnalyticsEventsSchedule();
 
         sails.log.info('Platform configuration loaded successfully');
+
+        await LogProcessor.info({
+          message: 'Platform configuration loaded successfully',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: 'Info',
+          location: moduleName,
+          payload: {},
+        });
+
       }
 
     } catch (e) {

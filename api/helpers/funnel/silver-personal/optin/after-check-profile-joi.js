@@ -69,6 +69,8 @@ module.exports = {
     let profileId = null;
     let profilePic = null;
 
+    let pushMessage;
+
 
     try {
 
@@ -145,9 +147,58 @@ module.exports = {
                  * Отправляем информационное сообщение клиенту
                  */
 
+                /**
+                 * Достаём данные PushMessage
+                 */
+
+                const pushMessageName = currentAccount.service.push_message_name;
+
+                const pushMessageGetParams = {
+                  pushMessageName,
+                };
+
+                const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+                if (pushMessageGetRaw.status !== 'ok') {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.ERROR,
+                    location: moduleName,
+                    message: 'Wrong pushMessageGetJoi response',
+                    clientGuid,
+                    accountGuid,
+                    errorName: sails.config.custom.STORAGE_ERROR.name,
+                    payload: {
+                      pushMessageGetParams,
+                      pushMessageGetRaw,
+                    },
+                  });
+
+                }
+
+                pushMessage = pushMessageGetRaw.payload;
+
+                const messageDataPath = 'funnels.optin.instParserErrorResponse.checkProfile';
+                const messageData = _.get(pushMessage, messageDataPath, null);
+
+                if (messageData == null) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.ERROR,
+                    location: moduleName,
+                    message: 'No expected messageData',
+                    clientGuid,
+                    accountGuid,
+                    errorName: sails.config.custom.STORAGE_ERROR.name,
+                    payload: {
+                      pushMessage,
+                      messageDataPath,
+                      messageData,
+                    },
+                  });
+                }
+
                 const infoMessageParams = {
                   client,
-                  messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.checkProfile,
+                  messageData,
                 };
 
                 const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);

@@ -40,7 +40,7 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
-    push_messages_name: {
+    push_message_name: {
       type: 'string',
       allowNull: true,
     },

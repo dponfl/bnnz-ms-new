@@ -48,6 +48,8 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let pushMessage;
+
 
     try {
 
@@ -56,6 +58,7 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       /**
        * Save the received callback query message
@@ -84,6 +87,32 @@ module.exports = {
          * Полученный callback относиться к типу заданий
          */
 
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        const pushMessageGetParams = {
+          pushMessageName,
+        };
+
+        const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+        if (pushMessageGetRaw.status !== 'ok') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong pushMessageGetJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessageGetParams,
+              pushMessageGetRaw,
+            },
+          });
+
+        }
+
+        pushMessage = pushMessageGetRaw.payload;
+
         /**
          * Определяем тип задания
          */
@@ -94,7 +123,7 @@ module.exports = {
            * Задание на постановку лайков
            */
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes')) {
+          if (!_.has(pushMessage, 'tasks.likes')) {
             // throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes property`);
 
             await sails.helpers.general.throwErrorJoi({
@@ -106,15 +135,13 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessages: sails.config.custom.pushMessages,
+                pushMessage,
               },
             });
 
           }
 
-          if (sails.config.custom.pushMessages.tasks.likes[0].callbackHelper == null) {
-            // throw new Error(`${moduleName}, critical error: push messages config tasks.likes has no callbackHelper`);
-
+          if (pushMessage.tasks.likes.callbackHelper == null) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -124,18 +151,16 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes[0],
+                pushMessagesTasksLikes: pushMessage.tasks.likes,
               },
             });
-
           }
 
           /**
            * Находим стартовый блок в групе блоков
            */
 
-          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes,
-            {initial: true});
+          let initialBlock = pushMessage.tasks.likes;
 
           /**
            * Проверяем, что стартовый блок был успешно найден
@@ -161,7 +186,7 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes,
+                pushMessagesTasksLikes: pushMessage.tasks.likes,
               },
             });
 
@@ -174,9 +199,7 @@ module.exports = {
            * Задание на постановку лайков и оставление комментов
            */
 
-          if (!_.has(sails.config.custom.pushMessages, 'tasks.likes_comments')) {
-            // throw new Error(`${moduleName}, critical error: push messages config has no tasks.likes_comments property`);
-
+          if (!_.has(pushMessage, 'tasks.likes_comments')) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -186,15 +209,12 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessages: sails.config.custom.pushMessages,
+                pushMessage,
               },
             });
-
           }
 
-          if (sails.config.custom.pushMessages.tasks.likes_comments[0].callbackHelper == null) {
-            // throw new Error(`${moduleName}, critical error: push messages config tasks.likes_comments has no callbackHelper`);
-
+          if (pushMessage.tasks.likes_comments.callbackHelper == null) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -204,18 +224,16 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes_comments[0],
+                pushMessagesTasksLikes: pushMessage.tasks.likes_comments,
               },
             });
-
           }
 
           /**
            * Находим стартовый блок в групе блоков
            */
 
-          let initialBlock = _.find(sails.config.custom.pushMessages.tasks.likes_comments,
-            {initial: true});
+          let initialBlock = pushMessage.tasks.likes_comments;
 
           /**
            * Проверяем, что стартовый блок был успешно найден
@@ -241,7 +259,7 @@ module.exports = {
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesTasksLikes: sails.config.custom.pushMessages.tasks.likes_comments,
+                pushMessagesTasksLikes: pushMessage.tasks.likes_comments,
               },
             });
 

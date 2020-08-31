@@ -62,6 +62,13 @@ module.exports = {
     let accountsListDraft = [];
     let accountsList = [];
 
+    let pushMessage;
+    let messageDataPath;
+    let messageData;
+    let pushMessageName;
+    let pushMessageGetParams;
+    let pushMessageGetRaw;
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
@@ -69,6 +76,7 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       /**
        * Получаем текущий аккаунт клиента
@@ -196,28 +204,28 @@ module.exports = {
        * Обновляем данные по структуре PushMessages (из-за inline_keyboard кнопок)
        */
 
-      const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
-
-      if (pushMessagesRaw.status === 'ok') {
-        sails.config.custom.pushMessages = pushMessagesRaw.payload;
-      } else {
-        // throw new Error(`${moduleName}, Critical error: Cannot get push messages data:
-        // pushMessagesRaw: ${JSON.stringify(pushMessagesRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Cannot get push messages data',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.TASKS_ERROR.name,
-          payload: {
-            pushMessagesRaw,
-          },
-        });
-
-      }
+      // const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
+      //
+      // if (pushMessagesRaw.status === 'ok') {
+      //   sails.config.custom.pushMessages = pushMessagesRaw.payload;
+      // } else {
+      //   // throw new Error(`${moduleName}, Critical error: Cannot get push messages data:
+      //   // pushMessagesRaw: ${JSON.stringify(pushMessagesRaw, null, 3)}`);
+      //
+      //   await sails.helpers.general.throwErrorJoi({
+      //     errorType: sails.config.custom.enums.errorType.CRITICAL,
+      //     emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+      //     location: moduleName,
+      //     message: 'Cannot get push messages data',
+      //     clientGuid,
+      //     accountGuid,
+      //     errorName: sails.config.custom.TASKS_ERROR.name,
+      //     payload: {
+      //       pushMessagesRaw,
+      //     },
+      //   });
+      //
+      // }
 
       /**
        * Для каждого аккаунта из accountsList
@@ -256,9 +264,59 @@ module.exports = {
 
         switch (taskType) {
           case sails.config.custom.config.tasks.task_types.LIKE:
+
+            /**
+             * Достаём данные PushMessage
+             */
+
+            pushMessageName = currentAccount.service.push_message_name;
+
+            pushMessageGetParams = {
+              pushMessageName,
+            };
+
+            pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+            if (pushMessageGetRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong pushMessageGetJoi response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessageGetParams,
+                  pushMessageGetRaw,
+                },
+              });
+
+            }
+
+            pushMessage = pushMessageGetRaw.payload;
+
+            messageDataPath = 'tasks.likes';
+            messageData = _.get(pushMessage, messageDataPath, null);
+
+            if (messageData == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'No expected messageData',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessage,
+                  messageDataPath,
+                  messageData,
+                },
+              });
+            }
+
             msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: acc.client,
-              messageData: sails.config.custom.pushMessages.tasks.likes[0],
+              messageData,
               additionalTokens: [
                 {
                   token: '$PostLink$',
@@ -276,9 +334,59 @@ module.exports = {
             });
             break;
           case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
+
+            /**
+             * Достаём данные PushMessage
+             */
+
+            pushMessageName = currentAccount.service.push_message_name;
+
+            pushMessageGetParams = {
+              pushMessageName,
+            };
+
+            pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+            if (pushMessageGetRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong pushMessageGetJoi response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessageGetParams,
+                  pushMessageGetRaw,
+                },
+              });
+
+            }
+
+            pushMessage = pushMessageGetRaw.payload;
+
+            messageDataPath = 'tasks.likes_comments';
+            messageData = _.get(pushMessage, messageDataPath, null);
+
+            if (messageData == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'No expected messageData',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessage,
+                  messageDataPath,
+                  messageData,
+                },
+              });
+            }
+
             msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: acc.client,
-              messageData: sails.config.custom.pushMessages.tasks.likes_comments[0],
+              messageData,
               additionalTokens: [
                 {
                   token: '$PostLink$',

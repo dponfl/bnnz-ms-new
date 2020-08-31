@@ -59,6 +59,8 @@ module.exports = {
     let activeKeyboard;
     let keyboardName;
 
+    let pushMessage;
+
     try {
 
       input = await schema.validateAsync(inputs.params);
@@ -205,25 +207,54 @@ module.exports = {
 
         // TODO: Передать полученное сообщение в Службу поддержки
 
-        const messageData = {
-          "id": "wrong_message",
-          "description": "",
-          "actionType": "text",
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-          "html": [
-            {
-              "text": "BEHERO_GENERAL_USE_KEYBOARD",
-              "style": "b",
-              "cr": ""
-            }
-          ]
-        }
+        /**
+         * Достаём данные PushMessage
+         */
+
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        const pushMessageGetParams = {
+          pushMessageName,
         };
+
+        const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+        if (pushMessageGetRaw.status !== 'ok') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong pushMessageGetJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessageGetParams,
+              pushMessageGetRaw,
+            },
+          });
+
+        }
+
+        pushMessage = pushMessageGetRaw.payload;
+
+        const messageDataPath = 'keyboards.wrongMessage';
+        const messageData = _.get(pushMessage, messageDataPath, null);
+
+        if (messageData == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected messageData',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessage,
+              messageDataPath,
+              messageData,
+            },
+          });
+        }
 
         const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
           client: input.client,

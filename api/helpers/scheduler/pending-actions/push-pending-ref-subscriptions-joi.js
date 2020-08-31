@@ -294,11 +294,15 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
   const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
   const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
 
+  let pushMessage;
+
 
   try {
 
     clientGuid = client.guid;
     accountGuid = account.guid;
+
+    const currentAccount = account;
 
     /**
      * Устанавливаем флаг, что запись взята в работу
@@ -513,10 +517,58 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
         },
       });
 
+      /**
+       * Достаём данные PushMessage
+       */
+
+      const pushMessageName = currentAccount.service.push_message_name;
+
+      const pushMessageGetParams = {
+        pushMessageName,
+      };
+
+      const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+      if (pushMessageGetRaw.status !== 'ok') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong pushMessageGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessageGetParams,
+            pushMessageGetRaw,
+          },
+        });
+
+      }
+
+      pushMessage = pushMessageGetRaw.payload;
+
+      const messageDataPath = 'scheduler.refProfileSubscriptionCheck.joinRefDone';
+      const messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
 
       const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
         client,
-        messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.joinRefDone,
+        messageData,
       });
 
       await sails.helpers.storage.pendingActionsUpdateJoi({
@@ -1118,10 +1170,58 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
           },
         });
 
+        /**
+         * Достаём данные PushMessage
+         */
+
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        const pushMessageGetParams = {
+          pushMessageName,
+        };
+
+        const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+        if (pushMessageGetRaw.status !== 'ok') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong pushMessageGetJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessageGetParams,
+              pushMessageGetRaw,
+            },
+          });
+
+        }
+
+        pushMessage = pushMessageGetRaw.payload;
+
+        const messageDataPath = 'scheduler.refProfileSubscriptionCheck.joinRefDone';
+        const messageData = _.get(pushMessage, messageDataPath, null);
+
+        if (messageData == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected messageData',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessage,
+              messageDataPath,
+              messageData,
+            },
+          });
+        }
 
         const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
           client,
-          messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.joinRefDone,
+          messageData,
         });
 
         await sails.helpers.storage.pendingActionsUpdateJoi({

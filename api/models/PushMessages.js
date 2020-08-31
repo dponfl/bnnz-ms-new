@@ -10,6 +10,11 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
+    name: {
+      type: 'string',
+      required: true,
+    },
+
     active: {
       type: 'boolean',
       required: true,

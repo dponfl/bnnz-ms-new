@@ -50,6 +50,8 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let pushMessage;
+
 
     try {
 
@@ -58,10 +60,60 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      /**
+       * Достаём данные PushMessage
+       */
+
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
+      const pushMessageName = currentAccount.service.push_message_name;
+
+      const pushMessageGetParams = {
+        pushMessageName,
+      };
+
+      const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+      if (pushMessageGetRaw.status !== 'ok') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong pushMessageGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessageGetParams,
+            pushMessageGetRaw,
+          },
+        });
+
+      }
+
+      pushMessage = pushMessageGetRaw.payload;
+
+      const messageDataPath = 'keyboards.univer.lesson04';
+      const messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
 
       const sendMessageParams = {
         client: input.client,
-        messageData: sails.config.custom.pushMessages.keyboards.univer.silverPersonal.lesson04,
+        messageData,
       };
 
       const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);

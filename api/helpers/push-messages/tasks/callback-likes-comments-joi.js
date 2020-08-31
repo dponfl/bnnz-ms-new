@@ -73,6 +73,8 @@ module.exports = {
     let momentStart;
     let i;
 
+    let pushMessage;
+
     try {
 
       let taskPerformRes;
@@ -82,6 +84,7 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       const client = input.client;
 
@@ -244,7 +247,54 @@ module.exports = {
        * Отправляем сообщение, что начинаем проверку задания и убираем кнопку проверки задания
        */
 
-      const messageData = sails.config.custom.pushMessages.tasks.onCheckButtonPressed;
+      /**
+       * Достаём данные PushMessage
+       */
+
+      const pushMessageName = currentAccount.service.push_message_name;
+
+      const pushMessageGetParams = {
+        pushMessageName,
+      };
+
+      const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+      if (pushMessageGetRaw.status !== 'ok') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong pushMessageGetJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessageGetParams,
+            pushMessageGetRaw,
+          },
+        });
+
+      }
+
+      pushMessage = pushMessageGetRaw.payload;
+
+      const messageDataPath = 'tasks.onCheckButtonPressed';
+      const messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
 
       taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
         client: input.client,
@@ -306,7 +356,54 @@ module.exports = {
              * Трансформируем блок в информационное сообщение о факапе API
              */
 
-            const messageData = sails.config.custom.pushMessages.tasks.onParserError;
+            /**
+             * Достаём данные PushMessage
+             */
+
+            const pushMessageName = currentAccount.service.push_message_name;
+
+            const pushMessageGetParams = {
+              pushMessageName,
+            };
+
+            const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+            if (pushMessageGetRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong pushMessageGetJoi response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessageGetParams,
+                  pushMessageGetRaw,
+                },
+              });
+
+            }
+
+            pushMessage = pushMessageGetRaw.payload;
+
+            const messageDataPath = 'tasks.onParserError';
+            const messageData = _.get(pushMessage, messageDataPath, null);
+
+            if (messageData == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'No expected messageData',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessage,
+                  messageDataPath,
+                  messageData,
+                },
+              });
+            }
 
             taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: input.client,
@@ -430,7 +527,54 @@ module.exports = {
              * Трансформируем блок в информационное сообщение о факапе API
              */
 
-            const messageData = sails.config.custom.pushMessages.tasks.onParserError;
+            /**
+             * Достаём данные PushMessage
+             */
+
+            const pushMessageName = currentAccount.service.push_message_name;
+
+            const pushMessageGetParams = {
+              pushMessageName,
+            };
+
+            const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+            if (pushMessageGetRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong pushMessageGetJoi response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessageGetParams,
+                  pushMessageGetRaw,
+                },
+              });
+
+            }
+
+            pushMessage = pushMessageGetRaw.payload;
+
+            const messageDataPath = 'tasks.onParserError';
+            const messageData = _.get(pushMessage, messageDataPath, null);
+
+            if (messageData == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'No expected messageData',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  pushMessage,
+                  messageDataPath,
+                  messageData,
+                },
+              });
+            }
 
             taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
               client: input.client,
@@ -543,7 +687,7 @@ module.exports = {
       if (commentDone) {
 
         taskData.makeCommentPerformed = true;
-        taskData.commentText = commentText;
+        taskData.commentText = await MessageProcessor.clearStr(commentText);
         taskData.commentNumberOfWords = numberOfWords;
         postData.receivedComments++;
         postData.allCommentsDone = postData.receivedComments >= postRec.requestedComments;
@@ -605,9 +749,58 @@ module.exports = {
 
         if (likeDone && commentDone) {
 
+          /**
+           * Достаём данные PushMessage
+           */
+
+          const pushMessageName = currentAccount.service.push_message_name;
+
+          const pushMessageGetParams = {
+            pushMessageName,
+          };
+
+          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+          if (pushMessageGetRaw.status !== 'ok') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong pushMessageGetJoi response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessageGetParams,
+                pushMessageGetRaw,
+              },
+            });
+
+          }
+
+          pushMessage = pushMessageGetRaw.payload;
+
+          const messageDataPath = 'tasks.likes_comments_done';
+          const messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
+
           taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
             client: input.client,
-            messageData: sails.config.custom.pushMessages.tasks.likes_comments_done[0],
+            messageData,
             additionalTokens: [
               {
                 token: '$PostLink$',
@@ -631,18 +824,54 @@ module.exports = {
 
         if (!likeDone && !commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_not_done[0];
+          /**
+           * Достаём данные PushMessage
+           */
 
-          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-          //   [
-          //     [
-          //       {
-          //         "text": "MSG_TASK_PERFORM_BTN",
-          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-          //       }
-          //     ]
-          //   ]
-          // );
+          const pushMessageName = currentAccount.service.push_message_name;
+
+          const pushMessageGetParams = {
+            pushMessageName,
+          };
+
+          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+          if (pushMessageGetRaw.status !== 'ok') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong pushMessageGetJoi response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessageGetParams,
+                pushMessageGetRaw,
+              },
+            });
+
+          }
+
+          pushMessage = pushMessageGetRaw.payload;
+
+          const messageDataPath = 'tasks.likes_comments_not_done';
+          const messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
 
           messageData.message.inline_keyboard[1] = [
             {
@@ -677,18 +906,54 @@ module.exports = {
 
         if (likeDone && !commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_comment[0];
+          /**
+           * Достаём данные PushMessage
+           */
 
-          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-          //   [
-          //     [
-          //       {
-          //         "text": "MSG_TASK_PERFORM_BTN",
-          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-          //       }
-          //     ]
-          //   ]
-          // );
+          const pushMessageName = currentAccount.service.push_message_name;
+
+          const pushMessageGetParams = {
+            pushMessageName,
+          };
+
+          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+          if (pushMessageGetRaw.status !== 'ok') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong pushMessageGetJoi response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessageGetParams,
+                pushMessageGetRaw,
+              },
+            });
+
+          }
+
+          pushMessage = pushMessageGetRaw.payload;
+
+          const messageDataPath = 'tasks.likes_comments_no_comment';
+          const messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
 
           messageData.message.inline_keyboard[1] = [
             {
@@ -723,18 +988,54 @@ module.exports = {
 
         if (!likeDone && commentDone) {
 
-          const messageData = sails.config.custom.pushMessages.tasks.likes_comments_no_like[0];
+          /**
+           * Достаём данные PushMessage
+           */
 
-          // messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-          //   [
-          //     [
-          //       {
-          //         "text": "MSG_TASK_PERFORM_BTN",
-          //         "callback_data": "push_msg_tsk_lc_" + taskRec.guid
-          //       }
-          //     ]
-          //   ]
-          // );
+          const pushMessageName = currentAccount.service.push_message_name;
+
+          const pushMessageGetParams = {
+            pushMessageName,
+          };
+
+          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+          if (pushMessageGetRaw.status !== 'ok') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong pushMessageGetJoi response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessageGetParams,
+                pushMessageGetRaw,
+              },
+            });
+
+          }
+
+          pushMessage = pushMessageGetRaw.payload;
+
+          const messageDataPath = 'tasks.likes_comments_no_like';
+          const messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
 
           messageData.message.inline_keyboard[1] = [
             {

@@ -54,6 +54,7 @@ module.exports = {
       let serviceName = null;
       let categoryName = 'user';
       let client;
+      let pushMessage;
 
 
       try {
@@ -229,9 +230,57 @@ module.exports = {
                * Отправляем сообщение о необходимости завершить подписку
                */
 
+              /**
+               * Достаём данные PushMessage
+               */
+
+              const pushMessageName = currentAccount.service.push_message_name;
+
+              const pushMessageGetParams = {
+                pushMessageName,
+              };
+
+              const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+              if (pushMessageGetRaw.status !== 'ok') {
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'Wrong pushMessageGetJoi response',
+                  clientGuid: client.guid,
+                  accountGuid: client.account_use,
+                  errorName: sails.config.custom.STORAGE_ERROR.name,
+                  payload: {
+                    pushMessageGetParams,
+                    pushMessageGetRaw,
+                  },
+                });
+              }
+
+              pushMessage = pushMessageGetRaw.payload;
+
+              const messageDataPath = 'scheduler.refProfileSubscriptionCheck.disableMainMenu';
+              const messageData = _.get(pushMessage, messageDataPath, null);
+
+              if (messageData == null) {
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'No expected messageData',
+                  clientGuid: client.guid,
+                  accountGuid: client.account_use,
+                  errorName: sails.config.custom.STORAGE_ERROR.name,
+                  payload: {
+                    pushMessage,
+                    messageDataPath,
+                    messageData,
+                  },
+                });
+              }
+
               const msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
                 client,
-                messageData: sails.config.custom.pushMessages.scheduler.refProfileSubscriptionCheck.disableMainMenu,
+                messageData,
               });
 
             } else {

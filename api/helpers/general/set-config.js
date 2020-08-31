@@ -42,17 +42,17 @@ module.exports = {
 
       sails.config.custom.config = confRec.config_data;
 
-      /**
-       * Load push messages data
-       */
-
-      const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
-
-      if (pushMessagesRaw.status === 'ok') {
-        sails.config.custom.pushMessages = pushMessagesRaw.payload;
-      } else {
-        throw new Error('Critical error: Cannot get push messages data');
-      }
+      // /**
+      //  * Load push messages data
+      //  */
+      //
+      // const pushMessagesRaw = await sails.helpers.storage.pushMessagesGet();
+      //
+      // if (pushMessagesRaw.status === 'ok') {
+      //   sails.config.custom.pushMessages = pushMessagesRaw.payload;
+      // } else {
+      //   throw new Error('Critical error: Cannot get push messages data');
+      // }
 
       if (inputs.data != null) {
         sails.config.custom = _.assign(sails.config.custom, inputs.data);

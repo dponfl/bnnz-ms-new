@@ -83,8 +83,7 @@
     ]
   },
   "tasks": {
-    "likes": [
-      {
+    "likes": {
         "id": "start",
         "description": "Задача: поставить лайк",
         "actionType": "inline_keyboard",
@@ -126,10 +125,8 @@
             ]
           ]
         }
-      }
-    ],
-    "likes_comments": [
-      {
+      },
+    "likes_comments": {
         "id": "start",
         "description": "Задача: оставить комментарий и поставить лайк",
         "actionType": "inline_keyboard",
@@ -171,10 +168,8 @@
             ]
           ]
         }
-      }
-    ],
-    "likes_done": [
-      {
+      },
+    "likes_done": {
         "id": "start",
         "description": "Задание поставить лайк выполнено",
         "actionType": "edit_message_text",
@@ -200,10 +195,8 @@
           "inline_keyboard": [
           ]
         }
-      }
-    ],
-    "likes_not_done": [
-      {
+      },
+    "likes_not_done": {
         "id": "start",
         "description": "Задание поставить лайк не выполнено",
         "actionType": "edit_message_text",
@@ -240,10 +233,8 @@
             ]
           ]
         }
-      }
-    ],
-    "likes_comments_done": [
-      {
+      },
+    "likes_comments_done": {
         "id": "start",
         "description": "Задание поставить лайк и оставить комментарий выполнено",
         "actionType": "edit_message_text",
@@ -269,10 +260,8 @@
           "inline_keyboard": [
           ]
         }
-      }
-    ],
-    "likes_comments_not_done": [
-      {
+      },
+    "likes_comments_not_done": {
         "id": "start",
         "description": "Задание поставить лайк и оставить комментарий не выполнено",
         "actionType": "edit_message_text",
@@ -309,10 +298,8 @@
             ]
           ]
         }
-      }
-    ],
-    "likes_comments_no_like": [
-      {
+      },
+    "likes_comments_no_like": {
         "id": "start",
         "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет лайка",
         "actionType": "edit_message_text",
@@ -354,10 +341,8 @@
             ]
           ]
         }
-      }
-    ],
-    "likes_comments_no_comment": [
-      {
+      },
+    "likes_comments_no_comment": {
         "id": "start",
         "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет комментария",
         "actionType": "edit_message_text",
@@ -399,8 +384,7 @@
             ]
           ]
         }
-      }
-    ],
+      },
     "onCheckButtonPressed": {
       "id": "check_button_pressed",
       "description": "Message on Check button pressed",
@@ -527,115 +511,138 @@
     }
   },
   "keyboards": {
+    "wrongMessage": {
+      "id": "wrong_message",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "BEHERO_GENERAL_USE_KEYBOARD",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
     "univer": {
-      "silverPersonal": {
-        "lesson01": {
-          "id": "lesson_01",
-          "description": "Lesson 01",
-          "actionType": "doc",
-          "initial": true,
-          "enabled": true,
-          "show_time": 0,
-          "previous": null,
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-            "doc": "v1598800867/BeFame_Dev/Univer/UNIVER_Lesson_01_sample_V000_000.pdf",
-            "mediaLibrary": true,
-            "html": [
-              {
-                "text": "BEHERO_PM_UNIVER_LESSON_01_MSG_01",
-                "style": "",
-                "cr": ""
-              }
-            ]
-          }
-        },
-        "lesson02": {
-          "id": "lesson_02",
-          "description": "Lesson 02",
-          "actionType": "doc",
-          "initial": true,
-          "enabled": true,
-          "show_time": 0,
-          "previous": null,
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-            "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_02_sample_V000_000.pdf",
-            "mediaLibrary": true,
-            "html": [
-              {
-                "text": "BEHERO_PM_UNIVER_LESSON_02_MSG_01",
-                "style": "",
-                "cr": ""
-              }
-            ]
-          }
-        },
-        "lesson03": {
-          "id": "lesson_03",
-          "description": "Lesson 03",
-          "actionType": "doc",
-          "initial": true,
-          "enabled": true,
-          "show_time": 0,
-          "previous": null,
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-            "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_03_sample_V000_000.pdf",
-            "mediaLibrary": true,
-            "html": [
-              {
-                "text": "BEHERO_PM_UNIVER_LESSON_03_MSG_01",
-                "style": "",
-                "cr": ""
-              }
-            ]
-          }
-        },
-        "lesson04": {
-          "id": "lesson_04",
-          "description": "Lesson 04",
-          "actionType": "doc",
-          "initial": true,
-          "enabled": true,
-          "show_time": 0,
-          "previous": null,
-          "next": null,
-          "shown": false,
-          "beforeHelper": null,
-          "afterHelper": null,
-          "forcedHelper": null,
-          "callbackHelper": null,
-          "blockModifyHelper": null,
-          "message": {
-            "doc": "v1598800870/BeFame_Dev/Univer/UNIVER_Lesson_04_sample_V000_000.pdf",
-            "mediaLibrary": true,
-            "html": [
-              {
-                "text": "BEHERO_PM_UNIVER_LESSON_04_MSG_01",
-                "style": "",
-                "cr": ""
-              }
-            ]
-          }
+      "lesson01": {
+        "id": "lesson_01",
+        "description": "Lesson 01",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "v1598800867/BeFame_Dev/Univer/UNIVER_Lesson_01_sample_V000_000.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "BEHERO_PM_UNIVER_LESSON_01_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson02": {
+        "id": "lesson_02",
+        "description": "Lesson 02",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_02_sample_V000_000.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "BEHERO_PM_UNIVER_LESSON_02_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson03": {
+        "id": "lesson_03",
+        "description": "Lesson 03",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "v1598800869/BeFame_Dev/Univer/UNIVER_Lesson_03_sample_V000_000.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "BEHERO_PM_UNIVER_LESSON_03_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson04": {
+        "id": "lesson_04",
+        "description": "Lesson 04",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "v1598800870/BeFame_Dev/Univer/UNIVER_Lesson_04_sample_V000_000.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "BEHERO_PM_UNIVER_LESSON_04_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
         }
       }
     }

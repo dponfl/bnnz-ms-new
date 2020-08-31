@@ -236,55 +236,6 @@ module.exports = {
             },
           });
 
-          // for (const elem of notifications) {
-          //
-          //   if (requestDuration > elem.notificationInterval * parserRequestIntervalTime) {
-          //
-          //     if (elem.sendMessageToClient && !elem.clientNotified) {
-          //
-          //       /**
-          //        * Отправляем информационное Push-сообщение
-          //        */
-          //
-          //       const infoMessageParams = {
-          //         client,
-          //         messageData: sails.config.custom.pushMessages.funnels.optin.instParserErrorResponse.joinRefCheck,
-          //       };
-          //
-          //       const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
-          //
-          //       elem.clientNotified = true;
-          //
-          //     }
-          //
-          //     if (elem.sendMessageToAdmin && !elem.adminNotified) {
-          //
-          //       /**
-          //        * Генерим сообщение о критической ошибке
-          //        */
-          //
-          //       await LogProcessor.critical({
-          //         message: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.message,
-          //         clientGuid,
-          //         accountGuid,
-          //         // requestId: null,
-          //         // childRequestId: null,
-          //         errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.name,
-          //         location: moduleName,
-          //         emergencyLevel: elem.emergencyLevel,
-          //         payload: {
-          //           parserRequestInterval: parserRequestIntervals[i],
-          //         },
-          //       });
-          //
-          //       elem.adminNotified = true;
-          //
-          //     }
-          //
-          //   }
-          //
-          // }
-
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
         }

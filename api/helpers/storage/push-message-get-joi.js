@@ -1,12 +1,14 @@
 "use strict";
 
-const moduleName = 'message-processor:push-messages-get';
+const Joi = require('@hapi/joi');
+
+const moduleName = 'message-processor:push-message-get-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'message-processor:push-messages-get',
+  friendlyName: 'message-processor:push-message-get-joi',
 
 
   description: 'Fetch push messages data from push_messages table',
@@ -14,11 +16,17 @@ module.exports = {
 
   inputs: {
 
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
+      type: 'ref',
+      required: true,
+    },
+
   },
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
@@ -26,23 +34,34 @@ module.exports = {
     err: {
       description: 'Error',
     }
-
   },
 
 
   fn: async function (inputs, exits) {
 
+    const schema = Joi.object({
+      pushMessageName: Joi
+        .string()
+        .description('pushMessage name')
+        .required(),
+    });
+
+    let input;
+
     try {
+
+      input = await schema.validateAsync(inputs.params);
 
       const pushMessages = await PushMessages.findOne({
         active: true,
+        name: input.pushMessageName,
       });
 
       if (pushMessages.message_data != null) {
 
         return exits.success({
           status: 'ok',
-          message: 'Push messages data received',
+          message: 'Push message data received',
           payload: pushMessages.message_data,
         })
 
@@ -50,27 +69,13 @@ module.exports = {
 
         return exits.success({
           status: 'nok',
-          message: 'Push messages data NOT received',
+          message: 'Push message data NOT received',
           payload: {},
         })
 
       }
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {},
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -90,7 +95,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }
