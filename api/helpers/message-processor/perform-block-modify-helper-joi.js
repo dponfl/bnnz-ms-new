@@ -44,7 +44,7 @@ module.exports = {
       additionalParams: Joi.any(),
     });
 
-    let res
+    let res;
 
     let clientGuid;
     let accountGuid;
@@ -118,8 +118,11 @@ module.exports = {
           additionalParams: input.additionalParams,
         };
 
+        const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-        res = await sails.helpers.pushMessages[blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        res = await sails.helpers.pushMessages[pushMessageName][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
 
       } else {
         // throw new Error(`${moduleName}, critical error: could not parse callback helper name:

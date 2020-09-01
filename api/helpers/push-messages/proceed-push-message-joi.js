@@ -69,16 +69,16 @@ module.exports = {
          * We managed to parse the specified callbackHelper and can perform it
          */
 
-        await sails.helpers.pushMessages[callbackHelperBlock][callbackHelperName]({
+        const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        await sails.helpers.pushMessages[pushMessageName][callbackHelperBlock][callbackHelperName]({
           client: input.client,
           query: input.query,
         });
 
       } else {
-        // throw new Error(`${moduleName}, critical error: could not parse callback helper name:
-        //     callbackHelperBlock: ${callbackHelperBlock}
-        //     callbackHelperName: ${callbackHelperName}`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -93,7 +93,6 @@ module.exports = {
             callbackHelperName,
           },
         });
-
       }
 
       return exits.success({
@@ -103,22 +102,6 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
