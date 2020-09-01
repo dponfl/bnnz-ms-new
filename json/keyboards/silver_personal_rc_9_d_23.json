@@ -226,9 +226,7 @@
             "id": "one",
             "text": "BEHERO_KEYBOARD_UNIVER_START_BTN_01",
             "action": "univer::oneJoi"
-          }
-        ],
-        [
+          },
           {
             "id": "two",
             "text": "BEHERO_KEYBOARD_UNIVER_START_BTN_02",
@@ -240,9 +238,7 @@
             "id": "three",
             "text": "BEHERO_KEYBOARD_UNIVER_START_BTN_03",
             "action": "univer::threeJoi"
-          }
-        ],
-        [
+          },
           {
             "id": "four",
             "text": "BEHERO_KEYBOARD_UNIVER_START_BTN_04",
