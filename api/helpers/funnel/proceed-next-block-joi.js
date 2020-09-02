@@ -608,10 +608,11 @@ module.exports = {
         } else {
 
           let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
-          let afterHelperBlock = splitAfterHelperRes[0];
-          let afterHelperName = splitAfterHelperRes[1];
+          let afterHelperCategory = splitAfterHelperRes[0];
+          let afterHelperBlock = splitAfterHelperRes[1];
+          let afterHelperName = splitAfterHelperRes[2];
 
-          if (afterHelperBlock && afterHelperName) {
+          if (afterHelperCategory && afterHelperBlock && afterHelperName) {
 
             /**
              * We managed to parse the specified afterHelper and can perform it
@@ -628,7 +629,7 @@ module.exports = {
 
             }
 
-            await sails.helpers.funnel[input.client.funnel_name][afterHelperBlock][afterHelperName](afterHelperParams);
+            await sails.helpers.funnel[afterHelperCategory][afterHelperBlock][afterHelperName](afterHelperParams);
 
 
           } else {
