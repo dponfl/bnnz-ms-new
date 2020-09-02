@@ -91,16 +91,17 @@ module.exports = {
         if (!_.isNil(forcedReplyBlock)) {
 
           let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
-          let forcedHelperBlock = splitForcedHelperRes[0];
-          let forcedHelperName = splitForcedHelperRes[1];
+          let forcedHelperCategory = splitForcedHelperRes[0];
+          let forcedHelperBlock = splitForcedHelperRes[1];
+          let forcedHelperName = splitForcedHelperRes[2];
 
-          if (forcedHelperBlock && forcedHelperName) {
+          if (forcedHelperCategory && forcedHelperBlock && forcedHelperName) {
 
             /**
              * We managed to parse the specified forcedHelper and can perform it
              */
 
-            await sails.helpers.funnel[input.client.funnel_name][forcedHelperBlock][forcedHelperName]({
+            await sails.helpers.funnel[forcedHelperCategory][forcedHelperBlock][forcedHelperName]({
               client: input.client,
               block: forcedReplyBlock,
               msg: input.msg,
