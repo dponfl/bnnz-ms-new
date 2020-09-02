@@ -51,17 +51,17 @@ async function generateMessageData(messageType = null, data = null) {
           message: {
             html: [
               {
-                text: "MSG_TASK_LIKE",
+                text: "COMMON_MSG_TASK_LIKE",
                 style: "",
                 cr: "SCR"
               },
               {
-                text: "MSG_TASK_POST_LINK",
+                text: "COMMON_MSG_TASK_POST_LINK",
                 style: "b",
                 cr: "DCR"
               },
               {
-                text: "MSG_TASK",
+                text: "COMMON_MSG_TASK",
                 style: "bi",
                 cr: ""
               }
@@ -90,17 +90,17 @@ async function generateMessageData(messageType = null, data = null) {
           message: {
             html: [
               {
-                text: "MSG_TASK_LIKE_COMMENT",
+                text: "COMMON_MSG_TASK_LIKE_COMMENT",
                 style: "",
                 cr: "SCR"
               },
               {
-                text: "MSG_TASK_POST_LINK",
+                text: "COMMON_MSG_TASK_POST_LINK",
                 style: "b",
                 cr: "DCR"
               },
               {
-                text: "MSG_TASK",
+                text: "COMMON_MSG_TASK",
                 style: "bi",
                 cr: ""
               }
@@ -129,17 +129,17 @@ async function generateMessageData(messageType = null, data = null) {
           message: {
             html: [
               {
-                text: "MSG_TASK_LIKE",
+                text: "COMMON_MSG_TASK_LIKE",
                 style: "",
                 cr: "SCR"
               },
               {
-                text: "MSG_TASK_POST_LINK",
+                text: "COMMON_MSG_TASK_POST_LINK",
                 style: "b",
                 cr: "DCR"
               },
               {
-                text: "MSG_TASK",
+                text: "COMMON_MSG_TASK",
                 style: "bi",
                 cr: ""
               }

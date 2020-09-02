@@ -42,22 +42,22 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_START_01",
+            "text": "COMMON_START_01",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_START_02",
+            "text": "COMMON_START_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_START_03",
+            "text": "COMMON_START_03",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_START_04",
+            "text": "COMMON_START_04",
             "style": "",
             "cr": ""
           }
@@ -84,7 +84,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_INTRO",
+            "text": "COMMON_INTRO",
             "style": "",
             "cr": ""
           }
@@ -103,7 +103,7 @@
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
-      "forcedHelper": "optin::forcedGetProfileJoi",
+      "forcedHelper": "common::optin::forcedGetProfileJoi",
       "callbackHelper": null,
       "blockModifyHelper": null,
       "shown": false,
@@ -111,7 +111,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_GET_PROFILE",
+            "text": "COMMON_GET_PROFILE",
             "style": "",
             "cr": ""
           }
@@ -129,7 +129,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterCheckProfileJoi",
+      "afterHelper": "common::optin::afterCheckProfileJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -138,12 +138,12 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_CHECK_PROFILE_MSG_01",
+            "text": "COMMON_CHECK_PROFILE_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_CHECK_PROFILE_MSG_02",
+            "text": "COMMON_CHECK_PROFILE_MSG_02",
             "style": "",
             "cr": ""
           }
@@ -161,7 +161,7 @@
       "next": "optin::get_profile",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterWrongProfileJoi",
+      "afterHelper": "common::optin::afterWrongProfileJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -170,7 +170,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_WRONG_PROFILE",
+            "text": "COMMON_WRONG_PROFILE",
             "style": "",
             "cr": ""
           }
@@ -187,10 +187,10 @@
       "previous": "optin::get_profile",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": "optin::beforeConfirmProfileJoi",
+      "beforeHelper": "common::optin::beforeConfirmProfileJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackConfirmProfileJoi",
+      "callbackHelper": "common::optin::callbackConfirmProfileJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
@@ -199,17 +199,17 @@
         "mediaLibrary": false,
         "html": [
           {
-            "text": "BEHERO_CONFIRM_PROFILE_01",
+            "text": "COMMON_CONFIRM_PROFILE_01",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_CONFIRM_PROFILE_02",
+            "text": "COMMON_CONFIRM_PROFILE_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_CONFIRM_PROFILE_03",
+            "text": "COMMON_CONFIRM_PROFILE_03",
             "style": "",
             "cr": ""
           }
@@ -217,11 +217,11 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_CONFIRM_PROFILE_BTN_YES",
+              "text": "COMMON_CONFIRM_PROFILE_BTN_YES",
               "callback_data": "profile_confirm_yes"
             },
             {
-              "text": "BEHERO_CONFIRM_PROFILE_BTN_NO",
+              "text": "COMMON_CONFIRM_PROFILE_BTN_NO",
               "callback_data": "profile_confirm_no"
             }
           ]
@@ -239,7 +239,7 @@
       "next": "optin::get_profile",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterTryAgainJoi",
+      "afterHelper": "common::optin::afterTryAgainJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -248,7 +248,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NEXT_TRY",
+            "text": "COMMON_NEXT_TRY",
             "style": "",
             "cr": ""
           }
@@ -268,19 +268,19 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackMakePaymentJoi",
+      "callbackHelper": "common::optin::callbackMakePaymentJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAKE_PAYMENT_01",
+            "text": "COMMON_MAKE_PAYMENT_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MAKE_PAYMENT_02",
+            "text": "COMMON_MAKE_PAYMENT_02",
             "style": "",
             "cr": "DCR"
           }
@@ -288,19 +288,19 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_MAKE_PAYMENT_BTN_01",
+              "text": "COMMON_MAKE_PAYMENT_BTN_01",
               "callback_data": "make_payment"
             }
           ],
           [
             {
-              "text": "BEHERO_MAKE_PAYMENT_BTN_02",
+              "text": "COMMON_MAKE_PAYMENT_BTN_02",
               "callback_data": "more_info"
             }
           ],
           [
             {
-              "text": "BEHERO_MAKE_PAYMENT_BTN_03",
+              "text": "COMMON_MAKE_PAYMENT_BTN_03",
               "callback_data": "get_terms"
             }
           ]
@@ -329,7 +329,7 @@
         "mediaLibrary": true,
         "html": [
           {
-            "text": "BEHERO_TERMS_DOC",
+            "text": "COMMON_TERMS_DOC",
             "style": "",
             "cr": ""
           }
@@ -349,14 +349,14 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackMakePaymentSecondJoi",
+      "callbackHelper": "common::optin::callbackMakePaymentSecondJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAKE_PAYMENT_02",
+            "text": "COMMON_MAKE_PAYMENT_02",
             "style": "",
             "cr": ""
           }
@@ -364,7 +364,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_MAKE_PAYMENT_02_BTN_01",
+              "text": "COMMON_MAKE_PAYMENT_02_BTN_01",
               "callback_data": "make_payment"
             }
           ]
@@ -391,32 +391,32 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MORE_INFO_01_01",
+            "text": "COMMON_MORE_INFO_01_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_01_02",
+            "text": "COMMON_MORE_INFO_01_02",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_01_03",
+            "text": "COMMON_MORE_INFO_01_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_01_04",
+            "text": "COMMON_MORE_INFO_01_04",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_01_05",
+            "text": "COMMON_MORE_INFO_01_05",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_01_06",
+            "text": "COMMON_MORE_INFO_01_06",
             "style": "",
             "cr": ""
           }
@@ -443,32 +443,32 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MORE_INFO_02_01",
+            "text": "COMMON_MORE_INFO_02_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_02_02",
+            "text": "COMMON_MORE_INFO_02_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_02_03",
+            "text": "COMMON_MORE_INFO_02_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_02_04",
+            "text": "COMMON_MORE_INFO_02_04",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_02_05",
+            "text": "COMMON_MORE_INFO_02_05",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_02_06",
+            "text": "COMMON_MORE_INFO_02_06",
             "style": "",
             "cr": "DCR"
           }
@@ -488,34 +488,34 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackMakePaymentThirdJoi",
+      "callbackHelper": "common::optin::callbackMakePaymentThirdJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_MORE_INFO_03_01",
+            "text": "COMMON_MORE_INFO_03_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_03_02",
+            "text": "COMMON_MORE_INFO_03_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_03_03",
+            "text": "COMMON_MORE_INFO_03_03",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_03_04",
+            "text": "COMMON_MORE_INFO_03_04",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MORE_INFO_03_05",
+            "text": "COMMON_MORE_INFO_03_05",
             "style": "b",
             "cr": "DCR"
           }
@@ -523,7 +523,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_MORE_INFO_03_BTN_01",
+              "text": "COMMON_MORE_INFO_03_BTN_01",
               "callback_data": "make_payment"
             }
           ]
@@ -550,7 +550,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_PAYMENT_SUCCESSFUL",
+            "text": "COMMON_PAYMENT_SUCCESSFUL",
             "style": "",
             "cr": ""
           }
@@ -570,19 +570,19 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackMakePaymentAgainJoi",
+      "callbackHelper": "common::optin::callbackMakePaymentAgainJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_PAYMENT_ERROR_01",
+            "text": "COMMON_PAYMENT_ERROR_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_PAYMENT_ERROR_02",
+            "text": "COMMON_PAYMENT_ERROR_02",
             "style": "",
             "cr": ""
           }
@@ -590,13 +590,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_PAYMENT_ERROR_BTN_01",
+              "text": "COMMON_PAYMENT_ERROR_BTN_01",
               "callback_data": "make_payment"
             }
           ],
           [
             {
-              "text": "BEHERO_PAYMENT_ERROR_BTN_02",
+              "text": "COMMON_PAYMENT_ERROR_BTN_02",
               "callback_data": "contact_support"
             }
           ]
@@ -616,39 +616,39 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefStartJoi",
+      "callbackHelper": "common::optin::callbackJoinRefStartJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_01",
+            "text": "COMMON_JOIN_REF_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_02",
+            "text": "COMMON_JOIN_REF_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_03",
+            "text": "COMMON_JOIN_REF_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_04",
+            "text": "COMMON_JOIN_REF_04",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_05",
+            "text": "COMMON_JOIN_REF_05",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_06",
+            "text": "COMMON_JOIN_REF_06",
             "style": "",
             "cr": ""
           }
@@ -656,19 +656,19 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_BTN_01",
+              "text": "COMMON_JOIN_REF_BTN_01",
               "callback_data": "join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_BTN_02",
+              "text": "COMMON_JOIN_REF_BTN_02",
               "callback_data": "not_join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_BTN_03",
+              "text": "COMMON_JOIN_REF_BTN_03",
               "callback_data": "need_more_info"
             }
           ]
@@ -686,7 +686,7 @@
       "next": "optin::join_ref_subscribe",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterJoinRefPrepareListJoi",
+      "afterHelper": "common::optin::afterJoinRefPrepareListJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -695,7 +695,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_PREPARE_LIST",
+            "text": "COMMON_JOIN_REF_PREPARE_LIST",
             "style": "",
             "cr": ""
           }
@@ -712,22 +712,22 @@
       "previous": "optin::join_ref_prepare_list",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": "optin::beforeJoinRefSubscribeJoi",
+      "beforeHelper": "common::optin::beforeJoinRefSubscribeJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefSubscribeJoi",
+      "callbackHelper": "common::optin::callbackJoinRefSubscribeJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_SUBSCRIBE",
+            "text": "COMMON_JOIN_REF_SUBSCRIBE",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_SUBSCRIBE_PROFILES",
+            "text": "COMMON_JOIN_REF_SUBSCRIBE_PROFILES",
             "style": "",
             "cr": "DCR"
           }
@@ -735,7 +735,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_SUBSCRIBE_BTN_CHECK",
+              "text": "COMMON_JOIN_REF_SUBSCRIBE_BTN_CHECK",
               "callback_data": "check"
             }
           ]
@@ -753,7 +753,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterJoinRefCheckJoi",
+      "afterHelper": "common::optin::afterJoinRefCheckJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -762,7 +762,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_CHECK",
+            "text": "COMMON_JOIN_REF_CHECK",
             "style": "",
             "cr": ""
           }
@@ -789,22 +789,22 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_01",
+            "text": "COMMON_JOIN_REF_CHECK_ERROR_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_02",
+            "text": "COMMON_JOIN_REF_CHECK_ERROR_MSG_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_03",
+            "text": "COMMON_JOIN_REF_CHECK_ERROR_MSG_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_CHECK_ERROR_MSG_04",
+            "text": "COMMON_JOIN_REF_CHECK_ERROR_MSG_04",
             "style": "",
             "cr": ""
           }
@@ -822,7 +822,7 @@
       "next": "optin::optin_completed",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterJoinRefWithErrorJoi",
+      "afterHelper": "common::optin::afterJoinRefWithErrorJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -831,7 +831,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_WITH_ERROR_MSG",
+            "text": "COMMON_JOIN_REF_WITH_ERROR_MSG",
             "style": "",
             "cr": ""
           }
@@ -849,7 +849,7 @@
       "next": "optin::optin_completed",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterJoinRefDoneJoi",
+      "afterHelper": "common::optin::afterJoinRefDoneJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -858,12 +858,12 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_DONE_01",
+            "text": "COMMON_JOIN_REF_DONE_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_DONE_02",
+            "text": "COMMON_JOIN_REF_DONE_02",
             "style": "",
             "cr": ""
           }
@@ -880,27 +880,27 @@
       "previous": null,
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": "optin::beforeJoinRefMissedProfilesJoi",
+      "beforeHelper": "common::optin::beforeJoinRefMissedProfilesJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefMissedProfilesJoi",
+      "callbackHelper": "common::optin::callbackJoinRefMissedProfilesJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_01",
+            "text": "COMMON_JOIN_REF_MISSED_PROFILES_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_02",
+            "text": "COMMON_JOIN_REF_MISSED_PROFILES_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_MISSED_PROFILES_03",
+            "text": "COMMON_JOIN_REF_MISSED_PROFILES_03",
             "style": "",
             "cr": ""
           }
@@ -908,7 +908,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
+              "text": "COMMON_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
               "callback_data": "check"
             }
           ]
@@ -928,19 +928,19 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefNoJoi",
+      "callbackHelper": "common::optin::callbackJoinRefNoJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_NO_01",
+            "text": "COMMON_JOIN_REF_NO_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_NO_02",
+            "text": "COMMON_JOIN_REF_NO_02",
             "style": "",
             "cr": ""
           }
@@ -948,19 +948,19 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_NO_BTN_01",
+              "text": "COMMON_JOIN_REF_NO_BTN_01",
               "callback_data": "join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_NO_BTN_02",
+              "text": "COMMON_JOIN_REF_NO_BTN_02",
               "callback_data": "not_join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_NO_BTN_03",
+              "text": "COMMON_JOIN_REF_NO_BTN_03",
               "callback_data": "need_more_info"
             }
           ]
@@ -980,7 +980,7 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefMoreInfoFirstJoi",
+      "callbackHelper": "common::optin::callbackJoinRefMoreInfoFirstJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
@@ -989,7 +989,7 @@
         "mediaLibrary": true,
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST",
+            "text": "COMMON_JOIN_REF_MORE_INFO_FIRST",
             "style": "",
             "cr": ""
           }
@@ -997,13 +997,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST_BTN_01",
+              "text": "COMMON_JOIN_REF_MORE_INFO_FIRST_BTN_01",
               "callback_data": "join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_MORE_INFO_FIRST_BTN_02",
+              "text": "COMMON_JOIN_REF_MORE_INFO_FIRST_BTN_02",
               "callback_data": "not_join"
             }
           ]
@@ -1023,19 +1023,19 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefNoInterestJoi",
+      "callbackHelper": "common::optin::callbackJoinRefNoInterestJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_01",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_02",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_02",
             "style": "",
             "cr": ""
           }
@@ -1043,13 +1043,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_01",
+              "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_01",
               "callback_data": "join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_02",
+              "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_02",
               "callback_data": "not_join"
             }
           ]
@@ -1069,7 +1069,7 @@
       "beforeHelper": null,
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "optin::callbackJoinRefMoreInfoSecondJoi",
+      "callbackHelper": "common::optin::callbackJoinRefMoreInfoSecondJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
@@ -1078,7 +1078,7 @@
         "mediaLibrary": true,
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND",
+            "text": "COMMON_JOIN_REF_MORE_INFO_SECOND",
             "style": "",
             "cr": ""
           }
@@ -1086,13 +1086,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND_BTN_01",
+              "text": "COMMON_JOIN_REF_MORE_INFO_SECOND_BTN_01",
               "callback_data": "join"
             }
           ],
           [
             {
-              "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND_BTN_02",
+              "text": "COMMON_JOIN_REF_MORE_INFO_SECOND_BTN_02",
               "callback_data": "not_join"
             }
           ]
@@ -1110,7 +1110,7 @@
       "next": "optin::optin_completed",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterNoRefDoneJoi",
+      "afterHelper": "common::optin::afterNoRefDoneJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1119,7 +1119,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NO_REF_DONE",
+            "text": "COMMON_NO_REF_DONE",
             "style": "",
             "cr": ""
           }
@@ -1137,7 +1137,7 @@
       "next": "optin::optin_completed_video",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "optin::afterOptinCompletedJoi",
+      "afterHelper": "common::optin::afterOptinCompletedJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1146,7 +1146,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_OPTIN_COMPLETED",
+            "text": "COMMON_OPTIN_COMPLETED",
             "style": "",
             "cr": ""
           }
@@ -1154,13 +1154,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_OPTIN_COMPLETED_BTN_01",
+              "text": "COMMON_OPTIN_COMPLETED_BTN_01",
               "url": "https://drive.google.com/drive/folders/1jdDS-S6skzTIGTD79wNwTqGjyBgzMJmJ"
             }
           ],
           [
             {
-              "text": "BEHERO_OPTIN_COMPLETED_BTN_02",
+              "text": "COMMON_OPTIN_COMPLETED_BTN_02",
               "url": "https://befame.ru/"
             }
           ]
@@ -1178,7 +1178,7 @@
       "next": null,
       "switchToFunnel": "main",
       "beforeHelper": null,
-      "afterHelper": "optin::afterOptinCompletedVideoJoi",
+      "afterHelper": "common::optin::afterOptinCompletedVideoJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1189,12 +1189,12 @@
         "mediaLibrary": true,
         "html": [
           {
-            "text": "BEHERO_OPTIN_COMPLETED_VIDEO_01",
+            "text": "COMMON_OPTIN_COMPLETED_VIDEO_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_OPTIN_COMPLETED_VIDEO_02",
+            "text": "COMMON_OPTIN_COMPLETED_VIDEO_02",
             "style": "",
             "cr": ""
           }
@@ -1215,7 +1215,7 @@
       "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": null,
-      "forcedHelper": "main::forcedProvidePostLinkJoi",
+      "forcedHelper": "common::main::forcedProvidePostLinkJoi",
       "callbackHelper": null,
       "blockModifyHelper": null,
       "shown": false,
@@ -1223,7 +1223,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAIN_PROVIDE_POST_LINK",
+            "text": "COMMON_MAIN_PROVIDE_POST_LINK",
             "style": "",
             "cr": ""
           }
@@ -1241,7 +1241,7 @@
       "next": "main::provide_post_link",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "main::afterWrongPostLinkJoi",
+      "afterHelper": "common::main::afterWrongPostLinkJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1250,12 +1250,12 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAIN_WRONG_POST_LINK_01",
+            "text": "COMMON_MAIN_WRONG_POST_LINK_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_MAIN_WRONG_POST_LINK_02",
+            "text": "COMMON_MAIN_WRONG_POST_LINK_02",
             "style": "",
             "cr": ""
           }
@@ -1273,7 +1273,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "main::afterPostPerformedJoi",
+      "afterHelper": "common::main::afterPostPerformedJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1282,7 +1282,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_MAIN_POST_PERFORMED",
+            "text": "COMMON_MAIN_POST_PERFORMED",
             "style": "",
             "cr": ""
           }
@@ -1303,7 +1303,7 @@
       "next": "noRefJoin::join_ref_subscribe",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "noRefJoin::afterJoinRefPrepareListJoi",
+      "afterHelper": "common::noRefJoin::afterJoinRefPrepareListJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1312,7 +1312,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_PREPARE_LIST",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_PREPARE_LIST",
             "style": "",
             "cr": ""
           }
@@ -1329,22 +1329,22 @@
       "previous": "noRefJoin::join_ref_prepare_list",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": "noRefJoin::beforeJoinRefSubscribeJoi",
+      "beforeHelper": "common::noRefJoin::beforeJoinRefSubscribeJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "noRefJoin::callbackJoinRefSubscribeJoi",
+      "callbackHelper": "common::noRefJoin::callbackJoinRefSubscribeJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_SUBSCRIBE",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_SUBSCRIBE_PROFILES",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE_PROFILES",
             "style": "",
             "cr": "DCR"
           }
@@ -1352,7 +1352,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_NOREFJOIN_JOIN_REF_SUBSCRIBE_BTN_CHECK",
+              "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE_BTN_CHECK",
               "callback_data": "check"
             }
           ]
@@ -1370,7 +1370,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "noRefJoin::afterJoinRefCheckJoi",
+      "afterHelper": "common::noRefJoin::afterJoinRefCheckJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1379,7 +1379,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_CHECK",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK",
             "style": "",
             "cr": ""
           }
@@ -1397,7 +1397,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "noRefJoin::afterJoinRefCheckErrorJoi",
+      "afterHelper": "common::noRefJoin::afterJoinRefCheckErrorJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1406,17 +1406,17 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_CHECK_ERROR_01",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_CHECK_ERROR_02",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_CHECK_ERROR_03",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_03",
             "style": "",
             "cr": ""
           }
@@ -1434,7 +1434,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "noRefJoin::afterJoinRefDoneJoi",
+      "afterHelper": "common::noRefJoin::afterJoinRefDoneJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1443,7 +1443,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_DONE_01",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_DONE_01",
             "style": "",
             "cr": "DCR"
           }
@@ -1460,27 +1460,27 @@
       "previous": null,
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": "noRefJoin::beforeJoinRefMissedProfilesJoi",
+      "beforeHelper": "common::noRefJoin::beforeJoinRefMissedProfilesJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "noRefJoin::callbackJoinRefMissedProfilesJoi",
+      "callbackHelper": "common::noRefJoin::callbackJoinRefMissedProfilesJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_MISSED_PROFILES_01",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_MISSED_PROFILES_02",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFJOIN_JOIN_REF_MISSED_PROFILES_03",
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_03",
             "style": "",
             "cr": ""
           }
@@ -1488,7 +1488,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "BEHERO_NOREFJOIN_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
+              "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
               "callback_data": "check"
             }
           ]
@@ -1509,7 +1509,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "refProfileSubscriptionCheck::afterSubscriptionCheckJoi",
+      "afterHelper": "common::refProfileSubscriptionCheck::afterSubscriptionCheckJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1518,7 +1518,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_KB_JOIN_REF_CHECK_MSG",
+            "text": "COMMON_KB_JOIN_REF_CHECK_MSG",
             "style": "",
             "cr": ""
           }
@@ -1536,7 +1536,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "refProfileSubscriptionCheck::afterJoinRefDoneJoi",
+      "afterHelper": "common::refProfileSubscriptionCheck::afterJoinRefDoneJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1545,7 +1545,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_KB_JOIN_REF_DONE_MSG",
+            "text": "COMMON_KB_JOIN_REF_DONE_MSG",
             "style": "",
             "cr": ""
           }
@@ -1563,7 +1563,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "refProfileSubscriptionCheck::afterJoinRefCheckErrorJoi",
+      "afterHelper": "common::refProfileSubscriptionCheck::afterJoinRefCheckErrorJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1572,17 +1572,17 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_KB_JOIN_REF_CHECK_ERROR_MSG_01",
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_KB_JOIN_REF_CHECK_ERROR_MSG_02",
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_KB_JOIN_REF_CHECK_ERROR_MSG_03",
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_03",
             "style": "",
             "cr": ""
           }
@@ -1612,32 +1612,32 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_01",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_02",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_03",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_04",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_04",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_05",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_05",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_ONE_MSG_06",
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_06",
             "style": "",
             "cr": ""
           }
@@ -1655,7 +1655,7 @@
       "next": null,
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "noRefInfo::afterMoreInfoJoi",
+      "afterHelper": "common::noRefInfo::afterMoreInfoJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,
@@ -1666,7 +1666,7 @@
         "mediaLibrary": true,
         "html": [
           {
-            "text": "BEHERO_NOREFINFO_MORE_INFO_TWO_MSG",
+            "text": "COMMON_NOREFINFO_MORE_INFO_TWO_MSG",
             "style": "",
             "cr": ""
           }

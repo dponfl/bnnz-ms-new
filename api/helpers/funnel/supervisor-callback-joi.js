@@ -98,7 +98,7 @@ module.exports = {
            * We need to perform callbackHelper
            */
 
-          let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 2);
+          let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 3);
           let callbackHelperCategory = splitCallbackHelperRes[0];
           let callbackHelperBlock = splitCallbackHelperRes[1];
           let callbackHelperName = splitCallbackHelperRes[2];

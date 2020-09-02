@@ -607,7 +607,7 @@ module.exports = {
 
         } else {
 
-          let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 2);
+          let splitAfterHelperRes = _.split(block.afterHelper, sails.config.custom.JUNCTION, 3);
           let afterHelperCategory = splitAfterHelperRes[0];
           let afterHelperBlock = splitAfterHelperRes[1];
           let afterHelperName = splitAfterHelperRes[2];
@@ -826,7 +826,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
   if (!_.isNil(block.beforeHelper)) {
 
-    let splitBeforeHelperRes = _.split(block.beforeHelper, sails.config.custom.JUNCTION, 2);
+    let splitBeforeHelperRes = _.split(block.beforeHelper, sails.config.custom.JUNCTION, 3);
     let beforeHelperCategory = splitBeforeHelperRes[0];
     let beforeHelperBlock = splitBeforeHelperRes[1];
     let beforeHelperName = splitBeforeHelperRes[2];
@@ -886,7 +886,7 @@ async function activateBlockModifyHelper(client, block) {
 
   if (!_.isNil(block.blockModifyHelper)) {
 
-    let splitBlockModifyHelperRes = _.split(block.blockModifyHelper, sails.config.custom.JUNCTION, 2);
+    let splitBlockModifyHelperRes = _.split(block.blockModifyHelper, sails.config.custom.JUNCTION, 3);
     let blockModifyHelperCategory = splitBlockModifyHelperRes[0];
     let blockModifyHelperBlock = splitBlockModifyHelperRes[1];
     let blockModifyHelperName = splitBlockModifyHelperRes[2];

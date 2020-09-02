@@ -90,7 +90,7 @@ module.exports = {
 
         if (!_.isNil(forcedReplyBlock)) {
 
-          let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 2);
+          let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 3);
           let forcedHelperCategory = splitForcedHelperRes[0];
           let forcedHelperBlock = splitForcedHelperRes[1];
           let forcedHelperName = splitForcedHelperRes[2];

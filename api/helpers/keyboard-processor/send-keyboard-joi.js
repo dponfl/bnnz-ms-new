@@ -211,7 +211,7 @@ async function activateBeforeHelper(client, keyboard, htmlMsg, data) {
 
   if (!_.isNil(keyboard.beforeHelper)) {
 
-    let splitBeforeHelperRes = _.split(keyboard.beforeHelper, sails.config.custom.JUNCTION, 2);
+    let splitBeforeHelperRes = _.split(keyboard.beforeHelper, sails.config.custom.JUNCTION, 3);
     let beforeHelperCategory = splitBeforeHelperRes[0];
     let beforeHelperBlock = splitBeforeHelperRes[1];
     let beforeHelperName = splitBeforeHelperRes[2];

@@ -91,7 +91,7 @@ module.exports = {
         [
           [
             {
-              "text": "MSG_TASK_PERFORM_BTN",
+              "text": "COMMON_MSG_TASK_PERFORM_BTN",
               "callback_data": "push_msg_tsk_l_" + input.additionalParams.taskGuid
             }
           ]

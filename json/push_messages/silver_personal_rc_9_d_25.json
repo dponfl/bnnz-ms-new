@@ -20,7 +20,7 @@
         "message": {
           "html": [
             {
-              "text": "MSG_GENERAL_START",
+              "text": "COMMON_MSG_GENERAL_START",
               "style": "b",
               "cr": ""
             }
@@ -28,13 +28,13 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
+                "text": "COMMON_MSG_GENERAL_BTN_LINK_UPLOAD",
                 "callback_data": "start_upload"
               }
             ],
             [
               {
-                "text": "MSG_GENERAL_BTN_GET_HELP",
+                "text": "COMMON_MSG_GENERAL_BTN_GET_HELP",
                 "callback_data": "start_get_help"
               }
             ]
@@ -59,7 +59,7 @@
         "message": {
           "html": [
             {
-              "text": "MSG_GENERAL_START",
+              "text": "COMMON_MSG_GENERAL_START",
               "style": "b",
               "cr": ""
             }
@@ -67,13 +67,13 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_GENERAL_BTN_LINK_UPLOAD",
+                "text": "COMMON_MSG_GENERAL_BTN_LINK_UPLOAD",
                 "callback_data": "start_upload"
               }
             ],
             [
               {
-                "text": "MSG_GENERAL_BTN_GET_HELP",
+                "text": "COMMON_MSG_GENERAL_BTN_GET_HELP",
                 "callback_data": "start_get_help"
               }
             ]
@@ -96,22 +96,22 @@
         "beforeHelper": null,
         "afterHelper": null,
         "forcedHelper": null,
-        "callbackHelper": "tasks::callbackLikesJoi",
-        "blockModifyHelper": "tasks::blockModifyLikesJoi",
+        "callbackHelper": "common::tasks::callbackLikesJoi",
+        "blockModifyHelper": "common::tasks::blockModifyLikesJoi",
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_ACCOUNT",
+              "text": "COMMON_MSG_TASK_ACCOUNT",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE",
+              "text": "COMMON_MSG_TASK_LIKE",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "COMMON_MSG_TASK",
               "style": "",
               "cr": ""
             }
@@ -119,7 +119,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -139,22 +139,22 @@
         "beforeHelper": null,
         "afterHelper": null,
         "forcedHelper": null,
-        "callbackHelper": "tasks::callbackLikesCommentsJoi",
-        "blockModifyHelper": "tasks::blockModifyLikesCommentsJoi",
+        "callbackHelper": "common::tasks::callbackLikesCommentsJoi",
+        "blockModifyHelper": "common::tasks::blockModifyLikesCommentsJoi",
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_ACCOUNT",
+              "text": "COMMON_MSG_TASK_ACCOUNT",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "MSG_TASK",
+              "text": "COMMON_MSG_TASK",
               "style": "bi",
               "cr": ""
             }
@@ -162,7 +162,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -187,7 +187,7 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_DONE",
               "style": "",
               "cr": "DCR"
             }
@@ -214,12 +214,12 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_NOT_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE_NOT_DONE_ACTION",
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -227,7 +227,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -252,7 +252,7 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE",
               "style": "",
               "cr": "DCR"
             }
@@ -279,12 +279,12 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NOT_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NOT_DONE_ACTION",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -292,7 +292,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -317,17 +317,17 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_01",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_01",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_02",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_LIKE_ACTION",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_ACTION",
               "style": "",
               "cr": ""
             }
@@ -335,7 +335,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -360,17 +360,17 @@
         "message": {
           "html": [
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_01",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_01",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_02",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION",
               "style": "",
               "cr": ""
             }
@@ -378,7 +378,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "MSG_TASK_POST_LINK_BTN",
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
                 "url": "$PostLink$"
               }
             ]
@@ -403,12 +403,12 @@
       "message": {
         "html": [
           {
-            "text": "MSG_CHECK_BUTTON_PRESSED_MSG_01",
+            "text": "COMMON_MSG_CHECK_BUTTON_PRESSED_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "MSG_CHECK_BUTTON_PRESSED_MSG_02",
+            "text": "COMMON_MSG_CHECK_BUTTON_PRESSED_MSG_02",
             "style": "",
             "cr": ""
           }
@@ -416,7 +416,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "MSG_TASK_POST_LINK_BTN",
+              "text": "COMMON_MSG_TASK_POST_LINK_BTN",
               "url": "$PostLink$"
             }
           ]
@@ -441,17 +441,17 @@
       "message": {
         "html": [
           {
-            "text": "MSG_ON_PARSER_ERROR_MSG_01",
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "MSG_ON_PARSER_ERROR_MSG_02",
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "MSG_ON_PARSER_ERROR_MSG_03",
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_03",
             "style": "",
             "cr": ""
           }
@@ -459,7 +459,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "MSG_TASK_POST_LINK_BTN",
+              "text": "COMMON_MSG_TASK_POST_LINK_BTN",
               "url": "$PostLink$"
             }
           ]
@@ -488,17 +488,17 @@
           "message": {
             "html": [
               {
-                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_01",
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_01",
                 "style": "",
                 "cr": "DCR"
               },
               {
-                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_02",
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_02",
                 "style": "",
                 "cr": "DCR"
               },
               {
-                "text": "BEHERO_CHECK_PROFILE_ERROR_MSG_03",
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_03",
                 "style": "",
                 "cr": ""
               }
@@ -529,7 +529,7 @@
       "message": {
         "html": [
           {
-            "text": "BEHERO_GENERAL_USE_KEYBOARD",
+            "text": "COMMON_GENERAL_USE_KEYBOARD",
             "style": "b",
             "cr": ""
           }
@@ -557,7 +557,7 @@
           "mediaLibrary": true,
           "html": [
             {
-              "text": "BEHERO_PM_UNIVER_LESSON_01_MSG_01",
+              "text": "COMMON_PM_UNIVER_LESSON_01_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -584,7 +584,7 @@
           "mediaLibrary": true,
           "html": [
             {
-              "text": "BEHERO_PM_UNIVER_LESSON_02_MSG_01",
+              "text": "COMMON_PM_UNIVER_LESSON_02_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -611,7 +611,7 @@
           "mediaLibrary": true,
           "html": [
             {
-              "text": "BEHERO_PM_UNIVER_LESSON_03_MSG_01",
+              "text": "COMMON_PM_UNIVER_LESSON_03_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -638,7 +638,7 @@
           "mediaLibrary": true,
           "html": [
             {
-              "text": "BEHERO_PM_UNIVER_LESSON_04_MSG_01",
+              "text": "COMMON_PM_UNIVER_LESSON_04_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -667,12 +667,12 @@
         "message": {
           "html": [
             {
-              "text": "BEHERO_PM_DONE_MSG_01",
+              "text": "COMMON_PM_DONE_MSG_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "BEHERO_PM_DONE_MSG_02",
+              "text": "COMMON_PM_DONE_MSG_02",
               "style": "",
               "cr": ""
             }
@@ -697,7 +697,7 @@
         "message": {
           "html": [
             {
-              "text": "BEHERO_PM_DISABLE_MAIN_MENU_MSG",
+              "text": "COMMON_PM_DISABLE_MAIN_MENU_MSG",
               "style": "b",
               "cr": ""
             }

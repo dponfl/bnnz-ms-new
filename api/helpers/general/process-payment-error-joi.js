@@ -238,7 +238,7 @@ module.exports = {
 
       const helperNameRaw = block.callbackHelper;
 
-      const callbackHelperParseRes = _.split(helperNameRaw, sails.config.custom.JUNCTION, 2);
+      const callbackHelperParseRes = _.split(helperNameRaw, sails.config.custom.JUNCTION, 3);
       const callbackHelperCategory = callbackHelperParseRes[0];
       const callbackHelperGroup = callbackHelperParseRes[1];
       const callbackHelperName = callbackHelperParseRes[2];

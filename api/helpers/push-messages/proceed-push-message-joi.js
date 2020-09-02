@@ -59,7 +59,7 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      let splitCallbackHelperRes = _.split(input.messageData.callbackHelper, sails.config.custom.JUNCTION, 2);
+      let splitCallbackHelperRes = _.split(input.messageData.callbackHelper, sails.config.custom.JUNCTION, 3);
       let callbackHelperCategory = splitCallbackHelperRes[0];
       let callbackHelperBlock = splitCallbackHelperRes[1];
       let callbackHelperName = splitCallbackHelperRes[2];

@@ -60,7 +60,7 @@ module.exports = {
 
       res = input.messageData;
 
-      let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 2);
+      let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 3);
       let blockModifyHelperCategory = splitBlockModifyHelperRes[0];
       let blockModifyHelperBlock = splitBlockModifyHelperRes[1];
       let blockModifyHelperName = splitBlockModifyHelperRes[2];
