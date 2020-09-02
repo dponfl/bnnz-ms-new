@@ -60,20 +60,21 @@ module.exports = {
 
 
       let splitCallbackHelperRes = _.split(input.messageData.callbackHelper, sails.config.custom.JUNCTION, 2);
-      let callbackHelperBlock = splitCallbackHelperRes[0];
-      let callbackHelperName = splitCallbackHelperRes[1];
+      let callbackHelperCategory = splitCallbackHelperRes[0];
+      let callbackHelperBlock = splitCallbackHelperRes[1];
+      let callbackHelperName = splitCallbackHelperRes[2];
 
-      if (callbackHelperBlock && callbackHelperName) {
+      if (callbackHelperCategory && callbackHelperBlock && callbackHelperName) {
 
         /**
          * We managed to parse the specified callbackHelper and can perform it
          */
 
-        const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+        // const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-        const pushMessageName = currentAccount.service.push_message_name;
+        // const pushMessageName = currentAccount.service.push_message_name;
 
-        await sails.helpers.pushMessages[pushMessageName][callbackHelperBlock][callbackHelperName]({
+        await sails.helpers.pushMessages[callbackHelperCategory][callbackHelperBlock][callbackHelperName]({
           client: input.client,
           query: input.query,
         });

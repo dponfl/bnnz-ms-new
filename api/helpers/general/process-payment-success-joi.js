@@ -127,7 +127,7 @@ module.exports = {
        * к хелперу, который долже обрабатывать эту платёжную ошибку
        */
 
-      const funnelName = client.funnel_name;
+      // const funnelName = client.funnel_name;
 
       blockNameParseRes = _.split(paymentGroup.funnel_block, sails.config.custom.JUNCTION, 2);
       blockGroup = blockNameParseRes[0];
@@ -149,8 +149,9 @@ module.exports = {
       const helperNameRaw = block.callbackHelper;
 
       const callbackHelperParseRes = _.split(helperNameRaw, sails.config.custom.JUNCTION, 2);
-      const callbackHelperGroup = callbackHelperParseRes[0];
-      const callbackHelperName = callbackHelperParseRes[1];
+      const callbackHelperCategory = callbackHelperParseRes[0];
+      const callbackHelperGroup = callbackHelperParseRes[1];
+      const callbackHelperName = callbackHelperParseRes[2];
 
       if (callbackHelperGroup == null || callbackHelperName == null) {
         throw new Error(`${moduleName}, error: cannot parse callbackHelper: ${helperNameRaw}`);
@@ -162,7 +163,7 @@ module.exports = {
        * Вызываем хелпер обработки успешного платежа
        */
 
-      await sails.helpers.funnel[funnelName][callbackHelperGroup][successHelperName]({
+      await sails.helpers.funnel[callbackHelperCategory][callbackHelperGroup][successHelperName]({
         client,
         block,
         paymentGroup,

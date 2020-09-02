@@ -99,16 +99,17 @@ module.exports = {
            */
 
           let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 2);
-          let callbackHelperBlock = splitCallbackHelperRes[0];
-          let callbackHelperName = splitCallbackHelperRes[1];
+          let callbackHelperCategory = splitCallbackHelperRes[0];
+          let callbackHelperBlock = splitCallbackHelperRes[1];
+          let callbackHelperName = splitCallbackHelperRes[2];
 
-          if (callbackHelperBlock && callbackHelperName) {
+          if (callbackHelperCategory && callbackHelperBlock && callbackHelperName) {
 
             /**
              * We managed to parse the specified callbackHelper and can perform it
              */
 
-            await sails.helpers.funnel[input.client.funnel_name][callbackHelperBlock][callbackHelperName]({
+            await sails.helpers.funnel[callbackHelperCategory][callbackHelperBlock][callbackHelperName]({
               client: input.client,
               block,
               query: input.query,
