@@ -212,10 +212,11 @@ async function activateBeforeHelper(client, keyboard, htmlMsg, data) {
   if (!_.isNil(keyboard.beforeHelper)) {
 
     let splitBeforeHelperRes = _.split(keyboard.beforeHelper, sails.config.custom.JUNCTION, 2);
-    let beforeHelperBlock = splitBeforeHelperRes[0];
-    let beforeHelperName = splitBeforeHelperRes[1];
+    let beforeHelperCategory = splitBeforeHelperRes[0];
+    let beforeHelperBlock = splitBeforeHelperRes[1];
+    let beforeHelperName = splitBeforeHelperRes[2];
 
-    if (beforeHelperBlock && beforeHelperName) {
+    if (beforeHelperCategory && beforeHelperBlock && beforeHelperName) {
 
       /**
        * We managed to parse the specified beforeHelper and can perform it
@@ -231,11 +232,11 @@ async function activateBeforeHelper(client, keyboard, htmlMsg, data) {
         beforeHelperParams.additionalData = data;
       }
 
-      const currentAccount = _.find(client.accounts, {guid: client.account_use});
+      // const currentAccount = _.find(client.accounts, {guid: client.account_use});
 
-      keyboardName = currentAccount.service.keyboard_name;
+      // keyboardName = currentAccount.service.keyboard_name;
 
-      res = await sails.helpers.keyboards[keyboardName][beforeHelperBlock][beforeHelperName](beforeHelperParams);
+      res = await sails.helpers.keyboards[beforeHelperCategory][beforeHelperBlock][beforeHelperName](beforeHelperParams);
 
     } else {
 

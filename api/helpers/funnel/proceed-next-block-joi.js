@@ -826,10 +826,11 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
   if (!_.isNil(block.beforeHelper)) {
 
     let splitBeforeHelperRes = _.split(block.beforeHelper, sails.config.custom.JUNCTION, 2);
-    let beforeHelperBlock = splitBeforeHelperRes[0];
-    let beforeHelperName = splitBeforeHelperRes[1];
+    let beforeHelperCategory = splitBeforeHelperRes[0];
+    let beforeHelperBlock = splitBeforeHelperRes[1];
+    let beforeHelperName = splitBeforeHelperRes[2];
 
-    if (beforeHelperBlock && beforeHelperName) {
+    if (beforeHelperCategory && beforeHelperBlock && beforeHelperName) {
 
       /**
        * We managed to parse the specified beforeHelper and can perform it
@@ -847,7 +848,7 @@ async function activateBeforeHelper(client, block, msg, htmlMsg) {
 
       }
 
-      res = await sails.helpers.funnel[client.funnel_name][beforeHelperBlock][beforeHelperName](beforeHelperParams);
+      res = await sails.helpers.funnel[beforeHelperCategory][beforeHelperBlock][beforeHelperName](beforeHelperParams);
 
     } else {
 
