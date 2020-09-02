@@ -887,10 +887,11 @@ async function activateBlockModifyHelper(client, block) {
   if (!_.isNil(block.blockModifyHelper)) {
 
     let splitBlockModifyHelperRes = _.split(block.blockModifyHelper, sails.config.custom.JUNCTION, 2);
-    let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-    let blockModifyHelperName = splitBlockModifyHelperRes[1];
+    let blockModifyHelperCategory = splitBlockModifyHelperRes[0];
+    let blockModifyHelperBlock = splitBlockModifyHelperRes[1];
+    let blockModifyHelperName = splitBlockModifyHelperRes[2];
 
-    if (blockModifyHelperBlock && blockModifyHelperName) {
+    if (blockModifyHelperCategory && blockModifyHelperBlock && blockModifyHelperName) {
 
       /**
        * We managed to parse the specified blockModifyHelper and can perform it
@@ -901,7 +902,7 @@ async function activateBlockModifyHelper(client, block) {
         block: block,
       };
 
-      res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
+      res = await sails.helpers.funnel[blockModifyHelperCategory][blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
 
     } else {
 

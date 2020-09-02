@@ -60,53 +60,12 @@ module.exports = {
 
       res = input.messageData;
 
-      // if (input.messageData != null) {
-      //
-      //   let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 2);
-      //   let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-      //   let blockModifyHelperName = splitBlockModifyHelperRes[1];
-      //
-      //   if (blockModifyHelperBlock && blockModifyHelperName) {
-      //
-      //     /**
-      //      * We managed to parse the specified blockModifyHelper and can perform it
-      //      */
-      //
-      //     let beforeHelperParams = {
-      //       client: input.client,
-      //       messageData: input.messageData,
-      //       additionalParams: input.additionalParams,
-      //     };
-      //
-      //     res = await sails.helpers.funnel[client.funnel_name][blockModifyHelperBlock][blockModifyHelperName].with(beforeHelperParams);
-      //
-      //   } else {
-      //
-      //     /**
-      //      * Throw error: we could not parse the specified blockModifyHelper
-      //      */
-      //
-      //     const errorLocation = 'api/helpers/funnel/proceed-next-block';
-      //     const errorMsg = sails.config.custom.PROCEED_NEXT_BLOCK_BLOCKMODIFYEHELPER_PARSE_ERROR;
-      //
-      //     sails.log.error(errorLocation + ', error: ' + errorMsg);
-      //
-      //     throw {err: {
-      //         module: errorLocation,
-      //         message: errorMsg,
-      //         payload: {},
-      //       }
-      //     };
-      //   }
-      //
-      // }
-
-
       let splitBlockModifyHelperRes = _.split(input.messageData.blockModifyHelper, sails.config.custom.JUNCTION, 2);
-      let blockModifyHelperBlock = splitBlockModifyHelperRes[0];
-      let blockModifyHelperName = splitBlockModifyHelperRes[1];
+      let blockModifyHelperCategory = splitBlockModifyHelperRes[0];
+      let blockModifyHelperBlock = splitBlockModifyHelperRes[1];
+      let blockModifyHelperName = splitBlockModifyHelperRes[2];
 
-      if (blockModifyHelperBlock && blockModifyHelperName) {
+      if (blockModifyHelperCategory && blockModifyHelperBlock && blockModifyHelperName) {
 
         /**
          * We managed to parse the specified callbackHelper and can perform it
@@ -118,11 +77,11 @@ module.exports = {
           additionalParams: input.additionalParams,
         };
 
-        const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+        // const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-        const pushMessageName = currentAccount.service.push_message_name;
+        // const pushMessageName = currentAccount.service.push_message_name;
 
-        res = await sails.helpers.pushMessages[pushMessageName][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
+        res = await sails.helpers.pushMessages[blockModifyHelperCategory][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
 
       } else {
         // throw new Error(`${moduleName}, critical error: could not parse callback helper name:
