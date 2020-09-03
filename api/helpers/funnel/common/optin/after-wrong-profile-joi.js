@@ -57,6 +57,12 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let updateBlock;
+    let getBlock;
+    let splitRes;
+    let updateFunnel;
+    let updateId;
+
 
     try {
 
@@ -78,6 +84,7 @@ module.exports = {
       if (getProfileBlock) {
         getProfileBlock.shown = false;
         getProfileBlock.done = false;
+        getProfileBlock.enabled = false;
         getProfileBlock.next = null;
 
       } else {
@@ -95,6 +102,60 @@ module.exports = {
             nextId,
             nextFunnel,
             funnel: input.client.funnels[nextFunnel],
+          },
+        });
+
+      }
+
+      /**
+       * Update input.block.next block
+       */
+
+      updateBlock = input.block.next;
+
+      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
+      updateFunnel = splitRes[0];
+      updateId = splitRes[1];
+
+      if (_.isNil(updateFunnel)
+        || _.isNil(updateId)
+      ) {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block parsing error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            updateBlock,
+            block: input.block,
+          },
+        });
+
+      }
+
+      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+      if (getBlock) {
+        getBlock.shown = false;
+        getBlock.done = false;
+      } else {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            updateId,
+            updateFunnel,
+            funnel: input.client.funnels[updateFunnel],
           },
         });
 

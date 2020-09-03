@@ -124,6 +124,7 @@ module.exports = {
           let nextBlock = _.find(input.client.funnels[nextFunnel], {id: nextId});
           if (nextBlock) {
             nextBlock.enabled = true;
+            nextBlock.previous = `${input.client.current_funnel}::${input.block.id}`;
           } else {
             // throw new Error(`nextBlock not found: \nnextFunnel : ${nextFunnel} \nnextId : ${nextId} \ninput.client.funnels[nextFunnel]: ${JSON.stringify(input.client.funnels[nextFunnel], null, 3)}`);
 

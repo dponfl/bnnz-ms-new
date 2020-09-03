@@ -271,11 +271,12 @@ module.exports = {
 
         if (activatedButton.action != null) {
 
-          let actionHelperRes = _.split(activatedButton.action, sails.config.custom.JUNCTION, 2);
-          let actionHelperBlock = actionHelperRes[0];
-          let actionHelperName = actionHelperRes[1];
+          let actionHelperRes = _.split(activatedButton.action, sails.config.custom.JUNCTION, 3);
+          let actionHelperCategory = actionHelperRes[0];
+          let actionHelperBlock = actionHelperRes[1];
+          let actionHelperName = actionHelperRes[2];
 
-          if (actionHelperBlock && actionHelperName) {
+          if (actionHelperCategory && actionHelperBlock && actionHelperName) {
 
             /**
              * We managed to parse the specified actionHelper and can perform it
@@ -285,16 +286,13 @@ module.exports = {
               client: input.client,
             };
 
-            await sails.helpers.keyboards[keyboardName][actionHelperBlock][actionHelperName](actionHelperParams);
+            await sails.helpers.keyboards[actionHelperCategory][actionHelperBlock][actionHelperName](actionHelperParams);
 
           } else {
 
             /**
              * Throw error: we could not parse the specified actionHelper
              */
-
-          //   throw new Error(`${moduleName}, error: could not parse action helper:
-          // activatedButton.action: ${activatedButton.action}`);
 
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
