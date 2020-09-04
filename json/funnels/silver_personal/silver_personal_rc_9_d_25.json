@@ -391,32 +391,32 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_MORE_INFO_01_01",
+            "text": "BEHERO_MORE_INFO_01_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_01_02",
+            "text": "BEHERO_MORE_INFO_01_02",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_01_03",
+            "text": "BEHERO_MORE_INFO_01_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_01_04",
+            "text": "BEHERO_MORE_INFO_01_04",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_01_05",
+            "text": "BEHERO_MORE_INFO_01_05",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_01_06",
+            "text": "BEHERO_MORE_INFO_01_06",
             "style": "",
             "cr": ""
           }
@@ -443,32 +443,32 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_MORE_INFO_02_01",
+            "text": "BEHERO_MORE_INFO_02_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_02_02",
+            "text": "BEHERO_MORE_INFO_02_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_02_03",
+            "text": "BEHERO_MORE_INFO_02_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_02_04",
+            "text": "BEHERO_MORE_INFO_02_04",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_02_05",
+            "text": "BEHERO_MORE_INFO_02_05",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_02_06",
+            "text": "BEHERO_MORE_INFO_02_06",
             "style": "",
             "cr": "DCR"
           }
@@ -495,27 +495,27 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_MORE_INFO_03_01",
+            "text": "BEHERO_MORE_INFO_03_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_03_02",
+            "text": "BEHERO_MORE_INFO_03_02",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "COMMON_MORE_INFO_03_03",
+            "text": "BEHERO_MORE_INFO_03_03",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_03_04",
+            "text": "BEHERO_MORE_INFO_03_04",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "COMMON_MORE_INFO_03_05",
+            "text": "BEHERO_MORE_INFO_03_05",
             "style": "b",
             "cr": "DCR"
           }
@@ -523,7 +523,7 @@
         "inline_keyboard": [
           [
             {
-              "text": "COMMON_MORE_INFO_03_BTN_01",
+              "text": "BEHERO_MORE_INFO_03_BTN_01",
               "callback_data": "make_payment"
             }
           ]

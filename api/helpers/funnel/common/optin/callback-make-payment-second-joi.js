@@ -185,7 +185,7 @@ module.exports = {
            */
 
 
-          const currency = currentCurrencyText;
+          const currency = currentCurrency;
 
           // const invoiceItems = [
           //   {

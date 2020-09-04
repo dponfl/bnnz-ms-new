@@ -34,6 +34,13 @@ module.exports = {
 
       let paymentGroupGuid;
 
+      let clientGuid;
+      let accountGuid;
+      let currentAccount;
+
+      let currentRegion;
+
+
       try {
 
         if (_.isNil(msg.successful_payment.invoice_payload)) {
@@ -80,6 +87,11 @@ module.exports = {
 
         const client = clientRaw.payload;
 
+        clientGuid = client.guid;
+
+        currentAccount = _.find(client.accounts, {guid: client.account_use});
+        currentRegion = currentAccount.region;
+
 
         const checkSuccessfulPaymentResult = await sails.helpers.mgw.telegram.checkSuccessfulPayment.with({
           paymentResponse: msg,
@@ -97,7 +109,7 @@ module.exports = {
             clientId: client.id,
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            amount: msg.successful_payment.total_amount/sails.config.custom.config.price[msg.successful_payment.currency.toUpperCase()].transform_to_min_price_unit || 0,
+            amount: msg.successful_payment.total_amount/sails.config.custom.config.price[currentRegion].transform_to_min_price_unit || 0,
             currency: msg.successful_payment.currency || 'XXX',
           });
 
@@ -162,7 +174,7 @@ module.exports = {
             clientId: client.id,
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            amount: msg.successful_payment.total_amount/sails.config.custom.config.price[msg.successful_payment.currency.toUpperCase()].transform_to_min_price_unit || 0,
+            amount: msg.successful_payment.total_amount/sails.config.custom.config.price[currentRegion].transform_to_min_price_unit || 0,
             currency: msg.successful_payment.currency || 'XXX',
             comments: checkSuccessfulPaymentResult.payload.errorMessage,
           });
@@ -192,18 +204,26 @@ module.exports = {
         //   }
         // };
 
-        const throwError = true;
+        const throwError = false;
         if (throwError) {
           return await sails.helpers.general.catchErrorJoi({
             error: e,
             location: moduleName,
             throwError: true,
+            errorPayloadAdditional: {
+              clientGuid,
+              accountGuid,
+            },
           });
         } else {
           await sails.helpers.general.catchErrorJoi({
             error: e,
             location: moduleName,
             throwError: false,
+            errorPayloadAdditional: {
+              clientGuid,
+              accountGuid,
+            },
           });
           return exits.success({
             status: 'ok',

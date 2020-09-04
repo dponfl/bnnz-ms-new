@@ -113,7 +113,7 @@ module.exports = {
       }
     } else {
       const errorLocation = input.location;
-      const errorPayloadAdditional = input.errorPayloadAdditional;
+      const errorPayloadAdditional = input.errorPayloadAdditional || {};
       const errorMsg = errorObj.message != null ? errorObj.message : 'No error message';
       const errorName = errorObj.name != null ? errorObj.name : 'No error name';
       const errorPayload = errorObj.raw != null ? errorObj.raw : {};

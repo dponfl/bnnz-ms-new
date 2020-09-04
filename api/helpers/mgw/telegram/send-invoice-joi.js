@@ -97,6 +97,9 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let sendInvoiceParams;
+    let sendInvoiceResult;
+
 
     try {
 
@@ -111,9 +114,6 @@ module.exports = {
       if (paymentProviderTokenResponseRaw.status === 'ok') {
 
         const paymentProviderToken = paymentProviderTokenResponseRaw.payload.paymentProviderToken;
-
-        const paymentProvider = sails.config.custom.config.payments.telegram.provider.toUpperCase() +
-          '_' + sails.config.custom.config.payments.telegram.env.toUpperCase();
 
         if (paymentProviderToken == null) {
 
@@ -154,7 +154,19 @@ module.exports = {
 
         }
 
-        const sendInvoiceResult = await sails.config.custom.telegramBot.sendInvoice(
+        sendInvoiceParams = {
+          chatId: input.chatId,
+          title: input.title,
+          description: input.description,
+          paymentGroupGuid: input.paymentGroupGuid,
+          paymentProviderToken,
+          startParameter: input.startParameter,
+          currency: input.currency,
+          prices: input.prices,
+          options: input.options,
+        };
+
+        sendInvoiceResult = await sails.config.custom.telegramBot.sendInvoice(
           input.chatId,
           input.title,
           input.description,
@@ -218,12 +230,24 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+            sendInvoiceParams,
+            sendInvoiceResult,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+            sendInvoiceParams,
+            sendInvoiceResult,
+          },
         });
         return exits.success({
           status: 'ok',

@@ -86,8 +86,6 @@ module.exports = {
       const messenger = input.client.messenger;
       const chatId = input.client.chat_id;
       const clientId = input.client.id;
-      const clientGuid = input.client.guid;
-      const accountGuid = input.client.account_use;
 
       const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
         '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
@@ -253,12 +251,20 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
         return exits.success({
           status: 'ok',

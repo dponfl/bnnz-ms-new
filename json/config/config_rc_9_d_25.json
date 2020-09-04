@@ -10,7 +10,7 @@
   },
   "payments": {
     "telegram": {
-      "provider": "SBERBANK",
+      "provider": "TRANZZO",
       "env": "TEST"
     }
   },
@@ -1111,24 +1111,6 @@
         "COMMON_PAYMENT_SUCCESSFUL": "Пакет продвижения «$ServiceLevelTitle$» успешно оплачен :boom:",
         "COMMON_MAKE_PAYMENT_02": "Нажимая на кнопку «ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ», ты соглашаешься с «Условиями предоставления услуг» и переходишь к оплате выбранного пакета :blush:",
         "COMMON_MAKE_PAYMENT_02_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "COMMON_MORE_INFO_01_01": "Пакет «$ServiceLevelTitle$»",
-        "COMMON_MORE_INFO_01_02": ":rocket: Получаемая живая активность:",
-        "COMMON_MORE_INFO_01_03": ":speech_balloon: 600 комментариев в мес.",
-        "COMMON_MORE_INFO_01_04": ":heart: 720 лайков в мес.",
-        "COMMON_MORE_INFO_01_05": ":inbox_tray: до 1000 сохранений в мес.",
-        "COMMON_MORE_INFO_01_06": "* Из расчета публикации 1 поста в день.",
-        "COMMON_MORE_INFO_02_01": ":crown: Дополнительные возможности:",
-        "COMMON_MORE_INFO_02_02": "— :mortar_board: 4 курса в Школе Продвижения BeFame",
-        "COMMON_MORE_INFO_02_03": "— :sunrise: 70 пресетов для обработки фотографий в Lightroom",
-        "COMMON_MORE_INFO_02_04": "— :sunglasses: Выделяющийся аватар",
-        "COMMON_MORE_INFO_02_05": "— :link: Мультиссылка в шапку профиля",
-        "COMMON_MORE_INFO_02_06": "— :credit_card: Вывод средств по реферальной программе ",
-        "COMMON_MORE_INFO_03_01": ":star: Персональная поддержка:",
-        "COMMON_MORE_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
-        "COMMON_MORE_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
-        "COMMON_MORE_INFO_03_04": ":pencil: Нужно выполнять до 20 простых заданий в день ",
-        "COMMON_MORE_INFO_03_05": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо   $PriceList$)",
-        "COMMON_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "COMMON_PAYMENT_ERROR_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "COMMON_PAYMENT_ERROR_02": "Если деньги списались, при этом вы видите данное сообщение — напишите в техподдержку :pencil2:",
         "COMMON_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ",
@@ -1305,7 +1287,26 @@
         "COMMON_MSG_CHECK_BUTTON_PRESSED_MSG_02": "Это может занять некоторое время :hourglass_flowing_sand:",
         "COMMON_MSG_ON_PARSER_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
         "COMMON_MSG_ON_PARSER_ERROR_MSG_02": "Проверка задания займет большее количество времени :clock4:",
-        "COMMON_MSG_ON_PARSER_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:"
+        "COMMON_MSG_ON_PARSER_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
+        "$$$$$$$$$$$$$$$$$$$$$_BEHERO_Optin": "*** ТОКЕНЫ ДЛЯ BEHERO КЕЙСА Optin ***",
+        "BEHERO_MORE_INFO_01_01": "Пакет «$ServiceLevelTitle$»",
+        "BEHERO_MORE_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "BEHERO_MORE_INFO_01_03": ":speech_balloon: 600 комментариев в мес.",
+        "BEHERO_MORE_INFO_01_04": ":heart: 720 лайков в мес.",
+        "BEHERO_MORE_INFO_01_05": ":inbox_tray: до 1000 сохранений в мес.",
+        "BEHERO_MORE_INFO_01_06": "* Из расчета публикации 1 поста в день.",
+        "BEHERO_MORE_INFO_02_01": ":crown: Дополнительные возможности:",
+        "BEHERO_MORE_INFO_02_02": "— :mortar_board: 4 курса в Школе Продвижения BeFame",
+        "BEHERO_MORE_INFO_02_03": "— :sunrise: 70 пресетов для обработки фотографий в Lightroom",
+        "BEHERO_MORE_INFO_02_04": "— :sunglasses: Выделяющийся аватар",
+        "BEHERO_MORE_INFO_02_05": "— :link: Мультиссылка в шапку профиля",
+        "BEHERO_MORE_INFO_02_06": "— :credit_card: Вывод средств по реферальной программе ",
+        "BEHERO_MORE_INFO_03_01": ":star: Персональная поддержка:",
+        "BEHERO_MORE_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
+        "BEHERO_MORE_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
+        "BEHERO_MORE_INFO_03_04": ":pencil: Нужно выполнять до 20 простых заданий в день ",
+        "BEHERO_MORE_INFO_03_05": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо   $PriceList$)",
+        "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:"
       }
     }
   }

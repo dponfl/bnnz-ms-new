@@ -29,9 +29,11 @@ module.exports = {
 
     // sails.log.info('******************** ' + moduleName + ' ********************');
 
+    let paymentProvider;
+
     try {
 
-      const paymentProvider = sails.config.custom.config.payments[inputs.messenger]['provider'].toUpperCase() +
+      paymentProvider = sails.config.custom.config.payments[inputs.messenger]['provider'].toUpperCase() +
       '_' + sails.config.custom.config.payments[inputs.messenger]['env'].toUpperCase();
 
       if (paymentProvider == null) {
@@ -99,12 +101,18 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            paymentProvider,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            paymentProvider,
+          },
         });
         return exits.success({
           status: 'ok',

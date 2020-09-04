@@ -185,7 +185,7 @@ module.exports = {
            * Создаём запись о получении платежа
            */
 
-          const currency = currentCurrencyText;
+          const currency = currentCurrency;
 /*
           const invoiceItems = [
             {

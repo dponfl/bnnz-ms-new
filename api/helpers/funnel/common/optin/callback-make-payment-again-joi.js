@@ -166,7 +166,7 @@ module.exports = {
             ]
           });
 
-          const currency = currentCurrencyText;
+          const currency = currentCurrency;
 
           const item01Description = await MessageProcessor.parseStr({
           client: input.client,
