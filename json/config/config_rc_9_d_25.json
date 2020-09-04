@@ -1049,8 +1049,9 @@
         "period": "months"
       }
     },
-    "RUB": {
+    "RU": {
       "transform_to_min_price_unit": 100,
+      "currency": "RUB",
       "silver_personal": {
         "period_01": {
           "list_price": 4620,
@@ -1086,7 +1087,7 @@
         "$$$$$$$$$$$$$$$$$$$$$_Common_Optin": "*** ТОКЕНЫ ДЛЯ ОБЩЕГО КЕЙСА Optin ***",
         "COMMON_START_01": "Привет, $FirstName$ :wave:",
         "COMMON_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
-        "COMMON_START_03": "Поздравляю! Пакет продвижения  «$BeHeroTitle$» — это отличный выбор :thumbsup:",
+        "COMMON_START_03": "Поздравляю! Пакет продвижения  «$ServiceLevelTitle$» — это отличный выбор :thumbsup:",
         "COMMON_START_04": "Давай начнем продвигать твой аккаунт! :rocket:",
         "COMMON_INTRO": "Для регистрации и начала продвижения мне нужно узнать имя твоего профиля в Instagram.",
         "COMMON_GET_PROFILE": "Напиши свой ник в Instagram ниже :point_down:",
@@ -1099,18 +1100,18 @@
         "COMMON_NEXT_TRY": "Хорошо, давай попробуем снова :relieved:",
         "COMMON_MAKE_PAYMENT_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе и теперь можно перейти к оплате пакета :credit_card:",
         "COMMON_MAKE_PAYMENT_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "COMMON_MAKE_PAYMENT_BTN_02": "Подробнее о пакете «$BeHeroTitle$»",
+        "COMMON_MAKE_PAYMENT_BTN_02": "Подробнее о пакете «$ServiceLevelTitle$»",
         "COMMON_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
-        "COMMON_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения «$BeHeroTitle$»",
-        "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения «$BeHeroTitle$» на $paymentPeriod$",
-        "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "«$BeHeroTitle$» ($paymentPeriod$)",
+        "COMMON_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения «$ServiceLevelTitle$»",
+        "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения «$ServiceLevelTitle$» на $paymentPeriod$",
+        "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "«$ServiceLevelTitle$» ($paymentPeriod$)",
         "COMMON_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION": "Скидка",
         "COMMON_MAKE_PAYMENT_INVOICE_BTN": "Оплатить: $itemInvoicePrice$ руб.",
         "COMMON_TERMS_DOC": "Условия предоставления услуг",
-        "COMMON_PAYMENT_SUCCESSFUL": "Пакет продвижения «$BeHeroTitle$» успешно оплачен :boom:",
+        "COMMON_PAYMENT_SUCCESSFUL": "Пакет продвижения «$ServiceLevelTitle$» успешно оплачен :boom:",
         "COMMON_MAKE_PAYMENT_02": "Нажимая на кнопку «ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ», ты соглашаешься с «Условиями предоставления услуг» и переходишь к оплате выбранного пакета :blush:",
         "COMMON_MAKE_PAYMENT_02_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "COMMON_MORE_INFO_01_01": "Пакет «$BeHeroTitle$»",
+        "COMMON_MORE_INFO_01_01": "Пакет «$ServiceLevelTitle$»",
         "COMMON_MORE_INFO_01_02": ":rocket: Получаемая живая активность:",
         "COMMON_MORE_INFO_01_03": ":speech_balloon: 600 комментариев в мес.",
         "COMMON_MORE_INFO_01_04": ":heart: 720 лайков в мес.",
@@ -1126,7 +1127,7 @@
         "COMMON_MORE_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
         "COMMON_MORE_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
         "COMMON_MORE_INFO_03_04": ":pencil: Нужно выполнять до 20 простых заданий в день ",
-        "COMMON_MORE_INFO_03_05": "Стоимость пакета: $PriceBeHeroPeriod01RubCurrent$ :white_check_mark: (вместо   $PriceBeHeroPeriod01RubList$)",
+        "COMMON_MORE_INFO_03_05": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо   $PriceList$)",
         "COMMON_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "COMMON_PAYMENT_ERROR_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "COMMON_PAYMENT_ERROR_02": "Если деньги списались, при этом вы видите данное сообщение — напишите в техподдержку :pencil2:",

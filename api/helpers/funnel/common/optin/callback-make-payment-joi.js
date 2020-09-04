@@ -60,6 +60,18 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let useLang;
+
+    let priceConfigText;
+    let priceConfigGeneral;
+
+    let currentAccount;
+    let currentRegion;
+
+    let currentAmount;
+    let currentCurrency;
+    let currentCurrencyText;
+
 
     try {
 
@@ -68,13 +80,52 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      currentRegion = currentAccount.region;
+
+      useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+
+      priceConfigText = sails.config.custom.config.lang[useLang].price;
+      priceConfigGeneral = sails.config.custom.config.price;
+
+      if (priceConfigText == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'No text price config found (missing config.lang[useLang].price)',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            useLang,
+          },
+        });
+      }
+
+      if (priceConfigGeneral == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'No text price config found (missing config.price)',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {},
+        });
+      }
+
+      currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
+      currentCurrency = priceConfigGeneral[currentRegion].currency;
+      currentCurrencyText = priceConfigText.currency[currentCurrency];
+
 
       switch (input.query.data) {
         case 'make_payment':
 
 // TODO: Временная заглушка по причине нереботы тестовых платежей: Начало
 
-          const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
           const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
             return o.guid === currentAccount.guid;
           });
@@ -83,13 +134,11 @@ module.exports = {
            * Обновляем поля записи текущего аккаунта
            */
 
-          const priceConfig = sails.config.custom.config.price;
-
           input.client.accounts[currentAccountInd].payment_made = true;
           input.client.accounts[currentAccountInd].subscription_from = moment()
             .format();
           input.client.accounts[currentAccountInd].subscription_until = moment()
-            .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+            .add(priceConfigGeneral.payment_periods.period_01.value, priceConfigGeneral.payment_periods.period_01.period)
             .format();
 
           const reallocateRoomsToAccountJoiParams = {
@@ -141,21 +190,28 @@ module.exports = {
            * Создаём запись о получении платежа
            */
 
-          const priceConfigGeneral = sails.config.custom.config.price;
-          const currency = 'RUB';
+          const currency = currentCurrencyText;
+
+          // const invoiceItems = [
+          //   {
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+          //   }
+          // ];
+          //
+          // if (priceConfigGeneral[currentRegion].silver_personal.period_01.current_price !== priceConfigGeneral[currentRegion].silver_personal.period_01.list_price) {
+          //   invoiceItems.push({
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currentRegion].silver_personal.period_01.current_price - priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+          //   });
+          // }
+
           const invoiceItems = [
             {
               quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
+              price: currentAmount,
             }
           ];
-
-          if (priceConfigGeneral[currency].silver_personal.period_01.current_price !== priceConfigGeneral[currency].silver_personal.period_01.list_price) {
-            invoiceItems.push({
-              quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
-            });
-          }
 
           const messenger = input.client.messenger;
           const clientId = input.client.id;
@@ -229,48 +285,10 @@ module.exports = {
           //
           // }
           //
-          // const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
-          //
-          // const priceConfigText = sails.config.custom.config.lang[useLang].price;
-          // const priceConfigGeneral = sails.config.custom.config.price;
-          //
-          // if (priceConfigText == null) {
-          //   // throw new Error(`${moduleName}, error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
-          //
-          //   await sails.helpers.general.throwErrorJoi({
-          //     errorType: sails.config.custom.enums.errorType.CRITICAL,
-          //     emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-          //     location: moduleName,
-          //     message: 'No text price config found (missing config.lang[useLang].price)',
-          //     clientGuid,
-          //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
-          //     payload: {
-          //       useLang,
-          //     },
-          //   });
-          //
-          // }
-          //
-          // if (priceConfigGeneral == null) {
-          //   // throw new Error(`${moduleName}, error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
-          //
-          //   await sails.helpers.general.throwErrorJoi({
-          //     errorType: sails.config.custom.enums.errorType.CRITICAL,
-          //     emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-          //     location: moduleName,
-          //     message: 'No text price config found (missing config.price)',
-          //     clientGuid,
-          //     accountGuid,
-          //     errorName: sails.config.custom.FUNNELS_ERROR.name,
-          //     payload: {},
-          //   });
-          //
-          // }
           //
           // const title = await MessageProcessor.parseStr({
           //   client: input.client,
-          //   token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+          //   token: "COMMON_MAKE_PAYMENT_PMT_TITLE",
           //   additionalTokens: [
           //     {
           //       token: "$paymentPeriod$",
@@ -281,7 +299,7 @@ module.exports = {
           //
           // const description = await MessageProcessor.parseStr({
           //   client: input.client,
-          //   token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+          //   token: "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
           //   additionalTokens: [
           //     {
           //       token: "$paymentPeriod$",
@@ -290,11 +308,11 @@ module.exports = {
           //   ]
           // });
           //
-          // const currency = 'RUB';
+          // const currency = currentCurrencyText;
           //
           // const item01Description = await MessageProcessor.parseStr({
           // client: input.client,
-          // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+          // token: "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
           //   additionalTokens: [
           //     {
           //       token: "$paymentPeriod$",
@@ -305,29 +323,42 @@ module.exports = {
           //
           // const item02Description = await MessageProcessor.parseStr({
           // client: input.client,
-          // token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
+          // token: "COMMON_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
           // });
-          //
-          // const invoiceItems = [
-          //   {
-          //     description: item01Description,
-          //     quantity: '1.0',
-          //     price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
-          //     currency,
-          //     transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-          //   }
-          // ];
-          //
-          // if (priceConfigGeneral[currency].silver_personal.period_01.current_price !== priceConfigGeneral[currency].silver_personal.period_01.list_price) {
-          //   invoiceItems.push({
-          //     description: item02Description,
-          //     quantity: '1.0',
-          //     price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
-          //     currency,
-          //     transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-          //   });
-          // }
-          //
+//
+// /*
+//           const invoiceItems = [
+//             {
+//               description: item01Description,
+//               quantity: '1.0',
+//               price: priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+//               currency,
+//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+//             }
+//           ];
+//
+//           if (priceConfigGeneral[currentRegion].silver_personal.period_01.current_price !== priceConfigGeneral[currentRegion].silver_personal.period_01.list_price) {
+//             invoiceItems.push({
+//               description: item02Description,
+//               quantity: '1.0',
+//               price: priceConfigGeneral[currentRegion].silver_personal.period_01.current_price - priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+//               currency,
+//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+//             });
+//           }
+// */
+//
+//           const invoiceItems = [
+//             {
+//               description: item01Description,
+//               quantity: '1.0',
+//               price: currentAmount,
+//               currency,
+//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+//             }
+//           ];
+//
+//
           // const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
           //   client: input.client,
           //   title,
@@ -378,7 +409,7 @@ module.exports = {
           //
           // }
           //
-          // input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
+          // input.client.accounts[accountIndex].payment_amount = currentAmount;
           // input.client.accounts[accountIndex].payment_currency = currency;
 
           break;
@@ -451,12 +482,20 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
         return exits.success({
           status: 'ok',

@@ -45,6 +45,7 @@ module.exports = {
       const accountRec = {
         guid: uuidApiKey.uuid,
         ref_key: uuidApiKey.apiKey,
+        region: inputs.account.region || 'RU',
         subscription_active: inputs.account.subscription_active || false,
         subscription_from: inputs.account.subscription_from || null,
         subscription_until: inputs.account.subscription_until || null,

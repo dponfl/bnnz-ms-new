@@ -58,6 +58,18 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let useLang;
+
+    let priceConfigText;
+    let priceConfigGeneral;
+
+    let currentAccount;
+    let currentRegion;
+
+    let currentAmount;
+    let currentCurrency;
+    let currentCurrencyText;
+
 
     try {
 
@@ -65,6 +77,46 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+
+      currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      currentRegion = currentAccount.region;
+
+      useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+
+      priceConfigText = sails.config.custom.config.lang[useLang].price;
+      priceConfigGeneral = sails.config.custom.config.price;
+
+      if (priceConfigText == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'No text price config found (missing config.lang[useLang].price)',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            useLang,
+          },
+        });
+      }
+
+      if (priceConfigGeneral == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'No text price config found (missing config.price)',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {},
+        });
+      }
+
+      currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
+      currentCurrency = priceConfigGeneral[currentRegion].currency;
+      currentCurrencyText = priceConfigText.currency[currentCurrency];
 
 
       switch (input.query.data) {
@@ -77,8 +129,6 @@ module.exports = {
           const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
 
           if (paymentProvider == null) {
-            // throw new Error(`${moduleName}, error: No payment provider config for messenger: ${input.client.messenger}`);
-
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
@@ -91,51 +141,12 @@ module.exports = {
                 inputClientMessenger: input.client.messenger,
               },
             });
-
           }
 
-          const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
-
-          const priceConfigText = sails.config.custom.config.lang[useLang].price;
-          const priceConfigGeneral = sails.config.custom.config.price;
-
-          if (priceConfigText == null) {
-            // throw new Error(`${moduleName}, error: No text price config found: ${JSON.stringify(sails.config.custom.config.lang[useLang].price, null, 3)}`);
-
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-              location: moduleName,
-              message: 'No text price config found (missing config.lang[useLang].price)',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                useLang,
-              },
-            });
-
-          }
-
-          if (priceConfigGeneral == null) {
-            // throw new Error(`${moduleName}, error: No general price config found: ${JSON.stringify(sails.config.custom.config.price, null, 3)}`);
-
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-              location: moduleName,
-              message: 'No text price config found (missing config.price)',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {},
-            });
-
-          }
 
           const title = await MessageProcessor.parseStr({
             client: input.client,
-            token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+            token: "COMMON_MAKE_PAYMENT_PMT_TITLE",
             additionalTokens: [
               {
                 token: "$paymentPeriod$",
@@ -146,7 +157,7 @@ module.exports = {
 
           const description = await MessageProcessor.parseStr({
             client: input.client,
-            token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+            token: "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
             additionalTokens: [
               {
                 token: "$paymentPeriod$",
@@ -155,11 +166,11 @@ module.exports = {
             ]
           });
 
-          const currency = 'RUB';
+          const currency = currentCurrencyText;
 
           const item01Description = await MessageProcessor.parseStr({
           client: input.client,
-          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+          token: "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
             additionalTokens: [
               {
                 token: "$paymentPeriod$",
@@ -168,25 +179,35 @@ module.exports = {
             ]
           });
 
-          const item02Description = await MessageProcessor.parseStr({
-          client: input.client,
-          token: "BEHERO_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
-          });
+          // const item02Description = await MessageProcessor.parseStr({
+          // client: input.client,
+          // token: "COMMON_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
+          // });
+
+          // const invoiceItems = [
+          //   {
+          //     description: item01Description,
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+          //     currency,
+          //     transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+          //   },
+          //   {
+          //     description: item02Description,
+          //     quantity: '1.0',
+          //     price: priceConfigGeneral[currentRegion].silver_personal.period_01.current_price - priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+          //     currency,
+          //     transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+          //   },
+          // ];
 
           const invoiceItems = [
             {
               description: item01Description,
               quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.list_price,
+              price: currentAmount,
               currency,
-              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
-            },
-            {
-              description: item02Description,
-              quantity: '1.0',
-              price: priceConfigGeneral[currency].silver_personal.period_01.current_price - priceConfigGeneral[currency].silver_personal.period_01.list_price,
-              currency,
-              transform_to_min_price_unit: priceConfigGeneral[currency].transform_to_min_price_unit,
+              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
             },
           ];
 
@@ -201,9 +222,6 @@ module.exports = {
           });
 
           if (sendInvoiceResultRaw.status !== 'ok') {
-            // throw new Error(`${moduleName}, error: sendInvoice error response:
-            // ${JSON.stringify(sendInvoiceResultRaw, null, 3)}`);
-
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.ERROR,
               location: moduleName,
@@ -215,16 +233,11 @@ module.exports = {
                 sendInvoiceResultRaw,
               },
             });
-
           }
 
           const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
 
           if (accountIndex < 0) {
-            // throw new Error(`${moduleName}, error: account not found:
-            // client.account_use: ${input.client.account_use}
-            // client.accounts: ${JSON.stringify(input.client.accounts, null, 3)}`);
-
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.ERROR,
               location: moduleName,
@@ -237,10 +250,9 @@ module.exports = {
                 accounts: input.client.accounts,
               },
             });
-
           }
 
-          input.client.accounts[accountIndex].payment_amount = priceConfigGeneral[currency].silver_personal.period_01.current_price;
+          input.client.accounts[accountIndex].payment_amount = currentAmount;
           input.client.accounts[accountIndex].payment_currency = currency;
 
           break;
@@ -253,8 +265,6 @@ module.exports = {
 
           break;
         default:
-          // throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
-
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -267,7 +277,6 @@ module.exports = {
               inputQueryData: input.query.data,
             },
           });
-
       }
 
       input.block.done = true;
@@ -311,12 +320,20 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
         });
         return exits.success({
           status: 'ok',

@@ -189,13 +189,13 @@ describe.skip('Test sendDocument with inline keyboard', function () {
     const inlineKeyboardRaw = [
       [
         {
-          "text": "BEHERO_PAYMENT_ERROR_BTN_01",
+          "text": "COMMON_PAYMENT_ERROR_BTN_01",
           "callback_data": "make_payment"
         }
       ],
       [
         {
-          "text": "BEHERO_PAYMENT_ERROR_BTN_02",
+          "text": "COMMON_PAYMENT_ERROR_BTN_02",
           "callback_data": "contact_support"
         }
       ]
@@ -261,13 +261,13 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
     const inlineKeyboardRaw = [
       [
         {
-          "text": "BEHERO_CONFIRM_PROFILE_BTN_YES",
+          "text": "COMMON_CONFIRM_PROFILE_BTN_YES",
           "callback_data": "yes"
         }
       ],
       [
         {
-          "text": "BEHERO_CONFIRM_PROFILE_BTN_NO",
+          "text": "COMMON_CONFIRM_PROFILE_BTN_NO",
           "callback_data": "no"
         }
       ]
@@ -597,12 +597,12 @@ describe.skip('Test sendInvoce', function () {
 
       const title = await MessageProcessor.parseStr({
         client,
-        token: "BEHERO_MAKE_PAYMENT_PMT_TITLE",
+        token: "COMMON_MAKE_PAYMENT_PMT_TITLE",
       });
 
       const description = await MessageProcessor.parseStr({
         client,
-        token: "BEHERO_MAKE_PAYMENT_PMT_DESCRIPTION",
+        token: "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
         additionalTokens: [
           {
             token: "$paymentPeriod$",
@@ -1154,7 +1154,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_02",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_02",
             "style": "bi",
             "cr": "DCR"
           },
@@ -1164,14 +1164,14 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
         [
           {
             "id": "btn_id_01",
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_01",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_01",
             "action": "main::actionForButton01"
           }
         ],
         [
           {
             "id": "btn_id_02",
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_02",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_02",
             "action": "main::actionForButton02"
           }
         ],
@@ -1188,7 +1188,7 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
       "message": {
         "html": [
           {
-            "text": "BEHERO_JOIN_REF_MORE_INFO_SECOND",
+            "text": "COMMON_JOIN_REF_MORE_INFO_SECOND",
             "style": "bi",
             "cr": "DCR"
           },
@@ -1198,14 +1198,14 @@ describe.skip('Check KeyboardProcessor methods & sendKeyboardJoi', function () {
         [
           {
             "id": "btn_id_01",
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_01",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_01",
             "action": "main::actionForButton01"
           }
         ],
         [
           {
             "id": "btn_id_02",
-            "text": "BEHERO_JOIN_REF_NO_INTEREST_BTN_02",
+            "text": "COMMON_JOIN_REF_NO_INTEREST_BTN_02",
             "action": "main::actionForButton02"
           }
         ],

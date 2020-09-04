@@ -19,6 +19,9 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    region: {
+      type: 'string',
+    },
 
     /**
      * флаг, что клиент пожелал подключить этот акаунт к реферальной программе

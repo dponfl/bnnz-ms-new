@@ -201,6 +201,10 @@ module.exports = {
 
       let resultStr = input.message;
 
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentRegion = currentAccount.region;
+      const currentServiceName = currentAccount.service.name;
+
       const firstName = input.client.first_name || '';
       const lastName = input.client.last_name || '';
 
@@ -209,16 +213,18 @@ module.exports = {
       const priceConfigText = sails.config.custom.config.lang[useLang].price;
       const priceConfigGeneral = sails.config.custom.config.price;
 
+      const currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
+      const currentCurrency = priceConfigGeneral[currentRegion].currency;
+      const currentCurrencyText = priceConfigText.currency[currentCurrency];
+      const currentServiceLevelTitle = priceConfigText.service_title[currentServiceName].title;
 
       resultStr = _.replace(resultStr, '$FirstName$', firstName);
       resultStr = _.replace(resultStr, '$LastName$', lastName);
 
-      resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubCurrent$', `${priceConfigGeneral.RUB.silver_personal.period_01.current_price} ${priceConfigText.currency.RUB}`);
-      resultStr = _.replace(resultStr, '$PriceBeHeroPeriod01RubList$', `${priceConfigGeneral.RUB.silver_personal.period_01.list_price} ${priceConfigText.currency.RUB}`);
+      resultStr = _.replace(resultStr, '$PriceCurrent$', `${currentAmount} ${currentCurrencyText}`);
+      resultStr = _.replace(resultStr, '$PriceList$', `${priceConfigGeneral.RUB.silver_personal.period_01.list_price} ${priceConfigText.currency.RUB}`);
 
-      resultStr = _.replace(resultStr, '$BeHeroTitle$', `${priceConfigText.service_title.silver_personal.title}`);
-
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      resultStr = _.replace(resultStr, '$ServiceLevelTitle$', `${currentServiceLevelTitle}`);
 
       const profileOfCurrentAccount = currentAccount.inst_profile;
       resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);

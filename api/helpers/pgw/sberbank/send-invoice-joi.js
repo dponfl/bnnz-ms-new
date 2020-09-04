@@ -124,7 +124,7 @@ module.exports = {
 
       const inlineKeyboardText = await MessageProcessor.parseStr({
         client: input.client,
-        token: "BEHERO_MAKE_PAYMENT_INVOICE_BTN",
+        token: "COMMON_MAKE_PAYMENT_INVOICE_BTN",
         additionalTokens: [
           {
             token: "$itemInvoicePrice$",
