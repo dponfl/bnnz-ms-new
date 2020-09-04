@@ -260,6 +260,7 @@ module.exports = {
       const priceConfigGeneral = sails.config.custom.config.price;
 
       const currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
+      const listAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.list_price;
       const currentCurrency = priceConfigGeneral[currentRegion].currency;
       const currentCurrencyText = priceConfigText.currency[currentCurrency];
       const currentServiceLevelTitle = priceConfigText.service_title[currentServiceName].title;
@@ -268,7 +269,7 @@ module.exports = {
       resultStr = _.replace(resultStr, '$LastName$', lastName);
 
       resultStr = _.replace(resultStr, '$PriceCurrent$', `${currentAmount} ${currentCurrencyText}`);
-      resultStr = _.replace(resultStr, '$PriceList$', `${priceConfigGeneral[currentRegion].silver_personal.period_01.list_price} ${priceConfigText.currency.RUB}`);
+      resultStr = _.replace(resultStr, '$PriceList$', `${listAmount} ${currentCurrencyText}`);
 
       resultStr = _.replace(resultStr, '$ServiceLevelTitle$', `${currentServiceLevelTitle}`);
 
