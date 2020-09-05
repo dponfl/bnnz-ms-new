@@ -99,6 +99,9 @@ module.exports = {
 
         if (checkSuccessfulPaymentResult.status === 'ok') {
 
+          const paymentAmount = msg.successful_payment.total_amount/sails.config.custom.config.price[currentRegion].transform_to_min_price_unit || 0;
+          const paymentCurrency = msg.successful_payment.currency || 'XXX';
+
           await sails.helpers.storage.paymentCreateJoi({
             paymentGroupGuid,
             paymentStatus: sails.config.custom.enums.paymentStatus.SUCCESS,
@@ -109,8 +112,8 @@ module.exports = {
             clientId: client.id,
             clientGuid: client.guid,
             accountGuid: client.account_use,
-            amount: msg.successful_payment.total_amount/sails.config.custom.config.price[currentRegion].transform_to_min_price_unit || 0,
-            currency: msg.successful_payment.currency || 'XXX',
+            amount: paymentAmount,
+            currency: paymentCurrency,
           });
 
           // TODO: Заменить на метод storage.paymentGroupUpdateJoi
@@ -143,8 +146,8 @@ module.exports = {
           await sails.helpers.storage.accountUpdateJoi({
             criteria: {guid: accountRec.guid},
             data: {
-              payment_amount: null,
-              payment_currency: null,
+              payment_amount: paymentAmount,
+              payment_currency: paymentCurrency,
             },
             createdBy: moduleName,
           });
