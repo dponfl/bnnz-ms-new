@@ -1146,7 +1146,7 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_OPTIN_COMPLETED",
+            "text": "BEHERO_OPTIN_COMPLETED",
             "style": "",
             "cr": ""
           }
@@ -1154,13 +1154,13 @@
         "inline_keyboard": [
           [
             {
-              "text": "COMMON_OPTIN_COMPLETED_BTN_01",
+              "text": "BEHERO_OPTIN_COMPLETED_BTN_01",
               "url": "https://drive.google.com/drive/folders/1jdDS-S6skzTIGTD79wNwTqGjyBgzMJmJ"
             }
           ],
           [
             {
-              "text": "COMMON_OPTIN_COMPLETED_BTN_02",
+              "text": "BEHERO_OPTIN_COMPLETED_BTN_02",
               "url": "https://befame.ru/"
             }
           ]
