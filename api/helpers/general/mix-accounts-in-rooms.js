@@ -1,6 +1,6 @@
 "use strict"
 
-const moduleName = 'general:mixAccountsInRooms';
+const moduleName = 'general:mix-accounts-in-rooms';
 
 module.exports = {
 
@@ -46,6 +46,9 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    let clientGuid;
+    let accountGuid;
+
     // sails.log.info(`*** ${moduleName} ***`);
     // sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
@@ -53,6 +56,9 @@ module.exports = {
       .populate('account');
     const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
     const client = await Client.findOne({id: inputs.accountRec.client});
+
+    clientGuid = client.guid;
+    accountGuid = inputs.accountRec.guid;
 
     // sails.log.warn('oldRoomWithAccounts: ', oldRoomWithAccounts);
     // sails.log.warn('newRoomWithAccounts: ', newRoomWithAccounts);
@@ -76,7 +82,21 @@ module.exports = {
           const accountCategory = sails.config.custom.config.rooms.category_by_service[inputs.accountRec.service.name];
 
           if (accountCategory == null) {
-            throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}" for inputs.accountRec.service.name=${inputs.accountRec.service.name}`);
+            // throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}" for inputs.accountRec.service.name=${inputs.accountRec.service.name}`);
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Unknown account category at config',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.GENERAL_ERROR.name,
+              payload: {
+                accountCategory,
+                serviceName: inputs.accountRec.service.name,
+                inputs,
+              },
+            });
           }
 
           const newRoomHasSpaceToAllocateAccount = newRoomWithAccounts[accountCategory] < sails.config.custom.config.rooms.accounts_distribution_by_category[accountCategory];
@@ -157,7 +177,21 @@ module.exports = {
                 newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
                 break;
 
-              default: throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
+              default:
+                // throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                  location: moduleName,
+                  message: 'Unknown account category',
+                  clientGuid,
+                  accountGuid,
+                  errorName: sails.config.custom.GENERAL_ERROR.name,
+                  payload: {
+                    accountCategory,
+                    inputs,
+                  },
+                });
             }
 
           }
@@ -175,18 +209,47 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/general/mix-accounts-in-rooms';
-      const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+      // const errorLocation = 'api/helpers/general/mix-accounts-in-rooms';
+      // const errorMsg = sails.config.custom.GENERAL_HELPER_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
+        });
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
 
   }

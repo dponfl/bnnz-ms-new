@@ -2,6 +2,8 @@
 
 const moment = require('moment');
 
+const moduleName = 'general:confirm-payment';
+
 module.exports = {
 
 
@@ -54,6 +56,9 @@ module.exports = {
     let updateFunnel;
     let updateId;
     let getServiceRes;
+
+    let clientGuid;
+    let accountGuid;
 
     try {
 
@@ -119,17 +124,31 @@ module.exports = {
 
       account = _.find(accountRecords, {guid: inputs.aid});
 
+      clientGuid = client.guid;
+      accountGuid = account.guid;
+
       if (_.isNil(account)) {
 
-        sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+        // sails.log.error('api/helpers/general/confirm-payment, error: Cannot find account by inputs.aid=' + inputs.aid);
+        //
+        // throw {err: {
+        //     module: 'api/helpers/general/confirm-payment',
+        //     message: 'Cannot find account by inputs.aid=' + inputs.aid,
+        //     payload: {},
+        //   }
+        // };
 
-        throw {err: {
-            module: 'api/helpers/general/confirm-payment',
-            message: 'Cannot find account by inputs.aid=' + inputs.aid,
-            payload: {},
-          }
-        };
-
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Cannot find account by inputs.aid',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            inputs,
+          },
+        });
       }
 
       accountInd = _.findIndex(accountRecords, (o) => {
@@ -330,7 +349,19 @@ module.exports = {
           break;
 
         default:
-          throw new Error(`Wrong payment plan: ${account.payment_plan}`);
+          // throw new Error(`Wrong payment plan: ${account.payment_plan}`);
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Wrong payment plan',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.GENERAL_ERROR.name,
+            payload: {
+              payment_plan: account.payment_plan,
+            },
+          });
       }
 
       account.payment_made = true;
@@ -383,7 +414,19 @@ module.exports = {
       });
 
       if (clientUpdateRes.status != null && clientUpdateRes.status !== 'ok') {
-        throw new Error('Wrong clientUpdate response: ' + JSON.stringify(clientUpdateRes));
+        // throw new Error('Wrong clientUpdate response: ' + JSON.stringify(clientUpdateRes));
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Wrong clientUpdate response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            clientUpdateRes,
+          },
+        });
       }
 
       return exits.success({
@@ -397,18 +440,47 @@ module.exports = {
 
     } catch (e) {
 
-      const errorLocation = 'api/helpers/general/confirm-payment';
-      const errorMsg = sails.config.custom.CONFIRM_PAYMENT_GENERAL_ERROR;
+      // const errorLocation = 'api/helpers/general/confirm-payment';
+      // const errorMsg = sails.config.custom.CONFIRM_PAYMENT_GENERAL_ERROR;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {},
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+          errorPayloadAdditional: {
+            clientGuid,
+            accountGuid,
+          },
+        });
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed`,
           payload: {},
-        }
-      };
+        });
+      }
+
     }
   }
 };

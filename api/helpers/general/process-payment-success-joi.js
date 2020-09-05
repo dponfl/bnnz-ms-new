@@ -68,6 +68,10 @@ module.exports = {
     let blockId;
     let block;
 
+    let clientGuid;
+    let accountGuid;
+
+
     try {
 
       input = await schema.validateAsync(inputs.params);
@@ -85,19 +89,45 @@ module.exports = {
       });
 
       if (paymentGroupRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: payment group not found:
-        guid: ${paymentGroupGuid}
-        paymentGroupRaw: ${JSON.stringify(paymentGroupRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: payment group not found:
+        // guid: ${paymentGroupGuid}
+        // paymentGroupRaw: ${JSON.stringify(paymentGroupRaw, null, 3)}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'payment group not found',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            paymentGroupGuid,
+            paymentGroupRaw,
+          },
+        });
       }
       if (paymentGroupRaw.payload.length !== 1) {
-        throw new Error(`${moduleName}, error: several or none payment group records found:
-        guid: ${paymentGroupGuid}
-        paymentGroupRaw: ${JSON.stringify(paymentGroupRaw.payload, null, 3)}`);
+        // throw new Error(`${moduleName}, error: several or none payment group records found:
+        // guid: ${paymentGroupGuid}
+        // paymentGroupRaw: ${JSON.stringify(paymentGroupRaw.payload, null, 3)}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'several or none payment group records found',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            paymentGroupGuid,
+            paymentGroupRaw,
+          },
+        });
       }
 
       paymentGroup = paymentGroupRaw.payload[0];
 
-      const clientGuid = paymentGroup.client_guid;
+      clientGuid = paymentGroup.client_guid;
 
       /**
        * Достаём запись клиента
@@ -110,17 +140,45 @@ module.exports = {
       });
 
       if (clientRaw.status !== 'ok') {
-        throw new Error(`${moduleName}, error: client not found:
-        guid: ${clientGuid}
-        clientRaw: ${JSON.stringify(clientRaw, null, 3)}`);
+        // throw new Error(`${moduleName}, error: client not found:
+        // guid: ${clientGuid}
+        // clientRaw: ${JSON.stringify(clientRaw, null, 3)}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'client not found',
+          clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            clientGuid,
+            clientRaw,
+          },
+        });
       }
       if (clientRaw.payload.length !== 1) {
-        throw new Error(`${moduleName}, error: several or none client records found:
-        guid: ${clientGuid}
-        clientRaw: ${JSON.stringify(clientRaw.payload, null, 3)}`);
+        // throw new Error(`${moduleName}, error: several or none client records found:
+        // guid: ${clientGuid}
+        // clientRaw: ${JSON.stringify(clientRaw.payload, null, 3)}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'several or none client records found',
+          clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            clientGuid,
+            clientRaw,
+          },
+        });
       }
 
       client = clientRaw.payload[0];
+      accountGuid = client.account_use;
+
 
       /**
        * Используя наименование сервиса, воронки, блока и коллбэк-хелпера - формируем обращение
@@ -134,16 +192,43 @@ module.exports = {
       blockId = blockNameParseRes[1];
 
       if (blockGroup == null || blockId == null) {
-        throw new Error(`${moduleName}, error: cannot parse funnel block: ${paymentGroup.funnel_block}`);
+        // throw new Error(`${moduleName}, error: cannot parse funnel block: ${paymentGroup.funnel_block}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block parsing error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            updateBlock: paymentGroup.funnel_block,
+            block: input.block,
+          },
+        });
       }
 
       block = _.find(client.funnels[blockGroup], {id: blockId});
 
       if (block == null) {
-        throw new Error(`${moduleName}, error: funnel block not found:
-        updateFunnel: ${blockGroup}
-        updateId: ${blockId}
-        funnels[updateFunnel]: ${JSON.stringify(client.funnels[blockGroup], null, 3)}`);
+        // throw new Error(`${moduleName}, error: funnel block not found:
+        // updateFunnel: ${blockGroup}
+        // updateId: ${blockId}
+        // funnels[updateFunnel]: ${JSON.stringify(client.funnels[blockGroup], null, 3)}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block not found',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            blockGroup,
+            blockId,
+            funnel: client.funnels[blockGroup],
+          },
+        });
       }
 
       const helperNameRaw = block.callbackHelper;
@@ -153,8 +238,27 @@ module.exports = {
       const callbackHelperGroup = callbackHelperParseRes[1];
       const callbackHelperName = callbackHelperParseRes[2];
 
-      if (callbackHelperGroup == null || callbackHelperName == null) {
-        throw new Error(`${moduleName}, error: cannot parse callbackHelper: ${helperNameRaw}`);
+      if (
+        callbackHelperCategory == null
+        || callbackHelperGroup == null
+        || callbackHelperName == null
+      ) {
+        // throw new Error(`${moduleName}, error: cannot parse callbackHelper: ${helperNameRaw}`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Block parsing error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            helperNameRaw,
+            callbackHelperCategory,
+            callbackHelperGroup,
+            callbackHelperName,
+          },
+        });
       }
 
       const successHelperName = `${callbackHelperName}OnPaymentSuccessJoi`;
