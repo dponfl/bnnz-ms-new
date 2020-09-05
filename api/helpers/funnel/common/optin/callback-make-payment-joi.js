@@ -408,9 +408,11 @@ module.exports = {
 //             });
 //
 //           }
-//
-//           input.client.accounts[accountIndex].payment_amount = currentAmount;
-//           input.client.accounts[accountIndex].payment_currency = currency;
+
+/*
+          input.client.accounts[accountIndex].payment_amount = currentAmount;
+          input.client.accounts[accountIndex].payment_currency = currency;
+*/
 
           break;
         case 'more_info':
