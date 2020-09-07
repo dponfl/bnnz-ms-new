@@ -134,20 +134,47 @@ module.exports = {
 
       _.forEach(accountFieldsData, async (accountFieldValue, accountFieldKey) => {
 
-        if (accountRec[accountFieldKey] !== accountFieldValue) {
+        try {
+          if (accountRec[accountFieldKey] !== accountFieldValue) {
 
-          const accountFieldRec = {
-            account_guid: input.accountGuid,
-            field: accountFieldKey,
-            old_value: _.toString(accountRec[accountFieldKey]),
-            new_value: _.toString(accountFieldValue),
-            created_by: `${input.createdBy} => ${moduleName}`,
-          };
+            const accountFieldRec = {
+              account_guid: input.accountGuid,
+              field: accountFieldKey,
+              old_value: _.toString(accountRec[accountFieldKey]),
+              new_value: _.toString(accountFieldValue),
+              created_by: `${input.createdBy} => ${moduleName}`,
+            };
 
-          await AccountFields.create(accountFieldRec);
+            await AccountFields.create(accountFieldRec);
 
+          }
+        } catch (ee) {
+          const throwError = true;
+          if (throwError) {
+            return await sails.helpers.general.catchErrorJoi({
+              error: ee,
+              location: moduleName,
+              throwError: true,
+              errorPayloadAdditional: {
+                accountGuid: input.accountGuid,
+              },
+            });
+          } else {
+            await sails.helpers.general.catchErrorJoi({
+              error: ee,
+              location: moduleName,
+              throwError: false,
+              errorPayloadAdditional: {
+                accountGuid: input.accountGuid,
+              },
+            });
+            return exits.success({
+              status: 'ok',
+              message: `${moduleName} performed`,
+              payload: {},
+            });
+          }
         }
-
       });
 
       return exits.success({
@@ -182,12 +209,18 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            accountGuid: input.accountGuid,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            accountGuid: input.accountGuid,
+          },
         });
         return exits.success({
           status: 'ok',
