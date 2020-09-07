@@ -213,8 +213,8 @@ module.exports = {
       const priceConfigText = sails.config.custom.config.lang[useLang].price;
       const priceConfigGeneral = sails.config.custom.config.price;
 
-      const currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
-      const listAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.list_price;
+      const currentAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price;
+      const listAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price;
       const currentCurrency = priceConfigGeneral[currentRegion].currency;
       const currentCurrencyText = priceConfigText.currency[currentCurrency];
       const currentServiceLevelTitle = priceConfigText.service_title[currentServiceName].title;
