@@ -70,6 +70,7 @@ module.exports = {
     let currentAmount;
     let currentCurrency;
     let currentCurrencyText;
+    let currentServiceName;
 
 
     try {
@@ -81,6 +82,7 @@ module.exports = {
 
       currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
       currentRegion = currentAccount.region;
+      currentServiceName = currentAccount.service.name;
 
       useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
 
@@ -115,7 +117,7 @@ module.exports = {
         });
       }
 
-      currentAmount = priceConfigGeneral[currentRegion].silver_personal.period_01.current_price;
+      currentAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price;
       currentCurrency = priceConfigGeneral[currentRegion].currency;
       currentCurrencyText = priceConfigText.currency[currentCurrency];
 
@@ -211,8 +213,8 @@ module.exports = {
 
           const messenger = input.client.messenger;
           const clientId = input.client.id;
-          const clientGuid = input.client.guid;
-          const accountGuid = input.client.account_use;
+          // const clientGuid = input.client.guid;
+          // const accountGuid = input.client.account_use;
 
           const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
             '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
