@@ -1061,6 +1061,16 @@
           "list_price": 10000,
           "current_price": 9000
         }
+      },
+      "platinum_personal": {
+        "period_01": {
+          "list_price": 24780,
+          "current_price": 22380
+        },
+        "period_03": {
+          "list_price": 100,
+          "current_price": 100
+        }
       }
     }
   },
