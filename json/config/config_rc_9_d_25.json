@@ -1071,6 +1071,16 @@
           "list_price": 10,
           "current_price": 10
         }
+      },
+      "bronze_commercial": {
+        "period_01": {
+          "list_price": 2990,
+          "current_price": 2580
+        },
+        "period_03": {
+          "list_price": 10,
+          "current_price": 10
+        }
       }
     }
   },
