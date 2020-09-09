@@ -1061,6 +1061,16 @@
           "list_price": 10000,
           "current_price": 9000
         }
+      },
+      "silver_commercial": {
+        "period_01": {
+          "list_price": 8380,
+          "current_price": 7680
+        },
+        "period_03": {
+          "list_price": 10,
+          "current_price": 10
+        }
       }
     }
   },
@@ -1077,6 +1087,9 @@
         "service_title": {
           "silver_personal": {
             "title": "BeHero"
+          },
+          "silver_commercial": {
+            "title": "BeCreator"
           }
         }
       },
@@ -1306,7 +1319,33 @@
         "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "BEHERO_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (аудит аккаунта, хэштеги и геотеги) будут готовы в течении 1-7 рабочих дней :calendar:",
         "BEHERO_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
-        "BEHERO_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
+        "BEHERO_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeCreator_Optin": "*** ТОКЕНЫ ДЛЯ BeCreator Optin ***",
+        "BECREATOR_MORE_INFO_01_01": "Пакет «$ServiceLevelTitle$»",
+        "BECREATOR_MORE_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "BECREATOR_MORE_INFO_01_03": ":speech_balloon: 600 комментариев в мес.",
+        "BECREATOR_MORE_INFO_01_04": ":heart: 720 лайков в мес.",
+        "BECREATOR_MORE_INFO_01_05": ":inbox_tray: до 1000 сохранений в мес.",
+        "BECREATOR_MORE_INFO_01_06": "* Из расчета публикации 1 поста в день.",
+        "BECREATOR_MORE_INFO_02_01": ":crown: Дополнительные возможности:",
+        "BECREATOR_MORE_INFO_02_02": "— 4 курса в Школе Продвижения BeFame",
+        "BECREATOR_MORE_INFO_02_03": "— 70 пресетов для обработки фотографий в Lightroom",
+        "BECREATOR_MORE_INFO_02_04": "— Выделяющийся аватар",
+        "BECREATOR_MORE_INFO_02_05": "— Мультиссылка в шапку профиля",
+        "BECREATOR_MORE_INFO_02_06": "— Вывод средств по реферальной программе",
+        "BECREATOR_MORE_INFO_02_07": "— Создание простого лендинга",
+        "BECREATOR_MORE_INFO_02_08": "— Аудит вашего сайта (если есть)",
+        "BECREATOR_MORE_INFO_02_09": "— Контекстная реклама на 50 ключевых слов",
+        "BECREATOR_MORE_INFO_02_10": "— Яндекс.Метрика, Google Analytics, UTM- метки",
+        "BECREATOR_MORE_INFO_03_01": ":star: Персональная поддержка:",
+        "BECREATOR_MORE_INFO_03_02": "— Создание продающих хэштегов и геотегов",
+        "BECREATOR_MORE_INFO_03_03": "— Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
+        "BECREATOR_MORE_INFO_03_04": "— Продающее оформление шапки профиля",
+        "BECREATOR_MORE_INFO_03_05": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо $PriceList$)",
+        "BECREATOR_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "BECREATOR_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание лендинга и т. д.), а также персональная поддержка (создание продающих хэштегов, аудит аккаунта, контекстная реклама и т. д.) будут готовы в течении 1-9 рабочих дней :calendar:",
+        "BECREATOR_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
+        "BECREATOR_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
       }
     }
   }
