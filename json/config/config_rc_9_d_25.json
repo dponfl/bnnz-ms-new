@@ -1100,6 +1100,9 @@
           },
           "bronze_personal": {
             "title": "BeLike"
+          },
+          "bronze_commercial": {
+            "title": "BeMaster"
           }
         }
       },
@@ -1347,7 +1350,26 @@
         "BELIKE_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "BELIKE_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар и создание мультиссылки) будут готовы в течении 1-7 рабочих дней :calendar:",
         "BELIKE_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
-        "BELIKE_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
+        "BELIKE_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeMaster_Optin": "*** ТОКЕНЫ ДЛЯ BeMaster Optin ***",
+        "BEMASTER_MORE_INFO_01_01": "Пакет «$ServiceLevelTitle$»",
+        "BEMASTER_MORE_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "BEMASTER_MORE_INFO_01_03": ":speech_balloon: 360 комментариев в мес.",
+        "BEMASTER_MORE_INFO_01_04": ":heart: 480 лайков в мес.",
+        "BEMASTER_MORE_INFO_01_05": ":inbox_tray: до 450 сохранений в мес.",
+        "BEMASTER_MORE_INFO_01_06": "* Из расчета публикации 1 поста в день.",
+        "BEMASTER_MORE_INFO_03_01": ":crown: Дополнительные возможности:",
+        "BEMASTER_MORE_INFO_03_02": "— 3 курса в Школе Продвижения BeFame",
+        "BEMASTER_MORE_INFO_03_03": "— 40 пресетов для обработки фотографий в Lightroom",
+        "BEMASTER_MORE_INFO_03_04": "— Выделяющийся аватар",
+        "BEMASTER_MORE_INFO_03_05": "— Мультиссылка в шапку профиля",
+        "BEMASTER_MORE_INFO_03_06": "— Вывод средств по реферальной программе",
+        "BEMASTER_MORE_INFO_03_07": "— Продающее оформление шапки профиля",
+        "BEMASTER_MORE_INFO_03_08": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо $PriceList$)",
+        "BEMASTER_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "BEMASTER_OPTIN_COMPLETED": "Дополнительные опции: (выделяющийся аватар, продающее оформление шапки профиля и т. д.) будут готовы в течении 1-7 рабочих дней :calendar:",
+        "BEMASTER_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
+        "BEMASTER_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
       }
     }
   }
