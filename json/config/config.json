@@ -1062,10 +1062,30 @@
           "current_price": 100
         }
       },
+      "silver_commercial": {
+        "period_01": {
+          "list_price": 8380,
+          "current_price": 7680
+        },
+        "period_03": {
+          "list_price": 100,
+          "current_price": 100
+        }
+      },
       "gold_personal": {
         "period_01": {
           "list_price": 8290,
           "current_price": 7380
+        },
+        "period_03": {
+          "list_price": 100,
+          "current_price": 100
+        }
+      },
+      "gold_commercial": {
+        "period_01": {
+          "list_price": 17780,
+          "current_price": 16780
         },
         "period_03": {
           "list_price": 100,
