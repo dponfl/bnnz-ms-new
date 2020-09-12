@@ -38,7 +38,7 @@
         "shown": false,
         "beforeHelper": null,
         "afterHelper": null,
-        "forcedHelper": "XXXXXXX::XXXXXXX",
+        "forcedHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
         "callbackHelper": null,
         "blockModifyHelper": null,
         "message": {
@@ -64,7 +64,7 @@
         "beforeHelper": null,
         "afterHelper": null,
         "forcedHelper": null,
-        "callbackHelper": "XXXXXXX::XXXXXXX",
+        "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
         "blockModifyHelper": null,
         "message": {
           "html": [
