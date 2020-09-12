@@ -177,6 +177,14 @@ module.exports = {
         comments: {
           responseStatusMain,
           responseStatusInner,
+          userPk,
+          userName,
+          fullName,
+          isPrivate,
+          profilePicUrl,
+          profilePicId,
+          isVerified,
+          hasAnonymousProfilePicture,
           request_id: _.get(requestRes, 'request_id', null),
         },
       };
