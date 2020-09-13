@@ -1052,20 +1052,40 @@
     "RU": {
       "transform_to_min_price_unit": 100,
       "currency": "RUB",
+      "test_personal": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0
+        }
+      },
+      "test_personal_initial": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0
+        }
+      },
+      "bronze_personal": {
+        "period_01": {
+          "list_price": 1990,
+          "current_price": 1680
+        },
+        "period_03": {
+          "list_price": 10,
+          "current_price": 10
+        }
+      },
       "silver_personal": {
         "period_01": {
           "list_price": 4620,
           "current_price": 3780
-        },
-        "period_03": {
-          "list_price": 100,
-          "current_price": 100
-        }
-      },
-      "silver_commercial": {
-        "period_01": {
-          "list_price": 8380,
-          "current_price": 7680
         },
         "period_03": {
           "list_price": 100,
@@ -1082,24 +1102,14 @@
           "current_price": 100
         }
       },
-      "gold_commercial": {
+      "platinum_personal": {
         "period_01": {
-          "list_price": 17780,
-          "current_price": 16780
+          "list_price": 24780,
+          "current_price": 22380
         },
         "period_03": {
           "list_price": 100,
           "current_price": 100
-        }
-      },
-      "bronze_personal": {
-        "period_01": {
-          "list_price": 1990,
-          "current_price": 1680
-        },
-        "period_03": {
-          "list_price": 10,
-          "current_price": 10
         }
       },
       "bronze_commercial": {
@@ -1112,10 +1122,20 @@
           "current_price": 10
         }
       },
-      "platinum_personal": {
+      "silver_commercial": {
         "period_01": {
-          "list_price": 24780,
-          "current_price": 22380
+          "list_price": 8380,
+          "current_price": 7680
+        },
+        "period_03": {
+          "list_price": 100,
+          "current_price": 100
+        }
+      },
+      "gold_commercial": {
+        "period_01": {
+          "list_price": 17780,
+          "current_price": 16780
         },
         "period_03": {
           "list_price": 100,
@@ -1145,14 +1165,20 @@
           "RUB": "руб"
         },
         "service_title": {
+          "test_personal": {
+            "title": "BeFree"
+          },
+          "test_personal_initial": {
+            "title": "BeFree"
+          },
+          "bronze_personal": {
+            "title": "BeLike"
+          },
           "silver_personal": {
             "title": "BeHero"
           },
           "gold_personal": {
             "title": "BeStar"
-          },
-          "bronze_personal": {
-            "title": "BeLike"
           },
           "platinum_personal": {
             "title": "BeLegend"
@@ -1591,7 +1617,30 @@
         "BEBUSINESS_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "BEBUSINESS_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание лендинга, отложенный постинг, анализ конкурентов, аудит вашего сайта и т. д.), а также персональная поддержка (создание продающих хэштегов, аудит аккаунта, настройка правильной таргетированной рекламы, контекстная реклама, продающие баннеры для постов и сториз и т. д.) будут готовы в течении 1-10 рабочих дней :calendar:",
         "BEBUSINESS_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
-        "BEBUSINESS_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
+        "BEBUSINESS_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFree_Personal_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Personal Optin ***",
+        "BEFREE_P_START_01": "Привет, $FirstName$ :wave:",
+        "BEFREE_P_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
+        "BEFREE_P_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeHero» который включает:",
+        "BEFREE_P_START_04": ":speech_balloon: 20 комментариев под каждой новой публикацией",
+        "BEFREE_P_START_05": ":heart: 24 лайка под каждой новой публикацией",
+        "BEFREE_P_START_06": ":inbox_tray: до 30 сохранений каждой новой публикацией",
+        "BEFREE_P_START_07": "(из расчета 1 поста в день)",
+        "BEFREE_P_FIVE_DAYS_01": "По истечении 5 дней сервис автоматически переключится на бесплатный пакет продвижения «BeFree», которым ты сможешь пользоваться неограниченное время :recycle:",
+        "BEFREE_P_CONDITIONS_01": "На пакете «$ServiceLevelTitle$» ты получаешь:",
+        "BEFREE_P_CONDITIONS_02": ":rocket: Живую активность:",
+        "BEFREE_P_CONDITIONS_03": ":speech_balloon: 180 комментариев в мес.",
+        "BEFREE_P_CONDITIONS_04": ":heart: 240 лайков в мес.",
+        "BEFREE_P_CONDITIONS_05": "(из расчета публикации 1 поста в день)",
+        "BEFREE_P_CONDITIONS_06": ":crown: Дополнительные возможности:",
+        "BEFREE_P_CONDITIONS_07": "—mortar_board: 1 курса в Школе Продвижения BeFame",
+        "BEFREE_P_CONDITIONS_08": "— :sunrise: 20 пресетов для обработки фотографий в Lightroom",
+        "BEFREE_P_CONDITIONS_09": "— :busts_in_silhouette: Набор живых подписчиков по реферальной программе ",
+        "BEFREE_P_CONDITIONS_10": "Давай начнем продвигать твой аккаунт! :wink:",
+        "BEFREE_P_JOIN_REF_PREPARE_LIST_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе :tada:",
+        "BEFREE_P_JOIN_REF_PREPARE_LIST_02": "Сервис готовит список профилей для подписки... Это может занять некоторое время :clock5:",
+        "BEFREE_P_OPTIN_COMPLETED_01": "Если у тебя возникнут какие-либо вопросы, ты всегда можешь обратиться в тех поддержку :gear:",
+        "BEFREE_P_OPTIN_COMPLETED_02": "Для того, чтобы воспользоваться пресетами, нажми на кнопку ниже :point_down:"
       }
     }
   }
