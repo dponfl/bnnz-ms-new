@@ -1112,6 +1112,26 @@
           "current_price": 100
         }
       },
+      "test_commercial": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0
+        }
+      },
+      "test_commercial_initial": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0
+        }
+      },
       "bronze_commercial": {
         "period_01": {
           "list_price": 2990,
@@ -1182,6 +1202,12 @@
           },
           "platinum_personal": {
             "title": "BeLegend"
+          },
+          "test_commercial": {
+            "title": "BeFree"
+          },
+          "test_commercial_initial": {
+            "title": "BeFree"
           },
           "bronze_commercial": {
             "title": "BeMaster"
@@ -1618,33 +1644,36 @@
         "BEBUSINESS_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание лендинга, отложенный постинг, анализ конкурентов, аудит вашего сайта и т. д.), а также персональная поддержка (создание продающих хэштегов, аудит аккаунта, настройка правильной таргетированной рекламы, контекстная реклама, продающие баннеры для постов и сториз и т. д.) будут готовы в течении 1-10 рабочих дней :calendar:",
         "BEBUSINESS_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "BEBUSINESS_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFree_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Optin ***",
+        "BEFREE_START_01": "Привет, $FirstName$ :wave:",
+        "BEFREE_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
+        "BEFREE_START_04": ":speech_balloon: 20 комментариев под каждой новой публикацией",
+        "BEFREE_START_05": ":heart: 24 лайка под каждой новой публикацией",
+        "BEFREE_START_06": ":inbox_tray: до 30 сохранений каждой новой публикацией",
+        "BEFREE_START_07": "(из расчета 1 поста в день)",
+        "BEFREE_FIVE_DAYS_01": "По истечении 5 дней сервис автоматически переключится на бесплатный пакет продвижения «BeFree», которым ты сможешь пользоваться неограниченное время :recycle:",
+        "BEFREE_CONDITIONS_01": "На пакете «$ServiceLevelTitle$» ты получаешь:",
+        "BEFREE_CONDITIONS_02": ":rocket: Живую активность:",
+        "BEFREE_CONDITIONS_03": ":speech_balloon: 180 комментариев в мес.",
+        "BEFREE_CONDITIONS_04": ":heart: 240 лайков в мес.",
+        "BEFREE_CONDITIONS_05": "(из расчета публикации 1 поста в день)",
+        "BEFREE_CONDITIONS_06": ":crown: Дополнительные возможности:",
+        "BEFREE_CONDITIONS_07": "— :mortar_board: 1 курса в Школе Продвижения BeFame",
+        "BEFREE_CONDITIONS_08": "— :sunrise: 20 пресетов для обработки фотографий в Lightroom",
+        "BEFREE_CONDITIONS_09": "— :busts_in_silhouette: Набор живых подписчиков по реферальной программе ",
+        "BEFREE_CONDITIONS_10": "Давай начнем продвигать твой аккаунт! :wink:",
+        "BEFREE_JOIN_REF_PREPARE_LIST_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе :tada:",
+        "BEFREE_JOIN_REF_PREPARE_LIST_02": "Сервис готовит список профилей для подписки... Это может занять некоторое время :clock5:",
+        "BEFREE_JOIN_REF_SUBSCRIBE_01": "Остался последний шаг :raised_hands:",
+        "BEFREE_JOIN_REF_SUBSCRIBE_02": "Чтобы начать бесплатное продвижение своего аккаунта подпишись всего на 8 человек и после этого нажми на кнопку ниже, чтобы проверить подписку:",
+        "BEFREE_OPTIN_COMPLETED_01": "Если у тебя возникнут какие-либо вопросы, ты всегда можешь обратиться в тех поддержку :gear:",
+        "BEFREE_OPTIN_COMPLETED_02": "Для того, чтобы воспользоваться пресетами, нажми на кнопку ниже :point_down:",
+        "BEFREE_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
+        "BEFREE_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFree_Personal_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Personal Optin ***",
-        "BEFREE_P_START_01": "Привет, $FirstName$ :wave:",
-        "BEFREE_P_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
         "BEFREE_P_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeHero» который включает:",
-        "BEFREE_P_START_04": ":speech_balloon: 20 комментариев под каждой новой публикацией",
-        "BEFREE_P_START_05": ":heart: 24 лайка под каждой новой публикацией",
-        "BEFREE_P_START_06": ":inbox_tray: до 30 сохранений каждой новой публикацией",
-        "BEFREE_P_START_07": "(из расчета 1 поста в день)",
-        "BEFREE_P_FIVE_DAYS_01": "По истечении 5 дней сервис автоматически переключится на бесплатный пакет продвижения «BeFree», которым ты сможешь пользоваться неограниченное время :recycle:",
-        "BEFREE_P_CONDITIONS_01": "На пакете «$ServiceLevelTitle$» ты получаешь:",
-        "BEFREE_P_CONDITIONS_02": ":rocket: Живую активность:",
-        "BEFREE_P_CONDITIONS_03": ":speech_balloon: 180 комментариев в мес.",
-        "BEFREE_P_CONDITIONS_04": ":heart: 240 лайков в мес.",
-        "BEFREE_P_CONDITIONS_05": "(из расчета публикации 1 поста в день)",
-        "BEFREE_P_CONDITIONS_06": ":crown: Дополнительные возможности:",
-        "BEFREE_P_CONDITIONS_07": "— :mortar_board: 1 курса в Школе Продвижения BeFame",
-        "BEFREE_P_CONDITIONS_08": "— :sunrise: 20 пресетов для обработки фотографий в Lightroom",
-        "BEFREE_P_CONDITIONS_09": "— :busts_in_silhouette: Набор живых подписчиков по реферальной программе ",
-        "BEFREE_P_CONDITIONS_10": "Давай начнем продвигать твой аккаунт! :wink:",
-        "BEFREE_P_JOIN_REF_PREPARE_LIST_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе :tada:",
-        "BEFREE_P_JOIN_REF_PREPARE_LIST_02": "Сервис готовит список профилей для подписки... Это может занять некоторое время :clock5:",
-        "BEFREE_P_JOIN_REF_SUBSCRIBE_01": "Остался последний шаг :raised_hands:",
-        "BEFREE_P_JOIN_REF_SUBSCRIBE_02": "Чтобы начать бесплатное продвижение своего аккаунта подпишись всего на 8 человек и после этого нажми на кнопку ниже, чтобы проверить подписку:",
-        "BEFREE_P_OPTIN_COMPLETED_01": "Если у тебя возникнут какие-либо вопросы, ты всегда можешь обратиться в тех поддержку :gear:",
-        "BEFREE_P_OPTIN_COMPLETED_02": "Для того, чтобы воспользоваться пресетами, нажми на кнопку ниже :point_down:",
-        "BEFREE_P_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
-        "BEFREE_P_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
+        "$$$$$$$$$$$$$$$$$$$$$_BeFree_Commercial_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Commercial Optin ***",
+        "BEFREE_C_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeCreator» который включает:"
       }
     }
   }

@@ -52,7 +52,7 @@
             "cr": "DCR"
           },
           {
-            "text": "BEFREE_P_START_03",
+            "text": "BEFREE_C_START_03",
             "style": "",
             "cr": "DCR"
           },
@@ -306,7 +306,7 @@
       "beforeHelper": "common::optin::beforeConfirmProfileJoi",
       "afterHelper": null,
       "forcedHelper": null,
-      "callbackHelper": "testPersonal::optin::callbackConfirmProfileJoi",
+      "callbackHelper": "testCommercial::optin::callbackConfirmProfileJoi",
       "blockModifyHelper": null,
       "shown": false,
       "done": false,
@@ -382,7 +382,7 @@
       "next": "optin::join_ref_subscribe",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "testPersonal::optin::afterJoinRefPrepareListJoi",
+      "afterHelper": "testCommercial::optin::afterJoinRefPrepareListJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,

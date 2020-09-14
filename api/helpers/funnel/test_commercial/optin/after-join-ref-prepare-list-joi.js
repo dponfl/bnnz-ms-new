@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const moment = require('moment');
 
-const moduleName = 'funnel:test_personal:optin:after-join-ref-prepare-list-joi';
+const moduleName = 'funnel:test_commercial:optin:after-join-ref-prepare-list-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:test_personal:optin:after-join-ref-prepare-list-joi',
+  friendlyName: 'funnel:test_commercial:optin:after-join-ref-prepare-list-joi',
 
 
-  description: 'funnel:test_personal:optin:after-join-ref-prepare-list-joi',
+  description: 'funnel:test_commercial:optin:after-join-ref-prepare-list-joi',
 
 
   inputs: {
