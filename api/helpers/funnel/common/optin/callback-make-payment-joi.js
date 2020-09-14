@@ -143,6 +143,10 @@ module.exports = {
             .add(priceConfigGeneral.payment_periods.period_01.value, priceConfigGeneral.payment_periods.period_01.period)
             .format();
 
+          /**
+           * Прописываем клиента в комнаты
+           */
+
           const reallocateRoomsToAccountJoiParams = {
             account: currentAccount,
           };

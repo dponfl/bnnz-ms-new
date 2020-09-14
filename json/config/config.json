@@ -1640,7 +1640,9 @@
         "BEFREE_P_JOIN_REF_PREPARE_LIST_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе :tada:",
         "BEFREE_P_JOIN_REF_PREPARE_LIST_02": "Сервис готовит список профилей для подписки... Это может занять некоторое время :clock5:",
         "BEFREE_P_OPTIN_COMPLETED_01": "Если у тебя возникнут какие-либо вопросы, ты всегда можешь обратиться в тех поддержку :gear:",
-        "BEFREE_P_OPTIN_COMPLETED_02": "Для того, чтобы воспользоваться пресетами, нажми на кнопку ниже :point_down:"
+        "BEFREE_P_OPTIN_COMPLETED_02": "Для того, чтобы воспользоваться пресетами, нажми на кнопку ниже :point_down:",
+        "BEFREE_P_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
+        "BEFREE_P_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:"
       }
     }
   }
