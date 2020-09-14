@@ -423,7 +423,12 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_JOIN_REF_SUBSCRIBE",
+            "text": "BEFREE_P_JOIN_REF_SUBSCRIBE_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BEFREE_P_JOIN_REF_SUBSCRIBE_02",
             "style": "",
             "cr": "DCR"
           },
