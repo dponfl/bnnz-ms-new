@@ -165,7 +165,7 @@
           {
             "text": "BEFREE_P_CONDITIONS_08",
             "style": "",
-            "cr": ""
+            "cr": "SCR"
           },
           {
             "text": "BEFREE_P_CONDITIONS_09",
@@ -382,7 +382,7 @@
       "next": "optin::join_ref_subscribe",
       "switchToFunnel": null,
       "beforeHelper": null,
-      "afterHelper": "common::optin::afterJoinRefPrepareListJoi",
+      "afterHelper": "testPersonal::optin::afterJoinRefPrepareListJoi",
       "forcedHelper": null,
       "callbackHelper": null,
       "blockModifyHelper": null,

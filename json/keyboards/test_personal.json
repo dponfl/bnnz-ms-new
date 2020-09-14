@@ -227,6 +227,13 @@
             "text": "COMMON_KEYBOARD_UNIVER_START_BTN_01",
             "action": "common::univer::oneJoi"
           }
+        ],
+        [
+          {
+            "id": "home_menu",
+            "text": "COMMON_KEYBOARD_UNIVER_START_BTN_05",
+            "action": "common::univer::homeMenuJoi"
+          }
         ]
       ]
     }

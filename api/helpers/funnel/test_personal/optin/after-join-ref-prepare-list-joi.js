@@ -133,7 +133,7 @@ module.exports = {
 
       currentAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price;
       currentCurrency = priceConfigGeneral[currentRegion].currency;
-      currentCurrencyText = priceConfigText.currency[currentCurrency];
+      // currentCurrencyText = priceConfigText.currency[currentCurrency];
 
       /**
        * Обновляем поля записи текущего аккаунта
@@ -147,7 +147,7 @@ module.exports = {
         .format();
 
       input.client.accounts[currentAccountInd].payment_amount = currentAmount;
-      input.client.accounts[currentAccountInd].payment_currency = currentCurrencyText;
+      input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
 
 
       /**
