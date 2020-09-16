@@ -145,6 +145,8 @@ module.exports = {
             // sails.log.info('getServiceRefResRaw: ', getServiceRefResRaw);
 
             serviceName = getServiceRefResRaw.payload.service;
+          } else {
+            serviceName = 'generic';
           }
 
           if (serviceName) {
