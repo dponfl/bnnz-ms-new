@@ -43,9 +43,13 @@ module.exports = {
         .any()
         .description('client record')
         .required(),
+      clientCategory: Joi
+        .string()
+        .description('client category (e.g. silverPersonal)')
+        .required(),
       funnelName: Joi
         .string()
-        .description('funnel name to switch to')
+        .description('funnel (e.g. optin)')
         .required(),
       blockId: Joi
         .string()
@@ -80,9 +84,6 @@ module.exports = {
       accountGuid = client.account_use;
 
       currentAccount = _.find(client.accounts, {guid: client.account_use});
-      currentAccountInd = _.findIndex(client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
 
       /**
        * Загрузить девственную версию воронки для перехода
@@ -90,7 +91,7 @@ module.exports = {
 
       const loadInitialFunnelsJoiParams = {
         client,
-        clientCategory: client.accounts[currentAccountInd]['service']['funnel_name'],
+        clientCategory: input.clientCategory,
         funnelName: input.funnelName,
       };
 
@@ -119,6 +120,7 @@ module.exports = {
 
       currentAccount.keyboard = null;
 
+      client.funnel_name = input.clientCategory;
       client.current_funnel = input.funnelName;
 
       /**
