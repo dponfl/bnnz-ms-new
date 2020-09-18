@@ -1052,6 +1052,16 @@
     "RU": {
       "transform_to_min_price_unit": 100,
       "currency": "RUB",
+      "generic": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0
+        }
+      },
       "test_personal": {
         "period_01": {
           "list_price": 0,
@@ -1185,6 +1195,9 @@
           "RUB": "руб"
         },
         "service_title": {
+          "generic": {
+            "title": "BeFame"
+          },
           "test_personal": {
             "title": "BeFree"
           },
@@ -1673,7 +1686,11 @@
         "$$$$$$$$$$$$$$$$$$$$$_BeFree_Personal_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Personal Optin ***",
         "BEFREE_P_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeHero» который включает:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFree_Commercial_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Commercial Optin ***",
-        "BEFREE_C_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeCreator» который включает:"
+        "BEFREE_C_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeCreator» который включает:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options ***",
+        "GEN_START_01": "Приветствую, $FirstName$",
+        "GEN_INTRO_01": "Добро пожаловать в BeFame! :wave:",
+        "GEN_INTRO_02": "Это сервис по продвижению в Instagram, который работает на базе искусственного интеллекта :robot:"
       }
     }
   }

@@ -72,6 +72,7 @@ module.exports = {
       const switchFunnelToAnyBlockParams = {
         client,
         clientCategory: 'testPersonal',
+        serviceName: 'test_personal_initial',
         funnelName: 'optin',
         blockId: 'intro',
         skipBlocks: ['start_sticker', 'start', 'five_days', 'conditions'],

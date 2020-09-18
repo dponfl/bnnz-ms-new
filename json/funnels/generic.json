@@ -1,0 +1,65 @@
+{
+  "options": [
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "removeKeyboard": false,
+      "previous": null,
+      "next": "options::intro",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "GEN_START_01",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "intro",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": false,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "generic::options::afterIntroJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "GEN_INTRO_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_INTRO_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ]
+}

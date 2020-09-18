@@ -47,6 +47,10 @@ module.exports = {
         .string()
         .description('client category (e.g. silverPersonal)')
         .required(),
+      serviceName: Joi
+        .string()
+        .description('service name (e.g. silver_personal)')
+        .required(),
       funnelName: Joi
         .string()
         .description('funnel (e.g. optin)')
@@ -84,6 +88,19 @@ module.exports = {
       accountGuid = client.account_use;
 
       currentAccount = _.find(client.accounts, {guid: client.account_use});
+      currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+        return o.guid === currentAccount.guid;
+      });
+
+      /**
+       * Обновить данные по уровню сервиса для аккаунта client.account_use
+       */
+
+      const getServiceRes = await sails.helpers.storage.getService.with({serviceName: input.serviceName});
+
+      // client.accounts[currentAccountInd].service = getServiceRes.payload.id;
+      client.accounts[currentAccountInd].service = getServiceRes.payload;
+
 
       /**
        * Загрузить девственную версию воронки для перехода
@@ -92,10 +109,9 @@ module.exports = {
       const loadInitialFunnelsJoiParams = {
         client,
         clientCategory: input.clientCategory,
-        funnelName: input.funnelName,
       };
 
-      const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsJoi(loadInitialFunnelsJoiParams);
+      const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsAllJoi(loadInitialFunnelsJoiParams);
 
       if (loadInitialFunnelsJoiRaw.status !== 'ok') {
         await sails.helpers.general.throwErrorJoi({
