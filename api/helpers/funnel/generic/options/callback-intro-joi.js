@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'funnel:generic:options:callback-intro-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'funnel:generic:options:callback-intro-joi',
 
 
-  description: 'module:helper',
+  description: 'funnel:generic:options:callback-intro-joi',
 
 
   inputs: {
@@ -47,9 +47,10 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      msg: Joi
+      query: Joi
         .any()
-        .description('Message received'),
+        .description('Callback query received')
+        .required(),
     });
 
     let input;
@@ -58,11 +59,8 @@ module.exports = {
     let accountGuid;
 
 
-    let updateBlock;
-    let getBlock;
-    let splitRes;
-    let updateFunnel;
-    let updateId;
+    let nextBlockActivationGenericParams;
+
 
     try {
 
@@ -72,45 +70,39 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      /**
-       * Update xxx::xxx block
-       */
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
-      updateBlock = 'xxx::xxx';
+      switch (input.query.data) {
+        case 'action_go':
 
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
+          nextBlockActivationGenericParams = {
+            client: input.client,
+            account: currentAccount,
+            block: input.block,
+            updateElement: 'next',
+            updateElementValue: 'options::intro_video',
+            updateElementPreviousValue: 'options::intro',
+            createdBy: moduleName,
+            msg: input.msg,
+          };
 
-      if (_.isNil(updateFunnel)
-        || _.isNil(updateId)
-      ) {
-        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
+          await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
+
+          break;
+        default:
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Wrong callback data',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              inputQueryData: input.query.data,
+            },
+          });
       }
-
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.shown = false;
-        getBlock.done = false;
-        getBlock.next = null;
-      } else {
-        throw new Error(`${moduleName}, error: block not found:
-             updateBlock: ${updateBlock}
-             updateFunnel: ${updateFunnel}
-             updateId: ${updateId}
-             input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
-      }
-
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.msg,
-        next: true,
-        previous: true,
-        switchFunnel: true,
-        createdBy: moduleName,
-      });
 
       return exits.success({
         status: 'ok',

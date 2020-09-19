@@ -5,6 +5,8 @@ const mlog = require('mocha-logger');
 const moment = require('moment');
 const sinon = require('sinon');
 
+const emoji = require('node-emoji');
+
 const clientSdk = require('./sdk/client');
 const accountSdk = require('./sdk/account');
 
@@ -65,7 +67,7 @@ describe.skip('Test sendMessage', function () {
   it('should send one simple message', async function () {
 
     const client = await Client.findOne({
-      guid: '4f71e0c9-26ae-4bfd-b633-2f353ae7fe26'
+      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
     });
 
     client.accounts = await Account.find({client: client.id});
@@ -108,6 +110,56 @@ describe.skip('Test sendMessage', function () {
 
     const chatId = client.chat_id;
     const html = 'Задание поставить лайк для поста https://www.instagram.com/p/B7QmKU8FORo/?igshid=1t040901hzji4 выполнено. Спасибо';
+
+    const res = await sails.helpers.mgw.telegram.simpleMessageJoi({
+      chatId,
+      html,
+    });
+
+  });
+
+});
+
+describe.only('Test emoji', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+  });
+
+  it('should send one simple message with emoji', async function () {
+
+    let html =
+`
+Проверка отображения emoji:
+- wave :wave:
+- point_right :point_right:
+- point_left :point_left:
+- robot :robot:
+- rocket :rocket:
+- wink :wink:
+- eyes :eyes:
+- boom :boom:
+- dart :dart:
+- point_down :point_down:
+- calling :calling:
+- white_check_mark :white_check_mark:
+- speech_balloon :speech_balloon:
+- heart :heart:
+- inbox_tray :inbox_tray:
+- recycle :recycle:
+- crown :crown:
+- mortar_board :mortar_board:
+- sunrise :sunrise:
+- busts_in_silhouette :busts_in_silhouette:
+- 
+`;
+
+    html = emoji.emojify(html, () => '');
+
+    const chatId = '372204823';
 
     const res = await sails.helpers.mgw.telegram.simpleMessageJoi({
       chatId,

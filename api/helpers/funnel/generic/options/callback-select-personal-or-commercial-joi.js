@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'funnel:generic:options:callback-select-personal-or-commercial-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'funnel:generic:options:callback-select-personal-or-commercial-joi',
 
 
-  description: 'module:helper',
+  description: 'funnel:generic:options:callback-select-personal-or-commercial-joi',
 
 
   inputs: {
@@ -59,11 +59,7 @@ module.exports = {
     let accountGuid;
 
 
-    let updateBlock;
-    let getBlock;
-    let splitRes;
-    let updateFunnel;
-    let updateId;
+    let nextBlockActivationGenericParams;
 
 
     try {
@@ -75,67 +71,54 @@ module.exports = {
 
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
-
-      /**
-       * Update xxx::xxx block
-       */
-
-      updateBlock = 'xxx::xxx';
-
-      splitRes = _.split(updateBlock, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
-
-      if (_.isNil(updateFunnel)
-        || _.isNil(updateId)
-      ) {
-        throw new Error(`${moduleName}, error: parsing error of ${updateBlock}`);
-      }
-
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.shown = false;
-        getBlock.done = false;
-        getBlock.next = null;
-      } else {
-        throw new Error(`${moduleName}, error: block not found:
-          updateBlock: ${updateBlock}
-          updateFunnel: ${updateFunnel}
-          updateId: ${updateId}
-          input.client.funnels[updateFunnel]: ${JSON.stringify(input.client.funnels[updateFunnel], null, 3)}`);
-      }
-
 
       switch (input.query.data) {
-        case 'one':
+        case 'go_personal':
 
-          input.block.next = 'xxx::xxx';
+          nextBlockActivationGenericParams = {
+            client: input.client,
+            account: currentAccount,
+            block: input.block,
+            updateElement: 'next',
+            updateElementValue: 'options::get_personal',
+            updateElementPreviousValue: 'options::select_personal_or_commercial',
+            createdBy: moduleName,
+            msg: input.msg,
+          };
+
+          await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
+
           break;
-        case 'two':
-          input.block.next = 'xxx::xxx';
-          break;
-        case 'three':
-          input.block.next = 'xxx::xxx';
+        case 'go_commercial':
+
+          nextBlockActivationGenericParams = {
+            client: input.client,
+            account: currentAccount,
+            block: input.block,
+            updateElement: 'next',
+            updateElementValue: 'options::get_commercial',
+            updateElementPreviousValue: 'options::select_personal_or_commercial',
+            createdBy: moduleName,
+            msg: input.msg,
+          };
+
+          await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
+
           break;
         default:
-          throw new Error(`${moduleName}, error: Wrong callback data: ${input.query.data}`);
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Wrong callback data',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              inputQueryData: input.query.data,
+            },
+          });
       }
-
-      input.block.done = true;
-
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.query,
-        next: true,
-        previous: true,
-        switchFunnel: true,
-        createdBy: moduleName,
-      });
 
       return exits.success({
         status: 'ok',

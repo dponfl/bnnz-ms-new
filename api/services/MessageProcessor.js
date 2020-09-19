@@ -230,6 +230,9 @@ module.exports = {
       const profileOfCurrentAccount = currentAccount.inst_profile;
       resultStr = _.replace(resultStr, '$CurrentAccount$', profileOfCurrentAccount);
 
+      resultStr = _.replace(resultStr, '$SCR$', sails.config.custom.SCR);
+      resultStr = _.replace(resultStr, '$DCR$', sails.config.custom.DCR);
+
       /**
        * Кол-во сообщений, отправленных с текущего аккаунта за сутки
        */

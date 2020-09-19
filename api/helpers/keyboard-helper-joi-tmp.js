@@ -103,7 +103,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
-          }
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
@@ -113,7 +113,7 @@ module.exports = {
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
-          }
+          },
         });
         return exits.success({
           status: 'ok',
