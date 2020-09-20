@@ -25,5 +25,6 @@ module.exports = {
 
   HOST: process.env.HOST || 'http://localhost:1337',
 
+  hookTimeout: 120000,
 
 };

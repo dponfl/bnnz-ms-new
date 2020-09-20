@@ -43,10 +43,6 @@ module.exports = {
         .any()
         .description('client record')
         .required(),
-      clientCategory: Joi
-        .string()
-        .description('client category (e.g. silverPersonal)')
-        .required(),
       serviceName: Joi
         .string()
         .description('service name (e.g. silver_personal)')
@@ -60,9 +56,52 @@ module.exports = {
         .description('blockId to switch to')
         .required(),
       skipBlocks: Joi
-        .any()
-        .description('array of blockIds to mark as done/shown')
+        .array()
+        .description('array of block objects to update')
+        .items(Joi
+          .object({
+            id: Joi
+              .string()
+              .required(),
+            initial: Joi
+              .boolean()
+              .default(false),
+            enabled: Joi
+              .boolean()
+              .default(true),
+            previous: Joi
+              .alternatives()
+              .try(
+                Joi.string(),
+                Joi.any().allow(null),
+              )
+              .required(),
+            next: Joi
+              .alternatives()
+              .try(
+                Joi.string(),
+                Joi.any().allow(null),
+              )
+              .required(),
+            switchToFunnel: Joi
+              .alternatives()
+              .try(
+                Joi.string(),
+                Joi.any().allow(null),
+              )
+              .required(),
+            shown: Joi
+              .boolean()
+              .default(true),
+            done: Joi
+              .boolean()
+              .default(true),
+          }))
         .required(),
+      proceedNextBlock: Joi
+        .boolean()
+        .description('flag if to proceed next block')
+        .default(true),
       createdBy: Joi
         .string()
         .description('createdBy'),
@@ -77,6 +116,8 @@ module.exports = {
 
     let currentAccount;
     let currentAccountInd;
+
+    let clientCategory;
 
 
     try {
@@ -101,6 +142,7 @@ module.exports = {
       // client.accounts[currentAccountInd].service = getServiceRes.payload.id;
       client.accounts[currentAccountInd].service = getServiceRes.payload;
 
+      clientCategory = getServiceRes.payload.funnel_name;
 
       /**
        * Загрузить девственную версию воронки для перехода
@@ -108,7 +150,7 @@ module.exports = {
 
       const loadInitialFunnelsJoiParams = {
         client,
-        clientCategory: input.clientCategory,
+        clientCategory,
       };
 
       const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsAllJoi(loadInitialFunnelsJoiParams);
@@ -136,19 +178,16 @@ module.exports = {
 
       currentAccount.keyboard = null;
 
-      client.funnel_name = input.clientCategory;
+      client.funnel_name = clientCategory;
       client.current_funnel = input.funnelName;
 
       /**
-       * Промаркировать блоки, которые не нужно выполнять
+       * Update блоки, которые не нужно выполнять, используя переданные данные
        */
 
-      _.forEach(input.skipBlocks, (skipBlockId) => {
-        const skipBlock = _.find(client.funnels[input.funnelName], {id: skipBlockId});
-        if (skipBlock != null) {
-          skipBlock.done = true;
-          skipBlock.shown = true;
-        }
+      _.forEach(input.skipBlocks, (skipBlockObj) => {
+        const skipBlock = _.find(client.funnels[input.funnelName], {id: skipBlockObj.id});
+        _.assign(skipBlock, skipBlockObj);
       });
 
       /**
@@ -184,12 +223,14 @@ module.exports = {
       });
 
 
-      await sails.helpers.funnel.proceedNextBlockJoi({
-        client,
-        funnelName: client.current_funnel,
-        blockId: input.blockId,
-        createdBy: `${input.createdBy} => ${moduleName}`,
-      });
+      if (input.proceedNextBlock) {
+        await sails.helpers.funnel.proceedNextBlockJoi({
+          client,
+          funnelName: client.current_funnel,
+          blockId: input.blockId,
+          createdBy: `${input.createdBy} => ${moduleName}`,
+        });
+      }
 
 
       return exits.success({

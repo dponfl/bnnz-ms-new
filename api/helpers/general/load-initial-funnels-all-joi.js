@@ -59,6 +59,8 @@ module.exports = {
         active: true
       });
 
+      input.client.funnels = {};
+
       for (const funnel in funnels.funnel_data) {
         input.client.funnels[funnel] = funnels.funnel_data[funnel];
       }

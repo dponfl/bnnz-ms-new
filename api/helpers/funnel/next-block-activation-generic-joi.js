@@ -222,7 +222,7 @@ module.exports = {
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${input.createdBy} => ${moduleName}`,
           throwError: true,
           errorPayloadAdditional: {
             clientGuid,
@@ -233,7 +233,7 @@ module.exports = {
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
-          location: moduleName,
+          location: `${input.createdBy} => ${moduleName}`,
           throwError: false,
           errorPayloadAdditional: {
             clientGuid,

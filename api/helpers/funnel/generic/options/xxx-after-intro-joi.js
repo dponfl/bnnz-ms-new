@@ -71,11 +71,36 @@ module.exports = {
 
       const switchFunnelToAnyBlockParams = {
         client,
-        clientCategory: 'testPersonal',
         serviceName: 'test_personal_initial',
         funnelName: 'optin',
         blockId: 'intro',
-        skipBlocks: ['start_sticker', 'start', 'five_days', 'conditions'],
+        skipBlocks: [
+          {
+            id: 'start_sticker',
+            initial: true,
+            previous: null,
+            next: 'optin::start',
+            switchToFunnel: null,
+          },
+          {
+            id: 'start',
+            previous: 'optin::start_sticker',
+            next: 'optin::five_days',
+            switchToFunnel: null,
+          },
+          {
+            id: 'five_days',
+            previous: 'optin::start',
+            next: 'optin::conditions',
+            switchToFunnel: null,
+          },
+          {
+            id: 'conditions',
+            previous: 'optin::five_days',
+            next: 'optin::intro',
+            switchToFunnel: null,
+          },
+        ],
         createdBy: moduleName,
       };
 
