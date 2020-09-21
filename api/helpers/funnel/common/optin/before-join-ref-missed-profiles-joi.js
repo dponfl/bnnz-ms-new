@@ -177,10 +177,14 @@ module.exports = {
       let refProfilesList = '';
 
       for (const refListElem of accountAndInstProfilePairs) {
-        refProfilesList = refProfilesList + `<a href="${sails.config.custom.config.general.instagram_prefix}${refListElem.instProfile}">${refListElem.instProfile}</a>${sails.config.custom.SCR}`;
+        refProfilesList = refProfilesList + `<a href="${sails.config.custom.config.general.instagram_prefix}${refListElem.instProfile}">:point_right: ${refListElem.instProfile}</a>${sails.config.custom.SCR}`;
       }
 
       refProfilesList = refProfilesList + sails.config.custom.SCR;
+
+      refProfilesList = await MessageProcessor.parseEmoji({
+        str: refProfilesList,
+      });
 
       resHtml = _.replace(resHtml, '$RefMissedProfilesList$', refProfilesList);
 

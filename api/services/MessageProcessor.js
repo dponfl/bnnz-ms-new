@@ -177,6 +177,55 @@ module.exports = {
 
   },
 
+  parseEmoji: async function(params) {
+
+    const methodName = 'parseEmoji';
+
+    const schema = Joi.object({
+      str: Joi
+        .string()
+        .description('string to parse emoji in')
+        .required(),
+    });
+
+    let input;
+    let resultStr;
+
+    try {
+
+      const inputRaw = schema.validate(params);
+      input = inputRaw.value;
+
+      resultStr = emoji.emojify(input.str, () => '');
+
+      return resultStr;
+
+    } catch (e) {
+
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: `${moduleName}:${methodName}`,
+          throwError: true,
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: `${moduleName}:${methodName}`,
+          throwError: false,
+        });
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName}:${methodName} performed`,
+          payload: {},
+        });
+      }
+
+    }
+
+  },
+
   parseSpecialTokens: async function (params) {
 
     const methodName = 'parseSpecialTokens';
