@@ -144,6 +144,7 @@ module.exports = {
                 switchToFunnel: null,
               },
             ],
+            proceedNextBlock: false,
             createdBy: moduleName,
           };
 
