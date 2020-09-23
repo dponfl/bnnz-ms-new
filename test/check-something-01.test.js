@@ -157,6 +157,10 @@ describe.only('Test emoji', function () {
 - sunglasses :sunglasses:
 - link :link:
 - credit_card :credit_card:
+- hash :hash:
+- man_technologist :man_technologist:
+- mag :mag:
+- star :star:
 - 
 `;
 

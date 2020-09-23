@@ -1753,7 +1753,26 @@
         "GEN_LIKE_INFO_02_06": "— :credit_card: Вывод средств по реферальной программе",
         "GEN_LIKE_INFO_02_07": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
         "GEN_BELIKE_INFO_02_BTN_01": ":white_check_mark: Хочу пакет «BeLike»",
-        "GEN_BELIKE_INFO_02_BTN_02": "Посмотреть другие пакеты  продвижения "
+        "GEN_BELIKE_INFO_02_BTN_02": "Посмотреть другие пакеты  продвижения ",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options_BeHero": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options BeHero ***",
+        "GEN_HERO_INFO_01_01": "BeHero",
+        "GEN_HERO_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "GEN_HERO_INFO_01_03": ":speech_balloon: 600 комментариев в мес.",
+        "GEN_HERO_INFO_01_04": ":heart: 720 лайков в мес.",
+        "GEN_HERO_INFO_01_05": ":inbox_tray: до 1000 сохранений в мес.",
+        "GEN_HERO_INFO_01_06": "(из расчета публикации 1 поста в день)",
+        "GEN_HERO_INFO_02_01": ":crown: Дополнительные возможности:",
+        "GEN_HERO_INFO_02_02": "— :mortar_board: 4 курса в Школе Продвижения BeFame",
+        "GEN_HERO_INFO_02_03": "— :sunrise: 70 пресетов для обработки фотографий в Lightroom",
+        "GEN_HERO_INFO_02_04": "— :sunglasses: Выделяющийся аватар",
+        "GEN_HERO_INFO_02_05": "— :link: Мультиссылка в шапку профиля",
+        "GEN_HERO_INFO_02_06": "—:credit_card: Вывод средств по реферальной программе",
+        "GEN_HERO_INFO_03_01": ":star: Персональная поддержка:",
+        "GEN_HERO_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
+        "GEN_HERO_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
+        "GEN_HERO_INFO_03_04": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
+        "GEN_HERO_INFO_03_BTN_01": ":white_check_mark: Хочу пакет «BeHero»",
+        "GEN_HERO_INFO_03_BTN_02": "Посмотреть другие пакеты  продвижения "
       }
     }
   }
