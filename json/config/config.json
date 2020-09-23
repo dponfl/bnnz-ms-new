@@ -1,5 +1,7 @@
 {
   "general": {
+    "defaultRegion": "RU",
+    "defaultLang": "RU",
     "instagram_prefix": "https://www.instagram.com/",
     "instagram_post_prefix": "https://www.instagram.com/p/",
     "dropDailyCountersAt": {
@@ -1688,6 +1690,7 @@
         "$$$$$$$$$$$$$$$$$$$$$_BeFree_Commercial_Optin": "*** ТОКЕНЫ ДЛЯ BeFree Commercial Optin ***",
         "BEFREE_C_START_03": "Поздравляю! Ты получаешь бесплатный доступ на 5 дней к пакету продвижения «BeCreator» который включает:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options ***",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options_Main": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options Main ***",
         "GEN_START_01": "Приветствую, $FirstName$",
         "GEN_INTRO_01": "Добро пожаловать в BeFame! :wave:",
         "GEN_INTRO_02": "Это сервис по продвижению в Instagram, который работает на базе искусственного интеллекта :robot:",
@@ -1715,6 +1718,7 @@
         "GEN_GET_C_BTN_03": "BeCreator (если у вас до 3500 подписчиков)",
         "GEN_GET_C_BTN_04": "BeProfi (если у вас до 10000 подписчиков)",
         "GEN_GET_C_BTN_05": "BeBusiness (если у вас от 10000+ подписчиков)",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options_BeFree_Personal": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options BeFree Personal ***",
         "GEN_BEFREE_P_INFO_01_01": "BeFree",
         "GEN_BEFREE_P_INFO_01_02": "БЕСПЛАТНО",
         "GEN_BEFREE_P_INFO_01_03": "На этом пакете продвижения ты получаешь бесплатный доступ на 5 дней к пакету продвижения BeHero , а именно :rocket: :",
@@ -1733,7 +1737,23 @@
         "GEN_BEFREE_P_INFO_03_08": "— :sunrise: 20 пресетов для обработки фотографий в Lightroom",
         "GEN_BEFREE_P_INFO_03_09": "— :busts_in_silhouette: Набор живых подписчиков по реферальной программе",
         "GEN_BEFREE_P_INFO_03_BTN_01": ":white_check_mark: Начать пользоваться БЕСПЛАТНО",
-        "GEN_BEFREE_P_INFO_03_BTN_02": "Посмотреть другие пакеты продвижения"
+        "GEN_BEFREE_P_INFO_03_BTN_02": "Посмотреть другие пакеты продвижения",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options_BeLike": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options BeLike ***",
+        "GEN_LIKE_INFO_01_01": "BeLike",
+        "GEN_LIKE_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "GEN_LIKE_INFO_01_03": ":speech_balloon: 360 комментариев в мес.",
+        "GEN_LIKE_INFO_01_04": ":heart: 480 лайков в мес.",
+        "GEN_LIKE_INFO_01_05": ":inbox_tray: до 450 сохранений в мес.",
+        "GEN_LIKE_INFO_01_06": "(из расчета публикации 1 поста в день)",
+        "GEN_LIKE_INFO_02_01": ":crown: Дополнительные возможности:",
+        "GEN_LIKE_INFO_02_02": "— :mortar_board: 3 курса в Школе Продвижения BeFame",
+        "GEN_LIKE_INFO_02_03": "— :sunrise: 50 пресетов для обработки фотографий в Lightroom",
+        "GEN_LIKE_INFO_02_04": "— :sunglasses: Выделяющийся аватар",
+        "GEN_LIKE_INFO_02_05": "— :link: Мультиссылка в шапку профиля",
+        "GEN_LIKE_INFO_02_06": "— :credit_card: Вывод средств по реферальной программе",
+        "GEN_LIKE_INFO_02_07": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
+        "GEN_BELIKE_INFO_02_BTN_01": ":white_check_mark: Хочу пакет «BeLike»",
+        "GEN_BELIKE_INFO_02_BTN_02": "Посмотреть другие пакеты  продвижения "
       }
     }
   }

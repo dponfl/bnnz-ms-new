@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'module:helper';
+const moduleName = 'funnel:generic:options:before-be-like-info-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'funnel:generic:options:before-be-like-info-joi',
 
 
-  description: 'module:helper',
+  description: 'funnel:generic:options:before-be-like-info-joi',
 
 
   inputs: {
@@ -61,25 +61,51 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let client;
+
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
+
+      const currentRegion = sails.config.custom.config.general.defaultRegion;
+      const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
+      const useLang = (_.has(sails.config.custom.config.lang, client.lang) ? client.lang : defaultLang);
+
+      const currentServiceName = 'bronze_personal';
+      const priceConfigGeneral = sails.config.custom.config.price;
+      const priceConfigText = sails.config.custom.config.lang[useLang].price;
 
 
-      let resHtml = input.payload.text;
+      const currentAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price;
+      const listAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price;
+      const currentCurrency = priceConfigGeneral[currentRegion].currency;
+      const currentCurrencyText = priceConfigText.currency[currentCurrency];
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
+
+      const resHtml = await MessageProcessor.parseSpecialTokens({
+        client,
+        message: input.payload.text,
+        additionalTokens: [
+          {
+            token: '$BeLikePriceCurrent$',
+            value: `${currentAmount} ${currentCurrencyText}`,
+          },
+          {
+            token: '$BeLikePriceList$',
+            value: `${listAmount} ${currentCurrencyText}`,
+          },
+        ],
+      });
 
       return exits.success({
         text: resHtml,
         inline_keyboard: input.payload.inline_keyboard,
-        img: input.payload.img,
-        video: input.payload.video,
-        doc: input.payload.doc,
       });
 
     } catch (e) {

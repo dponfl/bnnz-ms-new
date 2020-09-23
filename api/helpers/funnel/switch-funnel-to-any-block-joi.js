@@ -96,8 +96,7 @@ module.exports = {
             done: Joi
               .boolean()
               .default(true),
-          }))
-        .required(),
+          })),
       proceedNextBlock: Joi
         .boolean()
         .description('flag if to proceed next block')
@@ -181,14 +180,18 @@ module.exports = {
       client.funnel_name = clientCategory;
       client.current_funnel = input.funnelName;
 
-      /**
-       * Update блоки, которые не нужно выполнять, используя переданные данные
-       */
+      if (input.skipBlocks != null) {
 
-      _.forEach(input.skipBlocks, (skipBlockObj) => {
-        const skipBlock = _.find(client.funnels[input.funnelName], {id: skipBlockObj.id});
-        _.assign(skipBlock, skipBlockObj);
-      });
+        /**
+         * Update блоки, которые не нужно выполнять, используя переданные данные
+         */
+
+        _.forEach(input.skipBlocks, (skipBlockObj) => {
+          const skipBlock = _.find(client.funnels[input.funnelName], {id: skipBlockObj.id});
+          _.assign(skipBlock, skipBlockObj);
+        });
+
+      }
 
       /**
        * Активировать блок input.blockId

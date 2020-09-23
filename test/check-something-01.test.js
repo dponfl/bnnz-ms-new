@@ -154,6 +154,9 @@ describe.only('Test emoji', function () {
 - mortar_board :mortar_board:
 - sunrise :sunrise:
 - busts_in_silhouette :busts_in_silhouette:
+- sunglasses :sunglasses:
+- link :link:
+- credit_card :credit_card:
 - 
 `;
 

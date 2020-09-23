@@ -257,7 +257,8 @@ module.exports = {
       const firstName = input.client.first_name || '';
       const lastName = input.client.last_name || '';
 
-      const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : 'ru');
+      const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
+      const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : defaultLang);
 
       const priceConfigText = sails.config.custom.config.lang[useLang].price;
       const priceConfigGeneral = sails.config.custom.config.price;
