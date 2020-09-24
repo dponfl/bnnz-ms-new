@@ -1772,7 +1772,31 @@
         "GEN_HERO_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
         "GEN_HERO_INFO_03_04": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
         "GEN_HERO_INFO_03_BTN_01": ":white_check_mark: Хочу пакет «BeHero»",
-        "GEN_HERO_INFO_03_BTN_02": "Посмотреть другие пакеты  продвижения "
+        "GEN_HERO_INFO_03_BTN_02": "Посмотреть другие пакеты  продвижения ",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Generic_Options_BeStar": "*** ТОКЕНЫ ДЛЯ BeFame Generic Options BeStar ***",
+        "GEN_BESTAR_INFO_01_01": "BeStar",
+        "GEN_BESTAR_INFO_01_02": ":rocket: Получаемая живая активность:",
+        "GEN_BESTAR_INFO_01_03": ":speech_balloon: 900 комментариев в мес.",
+        "GEN_BESTAR_INFO_01_04": ":heart: 1200 лайков в мес.",
+        "GEN_BESTAR_INFO_01_05": ":inbox_tray: до 1800 сохранений в мес.",
+        "GEN_BESTAR_INFO_01_06": "(из расчета публикации 1 поста в день)",
+        "GEN_BESTAR_INFO_02_01": ":crown: Дополнительные возможности:",
+        "GEN_BESTAR_INFO_02_02": "— :mortar_board: 8 блоков обучения в школе продвижения BeFame",
+        "GEN_BESTAR_INFO_02_03": "— :sunrise: 100 пресетов для обработки фотографий в Lightroom",
+        "GEN_BESTAR_INFO_02_04": "— :sunglasses: Выделяющийся аватар",
+        "GEN_BESTAR_INFO_02_05": "— :link: Мультиссылка в шапку профиля",
+        "GEN_BESTAR_INFO_02_06": "— :credit_card: Вывод средств по реферальной программе",
+        "GEN_BESTAR_INFO_02_07": "— :speaking_head_in_silhouette: Дополнительная реклама вашего профиля на аудиторию с охватом до 50 тыс. человек 1 раза в мес. (YouTube, Twitter, Instagram)",
+        "GEN_BESTAR_INFO_02_08": "— :soon: Отложенный постинг публикаций",
+        "GEN_BESTAR_INFO_03_01": ":star: Персональная поддержка:",
+        "GEN_BESTAR_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
+        "GEN_BESTAR_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
+        "GEN_BESTAR_INFO_03_04": "— :chart_with_upwards_trend: Настройка правильной таргетированной рекламы в Instagram",
+        "GEN_BESTAR_INFO_03_05": "— :heart_eyes: Правильное оформление шапки вашего профиля",
+        "GEN_BESTAR_INFO_03_06": "— :art: Создание дизайнерский иконок для «вечных ссылок»",
+        "GEN_BESTAR_INFO_03_07": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
+        "GEN_BESTAR_INFO_03_BTN_01": ":white_check_mark: Хочу пакет «BeStar»",
+        "GEN_BESTAR_INFO_03_BTN_02": "Посмотреть другие пакеты  продвижения"
       }
     }
   }

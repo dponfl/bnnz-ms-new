@@ -161,6 +161,12 @@ describe.only('Test emoji', function () {
 - man_technologist :man_technologist:
 - mag :mag:
 - star :star:
+- speaking_head_in_silhouette :speaking_head_in_silhouette:
+- soon :soon:
+- chart_with_upwards_trend :chart_with_upwards_trend:
+- heart_eyes :heart_eyes:
+- woman_artist :woman_artist:
+- art :art:
 - 
 `;
 
