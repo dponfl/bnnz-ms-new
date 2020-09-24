@@ -167,6 +167,10 @@ describe.only('Test emoji', function () {
 - heart_eyes :heart_eyes:
 - woman_artist :woman_artist:
 - art :art:
+- wastebasket :wastebasket:
+- scales :scales:
+- camera_with_flash :camera_with_flash:
+- cool :cool:
 - 
 `;
 
