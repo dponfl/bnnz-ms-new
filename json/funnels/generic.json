@@ -1150,6 +1150,174 @@
           ]
         ]
       }
+    },
+    {
+      "id": "befree_c_info_01",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": false,
+      "previous": null,
+      "next": "options::befree_c_info_02",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "GEN_BEFREE_C_INFO_01_01",
+            "style": "b",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_02",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_03",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_04",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_05",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_06",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_01_07",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "befree_c_info_02",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 8000,
+      "removeKeyboard": false,
+      "previous": "options::befree_c_info_01",
+      "next": "options::befree_c_info_03",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "GEN_BEFREE_C_INFO_02_01",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "befree_c_info_03",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": false,
+      "previous": "options::befree_c_info_02",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "generic::options::callbackBeFreeCommercialInfoJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "GEN_BEFREE_C_INFO_03_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_02",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_03",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_04",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_05",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_06",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_07",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_08",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "GEN_BEFREE_C_INFO_03_09",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "GEN_BEFREE_C_INFO_03_BTN_01",
+              "callback_data": "funnel_befree_c"
+            }
+          ],
+          [
+            {
+              "text": "GEN_BEFREE_C_INFO_03_BTN_02",
+              "callback_data": "select_account_type"
+            }
+          ]
+        ]
+      }
     }
   ]
 }
