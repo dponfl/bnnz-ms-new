@@ -171,7 +171,7 @@ describe.only('Test emoji', function () {
 - scales :scales:
 - camera_with_flash :camera_with_flash:
 - cool :cool:
-- 
+- boom :boom:
 `;
 
     html = emoji.emojify(html, () => '');
