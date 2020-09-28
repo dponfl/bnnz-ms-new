@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  datastore: 'paymentDb',
   tableName: 'commissions',
   migrate: 'safe',
   attributes: {

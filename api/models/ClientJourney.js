@@ -8,6 +8,7 @@
  */
 
 module.exports = {
+  datastore: 'performanceDb',
   tableName: 'client_journey',
   migrate: 'safe',
   attributes: {

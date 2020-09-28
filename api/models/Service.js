@@ -8,6 +8,7 @@
  */
 
 module.exports = {
+  datastore: 'configDb',
   tableName: 'service',
   migrate: 'safe',
   attributes: {

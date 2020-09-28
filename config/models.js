@@ -121,5 +121,5 @@ module.exports.models = {
   // cascadeOnDestroy: true,
   cascadeOnDestroy: false,
 
-  datastore: 'default',
+  // datastore: 'default',
 };

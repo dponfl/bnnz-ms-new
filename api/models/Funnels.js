@@ -8,6 +8,7 @@
  */
 
 module.exports = {
+  datastore: 'configDb',
   tableName: 'funnels',
   migrate: 'safe',
   attributes: {

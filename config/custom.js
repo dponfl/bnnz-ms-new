@@ -551,13 +551,6 @@ module.exports.custom = {
   SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR: 'Initial block was not found of its ID is not defined',
   SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR: 'Block was not find by message_id',
 
-  /**
-   * ----------------------------
-   * performedFunnelsSave
-   * ----------------------------
-   */
-
-  PERFORMEDFUNNELSSAVE_ERROR: 'Performed_funnels record create error',
 
   /**
    * confirmPayment
@@ -649,6 +642,11 @@ module.exports.custom = {
   INST_PARSER_WRONG_RESPONSE_STATUS: {
     name: 'ERR_INST_PARSER_WRONG_RESPONSE_STATUS',
     message: 'Wrong parser response status',
+  },
+
+  INST_PARSER_WRONG_RESPONSE_DATA: {
+    name: 'ERR_INST_PARSER_WRONG_RESPONSE_DATA',
+    message: 'Wrong parser response data',
   },
 
   INST_PARSER_NO_USERS: {

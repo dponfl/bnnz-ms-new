@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  datastore: 'configDb',
   tableName: 'push_messages',
   migrate: 'safe',
   attributes: {

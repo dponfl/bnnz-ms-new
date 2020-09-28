@@ -150,6 +150,50 @@ module.exports = {
 
       }
 
+      const userData = _.get(requestRes, 'response.instagram.user', null);
+
+      if (userData === 'not_found') {
+
+        /**
+         * От парсера получен адекватный ответ, но пользователь не найден
+         */
+
+        status = 'success';
+
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            responseStatusMain,
+            responseStatusInner,
+            userPk: false,
+            request_id: _.get(requestRes, 'request_id', null),
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'success',
+          message: `${moduleName} performed`,
+          payload: {
+            userPk: false,
+          },
+          raw: requestRes,
+        })
+
+      }
+
       const userPk = _.get(requestRes, 'response.instagram.user.pk', null);
       const userName = _.get(requestRes, 'response.instagram.user.username', null);
       const fullName = _.get(requestRes, 'response.instagram.user.full_name', null);
@@ -158,6 +202,55 @@ module.exports = {
       const profilePicId = _.get(requestRes, 'response.instagram.user.profile_pic_id', null);
       const isVerified = _.get(requestRes, 'response.instagram.user.is_verified', null);
       const hasAnonymousProfilePicture = _.get(requestRes, 'response.instagram.user.has_anonymous_profile_picture', null);
+
+      // TODO: Добавить обработку ответа, когда парсер возвращает данные,
+      // как в Inapi/getUserIdByProfile_not_correct_response.json
+
+      if (
+        userPk == null
+        || profilePicUrl == null
+      ) {
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
+          location: moduleName,
+          payload: requestRes,
+        });
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: requestRes,
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: 'wrong parser response data',
+          },
+          raw: requestRes,
+        })
+
+      }
 
       status = 'success';
 

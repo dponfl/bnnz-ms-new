@@ -49,8 +49,33 @@ module.exports.datastores = {
     *                                                                          *
     ***************************************************************************/
     adapter: 'sails-mysql',
-    url: process.env.MAIN_DATABASE_URL,
+    url: process.env.JAWSDB_MARIA_URL,
 
+  },
+
+  clientDb: {
+    adapter: 'sails-mysql',
+    url: process.env.JAWSDB_MARIA_URL,
+  },
+
+  actionDb: {
+    adapter: 'sails-mysql',
+    url: process.env.JAWSDB_MARIA_ROSE_URL,
+  },
+
+  paymentDb: {
+    adapter: 'sails-mysql',
+    url: process.env.JAWSDB_MARIA_MAROON_URL,
+  },
+
+  configDb: {
+    adapter: 'sails-mysql',
+    url: process.env.JAWSDB_MARIA_GRAY_URL,
+  },
+
+  performanceDb: {
+    adapter: 'sails-mysql',
+    url: process.env.JAWSDB_MARIA_BLACK_URL,
   },
 
 

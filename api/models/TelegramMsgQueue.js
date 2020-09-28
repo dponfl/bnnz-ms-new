@@ -8,6 +8,7 @@
  */
 
 module.exports = {
+  datastore: 'performanceDb',
   tableName: 'telegram-msg-queue',
   migrate: 'safe',
 

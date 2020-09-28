@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  datastore: 'clientDb',
   tableName: 'ref',
   migrate: 'safe',
   attributes: {

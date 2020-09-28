@@ -149,7 +149,11 @@ module.exports = {
         status,
         clientGuid,
         accountGuid,
-        // comments: getUserIdByProfileJoiRes.raw || {},
+        comments: {
+          profileExists,
+          profileId,
+          profilePicUrl,
+        },
       };
 
       await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);

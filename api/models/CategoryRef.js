@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+  datastore: 'configDb',
   tableName: 'category_ref',
   migrate: 'safe',
 

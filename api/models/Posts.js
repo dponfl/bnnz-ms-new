@@ -8,6 +8,7 @@
  */
 
 module.exports = {
+  datastore: 'actionDb',
   tableName: 'posts',
   migrate: 'safe',
   attributes: {
