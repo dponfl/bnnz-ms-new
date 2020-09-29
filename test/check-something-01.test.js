@@ -120,7 +120,7 @@ describe.skip('Test sendMessage', function () {
 
 });
 
-describe.only('Test emoji', function () {
+describe.skip('Test emoji', function () {
 
   let customConfig;
 
@@ -2714,3 +2714,141 @@ describe.skip('Inapi requests', function () {
 
 
 });
+
+describe.only('Test DB', function () {
+
+  let customConfig;
+  let accounts = [];
+  let clients = [];
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    this.timeout(700000);
+
+    /**
+     * Создаём 20 клиентов по 1 аккаунту у каждого
+     */
+
+    for (let i=0; i<20; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      });
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+  });
+
+  it('should allocate rooms for 20 accounts', async function () {
+
+    this.timeout(700000);
+
+    try {
+
+      _.forEach(accounts, async (account) => {
+        const res = await sails.helpers.general.allocateRooms.with({
+          accountGuid: account.guid,
+        });
+      });
+
+    } catch (e) {
+      mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
+
+      const errorData = {
+        message: message,
+        errorName: 'DB Error',
+        location: 'Test DB',
+        payload: {
+          name: e.name || 'no error name',
+          message: e.message || 'no error message',
+          code: e.code || 'no error code',
+        },
+      };
+
+      mlog.error(JSON.stringify(errorData, null, 3));
+
+      await LogProcessor.error(errorData);
+
+
+    }
+
+
+  });
+
+  it.skip('should get error on simultaneous connections', async function () {
+
+    let res;
+    let arr = [];
+
+    try {
+
+      mlog.log(`DB: ${process.env.MAIN_DATABASE_URL}`);
+
+      for (let i = 100; i < 1000; i++) {
+        arr.push(i);
+      }
+
+      mlog.log(`arr.lengh: ${arr.length}`);
+
+      _.forEach(arr, async (elem) => {
+
+        mlog.error(`elem: ${elem}`);
+
+        await sails.helpers.storage.accountUpdateJoi({
+          criteria: {guid: '328774b1-4417-4ae3-8dd9-2539ef473ad0'},
+          data: {service: elem},
+          createdBy: 'test',
+        })
+
+
+        // res = await Account.find({
+        //   where: {
+        //     guid: '28861a2b-47b0-4541-8827-23196993bc66',
+        //   }
+        // });
+      });
+
+
+
+    } catch (e) {
+
+      const errorData = {
+        message: message,
+        errorName: 'DB Error',
+        location: 'Test DB',
+        payload: {
+          name: e.name || 'no error name',
+          message: e.message || 'no error message',
+          code: e.code || 'no error code',
+        },
+      };
+
+      mlog.error(JSON.stringify(errorData, null, 3));
+
+      await LogProcessor.error(errorData);
+
+    }
+
+  });
+
+});
+
+
