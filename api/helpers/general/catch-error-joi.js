@@ -80,10 +80,16 @@ module.exports = {
         .guid(),
       errorPayloadAdditional: Joi
         .any()
-        .description('error payload additional')
+        .description('error payload additional'),
+      createDbRecord: Joi
+        .boolean()
+        .description('Flag to create a record to DB')
+        .default(true),
     });
 
     const input = await schema.validateAsync(inputs.params);
+
+    const createDbRecord = input.createDbRecord;
 
     let errorObj;
     if (input.error.code != null && input.error.code === 'E_INTERNAL_ERROR') {
@@ -147,6 +153,7 @@ module.exports = {
           errorStack,
           errorPayloadAdditional,
         },
+        createDbRecord,
       });
       if (input.throwError) {
         throw {

@@ -767,6 +767,16 @@ module.exports.custom = {
     name: 'ERR_SCHEDULER_GENERAL',
   },
 
+  DB_ERROR_MEDIUM: {
+    name: 'ERR_DB_GENERAL_MEDIUM',
+    message: 'MEDIUM DB ERROR',
+  },
+
+  DB_ERROR_CRITICAL: {
+    name: 'ERR_DB_GENERAL_CRITICAL',
+    message: 'CRITICAL DB ERROR',
+  },
+
 
 
 

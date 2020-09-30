@@ -91,10 +91,66 @@ module.exports = {
 
       }
 
-      let account = await Account.find({where: searchConditions})
-        .populate('service')
-        .populate('next_service')
-        .populate('room');
+      // let account = await Account.find({where: searchConditions})
+      //   .populate('service')
+      //   .populate('next_service')
+      //   .populate('room')
+      //   .intercept((err) => {
+      //     const errorData = {
+      //       name: err.name || null,
+      //       message: _.truncate(err.message, {
+      //         length: 500,
+      //         omission: ' [...]',
+      //       }) || null,
+      //       code: err.code || null,
+      //       stack: _.truncate(err.stack, {
+      //         length: 500,
+      //         omission: ' [...]',
+      //       })  || null,
+      //     };
+      //
+      //     return new MyError(errorData);
+      //   });
+
+      // let account = await Account.find({where: searchConditions})
+      //   .populate('service')
+      //   .populate('next_service')
+      //   .populate('room')
+      //   .tolerate(async (err) => {
+      //     await LogProcessor.critical({
+      //       message: 'Some error message...',
+      //       // clientGuid,
+      //       // accountGuid,
+      //       // requestId: null,
+      //       // childRequestId: null,
+      //       errorName: sails.config.custom.DB_ERROR.name,
+      //       emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      //       location: moduleName,
+      //       payload: {
+      //         name: err.name || null,
+      //         message: _.truncate(err.message, {
+      //           length: 500,
+      //           omission: ' [...]',
+      //         }) || null,
+      //         code: err.code || null,
+      //         stack: _.truncate(err.stack, {
+      //           length: 500,
+      //           omission: ' [...]',
+      //         })  || null,
+      //       },
+      //       createDbRecord: false,
+      //     });
+      //   });
+
+      const findParams = {
+        model: 'Account',
+        params: searchConditions,
+        populate: ['service', 'next_service', 'room'],
+      };
+
+      const accountFindRaw = await sails.helpers.dbProcessor.findJoi(findParams);
+
+      let account = accountFindRaw.payload;
 
       return exits.success({
         status: 'ok',
@@ -103,21 +159,6 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}, error: ${sails.config.custom.ACCOUNTGETJOI_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
 
       const throwError = true;
       if (throwError) {
@@ -145,4 +186,16 @@ module.exports = {
 
 
 };
+
+function MyError(errorData) {
+  this.message = errorData.message || null;
+  this.payload = {
+    name: errorData.name || null,
+    message: errorData.message || null,
+    code: errorData.code || null,
+    stack: errorData.stack || null,
+  }
+}
+
+// MyError.prototype = new Error();
 

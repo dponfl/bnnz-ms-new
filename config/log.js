@@ -65,7 +65,7 @@ const customLogger = createLogger({
     new PapertrailTransport(papertrailConnection, {
       colorize: true,
       levels,
-      level: 'debug',
+      level: 'verbose',
       hostname: process.env.PAPERTRAIL_HOSTNAME || 'Bonanza',
       program: process.env.PAPERTRAIL_PROGRAM || 'Server',
     }),

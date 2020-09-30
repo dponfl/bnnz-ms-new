@@ -82,6 +82,7 @@ module.exports = {
           payload: {
             accountGuid: input.accountGuid,
           },
+          createDbRecord: false,
         });
 
       }
@@ -101,6 +102,7 @@ module.exports = {
           payload: {
             accountRaw,
           },
+          createDbRecord: false,
         });
 
       }
@@ -146,12 +148,14 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          createDbRecord: false,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          createDbRecord: false,
         });
         return exits.success({
           status: 'ok',
@@ -238,6 +242,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           payload: {
             accountCategory,
           },
+          createDbRecord: false,
         });
 
     }
@@ -377,12 +382,14 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         error: e,
         location: moduleName,
         throwError: true,
+        createDbRecord: false,
       });
     } else {
       await sails.helpers.general.catchErrorJoi({
         error: e,
         location: moduleName,
         throwError: false,
+        createDbRecord: false,
       });
       return exits.success({
         status: 'ok',

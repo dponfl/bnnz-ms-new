@@ -99,10 +99,15 @@ module.exports = {
           sails.config.custom.enums.emergencyLevels.HIGH,
           sails.config.custom.enums.emergencyLevels.HIGHEST,
         ),
+      createDbRecord: Joi
+        .boolean()
+        .description('Flag to create a record to DB')
+        .default(true),
     });
 
     const input = await schema.validateAsync(inputs.params);
 
+    const createDbRecord = input.createDbRecord;
     const location = input.location;
     const message = input.message;
     const payload = input.payload || {};
@@ -114,6 +119,7 @@ module.exports = {
       location,
       errorName: input.errorName || 'ERR_GENERAL',
       payload,
+      createDbRecord,
     };
 
     if (input.clientGuid != null) {

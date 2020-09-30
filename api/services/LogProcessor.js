@@ -41,6 +41,10 @@ const schema = Joi.object({
   payload: Joi
     .any()
     .description('payload'),
+  createDbRecord: Joi
+    .boolean()
+    .description('Flag to create a record to DB')
+    .default(true),
 });
 
 
@@ -71,7 +75,9 @@ module.exports = {
 
       sails.log.error(input.message, _.omit(input, 'message'));
 
-      await sails.helpers.storage.errorCreateJoi(input);
+      if (input.createDbRecord) {
+        await sails.helpers.storage.errorCreateJoi(input);
+      }
 
     } catch (e) {
 
@@ -102,7 +108,9 @@ module.exports = {
 
       sails.log.error(input.message, _.omit(input, 'message'));
 
-      await sails.helpers.storage.errorCreateJoi(input);
+      if (input.createDbRecord) {
+        await sails.helpers.storage.errorCreateJoi(input);
+      }
 
     } catch (e) {
 
@@ -134,7 +142,9 @@ module.exports = {
 
       sails.log.warn(input.message, _.omit(input, 'message'));
 
-      await sails.helpers.storage.errorCreateJoi(input);
+      if (input.createDbRecord) {
+        await sails.helpers.storage.errorCreateJoi(input);
+      }
 
     } catch (e) {
 

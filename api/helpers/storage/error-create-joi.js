@@ -77,6 +77,9 @@ module.exports = {
       payload: Joi
         .any()
         .description('payload'),
+      createDbRecord: Joi
+        .boolean()
+        .description('Flag to create a record to DB'),
     });
 
     try {
