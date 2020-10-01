@@ -60,6 +60,22 @@ module.exports = {
       payload: payloadObj,
     });
 
+    /**
+     * Логирование ошибок DB
+     */
+
+    await LogProcessor.dbError({
+      error: err,
+      message: message,
+      clientGuid,
+      accountGuid,
+      // requestId: null,
+      // childRequestId: null,
+      errorName: sails.config.custom.XXXXXXXXXXXXXX.name,
+      location: moduleName,
+      payload: payloadObj,
+    });
+
     // TODO: Delete after QA
     await LogProcessor.info({
       message: message,

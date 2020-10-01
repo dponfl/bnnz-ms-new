@@ -94,7 +94,21 @@ module.exports = {
       let account = await Account.find({where: searchConditions})
         .populate('service')
         .populate('next_service')
-        .populate('room');
+        .populate('room')
+        .tolerate(async (err) => {
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              searchConditions,
+            },
+          });
+        });
 
       return exits.success({
         status: 'ok',

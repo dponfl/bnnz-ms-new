@@ -41,6 +41,9 @@ const schema = Joi.object({
   payload: Joi
     .any()
     .description('payload'),
+  error: Joi
+    .any()
+    .description('Error instance'),
 });
 
 
@@ -193,6 +196,56 @@ module.exports = {
       input.level = 'info';
 
       sails.log.info(input.message, _.omit(input, 'message'));
+
+    } catch (e) {
+
+      const errorMsg = 'General error';
+
+      sails.log.error(`${moduleName}:${methodName}, Error details:
+      Platform error message: ${errorMsg}
+      Error name: ${e.name || 'no name'}
+      Error message: ${e.message || 'no message'}
+      Error stack: ${e.stack || ''}`);
+
+    }
+
+  },
+
+  dbError: async function(params) {
+
+    const methodName = 'dbError';
+
+    let input;
+
+    try {
+
+      const inputRaw = schema.validate(params);
+      input = inputRaw.value;
+
+      const err = input.error;
+      const location = input.location;
+
+      await LogProcessor.error({
+        message: `${sails.config.custom.DB_ERROR_MEDIUM.message}: ${input.message}`,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.DB_ERROR_MEDIUM.name,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+        location,
+        payload: {
+          name: err.name || null,
+          message: _.truncate(err.message, {
+            length: 500,
+            omission: ' [...]',
+          }) || null,
+          code: err.code || null,
+          stack: _.truncate(err.stack, {
+            length: 500,
+            omission: ' [...]',
+          })  || null,
+          details: err.details || 'none',
+        },
+      });
 
     } catch (e) {
 
