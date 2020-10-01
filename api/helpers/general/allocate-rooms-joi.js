@@ -105,6 +105,21 @@ module.exports = {
 
       }
 
+      if (account.service == null) {
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No service info for account',
+          accountGuid: input.accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            account,
+          },
+        });
+
+      }
+
       const roomsNum = account.service.rooms;
 
       for (let i=0; i < roomsNum; i++) {
@@ -327,7 +342,32 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         active: true,
       }).fetch();
 
-      await Account.addToCollection(accountRec.id, 'room', newRoom.id);
+      await Account.addToCollection(accountRec.id, 'room', newRoom.id)
+        .tolerate(async (err) => {
+
+          err.details = {
+            accountRecId: accountRec.id,
+            model: 'room',
+            newRoomId: newRoom.id,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.addToCollection() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              accountRecId: accountRec.id,
+              model: 'room',
+              newRoomId: newRoom.id,
+            },
+          });
+
+          return true;
+        });
 
       await sails.helpers.general.mixAccountsInRooms.with({
         accountRec: accountRec,
@@ -348,7 +388,32 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           accounts_number: roomRec.accounts_number + 1
         });
 
-      await Account.addToCollection(accountRec.id, 'room', roomRec.id);
+      await Account.addToCollection(accountRec.id, 'room', roomRec.id)
+        .tolerate(async (err) => {
+
+          err.details = {
+            accountRecId: accountRec.id,
+            model: 'room',
+            newRoomId: newRoom.id,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.addToCollection() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              accountRecId: accountRec.id,
+              model: 'room',
+              newRoomId: newRoom.id,
+            },
+          });
+
+          return true;
+        });
 
     }
 

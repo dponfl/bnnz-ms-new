@@ -52,7 +52,32 @@ module.exports = {
         where: {
           banned: true,
         },
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              banned: true,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.count() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: {
+                banned: true,
+              },
+            },
+          });
+
+          return 0;
+        });
 
       elapsedTimeEnd = moment();
 

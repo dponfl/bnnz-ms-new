@@ -49,13 +49,50 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    try {
+
     // sails.log.info(`*** ${moduleName} ***`);
     // sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
       .populate('account');
     const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
-    const client = await Client.findOne({id: inputs.accountRec.client});
+    const client = await Client.findOne({id: inputs.accountRec.client})
+      .tolerate(async (err) => {
+
+        err.details = {
+          id: inputs.accountRec.client
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Client.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            id: inputs.accountRec.client
+          },
+        });
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Client.findOne() error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            id: inputs.accountRec.client
+          },
+        });
+
+
+        return true;
+      });
 
     clientGuid = client.guid;
     accountGuid = inputs.accountRec.guid;
@@ -63,7 +100,6 @@ module.exports = {
     // sails.log.warn('oldRoomWithAccounts: ', oldRoomWithAccounts);
     // sails.log.warn('newRoomWithAccounts: ', newRoomWithAccounts);
 
-    try {
 
       // _.forEach(oldRoomWithAccounts.account, async function (accountRec) {
       for (const accountRec of oldRoomWithAccounts.account) {
@@ -105,8 +141,59 @@ module.exports = {
 
             // sails.log.info('Gonna re-allocate this account: ', accountRec);
 
-            await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id);
-            await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id);
+            await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id)
+              .tolerate(async (err) => {
+
+                err.details = {
+                  accountRecId: accountRec.id,
+                  model: 'room',
+                  oldRoomWithAccountsId: oldRoomWithAccounts.id,
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Account.removeFromCollection() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    accountRecId: accountRec.id,
+                    model: 'room',
+                    oldRoomWithAccountsId: oldRoomWithAccounts.id,
+                  },
+                });
+
+                return true;
+              });
+
+            await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id)
+              .tolerate(async (err) => {
+
+                err.details = {
+                  accountRecId: accountRec.id,
+                  model: 'room',
+                  newRoomWithAccountsId: newRoomWithAccounts.id,
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Account.addToCollection() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    accountRecId: accountRec.id,
+                    model: 'room',
+                    newRoomWithAccountsId: newRoomWithAccounts.id,
+                  },
+                });
+
+                return true;
+              });
 
             switch (accountCategory) {
               case 'bronze':

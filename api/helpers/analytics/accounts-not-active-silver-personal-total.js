@@ -62,8 +62,38 @@ module.exports = {
             subscription_active: false,
             service: serviceRec.id,
           },
-        });
+        })
+          .tolerate(async (err) => {
 
+            err.details = {
+              where: {
+                deleted: false,
+                banned: false,
+                subscription_active: false,
+                service: serviceRec.id,
+              },
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Account.count() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                where: {
+                  deleted: false,
+                  banned: false,
+                  subscription_active: false,
+                  service: serviceRec.id,
+                },
+              },
+            });
+
+            return 0;
+          });
         elapsedTimeEnd = moment();
 
         elapsedTime = moment.duration(elapsedTimeEnd.diff(elapsedTimeStart)).asSeconds();

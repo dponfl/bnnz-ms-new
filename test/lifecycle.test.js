@@ -17,10 +17,20 @@ before(function(done) {
     // hooks: { grunt: false },
     log: { level: 'error' },
     datastores: {
-      default: {
+      clientDb: {
         adapter: 'sails-mysql',
-        url: process.env.TEST_DATABASE_URL,
-      }
+        url: process.env.JAWSDB_MARIA_ROSE_URL,
+      },
+
+      configDb: {
+        adapter: 'sails-mysql',
+        url: process.env.JAWSDB_MARIA_MAROON_URL,
+      },
+
+      performanceDb: {
+        adapter: 'sails-mysql',
+        url: process.env.JAWSDB_MARIA_AQUA_URL,
+      },
     }
 
   }, async function(err) {

@@ -64,9 +64,30 @@ module.exports = {
 
       client = await Client.findOne({
         guid: inputs.cid,
-      });
+      })
+        .tolerate(async (err) => {
 
-      if (!client) {
+          err.details = {
+            guid: inputs.cid,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              guid: inputs.cid,
+            },
+          });
+
+          return null;
+        });
+
+      if (client == null) {
 
         /**
          * Reply that the client was not found

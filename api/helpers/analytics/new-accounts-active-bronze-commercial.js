@@ -66,7 +66,46 @@ module.exports = {
             subscription_active: true,
             service: serviceRec.id,
           },
-        });
+        })
+          .tolerate(async (err) => {
+
+            err.details = {
+              where: {
+                createdAt: {
+                  '>=': moment(inputs.start).format(),
+                  '<=': moment(inputs.end).format()
+                },
+                deleted: false,
+                banned: false,
+                subscription_active: true,
+                service: serviceRec.id,
+              },
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Account.count() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                where: {
+                  createdAt: {
+                    '>=': moment(inputs.start).format(),
+                    '<=': moment(inputs.end).format()
+                  },
+                  deleted: false,
+                  banned: false,
+                  subscription_active: true,
+                  service: serviceRec.id,
+                },
+              },
+            });
+
+            return 0;
+          });
 
         elapsedTimeEnd = moment();
 

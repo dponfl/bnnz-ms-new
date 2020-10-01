@@ -67,8 +67,42 @@ module.exports = {
 
       const service_id = _.get(inputs.client, 'service_id', null);
 
-      let client = await Client.create(_.omit(inputs.client, ['accounts', 'service_id'])).fetch();
+      let client = await Client.create(_.omit(inputs.client, ['accounts', 'service_id'])).fetch()
+        .tolerate(async (err) => {
 
+          err.details = {
+            data: _.omit(inputs.client, ['accounts', 'service_id']),
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              data: _.omit(inputs.client, ['accounts', 'service_id']),
+            },
+          });
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Client.create() error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            payload: {
+              data: _.omit(inputs.client, ['accounts', 'service_id']),
+            },
+          });
+
+
+          return true;
+        });
       // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> client response: ', client);
 
       const accountRaw = await sails.helpers.storage.accountCreate.with({

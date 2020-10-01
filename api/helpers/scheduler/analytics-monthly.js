@@ -66,7 +66,28 @@ module.exports = {
           period: eventPeriod,
         };
 
-        const getRec = await Analytics.findOne(getRecCond);
+        const getRec = await Analytics.findOne(getRecCond)
+          .tolerate(async (err) => {
+
+            err.details = {
+              getRecCond,
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Analytics.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                getRecCond,
+              },
+            });
+
+            return null;
+          });
 
         if (getRec == null) {
 
@@ -93,7 +114,28 @@ module.exports = {
             elapsed_time: eventRawResult.payload.elapsedTime || 0,
           };
 
-          await Analytics.create(analyticsRec);
+          await Analytics.create(analyticsRec)
+            .tolerate(async (err) => {
+
+              err.details = {
+                analyticsRec,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Analytics.create() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  analyticsRec,
+                },
+              });
+
+              return true;
+            });
 
         } else {
 

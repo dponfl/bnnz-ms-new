@@ -70,7 +70,32 @@ module.exports = {
         let room = await Room.findOne({id: elem.id});
 
         if (room) {
-          await Account.removeFromCollection(input.account.id, 'room', room.id);
+          await Account.removeFromCollection(input.account.id, 'room', room.id)
+            .tolerate(async (err) => {
+
+              err.details = {
+                inputAccountId: input.account.id,
+                model: 'room',
+                roomId: room.id,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Account.removeFromCollection() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  inputAccountId: input.account.id,
+                  model: 'room',
+                  roomId: room.id,
+                },
+              });
+
+              return true;
+            });
 
           switch (accountCategory) {
             case 'bronze':

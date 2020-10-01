@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  datastore: 'actionDb',
+  datastore: 'clientDb',
   tableName: 'tasks',
   migrate: 'safe',
   attributes: {

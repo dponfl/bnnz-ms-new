@@ -139,7 +139,28 @@ module.exports = {
 
       const client = await Client.findOne({
         id: input.account.client,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            id: input.account.client,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              id: input.account.client,
+            },
+          });
+
+          return null;
+        });
 
       if (client == null) {
         // throw new Error(`${moduleName}, error: No client was found for:
@@ -173,7 +194,28 @@ module.exports = {
 
         const ref_account = await Account.findOne({
           ref_key: refKey,
-        });
+        })
+          .tolerate(async (err) => {
+
+            err.details = {
+              ref_key: refKey,
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Account.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                ref_key: refKey,
+              },
+            });
+
+            return null;
+          });
 
         if (ref_account == null) {
           // throw new Error(`${moduleName}, error: No account was found for the ref_key="${refKey}"`);

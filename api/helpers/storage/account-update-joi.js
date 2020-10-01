@@ -72,7 +72,28 @@ module.exports = {
 
       const accountRecord = await Account.findOne({
         where: input.criteria,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: input.criteria,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: input.criteria,
+            },
+          });
+
+          return null;
+        });
 
       if (accountRecord != null) {
         await sails.helpers.storage.accountFieldsPutJoi({
@@ -82,7 +103,44 @@ module.exports = {
         })
       }
 
-      await Account.update(input.criteria).set(accountRec);
+      await Account.update(input.criteria).set(accountRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: input.criteria,
+            data: accountRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.update() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: input.criteria,
+              data: accountRec,
+            },
+          });
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Account.update() error',
+            // clientGuid,
+            // accountGuid,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            payload: {
+              criteria: input.criteria,
+              data: accountRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',

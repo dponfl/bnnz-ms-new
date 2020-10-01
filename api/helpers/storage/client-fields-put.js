@@ -92,9 +92,30 @@ module.exports = {
 
       const clientRec = await Client.findOne({
         guid: inputs.clientGuid
-      });
+      })
+        .tolerate(async (err) => {
 
-      if (!clientRec) {
+          err.details = {
+            guid: inputs.clientGuid
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.findOne() error',
+            clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              guid: inputs.clientGuid
+            },
+          });
+
+          return null;
+        });
+
+      if (clientRec == null) {
         // throw new Error(`No client record found for the conditions provided, inputs.clientGuid: ${inputs.clientGuid}`);
 
         await sails.helpers.general.throwErrorJoi({

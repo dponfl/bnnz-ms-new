@@ -54,7 +54,28 @@ module.exports = {
 
       const clientRecs = await Client.find({
         where: input.criteria,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: input.criteria,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: input.criteria,
+            },
+          });
+
+          return [];
+        });
 
       for (const client of clientRecs) {
 

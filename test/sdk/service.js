@@ -36,7 +36,7 @@ async function generateService(serviceName = null, service = null) {
       case 'test_personal':
         serviceRec = {
           guid: casual.uuid,
-          id: 10,
+          id: 1,
           name: 'test_personal',
           title: 'beFreePersonal',
           funnel_name: "test_personal",
@@ -54,7 +54,7 @@ async function generateService(serviceName = null, service = null) {
       case 'test_personal_initial':
         serviceRec = {
           guid: casual.uuid,
-          id: 11,
+          id: 2,
           name: 'test_personal_initial',
           title: 'beFreeInitialPersonal',
           funnel_name: "test_personal",
@@ -72,7 +72,7 @@ async function generateService(serviceName = null, service = null) {
       case 'bronze_personal':
         serviceRec = {
           guid: casual.uuid,
-          id: 20,
+          id: 3,
           name: 'bronze_personal',
           title: 'beLikePersonal',
           funnel_name: "bronze_personal",
@@ -90,7 +90,7 @@ async function generateService(serviceName = null, service = null) {
       case 'silver_personal':
         serviceRec = {
           guid: casual.uuid,
-          id: 21,
+          id: 4,
           name: 'silver_personal',
           title: 'beHeroPersonal',
           funnel_name: "silver_personal",
@@ -108,7 +108,7 @@ async function generateService(serviceName = null, service = null) {
       case 'gold_personal':
         serviceRec = {
           guid: casual.uuid,
-          id: 30,
+          id: 5,
           name: 'gold_personal',
           title: 'beStarPersonal',
           funnel_name: "gold_personal",
@@ -126,7 +126,7 @@ async function generateService(serviceName = null, service = null) {
       case 'platinum_personal':
         serviceRec = {
           guid: casual.uuid,
-          id: 40,
+          id: 6,
           name: 'platinum_personal',
           title: 'beLegendPersonal',
           funnel_name: "platinum_personal",
@@ -144,7 +144,7 @@ async function generateService(serviceName = null, service = null) {
       case 'star054':
         serviceRec = {
           guid: casual.uuid,
-          id: 50,
+          id: 13,
           name: 'star054',
           title: 'beFameStar054',
           funnel_name: "star",
@@ -162,7 +162,7 @@ async function generateService(serviceName = null, service = null) {
       case 'friend':
         serviceRec = {
           guid: casual.uuid,
-          id: 60,
+          id: 19,
           name: 'friend',
           title: 'beFameFriend',
           funnel_name: "friend",
@@ -180,16 +180,16 @@ async function generateService(serviceName = null, service = null) {
       default:
         serviceRec = {
           guid: casual.uuid,
-          id: 70,
-          name: 'generic',
-          title: 'beFameGeneric',
-          funnel_name: "generic_personal",
+          id: 3,
+          name: 'bronze_personal',
+          title: 'beLikePersonal',
+          funnel_name: "bronze_personal",
           funnel_start: "optin",
-          rooms: 3,
+          rooms: 2,
           max_outgoing_posts_day: 1,
           max_incoming_posts_day: 35,
           make_likes_min_day: 35,
-          make_comments_min_day: 28,
+          make_comments_min_day: 25,
           deleted: false,
           createdAt: moment().format(),
           updatedAt: moment().add(1, 'minutes').format(),

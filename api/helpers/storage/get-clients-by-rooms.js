@@ -52,6 +52,50 @@ module.exports = {
             where: {
               id: room,
             }
+          })
+          .tolerate(async (err) => {
+
+            err.details = {
+              where: {
+                subscription_active: true,
+                deleted: false,
+              }
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Account.find() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                where: {
+                  subscription_active: true,
+                  deleted: false,
+                }
+              },
+            });
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Account.find() error',
+              // clientGuid,
+              // accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {
+                where: {
+                  subscription_active: true,
+                  deleted: false,
+                }
+              },
+            });
+
+
+            return [];
           });
 
         for (const acc of accountsListByRoom) {
@@ -64,11 +108,40 @@ module.exports = {
                 deleted: false,
                 banned: false,
               }
-            });
+            })
+              .tolerate(async (err) => {
+
+                err.details = {
+                  where: {
+                    id: acc.client,
+                    deleted: false,
+                    banned: false,
+                  }
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Client.findOne() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    where: {
+                      id: acc.client,
+                      deleted: false,
+                      banned: false,
+                    }
+                  },
+                });
+
+                return null;
+              });
 
             // sails.log.warn('clientRecord: ', clientRecord);
 
-            if (clientRecord) {
+            if (clientRecord != null) {
 
               /**
                * Record for the client was found

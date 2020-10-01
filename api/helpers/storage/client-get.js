@@ -101,9 +101,32 @@ module.exports = {
       clientRecord = await Client.findOne({
         chat_id: chatId,
         messenger: inputs.messenger
-      });
+      })
+        .tolerate(async (err) => {
 
-      if (!clientRecord) {
+          err.details = {
+            chat_id: chatId,
+            messenger: inputs.messenger
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              chat_id: chatId,
+              messenger: inputs.messenger
+            },
+          });
+
+          return null;
+        });
+
+      if (clientRecord == null) {
 
         /**
          * Record for the client was not found

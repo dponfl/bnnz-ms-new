@@ -77,13 +77,81 @@ module.exports = {
 
       // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Data for create account: ', accountRec);
 
-      let account = await Account.create(accountRec).fetch();
+      let account = await Account.create(accountRec).fetch()
+        .tolerate(async (err) => {
+
+          err.details = {
+            accountRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.create() error',
+            // clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              accountRec,
+            },
+          });
+
+          return null;
+        });
+
+      if (account == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Account.create() error',
+          // clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            accountRec,
+          },
+        });
+      }
 
       account = await Account.findOne({guid: account.guid})
         .populate('room')
-        .populate('service');
+        .populate('service')
+        .tolerate(async (err) => {
 
-      // sails.log.warn('<<<<<<< !!!!!!!!!!!! >>>>>>> Created account data: ', account);
+          err.details = {
+            guid: account.guid,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.findOne() error',
+            // clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              guid: account.guid,
+            },
+          });
+
+          return null;
+        });
+
+      if (account == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Account.findOne() error',
+          // clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {},
+        });
+      }
 
       return exits.success({
         status: 'ok',

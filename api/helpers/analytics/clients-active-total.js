@@ -53,7 +53,34 @@ module.exports = {
           deleted: false,
           banned: false,
         },
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              deleted: false,
+              banned: false,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.count() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: {
+                deleted: false,
+                banned: false,
+              },
+            },
+          });
+
+          return 0;
+        });
 
       elapsedTimeEnd = moment();
 

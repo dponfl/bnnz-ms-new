@@ -2763,11 +2763,67 @@ describe.only('Test DB', function () {
 
     try {
 
-      _.forEach(accounts, async (account) => {
-        const res = await sails.helpers.general.allocateRooms.with({
-          accountGuid: account.guid,
-        });
+      // for (const account in accounts) {
+      //   const res = await sails.helpers.general.allocateRoomsJoi({
+      //     accountGuid: accounts[account].guid,
+      //   });
+      // }
+
+      // _.forEach(accounts, async (account) => {
+      //   const res = await sails.helpers.general.allocateRoomsJoi({
+      //     accountGuid: account.guid,
+      //   });
+      // });
+
+      const promises = accounts.map(async (account) => {
+        try {
+
+          const res = await sails.helpers.general.allocateRoomsJoi({
+            accountGuid: account.guid,
+          });
+
+        } catch (ee) {
+          const errorData = {
+            message: message,
+            errorName: 'DB Error',
+            location: 'Test DB',
+            payload: {
+              name: ee.name || 'no error name',
+              message: ee.message || 'no error message',
+              code: ee.code || 'no error code',
+            },
+          };
+
+          const throwError = true;
+          if (throwError) {
+            return await sails.helpers.general.catchErrorJoi({
+              error: ee,
+              location: moduleName,
+              throwError: true,
+              errorPayloadAdditional: {
+                errorData,
+              },
+            });
+          } else {
+            await sails.helpers.general.catchErrorJoi({
+              error: ee,
+              location: moduleName,
+              throwError: false,
+              errorPayloadAdditional: {
+                errorData,
+              },
+            });
+            return exits.success({
+              status: 'error',
+              message: `${moduleName} performed`,
+              payload: {},
+            });
+          }
+        }
+
       });
+
+      await Promise.all(promises);
 
     } catch (e) {
       mlog.error(`Error: ${JSON.stringify(e, null, 3)}`);
@@ -2783,10 +2839,31 @@ describe.only('Test DB', function () {
         },
       };
 
-      mlog.error(JSON.stringify(errorData, null, 3));
-
-      await LogProcessor.error(errorData);
-
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+          errorPayloadAdditional: {
+            errorData,
+          },
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+          errorPayloadAdditional: {
+            errorData,
+          },
+        });
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
 
     }
 

@@ -60,7 +60,34 @@ module.exports = {
             deleted: true,
             service: serviceRec.id,
           },
-        });
+        })
+          .tolerate(async (err) => {
+
+            err.details = {
+              where: {
+                deleted: true,
+                service: serviceRec.id,
+              },
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Account.count() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                where: {
+                  deleted: true,
+                  service: serviceRec.id,
+                },
+              },
+            });
+
+            return 0;
+          });
 
         elapsedTimeEnd = moment();
 

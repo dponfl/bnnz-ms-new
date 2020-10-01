@@ -72,7 +72,28 @@ module.exports = {
 
       const clientRec = await Client.findOne({
         where: input.criteria,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: input.criteria,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: input.criteria,
+            },
+          });
+
+          return null;
+        });
 
       if (clientRec != null) {
         await sails.helpers.storage.clientFieldsPut.with({
@@ -82,7 +103,41 @@ module.exports = {
         })
       }
 
-      await Client.update(input.criteria).set(_.omit(input.data, 'accounts'));
+      await Client.update(input.criteria).set(_.omit(input.data, 'accounts'))
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: _.omit(input.data, 'accounts'),
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Client.update() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: _.omit(input.data, 'accounts'),
+            },
+          });
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Client.update() error',
+            // clientGuid,
+            // accountGuid,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            payload: {
+              criteria: _.omit(input.data, 'accounts'),
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',

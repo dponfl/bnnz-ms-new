@@ -8,7 +8,7 @@
  */
 
 module.exports = {
-  datastore: 'actionDb',
+  datastore: 'clientDb',
   tableName: 'posts',
   migrate: 'safe',
   attributes: {

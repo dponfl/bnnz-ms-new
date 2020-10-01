@@ -45,7 +45,28 @@ module.exports = {
         deleted: false,
       };
 
-      categoryRefRecord = await CategoryRef.findOne(categoryRefParams);
+      categoryRefRecord = await CategoryRef.findOne(categoryRefParams)
+        .tolerate(async (err) => {
+
+          err.details = {
+            categoryRefParams,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'CategoryRef.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              categoryRefParams,
+            },
+          });
+
+          return null;
+        });
 
     } catch (e) {
 
@@ -129,8 +150,45 @@ module.exports = {
 
         if (categoryRefRecord.unique) {
 
-          updatedCategoryRefRec = await CategoryRef.updateOne({key: inputs.categoryKey}).set({used: true});
+          updatedCategoryRefRec = await CategoryRef.updateOne({key: inputs.categoryKey}).set({used: true})
+            .tolerate(async (err) => {
 
+              err.details = {
+                criteria: {key: inputs.categoryKey},
+                data: {used: true},
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'CategoryRef.updateOne() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  criteria: {key: inputs.categoryKey},
+                  data: {used: true},
+                },
+              });
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: 'CategoryRef.updateOne() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  criteria: {key: inputs.categoryKey},
+                  data: {used: true},
+                },
+              });
+
+
+              return true;
+            });
         } else {
 
           updatedCategoryRefRec = categoryRefRecord;

@@ -96,6 +96,11 @@ module.exports = {
         .populate('next_service')
         .populate('room')
         .tolerate(async (err) => {
+
+          err.details = {
+            searchConditions,
+          };
+
           await LogProcessor.dbError({
             error: err,
             message: 'Account.find() error',
@@ -108,6 +113,9 @@ module.exports = {
               searchConditions,
             },
           });
+
+          return [];
+
         });
 
       return exits.success({

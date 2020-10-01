@@ -114,9 +114,30 @@ module.exports = {
 
       const accountRec = await Account.findOne({
         guid: input.accountGuid
-      });
+      })
+        .tolerate(async (err) => {
 
-      if (!accountRec) {
+          err.details = {
+            guid: input.accountGuid
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Account.findOne() error',
+            // clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              guid: input.accountGuid
+            },
+          });
+
+          return null;
+        });
+
+      if (accountRec == null) {
         // throw new Error(`No account record found for the conditions provided, input.accountGuid: ${input.accountGuid}`);
 
         await sails.helpers.general.throwErrorJoi({
@@ -145,7 +166,28 @@ module.exports = {
               created_by: `${input.createdBy} => ${moduleName}`,
             };
 
-            await AccountFields.create(accountFieldRec);
+            await AccountFields.create(accountFieldRec)
+              .tolerate(async (err) => {
+
+                err.details = {
+                  accountFieldRec,
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'AccountFields.create() error',
+                  // clientGuid,
+                  accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    accountFieldRec,
+                  },
+                });
+
+                return true;
+              });
 
           }
         } catch (ee) {
