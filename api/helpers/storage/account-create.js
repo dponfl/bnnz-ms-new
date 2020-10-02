@@ -2,6 +2,9 @@
 
 const uuid = require('uuid-apikey');
 
+const moduleName = 'storage:account-create';
+
+
 module.exports = {
 
 

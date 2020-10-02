@@ -188,21 +188,25 @@ module.exports = {
            */
 
           const currency = currentCurrency;
-/*
-          const invoiceItems = [
-            {
-              quantity: '1.0',
-              price: priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
-            }
-          ];
 
-          if (priceConfigGeneral[currentRegion].silver_personal.period_01.current_price !== priceConfigGeneral[currentRegion].silver_personal.period_01.list_price) {
-            invoiceItems.push({
-              quantity: '1.0',
-              price: priceConfigGeneral[currentRegion].silver_personal.period_01.current_price - priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
-            });
-          }
-*/
+          input.client.accounts[currentAccountInd].payment_amount = currentAmount;
+          input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
+
+          /*
+                    const invoiceItems = [
+                      {
+                        quantity: '1.0',
+                        price: priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+                      }
+                    ];
+
+                    if (priceConfigGeneral[currentRegion].silver_personal.period_01.current_price !== priceConfigGeneral[currentRegion].silver_personal.period_01.list_price) {
+                      invoiceItems.push({
+                        quantity: '1.0',
+                        price: priceConfigGeneral[currentRegion].silver_personal.period_01.current_price - priceConfigGeneral[currentRegion].silver_personal.period_01.list_price,
+                      });
+                    }
+          */
 
           const invoiceItems = [
             {

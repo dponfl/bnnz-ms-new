@@ -1,5 +1,8 @@
 "use strict";
 
+const moduleName = 'chat-listeners:telegram:get-user-lang';
+
+
 module.exports = {
 
 

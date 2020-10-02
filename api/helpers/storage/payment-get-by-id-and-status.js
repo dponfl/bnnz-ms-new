@@ -1,5 +1,8 @@
 "use strict";
 
+const moduleName = 'storage:payment-get-by-id-and-status';
+
+
 module.exports = {
 
   friendlyName: 'Payment get by payment id',

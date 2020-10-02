@@ -1,5 +1,7 @@
 "use strict";
 
+const moduleName = 'storage:get-service';
+
 module.exports = {
 
 
@@ -60,7 +62,7 @@ module.exports = {
           return 'error';
         });
 
-      if (serviceRec === 'error') {
+      if (serviceRecord === 'error') {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,

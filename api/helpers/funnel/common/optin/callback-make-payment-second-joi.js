@@ -189,6 +189,10 @@ module.exports = {
 
           const currency = currentCurrency;
 
+          input.client.accounts[currentAccountInd].payment_amount = currentAmount;
+          input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
+
+
           // const invoiceItems = [
           //   {
           //     quantity: '1.0',

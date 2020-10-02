@@ -76,12 +76,12 @@ module.exports = {
           return 'error';
         });
 
-      if (serviceRec === 'error') {
+      if (servicesArray === 'error') {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
           location: moduleName,
-          message: 'Service.findOne() error',
+          message: 'Service.find() error',
           // clientGuid,
           // accountGuid,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,

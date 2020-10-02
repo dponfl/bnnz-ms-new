@@ -196,7 +196,11 @@ module.exports = {
            * Создаём запись о получении платежа
            */
 
-          const currency = currentCurrencyText;
+          const currency = currentCurrency;
+
+          input.client.accounts[currentAccountInd].payment_amount = currentAmount;
+          input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
+
 
           // const invoiceItems = [
           //   {

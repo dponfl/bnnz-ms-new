@@ -2,6 +2,9 @@
 
 const uuid = require('uuid-apikey');
 
+const moduleName = 'storage:get-service-ref';
+
+
 module.exports = {
 
 
@@ -226,11 +229,12 @@ module.exports = {
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
               payload: {
                 criteria: {
-                  key: inputs.serviceKey
+                  key: inputs.serviceKey,
                 },
                 data: {
-                  used: true
-                }
+                  used: true,
+                },
+              },
             });
           }
 
