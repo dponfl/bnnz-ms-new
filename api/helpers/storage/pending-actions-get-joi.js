@@ -56,7 +56,28 @@ module.exports = {
 
       pendingActionsRecs = await PendingActions.find({
         where: input.criteria,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: input.criteria,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'PendingActions.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: input.criteria,
+            },
+          });
+
+          return [];
+        });
 
       return exits.success({
         status: 'ok',

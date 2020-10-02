@@ -95,7 +95,28 @@ module.exports = {
       pendingActionsRec = input;
       pendingActionsRec.guid = uuidApiKey.uuid;
 
-      await PendingActions.create(pendingActionsRec);
+      await PendingActions.create(pendingActionsRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            pendingActionsRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'PendingActions.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              pendingActionsRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
