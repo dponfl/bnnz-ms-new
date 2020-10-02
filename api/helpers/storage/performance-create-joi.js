@@ -110,7 +110,28 @@ module.exports = {
         }
       }
 
-      await Performance.create(performanceRec);
+      await Performance.create(performanceRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            performanceRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Performance.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              performanceRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
