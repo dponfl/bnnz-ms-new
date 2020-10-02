@@ -34,7 +34,49 @@ module.exports = {
 
       let confRec = await Config.findOne({
         active: true
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: {
+              active: true,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Config.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: {
+                active: true,
+              },
+            },
+          });
+
+          return null;
+        });
+
+      if (confRec == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Config.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            criteria: {
+              active: true,
+            },
+          },
+        });
+      }
 
       sails.config.custom.config = confRec.config_data;
 
