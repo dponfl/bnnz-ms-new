@@ -104,7 +104,28 @@ module.exports = {
         searchConditions = _.assignIn(searchConditions, input.otherConditions);
       }
 
-      const taskRec = await Tasks.find({where: searchConditions});
+      const taskRec = await Tasks.find({where: searchConditions})
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: searchConditions,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Tasks.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: searchConditions,
+            },
+          });
+
+          return [];
+        });
 
       return exits.success({
         status: 'ok',

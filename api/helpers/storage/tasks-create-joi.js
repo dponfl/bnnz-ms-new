@@ -80,7 +80,28 @@ module.exports = {
       };
 
       // const taskRecRaw = await Tasks.create(taskRec).fetch();
-      await Tasks.create(taskRec);
+      await Tasks.create(taskRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            taskRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Tasks.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              taskRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
