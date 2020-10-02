@@ -132,7 +132,28 @@ module.exports = {
       //   }
       // }
 
-      await Messages.create(messageRec);
+      await Messages.create(messageRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            messageRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Messages.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              messageRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
