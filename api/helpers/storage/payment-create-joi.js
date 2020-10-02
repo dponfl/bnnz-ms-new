@@ -135,7 +135,32 @@ module.exports = {
         where: {
           paymentGroupGuid: input.paymentGroupGuid,
         }
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              paymentGroupGuid: input.paymentGroupGuid,
+            }
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Payments.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: {
+                paymentGroupGuid: input.paymentGroupGuid,
+              }
+            },
+          });
+
+          return [];
+        });
 
       const paymentRecsNum = paymentRecs.length;
 
@@ -153,7 +178,52 @@ module.exports = {
         account_guid: input.accountGuid,
         amount: input.amount,
         currency: input.currency,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            guid,
+            payment_id: paymentId,
+            payment_status: input.paymentStatus,
+            paymentGroupGuid: input.paymentGroupGuid,
+            order: paymentRecsNum + 1,
+            payment_data: paymentData,
+            payment_response: input.paymentResponse,
+            comments: input.comments || '',
+            client_id: input.clientId,
+            client_guid: input.clientGuid,
+            account_guid: input.accountGuid,
+            amount: input.amount,
+            currency: input.currency,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Payments.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              guid,
+              payment_id: paymentId,
+              payment_status: input.paymentStatus,
+              paymentGroupGuid: input.paymentGroupGuid,
+              order: paymentRecsNum + 1,
+              payment_data: paymentData,
+              payment_response: input.paymentResponse,
+              comments: input.comments || '',
+              client_id: input.clientId,
+              client_guid: input.clientGuid,
+              account_guid: input.accountGuid,
+              amount: input.amount,
+              currency: input.currency,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',

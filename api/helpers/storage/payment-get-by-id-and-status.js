@@ -42,7 +42,30 @@ module.exports = {
       const paymentRecord = await Payments.findOne({
         payment_id: inputs.paymentId,
         payment_status: inputs.paymentStatus,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            payment_id: inputs.paymentId,
+            payment_status: inputs.paymentStatus,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Payments.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              payment_id: inputs.paymentId,
+              payment_status: inputs.paymentStatus,
+            },
+          });
+
+          return null;
+        });
 
       if (paymentRecord == null) {
 
