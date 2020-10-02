@@ -56,7 +56,40 @@ module.exports = {
           },
           all_likes_done: true,
         },
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              createdAt: {
+                '>=': moment(inputs.start).format(),
+                '<=': moment(inputs.end).format()
+              },
+              all_likes_done: true,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.count() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: {
+                createdAt: {
+                  '>=': moment(inputs.start).format(),
+                  '<=': moment(inputs.end).format()
+                },
+                all_likes_done: true,
+              },
+            },
+          });
+
+          return 0;
+        });
 
       elapsedTimeEnd = moment();
 

@@ -115,7 +115,28 @@ module.exports = {
       };
 
       // const postRecRaw = await Posts.create(postRec).fetch();
-      await Posts.create(postRec);
+      await Posts.create(postRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            postRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              postRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',

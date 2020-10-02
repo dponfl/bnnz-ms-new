@@ -50,7 +50,30 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
-      await Posts.update(input.criteria).set(input.data);
+      await Posts.update(input.criteria).set(input.data)
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: input.criteria,
+            data: input.data,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.update() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: input.criteria,
+              data: input.data,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',

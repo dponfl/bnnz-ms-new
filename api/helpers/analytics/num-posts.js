@@ -55,7 +55,38 @@ module.exports = {
             '<=': moment(inputs.end).format()
           }
         },
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              createdAt: {
+                '>=': moment(inputs.start).format(),
+                '<=': moment(inputs.end).format()
+              }
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.count() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: {
+                createdAt: {
+                  '>=': moment(inputs.start).format(),
+                  '<=': moment(inputs.end).format()
+                }
+              },
+            },
+          });
+
+          return 0;
+        });
 
       elapsedTimeEnd = moment();
 
