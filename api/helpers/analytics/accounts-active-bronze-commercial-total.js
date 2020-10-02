@@ -51,7 +51,43 @@ module.exports = {
 
       const serviceRec = await Service.findOne({
         name: serviceName
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            name: serviceName,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Service.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              name: serviceName,
+            },
+          });
+
+          return 'error';
+        });
+
+      if (serviceRec === 'error') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: moduleName,
+          message: 'Service.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            name: serviceName,
+          },
+        });
+      }
 
       if (serviceRec != null) {
 
