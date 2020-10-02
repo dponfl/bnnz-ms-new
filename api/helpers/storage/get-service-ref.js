@@ -62,7 +62,43 @@ module.exports = {
         deleted: false,
       };
 
-      serviceRefRecord = await ServiceRef.findOne(serviceRefParams);
+      serviceRefRecord = await ServiceRef.findOne(serviceRefParams)
+        .tolerate(async (err) => {
+
+          err.details = {
+            serviceRefParams,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'ServiceRef.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              serviceRefParams,
+            },
+          });
+
+          return 'error';
+        });
+
+      if (serviceRefRecord === 'error') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'ServiceRef.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            serviceRefParams,
+          },
+        });
+      }
 
     } catch (e) {
 
@@ -146,7 +182,57 @@ module.exports = {
 
         if (serviceRefRecord.unique) {
 
-          updatedServiceRefRec = await ServiceRef.updateOne({key: inputs.serviceKey}).set({used: true});
+          updatedServiceRefRec = await ServiceRef.updateOne({key: inputs.serviceKey}).set({used: true})
+            .tolerate(async (err) => {
+
+              err.details = {
+                criteria: {
+                  key: inputs.serviceKey
+                },
+                data: {
+                  used: true
+                }
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'ServiceRef.updateOne() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  criteria: {
+                    key: inputs.serviceKey
+                  },
+                  data: {
+                    used: true
+                  }
+                },
+              });
+
+              return 'error';
+            });
+
+          if (updatedServiceRefRec === 'error') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'ServiceRef.updateOne() error',
+              // clientGuid,
+              // accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {
+                criteria: {
+                  key: inputs.serviceKey
+                },
+                data: {
+                  used: true
+                }
+            });
+          }
 
         } else {
 
