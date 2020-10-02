@@ -146,7 +146,28 @@ module.exports = {
             created_by: `${inputs.createdBy} => ${moduleName}`,
           };
 
-          await ClientFields.create(clientFieldRec);
+          await ClientFields.create(clientFieldRec)
+            .tolerate(async (err) => {
+
+              err.details = {
+                clientFieldRec,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'ClientFields.create() error',
+                clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  clientFieldRec,
+                },
+              });
+
+              return true;
+            });
 
         }
 
