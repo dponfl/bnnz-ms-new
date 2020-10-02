@@ -81,7 +81,28 @@ module.exports = {
         blockId: input.blockId,
       };
 
-      await ClientJourney.create(clientJourneyRec);
+      await ClientJourney.create(clientJourneyRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            clientJourneyRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'ClientJourney.create() error',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              clientJourneyRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
