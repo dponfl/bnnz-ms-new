@@ -96,7 +96,28 @@ module.exports = {
         }
       }
 
-      await Errors.create(errorRec);
+      await Errors.create(errorRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            errorRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Errors.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              errorRec,
+            },
+          });
+
+          return true;
+        });
 
       return exits.success({
         status: 'ok',
