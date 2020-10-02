@@ -53,7 +53,43 @@ module.exports = {
 
       const roomsArray = await Room.find({
         where: input.criteria,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: input.criteria,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Room.find() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              where: input.criteria,
+            },
+          });
+
+          return null;
+        });
+
+      if (roomsArray == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'Room.find() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            where: input.criteria,
+          },
+        });
+      }
 
       return exits.success({
         status: 'ok',

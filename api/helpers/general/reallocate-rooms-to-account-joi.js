@@ -67,7 +67,28 @@ module.exports = {
       }
 
       _.forEach(input.account.room, async function (elem) {
-        let room = await Room.findOne({id: elem.id});
+        let room = await Room.findOne({id: elem.id})
+          .tolerate(async (err) => {
+
+            err.details = {
+              id: elem.id,
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Room.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                id: elem.id,
+              },
+            });
+
+            return null;
+          });
 
         if (room) {
           await Account.removeFromCollection(input.account.id, 'room', room.id)
@@ -103,7 +124,41 @@ module.exports = {
                 .set({
                   bronze: room.bronze - 1,
                   accounts_number: room.accounts_number - 1
+                })
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    criteria: {
+                      id: room.id,
+                    },
+                    data: {
+                      bronze: room.bronze - 1,
+                      accounts_number: room.accounts_number - 1
+                    }
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Room.updateOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      criteria: {
+                        id: room.id,
+                      },
+                      data: {
+                        bronze: room.bronze - 1,
+                        accounts_number: room.accounts_number - 1
+                      }
+                    },
+                  });
+
+                  return true;
                 });
+
               break;
 
             case 'gold':
@@ -111,7 +166,42 @@ module.exports = {
                 .set({
                   gold: room.gold - 1,
                   accounts_number: room.accounts_number - 1
+                })
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    criteria: {
+                      id: room.id,
+                    },
+                    data: {
+                      gold: room.gold - 1,
+                      accounts_number: room.accounts_number - 1
+                    }
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Room.updateOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      criteria: {
+                        id: room.id,
+                      },
+                      data: {
+                        gold: room.gold - 1,
+                        accounts_number: room.accounts_number - 1
+                      }
+                    },
+                  });
+
+                  return true;
                 });
+
+
               break;
 
             case 'platinum':
@@ -119,7 +209,42 @@ module.exports = {
                 .set({
                   platinum: room.platinum - 1,
                   accounts_number: room.accounts_number - 1
+                })
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    criteria: {
+                      id: room.id,
+                    },
+                    data: {
+                      platinum: room.platinum - 1,
+                      accounts_number: room.accounts_number - 1
+                    }
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Room.updateOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      criteria: {
+                        id: room.id,
+                      },
+                      data: {
+                        platinum: room.platinum - 1,
+                        accounts_number: room.accounts_number - 1
+                      }
+                    },
+                  });
+
+                  return true;
                 });
+
+
               break;
 
             case 'star':
@@ -127,7 +252,42 @@ module.exports = {
                 .set({
                   star: room.star - 1,
                   accounts_number: room.accounts_number - 1
+                })
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    criteria: {
+                      id: room.id,
+                    },
+                    data: {
+                      star: room.star - 1,
+                      accounts_number: room.accounts_number - 1
+                    }
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Room.updateOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      criteria: {
+                        id: room.id,
+                      },
+                      data: {
+                        star: room.star - 1,
+                        accounts_number: room.accounts_number - 1
+                      }
+                    },
+                  });
+
+                  return true;
                 });
+
+
               break;
 
             default: throw new Error(`${moduleName}, error: Unknown client category="${accountCategory}"`);

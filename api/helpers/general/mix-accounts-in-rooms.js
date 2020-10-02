@@ -55,8 +55,82 @@ module.exports = {
     // sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
     const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
-      .populate('account');
-    const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom});
+      .populate('account')
+      .tolerate(async (err) => {
+
+        err.details = {
+          room: inputs.oldRoom,
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Room.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            room: inputs.oldRoom,
+          },
+        });
+
+        return 'error';
+      });
+
+    if (oldRoomWithAccounts === 'error') {
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+        location: moduleName,
+        message: 'Room.findOne() error',
+        // clientGuid,
+        // accountGuid,
+        errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+        payload: {
+          room: inputs.oldRoom,
+        },
+      });
+    }
+
+    const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom})
+      .tolerate(async (err) => {
+
+        err.details = {
+          room: inputs.newRoom,
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Room.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            room: inputs.newRoom,
+          },
+        });
+
+        return 'error';
+      });
+
+      if (oldRoomWithAccounts === 'error') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'Room.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            room: inputs.newRoom,
+          },
+        });
+      }
+
     const client = await Client.findOne({id: inputs.accountRec.client})
       .tolerate(async (err) => {
 
@@ -201,12 +275,81 @@ module.exports = {
                   .set({
                     bronze: oldRoomWithAccounts.bronze - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: oldRoomWithAccounts.room
+                      },
+                      data: {
+                        bronze: oldRoomWithAccounts.bronze - 1,
+                        accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: oldRoomWithAccounts.room
+                        },
+                        data: {
+                          bronze: oldRoomWithAccounts.bronze - 1,
+                          accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     bronze: newRoomWithAccounts.bronze + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: newRoomWithAccounts.room
+                      },
+                      data: {
+                        bronze: newRoomWithAccounts.bronze + 1,
+                        accounts_number: newRoomWithAccounts.accounts_number + 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: newRoomWithAccounts.room
+                        },
+                        data: {
+                          bronze: newRoomWithAccounts.bronze + 1,
+                          accounts_number: newRoomWithAccounts.accounts_number + 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 oldRoomWithAccounts.bronze = oldRoomWithAccounts.bronze - 1;
                 oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.bronze = newRoomWithAccounts.bronze + 1;
@@ -218,12 +361,82 @@ module.exports = {
                   .set({
                     gold: oldRoomWithAccounts.gold - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: oldRoomWithAccounts.room
+                      },
+                      data: {
+                        gold: oldRoomWithAccounts.gold - 1,
+                        accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: oldRoomWithAccounts.room
+                        },
+                        data: {
+                          gold: oldRoomWithAccounts.gold - 1,
+                          accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     gold: newRoomWithAccounts.gold + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: newRoomWithAccounts.room
+                      },
+                      data: {
+                        gold: newRoomWithAccounts.gold + 1,
+                        accounts_number: newRoomWithAccounts.accounts_number + 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: newRoomWithAccounts.room
+                        },
+                        data: {
+                          gold: newRoomWithAccounts.gold + 1,
+                          accounts_number: newRoomWithAccounts.accounts_number + 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 oldRoomWithAccounts.gold = oldRoomWithAccounts.gold - 1;
                 oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.gold = newRoomWithAccounts.gold + 1;
@@ -235,12 +448,82 @@ module.exports = {
                   .set({
                     platinum: oldRoomWithAccounts.platinum - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: oldRoomWithAccounts.room
+                      },
+                      data: {
+                        platinum: oldRoomWithAccounts.platinum - 1,
+                        accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: oldRoomWithAccounts.room
+                        },
+                        data: {
+                          platinum: oldRoomWithAccounts.platinum - 1,
+                          accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     platinum: newRoomWithAccounts.platinum + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: newRoomWithAccounts.room
+                      },
+                      data: {
+                        platinum: newRoomWithAccounts.platinum + 1,
+                        accounts_number: newRoomWithAccounts.accounts_number + 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: newRoomWithAccounts.room
+                        },
+                        data: {
+                          platinum: newRoomWithAccounts.platinum + 1,
+                          accounts_number: newRoomWithAccounts.accounts_number + 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 oldRoomWithAccounts.platinum = oldRoomWithAccounts.platinum - 1;
                 oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.platinum = newRoomWithAccounts.platinum + 1;
@@ -252,12 +535,82 @@ module.exports = {
                   .set({
                     star: oldRoomWithAccounts.star - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: oldRoomWithAccounts.room
+                      },
+                      data: {
+                        star: oldRoomWithAccounts.star - 1,
+                        accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: oldRoomWithAccounts.room
+                        },
+                        data: {
+                          star: oldRoomWithAccounts.star - 1,
+                          accounts_number: oldRoomWithAccounts.accounts_number - 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 await Room.updateOne({room: newRoomWithAccounts.room})
                   .set({
                     star: newRoomWithAccounts.star + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
+                  })
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      criteria: {
+                        room: newRoomWithAccounts.room
+                      },
+                      data: {
+                        star: newRoomWithAccounts.star + 1,
+                        accounts_number: newRoomWithAccounts.accounts_number + 1,
+                      }
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Room.updateOne() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        criteria: {
+                          room: newRoomWithAccounts.room
+                        },
+                        data: {
+                          star: newRoomWithAccounts.star + 1,
+                          accounts_number: newRoomWithAccounts.accounts_number + 1,
+                        }
+                      },
+                    });
+
+                    return true;
                   });
+
+
                 oldRoomWithAccounts.star = oldRoomWithAccounts.star - 1;
                 oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
                 newRoomWithAccounts.star = newRoomWithAccounts.star + 1;

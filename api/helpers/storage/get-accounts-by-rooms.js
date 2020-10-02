@@ -47,7 +47,58 @@ module.exports = {
               deleted: false,
               banned: false,
             }
+          })
+          .tolerate(async (err) => {
+
+            err.details = {
+              id: room,
+              where: {
+                subscription_active: true,
+                deleted: false,
+                banned: false,
+              }
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Room.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                id: room,
+                where: {
+                  subscription_active: true,
+                  deleted: false,
+                  banned: false,
+                }
+              },
+            });
+
+            return 'error';
           });
+
+        if (roomWithAccounts === 'error') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Room.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            payload: {
+              id: room,
+              where: {
+                subscription_active: true,
+                deleted: false,
+                banned: false,
+              }
+            },
+          });
+        }
 
 
         for (const acc of roomWithAccounts.account) {
