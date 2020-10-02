@@ -74,7 +74,28 @@ module.exports = {
         type: inputs.type,
       };
 
-      const refDownRecRaw = await RefDown.create(refDownRec).fetch();
+      const refDownRecRaw = await RefDown.create(refDownRec).fetch()
+        .tolerate(async (err) => {
+
+          err.details = {
+            refDownRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'RefDown.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              refDownRec,
+            },
+          });
+
+          return refDownRec;
+        });
 
       return exits.success({
         status: 'ok',

@@ -120,7 +120,41 @@ module.exports = {
        * Проверяется, есть ли записи в таблице ref_down
        */
 
-      const refDownRecsNum = await RefDown.count();
+      const refDownRecsNum = await RefDown.count()
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: 'whole table',
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'RefDown.count() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: 'whole table',
+            },
+          });
+
+          return 'error';
+        });
+
+      if (refDownRecsNum === 'error') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'RefDown.count() error',
+          // clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          criteria: 'whole table',
+        });
+      }
 
       /**
        * Если таблица пустая, то создаётся инициализирующая запись
@@ -811,7 +845,49 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       account_guid: use_account_guid,
       type: sails.config.custom.enums.ref.refDownType.NORMAL,
       level: 1,
-    });
+    })
+      .tolerate(async (err) => {
+
+        err.details = {
+          account_guid: use_account_guid,
+          type: sails.config.custom.enums.ref.refDownType.NORMAL,
+          level: 1,
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'RefDown.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            account_guid: use_account_guid,
+            type: sails.config.custom.enums.ref.refDownType.NORMAL,
+            level: 1,
+          },
+        });
+
+        return 'error';
+      });
+
+    if (use_ref_down_rec === 'error') {
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+        location: moduleName,
+        message: 'RefDown.findOne() error',
+        // clientGuid,
+        accountGuid,
+        errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+        payload: {
+          account_guid: use_account_guid,
+          type: sails.config.custom.enums.ref.refDownType.NORMAL,
+          level: 1,
+        },
+      });
+    }
 
     if (use_ref_down_rec != null) {
 
