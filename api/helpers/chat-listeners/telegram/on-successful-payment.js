@@ -118,6 +118,37 @@ module.exports = {
 
           // TODO: Заменить на метод storage.paymentGroupUpdateJoi
           await PaymentGroups.update({guid: paymentGroupGuid}).set({status: sails.config.custom.enums.paymentGroupStatus.SUCCESS})
+            .tolerate(async (err) => {
+
+              err.details = {
+                criteria: {
+                  guid: paymentGroupGuid,
+                },
+                data: {
+                  status: sails.config.custom.enums.paymentGroupStatus.SUCCESS,
+                },
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'PaymentGroups.update() error',
+                clientGuid,
+                accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  criteria: {
+                    guid: paymentGroupGuid,
+                  },
+                  data: {
+                    status: sails.config.custom.enums.paymentGroupStatus.SUCCESS,
+                  },
+                },
+              });
+
+              return true;
+            });
 
           const accountRecRaw = await sails.helpers.storage.accountGetJoi({
             accountGuids: [client.account_use],

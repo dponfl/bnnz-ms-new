@@ -77,7 +77,31 @@ module.exports = {
       //   })
       // }
 
-      await PaymentGroups.update(input.criteria).set(paymentGroupRec);
+      await PaymentGroups.update(input.criteria).set(paymentGroupRec)
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: input.criteria,
+            data: paymentGroupRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'PaymentGroups.update() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: input.criteria,
+              data: paymentGroupRec,
+            },
+          });
+
+          return true;
+        });
+
 
       return exits.success({
         status: 'ok',

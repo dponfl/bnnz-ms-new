@@ -62,7 +62,46 @@ module.exports = {
           currency: paymentCurrency,
           status: paymentStatus,
         },
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            field: 'amount',
+            where: {
+              createdAt: {
+                '>=': moment(inputs.start).format(),
+                '<=': moment(inputs.end).format()
+              },
+              type: paymentType,
+              currency: paymentCurrency,
+              status: paymentStatus,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'PaymentGroups.sum() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              field: 'amount',
+              where: {
+                createdAt: {
+                  '>=': moment(inputs.start).format(),
+                  '<=': moment(inputs.end).format()
+                },
+                type: paymentType,
+                currency: paymentCurrency,
+                status: paymentStatus,
+              },
+            },
+          });
+
+          return 0;
+        });
 
       elapsedTimeEnd = moment();
 
