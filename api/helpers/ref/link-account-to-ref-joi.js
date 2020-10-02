@@ -72,7 +72,43 @@ module.exports = {
 
       const refRecForNewAccountGuid = await Ref.findOne({
         account_guid: new_account_guid,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            account_guid: new_account_guid,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Ref.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              account_guid: new_account_guid,
+            },
+          });
+
+          return 'error';
+        });
+
+      if (refRecForNewAccountGuid === 'error') {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'Ref.findOne() error',
+          // clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            account_guid: new_account_guid,
+          },
+        });
+      }
 
       if (refRecForNewAccountGuid == null) {
         await sails.helpers.storage.refCreate.with({
@@ -240,7 +276,44 @@ module.exports = {
 
         const refRec = await Ref.findOne({
           account_guid: ref_account.guid,
-        });
+        })
+          .tolerate(async (err) => {
+
+            err.details = {
+              account_guid: ref_account.guid,
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Ref.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                account_guid: ref_account.guid,
+              },
+            });
+
+            return 'error';
+          });
+
+        if (refRecForNewAccountGuid === 'error') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+            location: moduleName,
+            message: 'Ref.findOne() error',
+            // clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            payload: {
+              account_guid: ref_account.guid,
+            },
+          });
+        }
+
 
         if (refRec == null) {
           // throw new Error(`${moduleName}, error: No ref record was found for the ref_account.guid="${ref_account.guid}"`);
@@ -312,7 +385,40 @@ module.exports = {
         }).set({
           direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
           total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
-        });
+        })
+          .tolerate(async (err) => {
+
+            err.details = {
+              criteria: {
+                guid: selectedRefRec.guid
+              },
+              data: {
+                direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+                total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+              }
+            };
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Ref.updateOne() error',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: {
+                criteria: {
+                  guid: selectedRefRec.guid
+                },
+                data: {
+                  direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+                  total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+                }
+              },
+            });
+
+            return true;
+          });
 
         const refDownCreateRawParams = {
           accountGuid: new_account_guid,
@@ -459,7 +565,41 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
     }).set({
       direct_linked_accounts_num: ++refRec.direct_linked_accounts_num,
       total_linked_accounts_num: ++refRec.total_linked_accounts_num,
-    });
+    })
+      .tolerate(async (err) => {
+
+        err.details = {
+          criteria: {
+            guid: refRec.guid
+          },
+          data: {
+            direct_linked_accounts_num: ++refRec.direct_linked_accounts_num,
+            total_linked_accounts_num: ++refRec.total_linked_accounts_num,
+          }
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Ref.updateOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            criteria: {
+              guid: refRec.guid
+            },
+            data: {
+              direct_linked_accounts_num: ++refRec.direct_linked_accounts_num,
+              total_linked_accounts_num: ++refRec.total_linked_accounts_num,
+            }
+          },
+        });
+
+        return true;
+      });
+
 
   } else {
 
@@ -467,7 +607,39 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       guid: refRec.guid
     }).set({
       total_linked_accounts_num: ++refRec.total_linked_accounts_num,
-    });
+    })
+      .tolerate(async (err) => {
+
+        err.details = {
+          criteria: {
+            guid: refRec.guid
+          },
+          data: {
+            total_linked_accounts_num: ++refRec.total_linked_accounts_num,
+          }
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Ref.updateOne() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            criteria: {
+              guid: refRec.guid
+            },
+            data: {
+              total_linked_accounts_num: ++refRec.total_linked_accounts_num,
+            }
+          },
+        });
+
+        return true;
+      });
+
 
   }
 
@@ -562,7 +734,41 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       }).set({
         direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
         total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            criteria: {
+              guid: selectedRefRec.guid
+            },
+            data: {
+              direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+              total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+            }
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Ref.updateOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              criteria: {
+                guid: selectedRefRec.guid
+              },
+              data: {
+                direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+                total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+              }
+            },
+          });
+
+          return true;
+        });
+
 
       const refDownCreateRawParams = {
         accountGuid: newAccountGuid,
@@ -717,7 +923,32 @@ async function getRandomRefRecordLessSomeAccounts(omitAccountsArray) {
     where: {
       direct_linked_accounts_num: {'<': sails.config.custom.config.ref.general.max_direct_links},
     },
-  });
+  })
+    .tolerate(async (err) => {
+
+      err.details = {
+        where: {
+          direct_linked_accounts_num: {'<': sails.config.custom.config.ref.general.max_direct_links},
+        },
+      };
+
+      await LogProcessor.dbError({
+        error: err,
+        message: 'Ref.find() error',
+        // clientGuid,
+        // accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        location: moduleName,
+        payload: {
+          where: {
+            direct_linked_accounts_num: {'<': sails.config.custom.config.ref.general.max_direct_links},
+          },
+        },
+      });
+
+      return [];
+    });
 
   _.remove(refRecs, (elem) => {
     return _.indexOf(omitAccountsArray, elem.account_guid) !== -1;

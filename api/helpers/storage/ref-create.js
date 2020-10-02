@@ -64,7 +64,43 @@ module.exports = {
         total_linked_accounts_num: inputs.totalLinkedAccountsNum || 0,
       };
 
-      const refRecRaw = await Ref.create(refRec).fetch();
+      const refRecRaw = await Ref.create(refRec).fetch()
+        .tolerate(async (err) => {
+
+          err.details = {
+            refRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Ref.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              refRec,
+            },
+          });
+
+          return null;
+        });
+
+      if (refRecRaw == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'Ref.create() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            refRec,
+          },
+        });
+      }
 
       return exits.success({
         status: 'ok',
