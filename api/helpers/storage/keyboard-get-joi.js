@@ -54,7 +54,46 @@ module.exports = {
       const keyboard = await Keyboards.findOne({
         active: true,
         name: input.keyboardName,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            active: true,
+            name: input.keyboardName,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Keyboards.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              active: true,
+              name: input.keyboardName,
+            },
+          });
+
+          return null;
+        });
+
+      if (keyboard == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'Keyboards.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            active: true,
+            name: input.keyboardName,
+          },
+        });
+      }
 
       if (keyboard.keyboard_data != null) {
 
