@@ -87,7 +87,28 @@ module.exports = {
         checkedAt: inputs.checkedAt || '',
       };
 
-      const refUpRecRaw = await RefUp.create(refUpRec).fetch();
+      const refUpRecRaw = await RefUp.create(refUpRec).fetch()
+        .tolerate(async (err) => {
+
+          err.details = {
+            refUpRec,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'RefUp.create() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              refUpRec,
+            },
+          });
+
+          return refUpRec;
+        });
 
       return exits.success({
         status: 'ok',
