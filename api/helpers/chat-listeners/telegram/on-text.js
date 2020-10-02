@@ -192,7 +192,46 @@ module.exports = {
           funnels = await Funnels.findOne({
             name: getServiceRes.payload.funnel_name,
             active: true
-          });
+          })
+            .tolerate(async (err) => {
+
+              err.details = {
+                name: getServiceRes.payload.funnel_name,
+                active: true
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Funnels.findOne() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  name: getServiceRes.payload.funnel_name,
+                  active: true
+                },
+              });
+
+              return null;
+            });
+
+          if (funnels == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+              location: moduleName,
+              message: 'Funnels.findOne() error',
+              // clientGuid,
+              // accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {
+                name: getServiceRes.payload.funnel_name,
+                active: true
+              },
+            });
+          }
 
           params.funnels = funnels.funnel_data || null;
 
