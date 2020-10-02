@@ -55,7 +55,46 @@ module.exports = {
       const pushMessages = await PushMessages.findOne({
         active: true,
         name: input.pushMessageName,
-      });
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            active: true,
+            name: input.pushMessageName,
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'PushMessages.findOne() error',
+            // clientGuid,
+            // accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              active: true,
+              name: input.pushMessageName,
+            },
+          });
+
+          return null;
+        });
+
+      if (pushMessages == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          message: 'PushMessages.findOne() error',
+          // clientGuid,
+          // accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {
+            active: true,
+            name: input.pushMessageName,
+          },
+        });
+      }
 
       if (pushMessages.message_data != null) {
 
