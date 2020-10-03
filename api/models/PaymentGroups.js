@@ -8,7 +8,7 @@
  */
 
 module.exports = {
-  datastore: 'clientDb',
+  datastore: 'paymentDb',
   tableName: 'payment_groups',
   migrate: 'safe',
   attributes: {

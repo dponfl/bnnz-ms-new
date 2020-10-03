@@ -22,6 +22,11 @@ before(function(done) {
         url: process.env.JAWSDB_MARIA_ROSE_URL,
       },
 
+      paymentDb: {
+        adapter: 'sails-mysql',
+        url: process.env.JAWSDB_MARIA_CYAN_URL,
+      },
+
       configDb: {
         adapter: 'sails-mysql',
         url: process.env.JAWSDB_MARIA_MAROON_URL,
