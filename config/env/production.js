@@ -53,17 +53,6 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     default: {
-      // adapter: 'sails-mysql',
-      // url: 'mysql://user:password@host:port/database',
-      //--------------------------------------------------------------------------
-      //  /\   To avoid checking it in to version control, you might opt to set
-      //  ||   sensitive credentials like `url` using an environment variable.
-      //
-      //  For example:
-      //  ```
-      //  sails_datastores__default__url=mysql://admin:myc00lpAssw2D@db.example.com:3306/my_prod_db
-      //  ```
-      //--------------------------------------------------------------------------
 
       /****************************************************************************
       *                                                                           *
@@ -78,7 +67,31 @@ module.exports = {
       ****************************************************************************/
       // ssl: true,
 
+      adapter: 'sails-mysql',
+      url: process.env.BF_CLIENT_DB_URL,
+
     },
+
+    clientDb: {
+      adapter: 'sails-mysql',
+      url: process.env.BF_CLIENT_DB_URL,
+    },
+
+    paymentDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_NAVY_URL,
+    },
+
+    configDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_GRAY_URL,
+    },
+
+    performanceDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_BLACK_URL,
+    },
+
 
   },
 

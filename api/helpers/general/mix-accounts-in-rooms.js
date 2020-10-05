@@ -54,12 +54,12 @@ module.exports = {
     // sails.log.info(`*** ${moduleName} ***`);
     // sails.log.debug(`input params: ${JSON.stringify(inputs, null, '   ')}`);
 
-    const oldRoomWithAccounts = await Room.findOne({room: inputs.oldRoom})
+    const oldRoomWithAccounts = await Room.findOne({id: inputs.oldRoom})
       .populate('account')
       .tolerate(async (err) => {
 
         err.details = {
-          room: inputs.oldRoom,
+          id: inputs.oldRoom,
         };
 
         await LogProcessor.dbError({
@@ -71,7 +71,7 @@ module.exports = {
           // childRequestId: null,
           location: moduleName,
           payload: {
-            room: inputs.oldRoom,
+            id: inputs.oldRoom,
           },
         });
 
@@ -88,16 +88,16 @@ module.exports = {
         // accountGuid,
         errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
         payload: {
-          room: inputs.oldRoom,
+          id: inputs.oldRoom,
         },
       });
     }
 
-    const newRoomWithAccounts = await Room.findOne({room: inputs.newRoom})
+    const newRoomWithAccounts = await Room.findOne({id: inputs.newRoom})
       .tolerate(async (err) => {
 
         err.details = {
-          room: inputs.newRoom,
+          id: inputs.newRoom,
         };
 
         await LogProcessor.dbError({
@@ -109,7 +109,7 @@ module.exports = {
           // childRequestId: null,
           location: moduleName,
           payload: {
-            room: inputs.newRoom,
+            id: inputs.newRoom,
           },
         });
 
@@ -126,7 +126,7 @@ module.exports = {
           // accountGuid,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           payload: {
-            room: inputs.newRoom,
+            id: inputs.newRoom,
           },
         });
       }
@@ -271,7 +271,7 @@ module.exports = {
 
             switch (accountCategory) {
               case 'bronze':
-                await Room.updateOne({room: oldRoomWithAccounts.room})
+                await Room.updateOne({id: oldRoomWithAccounts.id})
                   .set({
                     bronze: oldRoomWithAccounts.bronze - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
@@ -280,7 +280,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: oldRoomWithAccounts.room
+                        id: oldRoomWithAccounts.id
                       },
                       data: {
                         bronze: oldRoomWithAccounts.bronze - 1,
@@ -298,7 +298,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: oldRoomWithAccounts.room
+                          id: oldRoomWithAccounts.id
                         },
                         data: {
                           bronze: oldRoomWithAccounts.bronze - 1,
@@ -310,7 +310,7 @@ module.exports = {
                     return true;
                   });
 
-                await Room.updateOne({room: newRoomWithAccounts.room})
+                await Room.updateOne({id: newRoomWithAccounts.id})
                   .set({
                     bronze: newRoomWithAccounts.bronze + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
@@ -319,7 +319,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: newRoomWithAccounts.room
+                        id: newRoomWithAccounts.id
                       },
                       data: {
                         bronze: newRoomWithAccounts.bronze + 1,
@@ -337,7 +337,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: newRoomWithAccounts.room
+                          id: newRoomWithAccounts.id
                         },
                         data: {
                           bronze: newRoomWithAccounts.bronze + 1,
@@ -350,14 +350,18 @@ module.exports = {
                   });
 
 
-                oldRoomWithAccounts.bronze = oldRoomWithAccounts.bronze - 1;
-                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
-                newRoomWithAccounts.bronze = newRoomWithAccounts.bronze + 1;
-                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                // oldRoomWithAccounts.bronze = oldRoomWithAccounts.bronze - 1;
+                // oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
+                // newRoomWithAccounts.bronze = newRoomWithAccounts.bronze + 1;
+                // newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                oldRoomWithAccounts.bronze--;
+                oldRoomWithAccounts.accounts_number--;
+                newRoomWithAccounts.bronze++;
+                newRoomWithAccounts.accounts_number++;
                 break;
 
               case 'gold':
-                await Room.updateOne({room: oldRoomWithAccounts.room})
+                await Room.updateOne({id: oldRoomWithAccounts.id})
                   .set({
                     gold: oldRoomWithAccounts.gold - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
@@ -366,7 +370,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: oldRoomWithAccounts.room
+                        id: oldRoomWithAccounts.id
                       },
                       data: {
                         gold: oldRoomWithAccounts.gold - 1,
@@ -384,7 +388,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: oldRoomWithAccounts.room
+                          id: oldRoomWithAccounts.id
                         },
                         data: {
                           gold: oldRoomWithAccounts.gold - 1,
@@ -397,7 +401,7 @@ module.exports = {
                   });
 
 
-                await Room.updateOne({room: newRoomWithAccounts.room})
+                await Room.updateOne({id: newRoomWithAccounts.id})
                   .set({
                     gold: newRoomWithAccounts.gold + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
@@ -406,7 +410,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: newRoomWithAccounts.room
+                        id: newRoomWithAccounts.id
                       },
                       data: {
                         gold: newRoomWithAccounts.gold + 1,
@@ -424,7 +428,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: newRoomWithAccounts.room
+                          id: newRoomWithAccounts.id
                         },
                         data: {
                           gold: newRoomWithAccounts.gold + 1,
@@ -437,14 +441,18 @@ module.exports = {
                   });
 
 
-                oldRoomWithAccounts.gold = oldRoomWithAccounts.gold - 1;
-                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
-                newRoomWithAccounts.gold = newRoomWithAccounts.gold + 1;
-                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                // oldRoomWithAccounts.gold = oldRoomWithAccounts.gold - 1;
+                // oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
+                // newRoomWithAccounts.gold = newRoomWithAccounts.gold + 1;
+                // newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                oldRoomWithAccounts.gold--;
+                oldRoomWithAccounts.accounts_number--;
+                newRoomWithAccounts.gold++;
+                newRoomWithAccounts.accounts_number++;
                 break;
 
               case 'platinum':
-                await Room.updateOne({room: oldRoomWithAccounts.room})
+                await Room.updateOne({id: oldRoomWithAccounts.id})
                   .set({
                     platinum: oldRoomWithAccounts.platinum - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
@@ -453,7 +461,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: oldRoomWithAccounts.room
+                        id: oldRoomWithAccounts.id
                       },
                       data: {
                         platinum: oldRoomWithAccounts.platinum - 1,
@@ -471,7 +479,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: oldRoomWithAccounts.room
+                          id: oldRoomWithAccounts.id
                         },
                         data: {
                           platinum: oldRoomWithAccounts.platinum - 1,
@@ -484,7 +492,7 @@ module.exports = {
                   });
 
 
-                await Room.updateOne({room: newRoomWithAccounts.room})
+                await Room.updateOne({id: newRoomWithAccounts.id})
                   .set({
                     platinum: newRoomWithAccounts.platinum + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
@@ -493,7 +501,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: newRoomWithAccounts.room
+                        id: newRoomWithAccounts.id
                       },
                       data: {
                         platinum: newRoomWithAccounts.platinum + 1,
@@ -511,7 +519,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: newRoomWithAccounts.room
+                          id: newRoomWithAccounts.id
                         },
                         data: {
                           platinum: newRoomWithAccounts.platinum + 1,
@@ -524,14 +532,18 @@ module.exports = {
                   });
 
 
-                oldRoomWithAccounts.platinum = oldRoomWithAccounts.platinum - 1;
-                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
-                newRoomWithAccounts.platinum = newRoomWithAccounts.platinum + 1;
-                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                // oldRoomWithAccounts.platinum = oldRoomWithAccounts.platinum - 1;
+                // oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
+                // newRoomWithAccounts.platinum = newRoomWithAccounts.platinum + 1;
+                // newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                oldRoomWithAccounts.platinum--;
+                oldRoomWithAccounts.accounts_number--;
+                newRoomWithAccounts.platinum++;
+                newRoomWithAccounts.accounts_number++;
                 break;
 
               case 'star':
-                await Room.updateOne({room: oldRoomWithAccounts.room})
+                await Room.updateOne({id: oldRoomWithAccounts.id})
                   .set({
                     star: oldRoomWithAccounts.star - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
@@ -540,7 +552,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: oldRoomWithAccounts.room
+                        id: oldRoomWithAccounts.id
                       },
                       data: {
                         star: oldRoomWithAccounts.star - 1,
@@ -558,7 +570,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: oldRoomWithAccounts.room
+                          id: oldRoomWithAccounts.id
                         },
                         data: {
                           star: oldRoomWithAccounts.star - 1,
@@ -571,7 +583,7 @@ module.exports = {
                   });
 
 
-                await Room.updateOne({room: newRoomWithAccounts.room})
+                await Room.updateOne({id: newRoomWithAccounts.id})
                   .set({
                     star: newRoomWithAccounts.star + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
@@ -580,7 +592,7 @@ module.exports = {
 
                     err.details = {
                       criteria: {
-                        room: newRoomWithAccounts.room
+                        id: newRoomWithAccounts.id
                       },
                       data: {
                         star: newRoomWithAccounts.star + 1,
@@ -598,7 +610,7 @@ module.exports = {
                       location: moduleName,
                       payload: {
                         criteria: {
-                          room: newRoomWithAccounts.room
+                          id: newRoomWithAccounts.id
                         },
                         data: {
                           star: newRoomWithAccounts.star + 1,
@@ -611,10 +623,14 @@ module.exports = {
                   });
 
 
-                oldRoomWithAccounts.star = oldRoomWithAccounts.star - 1;
-                oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
-                newRoomWithAccounts.star = newRoomWithAccounts.star + 1;
-                newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                // oldRoomWithAccounts.star = oldRoomWithAccounts.star - 1;
+                // oldRoomWithAccounts.accounts_number = oldRoomWithAccounts.accounts_number - 1;
+                // newRoomWithAccounts.star = newRoomWithAccounts.star + 1;
+                // newRoomWithAccounts.accounts_number = newRoomWithAccounts.accounts_number + 1;
+                oldRoomWithAccounts.star--;
+                oldRoomWithAccounts.accounts_number--;
+                newRoomWithAccounts.star++;
+                newRoomWithAccounts.accounts_number++;
                 break;
 
               default:
@@ -640,12 +656,7 @@ module.exports = {
 
       }
 
-      return exits.success({
-        status: 'ok',
-        message: 'Mix accounts in rooms success',
-        payload: {
-        }
-      });
+      return newRoomWithAccounts;
 
     } catch (e) {
 

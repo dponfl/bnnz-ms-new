@@ -17,9 +17,15 @@ before(function(done) {
     // hooks: { grunt: false },
     log: { level: 'error' },
     datastores: {
+
+      default: {
+        adapter: 'sails-mysql',
+        url: process.env.BF_CLIENT_DB_URL,
+      },
+
       clientDb: {
         adapter: 'sails-mysql',
-        url: process.env.JAWSDB_MARIA_ROSE_URL,
+        url: process.env.BF_CLIENT_DB_URL,
       },
 
       paymentDb: {

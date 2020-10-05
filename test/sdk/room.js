@@ -33,7 +33,7 @@ async function generateRoom(room = null) {
 
     roomRec = {
       id: 1,
-      room: 1,
+      // room: 1,
       active: true,
       bronze: 0,
       gold: 0,

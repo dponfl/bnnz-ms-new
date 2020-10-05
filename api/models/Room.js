@@ -13,11 +13,15 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
-    room: {
-      type: 'number',
-      columnType: 'integer',
-    },
     active: {
+      type: 'boolean',
+      required: true,
+    },
+
+    /**
+     * Флаг, что запись находится в обработке и её нельзя использовать/изменять и т.п.
+     */
+    locked: {
       type: 'boolean',
       required: true,
     },

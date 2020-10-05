@@ -197,43 +197,6 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
   try {
 
-    totalRooms = await Room.count()
-      .tolerate(async (err) => {
-
-        err.details = {
-          criteria: 'whole table',
-        };
-
-        await LogProcessor.dbError({
-          error: err,
-          message: 'Room.count() error',
-          // clientGuid,
-          // accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          location: moduleName,
-          payload: {
-            criteria: 'whole table',
-          },
-        });
-
-        return 'error';
-      });
-
-    if (totalRooms === 'error') {
-      await sails.helpers.general.throwErrorJoi({
-        errorType: sails.config.custom.enums.errorType.CRITICAL,
-        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-        location: moduleName,
-        message: 'Room.count() error',
-        // clientGuid,
-        // accountGuid,
-        errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-        payload: {
-          criteria: 'whole table',
-        },
-      });
-    }
 
     const accountCategory = sails.config.custom.config.rooms.category_by_service[accountRec.service.name];
 
@@ -271,7 +234,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             return 'error';
           });
 
-        if (totalRooms === 'error') {
+        if (rooms === 'error') {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -326,7 +289,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             return 'error';
           });
 
-        if (totalRooms === 'error') {
+        if (rooms === 'error') {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -382,7 +345,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             return 'error';
           });
 
-        if (totalRooms === 'error') {
+        if (rooms === 'error') {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -438,7 +401,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             return 'error';
           });
 
-        if (totalRooms === 'error') {
+        if (rooms === 'error') {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -478,13 +441,53 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
     _.forEach(rooms, function (val) {
       if (!_.find(doNotUseRooms, function (el) {
-        return (val.room === el.room);
+        return (val.id === el.id);
       })) {
-        checkedRooms.push({room: val, used: false});
+        val.used = false;
       } else {
-        checkedRooms.push({room: val, used: true});
+        val.used = true;
       }
+      checkedRooms.push(val);
     });
+
+
+    totalRooms = await Room.count()
+      .tolerate(async (err) => {
+
+        err.details = {
+          criteria: 'whole table',
+        };
+
+        await LogProcessor.dbError({
+          error: err,
+          message: 'Room.count() error',
+          // clientGuid,
+          // accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          location: moduleName,
+          payload: {
+            criteria: 'whole table',
+          },
+        });
+
+        return 'error';
+      });
+
+    if (totalRooms === 'error') {
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+        location: moduleName,
+        message: 'Room.count() error',
+        // clientGuid,
+        // accountGuid,
+        errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+        payload: {
+          criteria: 'whole table',
+        },
+      });
+    }
 
     if (!totalRooms) {
 
@@ -493,7 +496,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
        */
 
       roomRec = await Room.create({
-        room: 1,
+        // room: 1,
         bronze: 0,
         gold: 0,
         platinum: 0,
@@ -504,7 +507,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         .tolerate(async (err) => {
 
           err.details = {
-            room: 1,
+            // room: 1,
             bronze: 0,
             gold: 0,
             platinum: 0,
@@ -522,7 +525,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             // childRequestId: null,
             location: moduleName,
             payload: {
-              room: 1,
+              // room: 1,
               bronze: 0,
               gold: 0,
               platinum: 0,
@@ -545,7 +548,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           // accountGuid,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           payload: {
-            room: 1,
+            // room: 1,
             bronze: 0,
             gold: 0,
             platinum: 0,
@@ -556,7 +559,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
         });
       }
 
-      totalRooms = 1;
+      // totalRooms = 1;
 
     } else {
 
@@ -572,12 +575,12 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
          * Get room record for the specified roomNumber
          */
 
-        roomRec = filteredRooms[elemNumber].room;
+        roomRec = filteredRooms[elemNumber];
 
       } else {
 
         roomRec = await Room.create({
-          room: totalRooms + 1,
+          // room: totalRooms + 1,
           bronze: 0,
           gold: 0,
           platinum: 0,
@@ -588,7 +591,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           .tolerate(async (err) => {
 
             err.details = {
-              room: totalRooms + 1,
+              // room: totalRooms + 1,
               bronze: 0,
               gold: 0,
               platinum: 0,
@@ -606,7 +609,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
               // childRequestId: null,
               location: moduleName,
               payload: {
-                room: totalRooms + 1,
+                // room: totalRooms + 1,
                 bronze: 0,
                 gold: 0,
                 platinum: 0,
@@ -629,7 +632,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             // accountGuid,
             errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
             payload: {
-              room: totalRooms + 1,
+              // room: totalRooms + 1,
               bronze: 0,
               gold: 0,
               platinum: 0,
@@ -659,23 +662,23 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
        */
 
       const newRoom = await Room.create({
-        room: totalRooms + 1,
-        bronze: accountCategory === 'bronze' ? 1 : 0,
-        gold: accountCategory === 'gold' ? 1 : 0,
-        platinum: accountCategory === 'platinum' ? 1 : 0,
-        star: accountCategory === 'star' ? 1 : 0,
-        accounts_number: 1,
+        // room: totalRooms + 1,
+        bronze: 0,
+        gold: 0,
+        platinum: 0,
+        star: 0,
+        accounts_number: 0,
         active: true,
       }).fetch()
         .tolerate(async (err) => {
 
           err.details = {
-            room: totalRooms + 1,
-            bronze: accountCategory === 'bronze' ? 1 : 0,
-            gold: accountCategory === 'gold' ? 1 : 0,
-            platinum: accountCategory === 'platinum' ? 1 : 0,
-            star: accountCategory === 'star' ? 1 : 0,
-            accounts_number: 1,
+            // room: totalRooms + 1,
+            bronze: 0,
+            gold: 0,
+            platinum: 0,
+            star: 0,
+            accounts_number: 0,
             active: true,
           };
 
@@ -688,12 +691,12 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             // childRequestId: null,
             location: moduleName,
             payload: {
-              room: totalRooms + 1,
-              bronze: accountCategory === 'bronze' ? 1 : 0,
-              gold: accountCategory === 'gold' ? 1 : 0,
-              platinum: accountCategory === 'platinum' ? 1 : 0,
-              star: accountCategory === 'star' ? 1 : 0,
-              accounts_number: 1,
+              // room: totalRooms + 1,
+              bronze: 0,
+              gold: 0,
+              platinum: 0,
+              star: 0,
+              accounts_number: 0,
               active: true,
             },
           });
@@ -701,7 +704,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           return null;
         });
 
-      if (roomRec == null) {
+      if (newRoom == null) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -711,12 +714,12 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           // accountGuid,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           payload: {
-            room: totalRooms + 1,
-            bronze: accountCategory === 'bronze' ? 1 : 0,
-            gold: accountCategory === 'gold' ? 1 : 0,
-            platinum: accountCategory === 'platinum' ? 1 : 0,
-            star: accountCategory === 'star' ? 1 : 0,
-            accounts_number: 1,
+            // room: totalRooms + 1,
+            bronze: 0,
+            gold: 0,
+            platinum: 0,
+            star: 0,
+            accounts_number: 0,
             active: true,
           },
         });
@@ -724,44 +727,44 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
     }
 
 
-    await Account.addToCollection(accountRec.id, 'room', newRoom.id)
-        .tolerate(async (err) => {
+    // await Account.addToCollection(accountRec.id, 'room', newRoom.id)
+    //     .tolerate(async (err) => {
+    //
+    //       err.details = {
+    //         accountRecId: accountRec.id,
+    //         model: 'room',
+    //         newRoomId: newRoom.id,
+    //       };
+    //
+    //       await LogProcessor.dbError({
+    //         error: err,
+    //         message: 'Account.addToCollection() error',
+    //         // clientGuid,
+    //         // accountGuid,
+    //         // requestId: null,
+    //         // childRequestId: null,
+    //         location: moduleName,
+    //         payload: {
+    //           accountRecId: accountRec.id,
+    //           model: 'room',
+    //           newRoomId: newRoom.id,
+    //         },
+    //       });
+    //
+    //       return true;
+    //     });
 
-          err.details = {
-            accountRecId: accountRec.id,
-            model: 'room',
-            newRoomId: newRoom.id,
-          };
-
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Account.addToCollection() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              accountRecId: accountRec.id,
-              model: 'room',
-              newRoomId: newRoom.id,
-            },
-          });
-
-          return true;
-        });
-
-      await sails.helpers.general.mixAccountsInRooms.with({
+      const newRoomUpdated = await sails.helpers.general.mixAccountsInRooms.with({
         accountRec: accountRec,
-        oldRoom: roomRec.room,
-        newRoom: newRoom.room
+        oldRoom: roomRec.id,
+        newRoom: newRoom.id
       });
 
-      roomRec = newRoom;
+      roomRec = newRoomUpdated;
 
     } else {
 
-      roomRec = await Room.updateOne({room: roomRec.room})
+      roomRec = await Room.updateOne({id: roomRec.id})
         .set({
           bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
           gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
@@ -773,7 +776,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
           err.details = {
             criteria: {
-              room: roomRec.room
+              id: roomRec.id
             },
             data: {
               bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
@@ -794,7 +797,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             location: moduleName,
             payload: {
               criteria: {
-                room: roomRec.room
+                id: roomRec.id
               },
               data: {
                 bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
@@ -820,7 +823,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           payload: {
             criteria: {
-              room: roomRec.room
+              id: roomRec.id
             },
             data: {
               bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
