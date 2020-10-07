@@ -2731,7 +2731,9 @@ describe.only('Test DB', function () {
      * Создаём 20 клиентов по 1 аккаунту у каждого
      */
 
-    for (let i=0; i<20; i++) {
+    const numberOfAccounts = 20;
+
+    for (let i=0; i<numberOfAccounts; i++) {
 
       const client = await clientSdk.createClientDB();
 
@@ -2763,10 +2765,29 @@ describe.only('Test DB', function () {
 
     try {
 
+      /**
+       * Последовательное создание и запись в комнаты 20 аккаунтов
+       */
+
       // for (const account in accounts) {
       //   const res = await sails.helpers.general.allocateRoomsJoi({
       //     accountGuid: accounts[account].guid,
       //   });
+      //
+      //   await LogProcessor.error({
+      //     message: 'allocateRoomsJoi result',
+      //     // clientGuid,
+      //     // accountGuid,
+      //     // requestId: null,
+      //     // childRequestId: null,
+      //     errorName: sails.config.custom.GENERAL_ERROR.name,
+      //     location: 'test',
+      //     payload: {
+      //       res,
+      //       account,
+      //     },
+      //   });
+      //
       // }
 
       // _.forEach(accounts, async (account) => {
@@ -2775,12 +2796,31 @@ describe.only('Test DB', function () {
       //   });
       // });
 
+
+      /**
+       * Нагрузочный тест по одновременному созданию и записи в комнаты 20 аккаунтов
+       */
+
       const promises = accounts.map(async (account) => {
         try {
 
           const res = await sails.helpers.general.allocateRoomsJoi({
             accountGuid: account.guid,
           });
+
+            // await LogProcessor.error({
+            //   message: 'allocateRoomsJoi result',
+            //   // clientGuid,
+            //   // accountGuid,
+            //   // requestId: null,
+            //   // childRequestId: null,
+            //   errorName: sails.config.custom.GENERAL_ERROR.name,
+            //   location: 'test',
+            //   payload: {
+            //     res,
+            //     account,
+            //   },
+            // });
 
         } catch (ee) {
           const errorData = {

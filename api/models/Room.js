@@ -23,7 +23,6 @@ module.exports = {
      */
     locked: {
       type: 'boolean',
-      required: true,
     },
     bronze: {
       type: 'number',

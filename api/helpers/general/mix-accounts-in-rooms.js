@@ -12,6 +12,13 @@ module.exports = {
 
 
   inputs: {
+    db: {
+      friendlyName: 'database connection',
+      description: 'database connection',
+      type: 'ref',
+      required: true,
+    },
+
     accountRec: {
       friendlyName: 'account record',
       description: 'account record',
@@ -48,6 +55,7 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    const db = inputs.db;
 
     try {
 
@@ -56,6 +64,7 @@ module.exports = {
 
     const oldRoomWithAccounts = await Room.findOne({id: inputs.oldRoom})
       .populate('account')
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -94,6 +103,7 @@ module.exports = {
     }
 
     const newRoomWithAccounts = await Room.findOne({id: inputs.newRoom})
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -132,6 +142,7 @@ module.exports = {
       }
 
     const client = await Client.findOne({id: inputs.accountRec.client})
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -216,6 +227,7 @@ module.exports = {
             // sails.log.info('Gonna re-allocate this account: ', accountRec);
 
             await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id)
+              .usingConnection(db)
               .tolerate(async (err) => {
 
                 err.details = {
@@ -243,6 +255,7 @@ module.exports = {
               });
 
             await Account.addToCollection(accountRec.id, 'room', newRoomWithAccounts.id)
+              .usingConnection(db)
               .tolerate(async (err) => {
 
                 err.details = {
@@ -276,6 +289,7 @@ module.exports = {
                     bronze: oldRoomWithAccounts.bronze - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -315,6 +329,7 @@ module.exports = {
                     bronze: newRoomWithAccounts.bronze + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -366,6 +381,7 @@ module.exports = {
                     gold: oldRoomWithAccounts.gold - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -406,6 +422,7 @@ module.exports = {
                     gold: newRoomWithAccounts.gold + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -457,6 +474,7 @@ module.exports = {
                     platinum: oldRoomWithAccounts.platinum - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -497,6 +515,7 @@ module.exports = {
                     platinum: newRoomWithAccounts.platinum + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -548,6 +567,7 @@ module.exports = {
                     star: oldRoomWithAccounts.star - 1,
                     accounts_number: oldRoomWithAccounts.accounts_number - 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
@@ -588,6 +608,7 @@ module.exports = {
                     star: newRoomWithAccounts.star + 1,
                     accounts_number: newRoomWithAccounts.accounts_number + 1,
                   })
+                  .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {

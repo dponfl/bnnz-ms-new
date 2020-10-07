@@ -6,7 +6,7 @@ const sails = require('sails');
 before(function(done) {
 
   // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
-  this.timeout(100000);
+  this.timeout(1000000);
 
   sails.lift({
     // Your Sails app's configuration files will be loaded automatically,

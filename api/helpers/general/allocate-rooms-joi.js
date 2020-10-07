@@ -195,213 +195,336 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
   let roomRec;
   let rooms;
 
-  try {
+  const sqlLockTables = `
+    LOCK TABLES 
+      room WRITE, 
+      account_room__room_account WRITE, 
+      account WRITE, 
+      client WRITE 
+      WAIT 60
+    `;
 
+  const sqlUnlockTables = `
+    UNLOCK TABLES
+    `;
+
+  const sqlSetTransactionSerializable = `
+    SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+    `;
+
+  const sqlSetTransactionReadCommitted = `
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED
+    `;
+
+  const sqlSetTransactionRepeatableRead = `
+    SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+    `;
+
+  const sqlStartTransaction = `
+    START TRANSACTION
+    `;
+
+  const sqlCommitTransaction = `
+    COMMIT
+    `;
+
+  const sqlRollbackTransaction = `
+    ROLLBACK
+    `;
+
+  try {
 
     const accountCategory = sails.config.custom.config.rooms.category_by_service[accountRec.service.name];
 
-    switch (accountCategory) {
-      case 'bronze':
+    await sails.getDatastore('clientDb')
+      .sendNativeQuery(sqlSetTransactionRepeatableRead);
 
-        rooms = await Room.find({
-          where: {
-            active: true
-          },
-        })
-          .tolerate(async (err) => {
+    // await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlLockTables);
 
-            err.details = {
+    await sails.getDatastore('clientDb')
+      .transaction(async (db) => {
+
+        switch (accountCategory) {
+          case 'bronze':
+
+            rooms = await Room.find({
               where: {
                 active: true
               },
-            };
+            })
+              .usingConnection(db)
+              .tolerate(async (err) => {
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Room.find() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                where: {
-                  active: true
+                err.details = {
+                  where: {
+                    active: true
+                  },
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Room.find() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    where: {
+                      active: true
+                    },
+                  },
+                });
+
+                return 'error';
+              });
+
+            if (rooms === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Room.count() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  where: {
+                    active: true
+                  },
                 },
-              },
-            });
+              });
+            }
 
-            return 'error';
-          });
+            break;
 
-        if (rooms === 'error') {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Room.count() error',
-            // clientGuid,
-            // accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              where: {
-                active: true
-              },
-            },
-          });
-        }
+          case 'gold':
 
-        break;
-
-      case 'gold':
-
-        rooms = await Room.find({
-          where: {
-            active: true,
-            gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
-          },
-        })
-          .tolerate(async (err) => {
-
-            err.details = {
+            rooms = await Room.find({
               where: {
                 active: true,
                 gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
               },
-            };
+            })
+              .usingConnection(db)
+              .tolerate(async (err) => {
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Room.find() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                where: {
-                  active: true,
-                  gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
+                err.details = {
+                  where: {
+                    active: true,
+                    gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
+                  },
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Room.find() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    where: {
+                      active: true,
+                      gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
+                    },
+                  },
+                });
+
+                return 'error';
+              });
+
+            if (rooms === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Room.count() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  where: {
+                    active: true,
+                    gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
+                  },
                 },
-              },
-            });
+              });
+            }
 
-            return 'error';
-          });
+            break;
 
-        if (rooms === 'error') {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Room.count() error',
-            // clientGuid,
-            // accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              where: {
-                active: true,
-                gold: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.gold}
-              },
-            },
-          });
-        }
+          case 'platinum':
 
-        break;
-
-      case 'platinum':
-
-        rooms = await Room.find({
-          where: {
-            active: true,
-            platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
-          },
-        })
-          .tolerate(async (err) => {
-
-            err.details = {
+            rooms = await Room.find({
               where: {
                 active: true,
                 platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
               },
-            };
+            })
+              .usingConnection(db)
+              .tolerate(async (err) => {
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Room.find() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                where: {
-                  active: true,
-                  platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
+                err.details = {
+                  where: {
+                    active: true,
+                    platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
+                  },
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Room.find() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    where: {
+                      active: true,
+                      platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
+                    },
+                  },
+                });
+
+                return 'error';
+              });
+
+            if (rooms === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Room.count() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  where: {
+                    active: true,
+                    platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
+                  },
                 },
+              });
+            }
+
+            break;
+
+          case 'star':
+
+            rooms = await Room.find({
+              where: {
+                active: true,
+                star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
+              },
+            })
+              .usingConnection(db)
+              .tolerate(async (err) => {
+
+                err.details = {
+                  where: {
+                    active: true,
+                    star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
+                  },
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Room.find() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    where: {
+                      active: true,
+                      star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
+                    },
+                  },
+                });
+
+                return 'error';
+              });
+
+            if (rooms === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Room.count() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  where: {
+                    active: true,
+                    star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
+                  },
+                },
+              });
+            }
+
+
+            break;
+
+          default:
+            // throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Unknown account category',
+              accountGuid: accountRec.guid,
+              errorName: sails.config.custom.GENERAL_ERROR.name,
+              payload: {
+                accountCategory,
               },
             });
 
-            return 'error';
-          });
-
-        if (rooms === 'error') {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Room.count() error',
-            // clientGuid,
-            // accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              where: {
-                active: true,
-                platinum: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.platinum}
-              },
-            },
-          });
         }
 
-        break;
 
-      case 'star':
+        _.forEach(rooms, function (val) {
+          if (!_.find(doNotUseRooms, function (el) {
+            return (val.id === el.id);
+          })) {
+            val.used = false;
+          } else {
+            val.used = true;
+          }
+          checkedRooms.push(val);
+        });
 
-        rooms = await Room.find({
-          where: {
-            active: true,
-            star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
-          },
-        })
+
+        totalRooms = await Room.count()
+          .usingConnection(db)
           .tolerate(async (err) => {
 
             err.details = {
-              where: {
-                active: true,
-                star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
-              },
+              criteria: 'whole table',
             };
 
             await LogProcessor.dbError({
               error: err,
-              message: 'Room.find() error',
+              message: 'Room.count() error',
               // clientGuid,
               // accountGuid,
               // requestId: null,
               // childRequestId: null,
               location: moduleName,
               payload: {
-                where: {
-                  active: true,
-                  star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
-                },
+                criteria: 'whole table',
               },
             });
 
             return 'error';
           });
 
-        if (rooms === 'error') {
+        if (totalRooms === 'error') {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -411,102 +534,18 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             // accountGuid,
             errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
             payload: {
-              where: {
-                active: true,
-                star: {'<': sails.config.custom.config.rooms.accounts_distribution_by_category.star}
-              },
+              criteria: 'whole table',
             },
           });
         }
 
+        if (!totalRooms) {
 
-        break;
+          /**
+           * There are no rooms in Room table yet and we need create it
+           */
 
-      default:
-        // throw new Error(`${moduleName}, error: Unknown account category="${accountCategory}"`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'Unknown account category',
-          accountGuid: accountRec.guid,
-          errorName: sails.config.custom.GENERAL_ERROR.name,
-          payload: {
-            accountCategory,
-          },
-        });
-
-    }
-
-
-    _.forEach(rooms, function (val) {
-      if (!_.find(doNotUseRooms, function (el) {
-        return (val.id === el.id);
-      })) {
-        val.used = false;
-      } else {
-        val.used = true;
-      }
-      checkedRooms.push(val);
-    });
-
-
-    totalRooms = await Room.count()
-      .tolerate(async (err) => {
-
-        err.details = {
-          criteria: 'whole table',
-        };
-
-        await LogProcessor.dbError({
-          error: err,
-          message: 'Room.count() error',
-          // clientGuid,
-          // accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          location: moduleName,
-          payload: {
-            criteria: 'whole table',
-          },
-        });
-
-        return 'error';
-      });
-
-    if (totalRooms === 'error') {
-      await sails.helpers.general.throwErrorJoi({
-        errorType: sails.config.custom.enums.errorType.CRITICAL,
-        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-        location: moduleName,
-        message: 'Room.count() error',
-        // clientGuid,
-        // accountGuid,
-        errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-        payload: {
-          criteria: 'whole table',
-        },
-      });
-    }
-
-    if (!totalRooms) {
-
-      /**
-       * There are no rooms in Room table yet and we need create it
-       */
-
-      roomRec = await Room.create({
-        // room: 1,
-        bronze: 0,
-        gold: 0,
-        platinum: 0,
-        star: 0,
-        accounts_number: 0,
-        active: true,
-      }).fetch()
-        .tolerate(async (err) => {
-
-          err.details = {
+          roomRec = await Room.create({
             // room: 1,
             bronze: 0,
             gold: 0,
@@ -514,83 +553,85 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             star: 0,
             accounts_number: 0,
             active: true,
-          };
+          })
+            .fetch()
+            .usingConnection(db)
+            .tolerate(async (err) => {
 
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Room.create() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              // room: 1,
-              bronze: 0,
-              gold: 0,
-              platinum: 0,
-              star: 0,
-              accounts_number: 0,
-              active: true,
-            },
+              err.details = {
+                // room: 1,
+                bronze: 0,
+                gold: 0,
+                platinum: 0,
+                star: 0,
+                accounts_number: 0,
+                active: true,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Room.create() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  // room: 1,
+                  bronze: 0,
+                  gold: 0,
+                  platinum: 0,
+                  star: 0,
+                  accounts_number: 0,
+                  active: true,
+                },
+              });
+
+              return null;
+            });
+
+          if (roomRec == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'Room.create() error',
+              // clientGuid,
+              // accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {
+                // room: 1,
+                bronze: 0,
+                gold: 0,
+                platinum: 0,
+                star: 0,
+                accounts_number: 0,
+                active: true,
+              },
+            });
+          }
+
+          // totalRooms = 1;
+
+        } else {
+
+          filteredRooms = _.filter(checkedRooms, function (val) {
+            return !val.used;
           });
 
-          return null;
-        });
+          if (filteredRooms.length > 0) {
 
-      if (roomRec == null) {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Room.create() error',
-          // clientGuid,
-          // accountGuid,
-          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-          payload: {
-            // room: 1,
-            bronze: 0,
-            gold: 0,
-            platinum: 0,
-            star: 0,
-            accounts_number: 0,
-            active: true,
-          },
-        });
-      }
+            let elemNumber = _.random(0, filteredRooms.length - 1);
 
-      // totalRooms = 1;
+            /**
+             * Get room record for the specified roomNumber
+             */
 
-    } else {
+            roomRec = filteredRooms[elemNumber];
 
-      filteredRooms = _.filter(checkedRooms, function (val) {
-        return !val.used;
-      });
+          } else {
 
-      if (filteredRooms.length > 0) {
-
-        let elemNumber = _.random(0, filteredRooms.length - 1);
-
-        /**
-         * Get room record for the specified roomNumber
-         */
-
-        roomRec = filteredRooms[elemNumber];
-
-      } else {
-
-        roomRec = await Room.create({
-          // room: totalRooms + 1,
-          bronze: 0,
-          gold: 0,
-          platinum: 0,
-          star: 0,
-          accounts_number: 0,
-          active: true,
-        }).fetch()
-          .tolerate(async (err) => {
-
-            err.details = {
+            roomRec = await Room.create({
               // room: totalRooms + 1,
               bronze: 0,
               gold: 0,
@@ -598,16 +639,136 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
               star: 0,
               accounts_number: 0,
               active: true,
-            };
+            })
+              .fetch()
+              .usingConnection(db)
+              .tolerate(async (err) => {
 
-            await LogProcessor.dbError({
-              error: err,
+                err.details = {
+                  // room: totalRooms + 1,
+                  bronze: 0,
+                  gold: 0,
+                  platinum: 0,
+                  star: 0,
+                  accounts_number: 0,
+                  active: true,
+                };
+
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Room.create() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    // room: totalRooms + 1,
+                    bronze: 0,
+                    gold: 0,
+                    platinum: 0,
+                    star: 0,
+                    accounts_number: 0,
+                    active: true,
+                  },
+                });
+
+                return null;
+              });
+
+            if (roomRec == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Room.create() error',
+                // clientGuid,
+                // accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  // room: totalRooms + 1,
+                  bronze: 0,
+                  gold: 0,
+                  platinum: 0,
+                  star: 0,
+                  accounts_number: 0,
+                  active: true,
+                },
+              });
+            }
+
+          }
+
+        }
+
+        /**
+         * Check if the selected room have vacant space
+         */
+
+        if (roomRec.accounts_number >= sails.config.custom.config.rooms.accounts_per_room
+          || (accountCategory === 'bronze'
+            && roomRec.bronze >= sails.config.custom.config.rooms.accounts_distribution_by_category.bronze)
+        ) {
+
+          /**
+           * We need to create a new room and distribute the existing clients of roomRec
+           * between these two rooms
+           */
+
+          const newRoom = await Room.create({
+            // room: totalRooms + 1,
+            bronze: 0,
+            gold: 0,
+            platinum: 0,
+            star: 0,
+            accounts_number: 0,
+            active: true,
+          })
+            .fetch()
+            .usingConnection(db)
+            .tolerate(async (err) => {
+
+              err.details = {
+                // room: totalRooms + 1,
+                bronze: 0,
+                gold: 0,
+                platinum: 0,
+                star: 0,
+                accounts_number: 0,
+                active: true,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Room.create() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  // room: totalRooms + 1,
+                  bronze: 0,
+                  gold: 0,
+                  platinum: 0,
+                  star: 0,
+                  accounts_number: 0,
+                  active: true,
+                },
+              });
+
+              return null;
+            });
+
+          if (newRoom == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
               message: 'Room.create() error',
               // clientGuid,
               // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
               payload: {
                 // room: totalRooms + 1,
                 bronze: 0,
@@ -619,251 +780,155 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
               },
             });
 
-            return null;
+          }
+
+
+          // await Account.addToCollection(accountRec.id, 'room', newRoom.id)
+          //     .tolerate(async (err) => {
+          //
+          //       err.details = {
+          //         accountRecId: accountRec.id,
+          //         model: 'room',
+          //         newRoomId: newRoom.id,
+          //       };
+          //
+          //       await LogProcessor.dbError({
+          //         error: err,
+          //         message: 'Account.addToCollection() error',
+          //         // clientGuid,
+          //         // accountGuid,
+          //         // requestId: null,
+          //         // childRequestId: null,
+          //         location: moduleName,
+          //         payload: {
+          //           accountRecId: accountRec.id,
+          //           model: 'room',
+          //           newRoomId: newRoom.id,
+          //         },
+          //       });
+          //
+          //       return true;
+          //     });
+
+          const newRoomUpdated = await sails.helpers.general.mixAccountsInRooms.with({
+            db,
+            accountRec: accountRec,
+            oldRoom: roomRec.id,
+            newRoom: newRoom.id
           });
 
-        if (roomRec == null) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Room.create() error',
-            // clientGuid,
-            // accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              // room: totalRooms + 1,
-              bronze: 0,
-              gold: 0,
-              platinum: 0,
-              star: 0,
-              accounts_number: 0,
-              active: true,
-            },
-          });
+          roomRec = newRoomUpdated;
+
+        } else {
+
+          roomRec = await Room.updateOne({id: roomRec.id})
+            .set({
+              bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+              gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+              platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+              star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+              accounts_number: roomRec.accounts_number + 1
+            })
+            .usingConnection(db)
+            .tolerate(async (err) => {
+
+              err.details = {
+                criteria: {
+                  id: roomRec.id
+                },
+                data: {
+                  bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+                  gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+                  platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+                  star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+                  accounts_number: roomRec.accounts_number + 1
+                },
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Room.updateOne() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  criteria: {
+                    id: roomRec.id
+                  },
+                  data: {
+                    bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+                    gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+                    platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+                    star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+                    accounts_number: roomRec.accounts_number + 1
+                  },
+                },
+              });
+
+              return null;
+            });
+
+          if (roomRec == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'Room.updateOne() error',
+              // clientGuid,
+              // accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {
+                criteria: {
+                  id: roomRec.id
+                },
+                data: {
+                  bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
+                  gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
+                  platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
+                  star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
+                  accounts_number: roomRec.accounts_number + 1
+                },
+              },
+            });
+          }
+
+          await Account.addToCollection(accountRec.id, 'room', roomRec.id)
+            .usingConnection(db)
+            .tolerate(async (err) => {
+
+              err.details = {
+                accountRecId: accountRec.id,
+                model: 'room',
+                newRoomId: newRoom.id,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Account.addToCollection() error',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  accountRecId: accountRec.id,
+                  model: 'room',
+                  newRoomId: newRoom.id,
+                },
+              });
+
+              return true;
+            });
+
         }
 
-      }
-
-    }
-
-    /**
-     * Check if the selected room have vacant space
-     */
-
-    if (roomRec.accounts_number >= sails.config.custom.config.rooms.accounts_per_room
-      || (accountCategory === 'bronze'
-        && roomRec.bronze >= sails.config.custom.config.rooms.accounts_distribution_by_category.bronze)
-    ) {
-
-      /**
-       * We need to create a new room and distribute the existing clients of roomRec
-       * between these two rooms
-       */
-
-      const newRoom = await Room.create({
-        // room: totalRooms + 1,
-        bronze: 0,
-        gold: 0,
-        platinum: 0,
-        star: 0,
-        accounts_number: 0,
-        active: true,
-      }).fetch()
-        .tolerate(async (err) => {
-
-          err.details = {
-            // room: totalRooms + 1,
-            bronze: 0,
-            gold: 0,
-            platinum: 0,
-            star: 0,
-            accounts_number: 0,
-            active: true,
-          };
-
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Room.create() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              // room: totalRooms + 1,
-              bronze: 0,
-              gold: 0,
-              platinum: 0,
-              star: 0,
-              accounts_number: 0,
-              active: true,
-            },
-          });
-
-          return null;
-        });
-
-      if (newRoom == null) {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Room.create() error',
-          // clientGuid,
-          // accountGuid,
-          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-          payload: {
-            // room: totalRooms + 1,
-            bronze: 0,
-            gold: 0,
-            platinum: 0,
-            star: 0,
-            accounts_number: 0,
-            active: true,
-          },
-        });
-
-    }
-
-
-    // await Account.addToCollection(accountRec.id, 'room', newRoom.id)
-    //     .tolerate(async (err) => {
-    //
-    //       err.details = {
-    //         accountRecId: accountRec.id,
-    //         model: 'room',
-    //         newRoomId: newRoom.id,
-    //       };
-    //
-    //       await LogProcessor.dbError({
-    //         error: err,
-    //         message: 'Account.addToCollection() error',
-    //         // clientGuid,
-    //         // accountGuid,
-    //         // requestId: null,
-    //         // childRequestId: null,
-    //         location: moduleName,
-    //         payload: {
-    //           accountRecId: accountRec.id,
-    //           model: 'room',
-    //           newRoomId: newRoom.id,
-    //         },
-    //       });
-    //
-    //       return true;
-    //     });
-
-      const newRoomUpdated = await sails.helpers.general.mixAccountsInRooms.with({
-        accountRec: accountRec,
-        oldRoom: roomRec.id,
-        newRoom: newRoom.id
       });
 
-      roomRec = newRoomUpdated;
 
-    } else {
-
-      roomRec = await Room.updateOne({id: roomRec.id})
-        .set({
-          bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
-          gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
-          platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
-          star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
-          accounts_number: roomRec.accounts_number + 1
-        })
-        .tolerate(async (err) => {
-
-          err.details = {
-            criteria: {
-              id: roomRec.id
-            },
-            data: {
-              bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
-              gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
-              platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
-              star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
-              accounts_number: roomRec.accounts_number + 1
-            },
-          };
-
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Room.updateOne() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              criteria: {
-                id: roomRec.id
-              },
-              data: {
-                bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
-                gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
-                platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
-                star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
-                accounts_number: roomRec.accounts_number + 1
-              },
-            },
-          });
-
-          return null;
-        });
-
-      if (roomRec == null) {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Room.updateOne() error',
-          // clientGuid,
-          // accountGuid,
-          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-          payload: {
-            criteria: {
-              id: roomRec.id
-            },
-            data: {
-              bronze: accountCategory === 'bronze' ? roomRec.bronze + 1 : roomRec.bronze,
-              gold: accountCategory === 'gold' ? roomRec.gold + 1 : roomRec.gold,
-              platinum: accountCategory === 'platinum' ? roomRec.platinum + 1 : roomRec.platinum,
-              star: accountCategory === 'star' ? roomRec.star + 1 : roomRec.star,
-              accounts_number: roomRec.accounts_number + 1
-            },
-          },
-        });
-      }
-
-      await Account.addToCollection(accountRec.id, 'room', roomRec.id)
-        .tolerate(async (err) => {
-
-          err.details = {
-            accountRecId: accountRec.id,
-            model: 'room',
-            newRoomId: newRoom.id,
-          };
-
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Account.addToCollection() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              accountRecId: accountRec.id,
-              model: 'room',
-              newRoomId: newRoom.id,
-            },
-          });
-
-          return true;
-        });
-
-    }
+    // await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlUnlockTables);
 
     return roomRec;
 
@@ -883,6 +948,9 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
     //     },
     //   }
     // };
+
+    // await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlUnlockTables);
 
     const throwError = true;
     if (throwError) {
