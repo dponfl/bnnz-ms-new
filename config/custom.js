@@ -782,6 +782,26 @@ module.exports.custom = {
     message: 'CRITICAL DB ERROR',
   },
 
+  DB_ERROR_GET_LOCK_WRONG_RESPONSE: {
+    name: 'DB_ERROR_GET_LOCK_WRONG_RESPONSE',
+    message: 'Wrong response from GET_LOCK()',
+  },
+
+  DB_ERROR_GET_LOCK_DECLINE: {
+    name: 'DB_ERROR_GET_LOCK_DECLINE',
+    message: 'Decline from GET_LOCK()',
+  },
+
+  DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE: {
+    name: 'DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE',
+    message: 'Wrong response from RELEASE_LOCK()',
+  },
+
+  DB_ERROR_RELEASE_LOCK_DECLINE: {
+    name: 'DB_ERROR_RELEASE_LOCK_DECLINE',
+    message: 'Decline from RELEASE_LOCK()',
+  },
+
 
 
 

@@ -6,7 +6,7 @@ const sails = require('sails');
 before(function(done) {
 
   // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
-  this.timeout(1000000);
+  this.timeout(10000000);
 
   sails.lift({
     // Your Sails app's configuration files will be loaded automatically,
@@ -15,7 +15,7 @@ before(function(done) {
     // For example, we might want to skip the Grunt hook,
     // and disable all logs except errors and warnings:
     // hooks: { grunt: false },
-    log: { level: 'error' },
+    log: { level: 'warn' },
     datastores: {
 
       default: {

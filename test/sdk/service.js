@@ -159,6 +159,24 @@ async function generateService(serviceName = null, service = null) {
           updatedAt: moment().add(1, 'minutes').format(),
         };
         break;
+      case 'star810':
+        serviceRec = {
+          guid: casual.uuid,
+          id: 18,
+          name: 'star810',
+          title: 'beFameStar810',
+          funnel_name: "star",
+          funnel_start: "optin",
+          rooms: 90,
+          max_outgoing_posts_day: 1,
+          max_incoming_posts_day: 5,
+          make_likes_min_day: 5,
+          make_comments_min_day: 5,
+          deleted: false,
+          createdAt: moment().format(),
+          updatedAt: moment().add(1, 'minutes').format(),
+        };
+        break;
       case 'friend':
         serviceRec = {
           guid: casual.uuid,

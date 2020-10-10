@@ -187,9 +187,28 @@ module.exports = {
 
 
       // _.forEach(oldRoomWithAccounts.account, async function (accountRec) {
+
+      let accountNumber = 0;
+
       for (const accountRec of oldRoomWithAccounts.account) {
 
         // sails.log.warn('accountRec: ', accountRec);
+
+        // TODO: Убрать после отладки
+        // accountNumber++;
+        // await LogProcessor.warn({
+        //   message: 'Starting work with new account',
+        //   location: moduleName,
+        //   payload: {
+        //     totalAccounts: oldRoomWithAccounts.account.length,
+        //     thisAccountNumber: accountNumber,
+        //     accountId: accountRec.id,
+        //     accountGuid: accountRec.guid,
+        //   },
+        // });
+
+
+
 
         if (
           !client.deleted
@@ -222,9 +241,23 @@ module.exports = {
 
           const newRoomHasSpaceToAllocateAccount = newRoomWithAccounts[accountCategory] < sails.config.custom.config.rooms.accounts_distribution_by_category[accountCategory];
 
-          if (_.random(0,1) && newRoomHasSpaceToAllocateAccount) {
+          if (_.random(0, 1) && newRoomHasSpaceToAllocateAccount) {
 
             // sails.log.info('Gonna re-allocate this account: ', accountRec);
+
+            // TODO: Убрать после отладки
+            // await LogProcessor.warn({
+            //   message: 'Gonna re-allocate this account',
+            //   location: moduleName,
+            //   payload: {
+            //     accountId: accountRec.id,
+            //     accountGuid: accountRec.guid,
+            //     oldRoom: oldRoomWithAccounts.id,
+            //     newRoom: newRoomWithAccounts.id,
+            //   },
+            // });
+
+
 
             await Account.removeFromCollection(accountRec.id, 'room', oldRoomWithAccounts.id)
               .usingConnection(db)
@@ -671,13 +704,27 @@ module.exports = {
                 });
             }
 
+          } else {
+
+            // TODO: Убрать после отладки
+            // await LogProcessor.warn({
+            //   message: 'Will not re-allocate this account',
+            //   location: moduleName,
+            //   payload: {
+            //     accountId: accountRec.id,
+            //     accountGuid: accountRec.guid,
+            //     oldRoom: oldRoomWithAccounts.id,
+            //     newRoom: newRoomWithAccounts.id,
+            //   },
+            // });
+
           }
 
         }
 
       }
 
-      return newRoomWithAccounts;
+      return exits.success(newRoomWithAccounts);
 
     } catch (e) {
 

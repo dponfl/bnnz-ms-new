@@ -2731,9 +2731,36 @@ describe.only('Test DB', function () {
      * Создаём 20 клиентов по 1 аккаунту у каждого
      */
 
-    const numberOfAccounts = 20;
+    const numberOfSilverAccounts = 20;
 
-    for (let i=0; i<numberOfAccounts; i++) {
+    for (let i=0; i<numberOfSilverAccounts; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      }, 'silver_personal');
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+
+    const numberOfGoldAccounts = 20;
+
+    for (let i=0; i<numberOfGoldAccounts; i++) {
 
       const client = await clientSdk.createClientDB();
 
@@ -2757,9 +2784,265 @@ describe.only('Test DB', function () {
 
     }
 
+    const numberOfSilverAccounts02 = 20;
+
+    for (let i=0; i<numberOfSilverAccounts02; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      }, 'silver_personal');
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+    const numberOfPlatinumAccounts = 10;
+
+    for (let i=0; i<numberOfPlatinumAccounts; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      }, 'platinum_personal');
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
+    const numberOfStarAccounts = 1;
+
+    for (let i=0; i<numberOfStarAccounts; i++) {
+
+      const client = await clientSdk.createClientDB();
+
+      const account = await accountSdk.createAccountDB({
+        client: client.id,
+      }, 'star810');
+
+      await clientSdk.updateClientDB(
+        {
+          guid: client.guid,
+        },
+        {
+          account_use: account.guid,
+        }
+      );
+
+      client.accounts = [account];
+
+      clients.push(client);
+      accounts.push(account);
+
+    }
+
   });
 
-  it('should allocate rooms for 20 accounts', async function () {
+  it.skip('Check GET_LOCK', async function () {
+
+    const sqlGetLock01 = `
+    SELECT GET_LOCK('lock01', 600) 
+    `;
+
+    const sqlGetLock02 = `
+    SELECT GET_LOCK('lock02', 600) 
+    `;
+
+    const sqlReleaseLock = `
+    SELECT RELEASE_LOCK('lock01') as release_lock
+    `;
+
+    const res01 = await sails.getDatastore('clientDb')
+      .sendNativeQuery(sqlGetLock01);
+
+    const res02 = await sails.getDatastore('clientDb')
+      .sendNativeQuery(sqlGetLock02);
+
+    mlog.success('res01: ', JSON.stringify(res01, null, 3));
+    mlog.success('res02: ', JSON.stringify(res02, null, 3));
+
+    // const res02 = await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlGetLock);
+    //
+    // mlog.success('res02: ', JSON.stringify(res02, null, 3));
+    //
+    // const res03 = await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlReleaseLock);
+    //
+    // mlog.success('res03: ', JSON.stringify(res03, null, 3));
+    //
+    // const res04 = await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlGetLock);
+    //
+    // mlog.success('res04: ', JSON.stringify(res04, null, 3));
+
+
+
+  });
+
+  it.skip('Check concurrent GET_LOCKs', async function () {
+
+    const sqlGetLock01 = `
+    SELECT GET_LOCK('lock01', 60) 
+    `;
+
+    const sqlGetLock02 = `
+    SELECT GET_LOCK('lock02', 60) 
+    `;
+
+    const sqlGetLock03 = `
+    SELECT GET_LOCK('lock03', 60) 
+    `;
+
+    // const sqlSetTransactionSerializable = `
+    // SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+    // `;
+    //
+    // await sails.getDatastore('clientDb')
+    //   .sendNativeQuery(sqlSetTransactionSerializable);
+
+
+    const sql = [sqlGetLock01, sqlGetLock02, sqlGetLock03];
+
+    // for (const elem in sql) {
+    //
+    //   const res = await sails.helpers.general.dbTest(sql[elem]);
+    //
+    //   mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    //
+    // }
+
+
+    const promises = sql.map(async (elem) => {
+
+      try {
+
+        const res = await sails.helpers.general.dbTest(elem);
+
+      } catch (ee) {
+        mlog.error(`Error: ${JSON.stringify(ee, null, 3)}`);
+      }
+
+    });
+
+    await Promise.all(promises);
+
+    const ttt = 1000;
+
+  });
+
+  it.skip('Check concurrent GET_LOCKs advanced', async function () {
+
+    this.timeout(700000);
+
+    const sqlGetLock01 = `
+    SELECT GET_LOCK('lock01', 20) 
+    `;
+
+    const sqlGetLock02 = `
+    SELECT GET_LOCK('lock02', 20) 
+    `;
+
+    const sqlGetLock03 = `
+    SELECT GET_LOCK('lock03', 20) 
+    `;
+
+    const sqlGetLock04 = `
+    SELECT GET_LOCK('lock01', 60) 
+    `;
+
+
+    const sqlReleaseLock01 = `
+    SELECT RELEASE_LOCK('lock01') 
+    `;
+
+    const sqlReleaseLock02 = `
+    SELECT RELEASE_LOCK('lock02') 
+    `;
+
+    const sqlReleaseLock03 = `
+    SELECT RELEASE_LOCK('lock03') 
+    `;
+
+    const sqlReleaseLock04 = `
+    SELECT RELEASE_LOCK('lock01') 
+    `;
+
+
+    const sql = [
+      {
+        id: 1,
+        getLock: sqlGetLock01,
+        releaseLock: sqlReleaseLock01,
+        delay: 30000,
+      },
+      {
+        id: 2,
+        getLock: sqlGetLock02,
+        releaseLock: sqlReleaseLock02,
+        delay: 30000,
+      },
+      {
+        id: 3,
+        getLock: sqlGetLock03,
+        releaseLock: sqlReleaseLock03,
+        delay: 30000,
+      },
+      {
+        id: 4,
+        getLock: sqlGetLock04,
+        releaseLock: sqlReleaseLock04,
+        delay: 10000,
+      },
+    ];
+
+    // for (const elem in sql) {
+    //
+    //   const res = await sails.helpers.general.dbTest(sql[elem]);
+    //
+    //   mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    //
+    // }
+
+
+    const promises = sql.map(async (elem) => await sails.helpers.general.dbTestNew(elem));
+
+    const res = await Promise.all(promises)
+      .then(res => {
+        return res;
+      });
+
+    const ttt = res;
+
+  });
+
+  it('should allocate rooms for created accounts', async function () {
 
     this.timeout(700000);
 
@@ -2773,22 +3056,9 @@ describe.only('Test DB', function () {
       //   const res = await sails.helpers.general.allocateRoomsJoi({
       //     accountGuid: accounts[account].guid,
       //   });
-      //
-      //   await LogProcessor.error({
-      //     message: 'allocateRoomsJoi result',
-      //     // clientGuid,
-      //     // accountGuid,
-      //     // requestId: null,
-      //     // childRequestId: null,
-      //     errorName: sails.config.custom.GENERAL_ERROR.name,
-      //     location: 'test',
-      //     payload: {
-      //       res,
-      //       account,
-      //     },
-      //   });
-      //
       // }
+
+
 
       // _.forEach(accounts, async (account) => {
       //   const res = await sails.helpers.general.allocateRoomsJoi({

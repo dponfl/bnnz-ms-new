@@ -50,14 +50,14 @@ module.exports = {
     }
   },
 
-  createAccountDB: async (account = null) => {
+  createAccountDB: async (account = null, payment_plan = null) => {
     const funcName = 'test:sdk:account:createAccountDB';
 
     let accountRec;
 
     try {
 
-      accountRec = await generateAccount(account);
+      accountRec = await generateAccount(account, payment_plan);
       const serviceData = _.get(accountRec, 'service');
       const nextServiceData = _.get(accountRec, 'next_service');
 
@@ -100,7 +100,7 @@ module.exports = {
 
 };
 
-async function generateAccount(account = null) {
+async function generateAccount(account = null, payment_plan = null) {
   const funcName = 'account:generateAccount';
 
   let accountRec;
@@ -117,8 +117,8 @@ async function generateAccount(account = null) {
       subscription_active: true,
       subscription_from: moment().format(),
       subscription_until: moment().add(1, 'months').format(),
-      service: await serviceSdk.generateService('gold_personal'),
-      payment_plan: 'gold_personal',
+      service: await serviceSdk.generateService(payment_plan || 'gold_personal'),
+      payment_plan: payment_plan || 'gold_personal',
       payment_made: true,
       deleted: false,
       banned: false,
