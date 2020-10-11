@@ -10,6 +10,9 @@
       "s": 0
     }
   },
+  "db": {
+    "lockTimeOut": 600
+  },
   "payments": {
     "telegram": {
       "provider": "TRANZZO",

@@ -2715,7 +2715,7 @@ describe.skip('Inapi requests', function () {
 
 });
 
-describe.only('Test DB', function () {
+describe.skip('Test DB', function () {
 
   let customConfig;
   let accounts = [];
@@ -3042,7 +3042,7 @@ describe.only('Test DB', function () {
 
   });
 
-  it('should allocate rooms for created accounts', async function () {
+  it.skip('should allocate rooms for created accounts', async function () {
 
     this.timeout(700000);
 

@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'ref:link-account-to-ref-joi';
+const moduleName = 'ref:link-account-tonew_account_guid-ref-joi';
 
 
 module.exports = {
@@ -66,460 +66,610 @@ module.exports = {
       new_account_guid = input.account.guid;
       used_ref_up = [new_account_guid];
 
-      /**
-       * Проверяется, есть ли записи в таблице ref для new_account_guid
-       */
+      const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
 
-      const refRecForNewAccountGuid = await Ref.findOne({
-        account_guid: new_account_guid,
-      })
-        .tolerate(async (err) => {
+      const sqlGetLockLinkAccountToRef = `
+    SELECT GET_LOCK('linkAccountToRefLock', ${lockTimeOut}) as getLinkAccountToRefLockResult
+    `;
 
-          err.details = {
-            account_guid: new_account_guid,
-          };
+      const sqlReleaseLockLinkAccountToRef = `
+    SELECT RELEASE_LOCK('linkAccountToRefLock') as releaseLinkAccountToRefLockResult
+    `;
 
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Ref.findOne() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
+      await sails.getDatastore('clientDb')
+        .leaseConnection(async (db) => {
+
+          try {
+
+            const resGetLock = await sails
+              .sendNativeQuery(sqlGetLockLinkAccountToRef)
+              .usingConnection(db);
+
+            const getLockRes = _.get(resGetLock, 'rows[0].getLinkAccountToRefLockResult', null);
+
+            if (getLockRes == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
+
+            if (getLockRes === 0) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
+
+            /**
+             * Проверяется, есть ли записи в таблице ref для new_account_guid
+             */
+
+            const refRecForNewAccountGuid = await Ref.findOne({
               account_guid: new_account_guid,
-            },
-          });
+            })
+              .tolerate(async (err) => {
 
-          return 'error';
-        });
+                err.details = {
+                  account_guid: new_account_guid,
+                };
 
-      if (refRecForNewAccountGuid === 'error') {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Ref.findOne() error',
-          // clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-          payload: {
-            account_guid: new_account_guid,
-          },
-        });
-      }
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Ref.findOne() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    account_guid: new_account_guid,
+                  },
+                });
 
-      if (refRecForNewAccountGuid == null) {
-        await sails.helpers.storage.refCreate.with({
-          accountGuid: new_account_guid,
-        });
-      }
+                return 'error';
+              });
 
-      /**
-       * Проверяется, есть ли записи в таблице ref_down
-       */
+            if (refRecForNewAccountGuid === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Ref.findOne() error',
+                // clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                payload: {
+                  account_guid: new_account_guid,
+                },
+              });
+            }
 
-      const refDownRecsNum = await RefDown.count()
-        .tolerate(async (err) => {
+            if (refRecForNewAccountGuid == null) {
+              await sails.helpers.storage.refCreate.with({
+                accountGuid: new_account_guid,
+              });
+            }
 
-          err.details = {
-            criteria: 'whole table',
-          };
+            /**
+             * Проверяется, есть ли записи в таблице ref_down
+             */
 
-          await LogProcessor.dbError({
-            error: err,
-            message: 'RefDown.count() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
-              criteria: 'whole table',
-            },
-          });
+            const refDownRecsNum = await RefDown.count()
+              .tolerate(async (err) => {
 
-          return 'error';
-        });
+                err.details = {
+                  criteria: 'whole table',
+                };
 
-      if (refDownRecsNum === 'error') {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'RefDown.count() error',
-          // clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-          criteria: 'whole table',
-        });
-      }
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'RefDown.count() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    criteria: 'whole table',
+                  },
+                });
 
-      /**
-       * Если таблица пустая, то создаётся инициализирующая запись
-       */
+                return 'error';
+              });
 
-      if (!refDownRecsNum) {
-        const firstRecRaw = await sails.helpers.storage.refDownCreate.with({
-          accountGuid: new_account_guid,
-          refAccountGuid: new_account_guid,
-          level: sails.config.custom.config.ref.general.initialRecLevel,
-          type: sails.config.custom.enums.ref.refDownType.FIRST,
-        });
+            if (refDownRecsNum === 'error') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'RefDown.count() error',
+                // clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                criteria: 'whole table',
+              });
+            }
 
-        if (firstRecRaw.status === 'ok') {
-          refDownRes.push(firstRecRaw.payload);
-        } else {
-          // throw new Error(`${moduleName}, error, refDownCreate error:
-          // firstRecRaw: ${JSON.stringify(firstRecRaw, null, 3)}`);
+            /**
+             * Если таблица пустая, то создаётся инициализирующая запись
+             */
 
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'refDownCreate error',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              firstRecRaw,
-            },
-          });
+            if (!refDownRecsNum) {
+              const firstRecRaw = await sails.helpers.storage.refDownCreate.with({
+                accountGuid: new_account_guid,
+                refAccountGuid: new_account_guid,
+                level: sails.config.custom.config.ref.general.initialRecLevel,
+                type: sails.config.custom.enums.ref.refDownType.FIRST,
+              });
 
-        }
+              if (firstRecRaw.status === 'ok') {
+                refDownRes.push(firstRecRaw.payload);
+              } else {
+                // throw new Error(`${moduleName}, error, refDownCreate error:
+                // firstRecRaw: ${JSON.stringify(firstRecRaw, null, 3)}`);
 
-        return exits.success({
-          status: 'ok',
-          message: 'Initial record created',
-          payload: {
-            refDown: refDownRes,
-            refUp: null,
-          },
-        })
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'refDownCreate error',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    firstRecRaw,
+                  },
+                });
 
-      }
+              }
 
-      /**
-       * Если таблица уже была инициализирована, то выполняем провязку аккаунта
-       * в реферальную систему
-       */
+              return exits.success({
+                status: 'ok',
+                message: 'Initial record created',
+                payload: {
+                  refDown: refDownRes,
+                  refUp: null,
+                },
+              })
 
-      /**
-       * Проверяем какому клиенту принадлежит аккаунт (реферальному или нет)
-       */
+            }
 
-      const client = await Client.findOne({
-        id: input.account.client,
-      })
-        .tolerate(async (err) => {
+            /**
+             * Если таблица уже была инициализирована, то выполняем провязку аккаунта
+             * в реферальную систему
+             */
 
-          err.details = {
-            id: input.account.client,
-          };
+            /**
+             * Проверяем какому клиенту принадлежит аккаунт (реферальному или нет)
+             */
 
-          await LogProcessor.dbError({
-            error: err,
-            message: 'Client.findOne() error',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            location: moduleName,
-            payload: {
+            const client = await Client.findOne({
               id: input.account.client,
-            },
-          });
+            })
+              .tolerate(async (err) => {
 
-          return null;
-        });
+                err.details = {
+                  id: input.account.client,
+                };
 
-      if (client == null) {
-        // throw new Error(`${moduleName}, error: No client was found for:
-        //  account:"${JSON.stringify(input.account, null, 3)}"`);
+                await LogProcessor.dbError({
+                  error: err,
+                  message: 'Client.findOne() error',
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  location: moduleName,
+                  payload: {
+                    id: input.account.client,
+                  },
+                });
 
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'No client record found for account',
-          accountGuid,
-          errorName: sails.config.custom.REF_ERROR.name,
-          payload: {
-            account: input.account,
-          },
-        });
+                return null;
+              });
 
-      }
+            if (client == null) {
+              // throw new Error(`${moduleName}, error: No client was found for:
+              //  account:"${JSON.stringify(input.account, null, 3)}"`);
 
-      const refKey = client.ref_key;
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'No client record found for account',
+                accountGuid,
+                errorName: sails.config.custom.REF_ERROR.name,
+                payload: {
+                  account: input.account,
+                },
+              });
 
-      if (refKey != null) {
+            }
 
-        /**
-         * Клиент пришёл по реферальной ссылке и его аккаунты нужно привязывать
-         * с использованием этой ссылки
-         */
+            const refKey = client.ref_key;
 
-        /**
-         * Достаём аккаунт, соответствующий этой реферальной ссылке
-         */
+            if (refKey != null) {
 
-        const ref_account = await Account.findOne({
-          ref_key: refKey,
-        })
-          .tolerate(async (err) => {
+              /**
+               * Клиент пришёл по реферальной ссылке и его аккаунты нужно привязывать
+               * с использованием этой ссылки
+               */
 
-            err.details = {
-              ref_key: refKey,
-            };
+              /**
+               * Достаём аккаунт, соответствующий этой реферальной ссылке
+               */
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Account.findOne() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
+              const ref_account = await Account.findOne({
                 ref_key: refKey,
-              },
-            });
+              })
+                .tolerate(async (err) => {
 
-            return null;
-          });
+                  err.details = {
+                    ref_key: refKey,
+                  };
 
-        if (ref_account == null) {
-          // throw new Error(`${moduleName}, error: No account was found for the ref_key="${refKey}"`);
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Account.findOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      ref_key: refKey,
+                    },
+                  });
 
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'No account record was found for the ref_key',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              refKey,
-            },
-          });
+                  return null;
+                });
 
-        }
+              if (ref_account == null) {
+                // throw new Error(`${moduleName}, error: No account was found for the ref_key="${refKey}"`);
 
-        /**
-         * Определяем как подключать новый аккаунт к ref_account
-         * (напрямую или с переливом)
-         */
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'No account record was found for the ref_key',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    refKey,
+                  },
+                });
 
-        const refRec = await Ref.findOne({
-          account_guid: ref_account.guid,
-        })
-          .tolerate(async (err) => {
+              }
 
-            err.details = {
-              account_guid: ref_account.guid,
-            };
+              /**
+               * Определяем как подключать новый аккаунт к ref_account
+               * (напрямую или с переливом)
+               */
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Ref.findOne() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
+              const refRec = await Ref.findOne({
                 account_guid: ref_account.guid,
-              },
-            });
+              })
+                .tolerate(async (err) => {
 
-            return 'error';
-          });
+                  err.details = {
+                    account_guid: ref_account.guid,
+                  };
 
-        if (refRecForNewAccountGuid === 'error') {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Ref.findOne() error',
-            // clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              account_guid: ref_account.guid,
-            },
-          });
-        }
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Ref.findOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      account_guid: ref_account.guid,
+                    },
+                  });
+
+                  return 'error';
+                });
+
+              if (refRecForNewAccountGuid === 'error') {
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                  location: moduleName,
+                  message: 'Ref.findOne() error',
+                  // clientGuid,
+                  accountGuid,
+                  errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                  payload: {
+                    account_guid: ref_account.guid,
+                  },
+                });
+              }
 
 
-        if (refRec == null) {
-          // throw new Error(`${moduleName}, error: No ref record was found for the ref_account.guid="${ref_account.guid}"`);
+              if (refRec == null) {
+                // throw new Error(`${moduleName}, error: No ref record was found for the ref_account.guid="${ref_account.guid}"`);
 
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'No ref record was found for the ref_account.guid',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              refAccountGuid: ref_account.guid,
-            },
-          });
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'No ref record was found for the ref_account.guid',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    refAccountGuid: ref_account.guid,
+                  },
+                });
 
-        }
+              }
 
-        if (refRec.direct_linked_accounts_num < sails.config.custom.config.ref.general.max_direct_links) {
+              if (refRec.direct_linked_accounts_num < sails.config.custom.config.ref.general.max_direct_links) {
 
-          /**
-           * Прямое/непосредственное подключение
-           */
+                /**
+                 * Прямое/непосредственное подключение
+                 */
 
-          await linkAccount(refDownRes, refUpRes, new_account_guid, ref_account.guid, refRec, true);
+                await linkAccount(db, refDownRes, refUpRes, new_account_guid, ref_account.guid, refRec, true);
 
-        } else {
+              } else {
 
-          /**
-           * Подключение переливом
-           */
+                /**
+                 * Подключение переливом
+                 */
 
-          await linkAccount(refDownRes, refUpRes, new_account_guid, ref_account.guid, refRec, false);
+                await linkAccount(db, refDownRes, refUpRes, new_account_guid, ref_account.guid, refRec, false);
 
-        }
+              }
 
-      } else {
+            } else {
 
-        /**
-         * Аккаунт принадлежит клиенту, который пришёл без реферальной ссылки
-         */
+              /**
+               * Аккаунт принадлежит клиенту, который пришёл без реферальной ссылки
+               */
 
-        /**
-         * Выбираем аккаунт для подключения к нему
-         */
+              /**
+               * Выбираем аккаунт для подключения к нему
+               */
 
-        const omitArray = [new_account_guid];
+              const omitArray = [new_account_guid];
 
-        const selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitArray);
+              const selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitArray);
 
-        if (selectedRefRec == null) {
-          // throw new Error(`${moduleName}, error: Could not select Ref record for new_account_guid="${new_account_guid}" and omitArray=${omitArray}`);
+              if (selectedRefRec == null) {
+                // throw new Error(`${moduleName}, error: Could not select Ref record for new_account_guid="${new_account_guid}" and omitArray=${omitArray}`);
 
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'No Ref record found for new_account_guid and omitArray',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              new_account_guid,
-              omitArray,
-            },
-          });
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'No Ref record found for new_account_guid and omitArray',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    new_account_guid,
+                    omitArray,
+                  },
+                });
 
-        }
+              }
 
-        await Ref.updateOne({
-          guid: selectedRefRec.guid
-        }).set({
-          direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
-          total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
-        })
-          .tolerate(async (err) => {
-
-            err.details = {
-              criteria: {
+              await Ref.updateOne({
                 guid: selectedRefRec.guid
-              },
-              data: {
+              }).set({
                 direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
                 total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+              })
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    criteria: {
+                      guid: selectedRefRec.guid
+                    },
+                    data: {
+                      direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+                      total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+                    }
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Ref.updateOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      criteria: {
+                        guid: selectedRefRec.guid
+                      },
+                      data: {
+                        direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
+                        total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
+                      }
+                    },
+                  });
+
+                  return true;
+                });
+
+              const refDownCreateRawParams = {
+                accountGuid: new_account_guid,
+                refAccountGuid: selectedRefRec.account_guid,
+                level: sails.config.custom.config.ref.general.noRefLevel,
+                type: sails.config.custom.enums.ref.refDownType.NOREF,
+              };
+
+              const refDownCreateRaw = await sails.helpers.storage.refDownCreate.with(refDownCreateRawParams);
+
+              if (refDownCreateRaw.status === 'ok') {
+                refDownRes.push(refDownCreateRaw.payload);
+              } else {
+                // throw new Error(`${methodName}, error: refDownCreate error:
+                // params: ${JSON.stringify(refDownCreateRawParams, null, 3)}
+                // refDownCreateRaw: ${JSON.stringify(refDownCreateRaw, null, 3)}`);
+
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'refDownCreate error',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    refDownCreateRawParams,
+                    refDownCreateRaw,
+                  },
+                });
+
               }
-            };
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Ref.updateOne() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                criteria: {
-                  guid: selectedRefRec.guid
+              const refUpCreateRawParams = {
+                accountGuid: new_account_guid,
+                refAccountGuid: selectedRefRec.account_guid,
+                index: 1,
+              };
+
+              const refUpCreateRaw = await sails.helpers.storage.refUpCreate.with(refUpCreateRawParams);
+
+              if (refUpCreateRaw.status === 'ok') {
+
+                refUpRes.push(refUpCreateRaw.payload);
+                used_ref_up.push(selectedRefRec.account_guid);
+
+              } else {
+                // throw new Error(`${methodName}, error: refUpCreate error:
+                // params: ${JSON.stringify(refUpCreateRawParams, null, 3)}
+                // refDownCreateRaw: ${JSON.stringify(refUpCreateRaw, null, 3)}`);
+
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.ERROR,
+                  location: moduleName,
+                  message: 'refUpCreate error',
+                  accountGuid,
+                  errorName: sails.config.custom.REF_ERROR.name,
+                  payload: {
+                    refUpCreateRawParams,
+                    refUpCreateRaw,
+                  },
+                });
+
+              }
+
+
+              await finalizeRefUpRecords(db, refUpRes, new_account_guid, used_ref_up);
+
+            }
+
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockLinkAccountToRef)
+              .usingConnection(db);
+
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseLinkAccountToRefLockResult', null);
+
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
                 },
-                data: {
-                  direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
-                  total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
-                }
-              },
-            });
+              });
+            }
 
-            return true;
-          });
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
-        const refDownCreateRawParams = {
-          accountGuid: new_account_guid,
-          refAccountGuid: selectedRefRec.account_guid,
-          level: sails.config.custom.config.ref.general.noRefLevel,
-          type: sails.config.custom.enums.ref.refDownType.NOREF,
-        };
+            return;
 
-        const refDownCreateRaw = await sails.helpers.storage.refDownCreate.with(refDownCreateRawParams);
+          } catch (ee) {
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockLinkAccountToRef)
+              .usingConnection(db);
 
-        if (refDownCreateRaw.status === 'ok') {
-          refDownRes.push(refDownCreateRaw.payload);
-        } else {
-          // throw new Error(`${methodName}, error: refDownCreate error:
-          // params: ${JSON.stringify(refDownCreateRawParams, null, 3)}
-          // refDownCreateRaw: ${JSON.stringify(refDownCreateRaw, null, 3)}`);
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseLinkAccountToRefLockResult', null);
 
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'refDownCreate error',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              refDownCreateRawParams,
-              refDownCreateRaw,
-            },
-          });
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
-        }
-
-        const refUpCreateRawParams = {
-          accountGuid: new_account_guid,
-          refAccountGuid: selectedRefRec.account_guid,
-          index: 1,
-        };
-
-        const refUpCreateRaw = await sails.helpers.storage.refUpCreate.with(refUpCreateRawParams);
-
-        if (refUpCreateRaw.status === 'ok') {
-
-          refUpRes.push(refUpCreateRaw.payload);
-          used_ref_up.push(selectedRefRec.account_guid);
-
-        } else {
-          // throw new Error(`${methodName}, error: refUpCreate error:
-          // params: ${JSON.stringify(refUpCreateRawParams, null, 3)}
-          // refDownCreateRaw: ${JSON.stringify(refUpCreateRaw, null, 3)}`);
-
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'refUpCreate error',
-            accountGuid,
-            errorName: sails.config.custom.REF_ERROR.name,
-            payload: {
-              refUpCreateRawParams,
-              refUpCreateRaw,
-            },
-          });
-
-        }
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
 
-        await finalizeRefUpRecords(refUpRes, new_account_guid, used_ref_up);
+            const throwError = true;
+            if (throwError) {
+              return await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: true,
+              });
+            } else {
+              await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: false,
+              });
+              return exits.success({
+                status: 'ok',
+                message: `${moduleName} performed`,
+                payload: {},
+              });
+            }
+          }
 
-      }
+        }); // leaseConnection()
 
 
       return exits.success({
@@ -533,21 +683,6 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
 
       const throwError = true;
       if (throwError) {
@@ -575,7 +710,7 @@ module.exports = {
 
 };
 
-async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid, refRec, useDirectLink) {
+async function linkAccount(db, refDownRes, refUpRes, newAccountGuid, refAccountGuid, refRec, useDirectLink) {
 
   const methodName = moduleName + ':linkAccount';
 
@@ -600,6 +735,7 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       direct_linked_accounts_num: ++refRec.direct_linked_accounts_num,
       total_linked_accounts_num: ++refRec.total_linked_accounts_num,
     })
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -642,6 +778,7 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
     }).set({
       total_linked_accounts_num: ++refRec.total_linked_accounts_num,
     })
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -739,16 +876,9 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
 
     const omitArray = [newAccountGuid];
 
-    const selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitArray);
+    const selectedRefRec = await getRandomRefRecordLessSomeAccounts(db, omitArray);
 
     if (selectedRefRec == null) {
-      // throw new Error(`${moduleName}, error: Could not select Ref record for:
-      // newAccountGuid: "${newAccountGuid}"
-      // omitArray: ${JSON.stringify(omitArray, null, 3)}`);
-      // sails.log.error(`${moduleName}, error: Could not select Ref record for:
-      // newAccountGuid: "${newAccountGuid}"
-      // omitArray: ${JSON.stringify(omitArray, null, 3)}`);
-
       await sails.helpers.general.throwErrorJoi({
         errorType: sails.config.custom.enums.errorType.WARN,
         location: methodName,
@@ -760,7 +890,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
           omitArray,
         },
       });
-
     } else {
 
       await Ref.updateOne({
@@ -769,6 +898,7 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
         direct_linked_accounts_num: ++selectedRefRec.direct_linked_accounts_num,
         total_linked_accounts_num: ++selectedRefRec.total_linked_accounts_num,
       })
+        .usingConnection(db)
         .tolerate(async (err) => {
 
           err.details = {
@@ -816,10 +946,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       if (refDownCreateRaw.status === 'ok') {
         refDownRes.push(refDownCreateRaw.payload);
       } else {
-    //     throw new Error(`${methodName}, error: refDownCreate error:
-    // params: ${JSON.stringify(refDownCreateRawParams, null, 3)}
-    // refDownCreateRaw: ${JSON.stringify(refDownCreateRaw, null, 3)}`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: methodName,
@@ -831,7 +957,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
             refDownCreateRaw,
           },
         });
-
       }
 
     }
@@ -846,6 +971,7 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       type: sails.config.custom.enums.ref.refDownType.NORMAL,
       level: 1,
     })
+      .usingConnection(db)
       .tolerate(async (err) => {
 
         err.details = {
@@ -914,10 +1040,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
       if (refDownCreateRaw.status === 'ok') {
         refDownRes.push(refDownCreateRaw.payload);
       } else {
-      //   throw new Error(`${methodName}, error: refDownCreate error:
-      // params: ${JSON.stringify(refDownCreateRawParams, null, 3)}
-      // refDownCreateRaw: ${JSON.stringify(refDownCreateRaw, null, 3)}`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: methodName,
@@ -929,7 +1051,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
             refDownCreateRaw,
           },
         });
-
       }
 
       use_ref_down_index++;
@@ -950,10 +1071,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
           used_ref_up.push(use_account_guid);
 
         } else {
-        //   throw new Error(`${methodName}, error: refUpCreate error:
-        // params: ${JSON.stringify(refUpCreateRawParams, null, 3)}
-        // refDownCreateRaw: ${JSON.stringify(refUpCreateRaw, null, 3)}`);
-
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: methodName,
@@ -965,7 +1082,6 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
               refUpCreateRaw,
             },
           });
-
         }
 
         use_ref_up_index++;
@@ -986,20 +1102,21 @@ async function linkAccount(refDownRes, refUpRes, newAccountGuid, refAccountGuid,
 
   if (use_ref_up_index <= sails.config.custom.config.ref.general.max_ref_up_links) {
 
-    await finalizeRefUpRecords(refUpRes, newAccountGuid, used_ref_up);
+    await finalizeRefUpRecords(db, refUpRes, newAccountGuid, used_ref_up);
 
   }
 
   return true;
 }
 
-async function getRandomRefRecordLessSomeAccounts(omitAccountsArray) {
+async function getRandomRefRecordLessSomeAccounts(db, omitAccountsArray) {
 
   const refRecs = await Ref.find({
     where: {
       direct_linked_accounts_num: {'<': sails.config.custom.config.ref.general.max_direct_links},
     },
   })
+    .usingConnection(db)
     .tolerate(async (err) => {
 
       err.details = {
@@ -1045,7 +1162,7 @@ async function getRandomRefRecordLessSomeAccounts(omitAccountsArray) {
 
 }
 
-async function finalizeRefUpRecords(refUpRes, newAccountGuid, omitAccountsArray) {
+async function finalizeRefUpRecords(db, refUpRes, newAccountGuid, omitAccountsArray) {
 
   /**
    * Завершаем формирование записей в таблице ref_up (это актуально для случая,
@@ -1062,7 +1179,7 @@ async function finalizeRefUpRecords(refUpRes, newAccountGuid, omitAccountsArray)
 
   while (use_ref_up_index <= sails.config.custom.config.ref.general.max_ref_up_links && ref_up_perform) {
 
-    selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitAccountsArray);
+    selectedRefRec = await getRandomRefRecordLessSomeAccounts(db, omitAccountsArray);
 
     if (selectedRefRec != null) {
 
@@ -1080,10 +1197,6 @@ async function finalizeRefUpRecords(refUpRes, newAccountGuid, omitAccountsArray)
         omitAccountsArray.push(selectedRefRec.account_guid);
 
       } else {
-        // throw new Error(`${methodName}, error: refUpCreate error:
-        // params: ${JSON.stringify(refUpCreateRawParams, null, 3)}
-        // refDownCreateRaw: ${JSON.stringify(refUpCreateRaw, null, 3)}`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: methodName,
@@ -1095,7 +1208,6 @@ async function finalizeRefUpRecords(refUpRes, newAccountGuid, omitAccountsArray)
             refUpCreateRaw,
           },
         });
-
       }
 
       use_ref_up_index++;

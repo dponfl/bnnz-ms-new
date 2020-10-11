@@ -175,8 +175,10 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
   let resultRoomRec;
   let rooms;
 
+  const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
+
   const sqlGetLockAllocateRoom = `
-    SELECT GET_LOCK('allocateRoomLock', 600) as getAllocateRoomLockResult
+    SELECT GET_LOCK('allocateRoomLock', ${lockTimeOut}) as getAllocateRoomLockResult
     `;
 
   const sqlReleaseLockAllocateRoom = `

@@ -56,272 +56,488 @@ module.exports = {
 
     let input;
 
+    let accountGuid;
+
+    let resultRooms;
+
     try {
 
       input = await schema.validateAsync(inputs.params);
 
+      accountGuid = input.account.guid;
+
       const accountCategory = sails.config.custom.config.rooms.category_by_service[input.account.service.name];
 
       if (accountCategory == null) {
-        throw new Error(`${moduleName}, error: Unknown account category for the following input.account.service.name="${input.account.service.name}"`);
+        // throw new Error(`${moduleName}, error: Unknown account category for the following input.account.service.name="${input.account.service.name}"`);
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Unknown account category',
+          // clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            accountServiceName: input.account.service.name,
+          },
+        });
       }
 
-      _.forEach(input.account.room, async function (elem) {
-        let room = await Room.findOne({id: elem.id})
-          .tolerate(async (err) => {
+      const sqlGetLockReallocateRoomsToAccount = `
+    SELECT GET_LOCK('reallocateRoomsLock', ${lockTimeOut}) as getReallocateRoomsLockResult
+    `;
 
-            err.details = {
-              id: elem.id,
-            };
+      const sqlReleaseLockReallocateRoomsToAccount = `
+    SELECT RELEASE_LOCK('reallocateRoomsLock') as releaseReallocateRoomsLockResult
+    `;
 
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Room.findOne() error',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                id: elem.id,
-              },
+      resultRooms = await sails.getDatastore('clientDb')
+        .leaseConnection(async (db) => {
+
+          try {
+
+            const resGetLock = await sails
+              .sendNativeQuery(sqlGetLockReallocateRoomsToAccount)
+              .usingConnection(db);
+
+            const getLockRes = _.get(resGetLock, 'rows[0].getReallocateRoomsLockResult', null);
+
+            if (getLockRes == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
+
+            if (getLockRes === 0) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
+
+
+            _.forEach(input.account.room, async function (elem) {
+              let room = await Room.findOne({id: elem.id})
+                .usingConnection(db)
+                .tolerate(async (err) => {
+
+                  err.details = {
+                    id: elem.id,
+                  };
+
+                  await LogProcessor.dbError({
+                    error: err,
+                    message: 'Room.findOne() error',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    location: moduleName,
+                    payload: {
+                      id: elem.id,
+                    },
+                  });
+
+                  return null;
+                });
+
+              if (room) {
+                await Account.removeFromCollection(input.account.id, 'room', room.id)
+                  .usingConnection(db)
+                  .tolerate(async (err) => {
+
+                    err.details = {
+                      inputAccountId: input.account.id,
+                      model: 'room',
+                      roomId: room.id,
+                    };
+
+                    await LogProcessor.dbError({
+                      error: err,
+                      message: 'Account.removeFromCollection() error',
+                      // clientGuid,
+                      // accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      location: moduleName,
+                      payload: {
+                        inputAccountId: input.account.id,
+                        model: 'room',
+                        roomId: room.id,
+                      },
+                    });
+
+                    return true;
+                  });
+
+                switch (accountCategory) {
+                  case 'bronze':
+                    await Room.updateOne({id: room.id})
+                      .set({
+                        bronze: room.bronze - 1,
+                        accounts_number: room.accounts_number - 1
+                      })
+                      .usingConnection(db)
+                      .tolerate(async (err) => {
+
+                        err.details = {
+                          criteria: {
+                            id: room.id,
+                          },
+                          data: {
+                            bronze: room.bronze - 1,
+                            accounts_number: room.accounts_number - 1
+                          }
+                        };
+
+                        await LogProcessor.dbError({
+                          error: err,
+                          message: 'Room.updateOne() error',
+                          // clientGuid,
+                          // accountGuid,
+                          // requestId: null,
+                          // childRequestId: null,
+                          location: moduleName,
+                          payload: {
+                            criteria: {
+                              id: room.id,
+                            },
+                            data: {
+                              bronze: room.bronze - 1,
+                              accounts_number: room.accounts_number - 1
+                            }
+                          },
+                        });
+
+                        return true;
+                      });
+
+                    break;
+
+                  case 'gold':
+                    await Room.updateOne({id: room.id})
+                      .set({
+                        gold: room.gold - 1,
+                        accounts_number: room.accounts_number - 1
+                      })
+                      .usingConnection(db)
+                      .tolerate(async (err) => {
+
+                        err.details = {
+                          criteria: {
+                            id: room.id,
+                          },
+                          data: {
+                            gold: room.gold - 1,
+                            accounts_number: room.accounts_number - 1
+                          }
+                        };
+
+                        await LogProcessor.dbError({
+                          error: err,
+                          message: 'Room.updateOne() error',
+                          // clientGuid,
+                          // accountGuid,
+                          // requestId: null,
+                          // childRequestId: null,
+                          location: moduleName,
+                          payload: {
+                            criteria: {
+                              id: room.id,
+                            },
+                            data: {
+                              gold: room.gold - 1,
+                              accounts_number: room.accounts_number - 1
+                            }
+                          },
+                        });
+
+                        return true;
+                      });
+
+
+                    break;
+
+                  case 'platinum':
+                    await Room.updateOne({id: room.id})
+                      .set({
+                        platinum: room.platinum - 1,
+                        accounts_number: room.accounts_number - 1
+                      })
+                      .usingConnection(db)
+                      .tolerate(async (err) => {
+
+                        err.details = {
+                          criteria: {
+                            id: room.id,
+                          },
+                          data: {
+                            platinum: room.platinum - 1,
+                            accounts_number: room.accounts_number - 1
+                          }
+                        };
+
+                        await LogProcessor.dbError({
+                          error: err,
+                          message: 'Room.updateOne() error',
+                          // clientGuid,
+                          // accountGuid,
+                          // requestId: null,
+                          // childRequestId: null,
+                          location: moduleName,
+                          payload: {
+                            criteria: {
+                              id: room.id,
+                            },
+                            data: {
+                              platinum: room.platinum - 1,
+                              accounts_number: room.accounts_number - 1
+                            }
+                          },
+                        });
+
+                        return true;
+                      });
+
+
+                    break;
+
+                  case 'star':
+                    await Room.updateOne({id: room.id})
+                      .set({
+                        star: room.star - 1,
+                        accounts_number: room.accounts_number - 1
+                      })
+                      .usingConnection(db)
+                      .tolerate(async (err) => {
+
+                        err.details = {
+                          criteria: {
+                            id: room.id,
+                          },
+                          data: {
+                            star: room.star - 1,
+                            accounts_number: room.accounts_number - 1
+                          }
+                        };
+
+                        await LogProcessor.dbError({
+                          error: err,
+                          message: 'Room.updateOne() error',
+                          // clientGuid,
+                          // accountGuid,
+                          // requestId: null,
+                          // childRequestId: null,
+                          location: moduleName,
+                          payload: {
+                            criteria: {
+                              id: room.id,
+                            },
+                            data: {
+                              star: room.star - 1,
+                              accounts_number: room.accounts_number - 1
+                            }
+                          },
+                        });
+
+                        return true;
+                      });
+
+
+                    break;
+
+                  default:
+                    // throw new Error(`${moduleName}, error: Unknown client category="${accountCategory}"`);
+                    await sails.helpers.general.throwErrorJoi({
+                      errorType: sails.config.custom.enums.errorType.ERROR,
+                      location: moduleName,
+                      message: 'Unknown client category',
+                      // clientGuid,
+                      accountGuid,
+                      errorName: sails.config.custom.GENERAL_ERROR.name,
+                      payload: {
+                        accountCategory,
+                      },
+                    });
+
+                }
+
+              }
             });
 
-            return null;
-          });
+            const rooms = await sails.helpers.general.allocateRoomsJoi({
+              accountGuid: input.account.guid,
+            });
 
-        if (room) {
-          await Account.removeFromCollection(input.account.id, 'room', room.id)
-            .tolerate(async (err) => {
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockReallocateRoomsToAccount)
+              .usingConnection(db);
 
-              err.details = {
-                inputAccountId: input.account.id,
-                model: 'room',
-                roomId: room.id,
-              };
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseReallocateRoomsLockResult', null);
 
-              await LogProcessor.dbError({
-                error: err,
-                message: 'Account.removeFromCollection() error',
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
                 // clientGuid,
                 // accountGuid,
                 // requestId: null,
                 // childRequestId: null,
-                location: moduleName,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
                 payload: {
-                  inputAccountId: input.account.id,
-                  model: 'room',
-                  roomId: room.id,
+                  releaseLockRes,
                 },
               });
+            }
 
-              return true;
-            });
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
-          switch (accountCategory) {
-            case 'bronze':
-              await Room.updateOne({id: room.id})
-                .set({
-                  bronze: room.bronze - 1,
-                  accounts_number: room.accounts_number - 1
-                })
-                .tolerate(async (err) => {
+            return rooms;
 
-                  err.details = {
-                    criteria: {
-                      id: room.id,
-                    },
-                    data: {
-                      bronze: room.bronze - 1,
-                      accounts_number: room.accounts_number - 1
-                    }
-                  };
+          } catch (ee) {
 
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'Room.updateOne() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      criteria: {
-                        id: room.id,
-                      },
-                      data: {
-                        bronze: room.bronze - 1,
-                        accounts_number: room.accounts_number - 1
-                      }
-                    },
-                  });
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockReallocateRoomsToAccount)
+              .usingConnection(db);
 
-                  return true;
-                });
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseReallocateRoomsLockResult', null);
 
-              break;
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
-            case 'gold':
-              await Room.updateOne({id: room.id})
-                .set({
-                  gold: room.gold - 1,
-                  accounts_number: room.accounts_number - 1
-                })
-                .tolerate(async (err) => {
-
-                  err.details = {
-                    criteria: {
-                      id: room.id,
-                    },
-                    data: {
-                      gold: room.gold - 1,
-                      accounts_number: room.accounts_number - 1
-                    }
-                  };
-
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'Room.updateOne() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      criteria: {
-                        id: room.id,
-                      },
-                      data: {
-                        gold: room.gold - 1,
-                        accounts_number: room.accounts_number - 1
-                      }
-                    },
-                  });
-
-                  return true;
-                });
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: `${moduleName}:${methodName}`,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
 
-              break;
-
-            case 'platinum':
-              await Room.updateOne({id: room.id})
-                .set({
-                  platinum: room.platinum - 1,
-                  accounts_number: room.accounts_number - 1
-                })
-                .tolerate(async (err) => {
-
-                  err.details = {
-                    criteria: {
-                      id: room.id,
-                    },
-                    data: {
-                      platinum: room.platinum - 1,
-                      accounts_number: room.accounts_number - 1
-                    }
-                  };
-
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'Room.updateOne() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      criteria: {
-                        id: room.id,
-                      },
-                      data: {
-                        platinum: room.platinum - 1,
-                        accounts_number: room.accounts_number - 1
-                      }
-                    },
-                  });
-
-                  return true;
-                });
-
-
-              break;
-
-            case 'star':
-              await Room.updateOne({id: room.id})
-                .set({
-                  star: room.star - 1,
-                  accounts_number: room.accounts_number - 1
-                })
-                .tolerate(async (err) => {
-
-                  err.details = {
-                    criteria: {
-                      id: room.id,
-                    },
-                    data: {
-                      star: room.star - 1,
-                      accounts_number: room.accounts_number - 1
-                    }
-                  };
-
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'Room.updateOne() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      criteria: {
-                        id: room.id,
-                      },
-                      data: {
-                        star: room.star - 1,
-                        accounts_number: room.accounts_number - 1
-                      }
-                    },
-                  });
-
-                  return true;
-                });
-
-
-              break;
-
-            default: throw new Error(`${moduleName}, error: Unknown client category="${accountCategory}"`);
+            const throwError = true;
+            if (throwError) {
+              return await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: `${moduleName}:${methodName}`,
+                throwError: true,
+              });
+            } else {
+              await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: `${moduleName}:${methodName}`,
+                throwError: false,
+              });
+              return exits.success({
+                status: 'ok',
+                message: `${moduleName}:${methodName} performed`,
+                payload: {},
+              });
+            }
           }
 
-        }
-      });
+        }); // leaseConnection()
 
-      const rooms = await sails.helpers.general.allocateRoomsJoi({
-        accountGuid: input.account.guid,
-      });
 
       return exits.success({
         status: 'ok',
         message: 'Rooms re-allocated to the account',
-        payload: {rooms: rooms}
+        payload: {rooms: resultRooms}
       });
 
     } catch (e) {
 
-      const errorLocation = moduleName;
-      const errorMsg = `${moduleName}: General error`;
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
 
-      sails.log.error(errorLocation + ', error: ' + errorMsg);
-      sails.log.error(errorLocation + ', error details: ', e);
-
-      throw {err: {
-          module: errorLocation,
-          message: errorMsg,
-          payload: {
-            error: e,
+      const throwError = true;
+      if (throwError) {
+        return await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: true,
+          errorPayloadAdditional: {
+            // clientGuid,
+            accountGuid,
           },
-        }
-      };
+        });
+      } else {
+        await sails.helpers.general.catchErrorJoi({
+          error: e,
+          location: moduleName,
+          throwError: false,
+          errorPayloadAdditional: {
+            // clientGuid,
+            accountGuid,
+          },
+        });
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed`,
+          payload: {},
+        });
+      }
+
 
     }
   }
