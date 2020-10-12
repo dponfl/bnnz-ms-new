@@ -227,235 +227,389 @@ module.exports = {
       //
       // }
 
-      /**
-       * Для каждого аккаунта из accountsList
-       * нужно сформировать задание и отправить соответствующее сообщение
-       */
 
-      for (const acc of accountsList) {
+      const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
 
-        const taskTypeRaw = await sails.helpers.tasks.generateTaskType();
-        const taskType = taskTypeRaw.payload;
+      const sqlGetLockGenerateTasks = `
+    SELECT GET_LOCK('generateTasksLock', ${lockTimeOut}) as getGenerateTasksLockResult
+    `;
 
-        const taskRecRaw = await sails.helpers.storage.tasksCreateJoi({
-          clientGuid: acc.client.guid,
-          accountGuid: acc.guid,
-          postGuid: postRec.guid,
-          messenger: acc.client.messenger,
-          makeLike: true,
-          makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
-        });
+      const sqlReleaseLockGenerateTasks = `
+    SELECT RELEASE_LOCK('generateTasksLock') as releaseGenerateTasksLockResult
+    `;
 
-        await sails.helpers.storage.postsUpdateJoi({
-          criteria: {guid: postRec.guid},
-          data: {
-            requestedLikes: ++postRec.requestedLikes,
-            requestedComments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
-              ? ++postRec.requestedComments
-              : postRec.requestedComments,
-          }
-        });
+      await sails.getDatastore('clientDb')
+        .leaseConnection(async (db) => {
+          
+          try {
 
-        /**
-         * Отправляем пуш-сообщение в соответствии с типом задания
-         */
+            const resGetLock = await sails
+              .sendNativeQuery(sqlGetLockGenerateTasks)
+              .usingConnection(db);
 
-        let msgRes;
+            const getLockRes = _.get(resGetLock, 'rows[0].getGenerateTasksLockResult', null);
 
-        switch (taskType) {
-          case sails.config.custom.config.tasks.task_types.LIKE:
+            if (getLockRes == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
+
+            if (getLockRes === 0) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
 
             /**
-             * Достаём данные PushMessage
+             * Для каждого аккаунта из accountsList
+             * нужно сформировать задание и отправить соответствующее сообщение
              */
 
-            pushMessageName = currentAccount.service.push_message_name;
+            for (const acc of accountsList) {
 
-            pushMessageGetParams = {
-              pushMessageName,
-            };
+              const taskTypeRaw = await sails.helpers.tasks.generateTaskType();
+              const taskType = taskTypeRaw.payload;
 
-            pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+              const taskRecRaw = await sails.helpers.storage.tasksCreateJoi({
+                clientGuid: acc.client.guid,
+                accountGuid: acc.guid,
+                postGuid: postRec.guid,
+                messenger: acc.client.messenger,
+                makeLike: true,
+                makeComment: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT,
+              });
 
-            if (pushMessageGetRaw.status !== 'ok') {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
-                location: moduleName,
-                message: 'Wrong pushMessageGetJoi response',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
-                payload: {
-                  pushMessageGetParams,
-                  pushMessageGetRaw,
+              await sails.helpers.storage.postsUpdateJoi({
+                criteria: {guid: postRec.guid},
+                data: {
+                  requestedLikes: ++postRec.requestedLikes,
+                  requestedComments: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+                    ? ++postRec.requestedComments
+                    : postRec.requestedComments,
+                }
+              });
+
+              /**
+               * Отправляем пуш-сообщение в соответствии с типом задания
+               */
+
+              let msgRes;
+
+              switch (taskType) {
+                case sails.config.custom.config.tasks.task_types.LIKE:
+
+                  /**
+                   * Достаём данные PushMessage
+                   */
+
+                  pushMessageName = currentAccount.service.push_message_name;
+
+                  pushMessageGetParams = {
+                    pushMessageName,
+                  };
+
+                  pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+                  if (pushMessageGetRaw.status !== 'ok') {
+                    await sails.helpers.general.throwErrorJoi({
+                      errorType: sails.config.custom.enums.errorType.ERROR,
+                      location: moduleName,
+                      message: 'Wrong pushMessageGetJoi response',
+                      clientGuid,
+                      accountGuid,
+                      errorName: sails.config.custom.STORAGE_ERROR.name,
+                      payload: {
+                        pushMessageGetParams,
+                        pushMessageGetRaw,
+                      },
+                    });
+
+                  }
+
+                  pushMessage = pushMessageGetRaw.payload;
+
+                  messageDataPath = 'tasks.likes';
+                  messageData = _.get(pushMessage, messageDataPath, null);
+
+                  if (messageData == null) {
+                    await sails.helpers.general.throwErrorJoi({
+                      errorType: sails.config.custom.enums.errorType.ERROR,
+                      location: moduleName,
+                      message: 'No expected messageData',
+                      clientGuid,
+                      accountGuid,
+                      errorName: sails.config.custom.STORAGE_ERROR.name,
+                      payload: {
+                        pushMessage,
+                        messageDataPath,
+                        messageData,
+                      },
+                    });
+                  }
+
+                  msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+                    client: acc.client,
+                    messageData,
+                    additionalTokens: [
+                      {
+                        token: '$PostLink$',
+                        value: input.postLink,
+                      },
+                      {
+                        token: '$CurrentAccount$',
+                        value: acc.inst_profile,
+                      },
+                    ],
+                    blockModifyHelperParams: {
+                      taskGuid: taskRecRaw.payload.guid || '',
+                    },
+                    disableWebPagePreview: true,
+                  });
+                  break;
+                case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
+
+                  /**
+                   * Достаём данные PushMessage
+                   */
+
+                  pushMessageName = currentAccount.service.push_message_name;
+
+                  pushMessageGetParams = {
+                    pushMessageName,
+                  };
+
+                  pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+                  if (pushMessageGetRaw.status !== 'ok') {
+                    await sails.helpers.general.throwErrorJoi({
+                      errorType: sails.config.custom.enums.errorType.ERROR,
+                      location: moduleName,
+                      message: 'Wrong pushMessageGetJoi response',
+                      clientGuid,
+                      accountGuid,
+                      errorName: sails.config.custom.STORAGE_ERROR.name,
+                      payload: {
+                        pushMessageGetParams,
+                        pushMessageGetRaw,
+                      },
+                    });
+
+                  }
+
+                  pushMessage = pushMessageGetRaw.payload;
+
+                  messageDataPath = 'tasks.likes_comments';
+                  messageData = _.get(pushMessage, messageDataPath, null);
+
+                  if (messageData == null) {
+                    await sails.helpers.general.throwErrorJoi({
+                      errorType: sails.config.custom.enums.errorType.ERROR,
+                      location: moduleName,
+                      message: 'No expected messageData',
+                      clientGuid,
+                      accountGuid,
+                      errorName: sails.config.custom.STORAGE_ERROR.name,
+                      payload: {
+                        pushMessage,
+                        messageDataPath,
+                        messageData,
+                      },
+                    });
+                  }
+
+                  msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
+                    client: acc.client,
+                    messageData,
+                    additionalTokens: [
+                      {
+                        token: '$PostLink$',
+                        value: input.postLink,
+                      },
+                      {
+                        token: '$CurrentAccount$',
+                        value: acc.inst_profile,
+                      },
+                    ],
+                    blockModifyHelperParams: {
+                      taskGuid: taskRecRaw.payload.guid || '',
+                    },
+                    disableWebPagePreview: true,
+                  });
+                  break;
+                default:
+                  // throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
+
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.ERROR,
+                    location: moduleName,
+                    message: 'Unknown task type',
+                    clientGuid,
+                    accountGuid,
+                    errorName: sails.config.custom.TASKS_ERROR.name,
+                    payload: {
+                      taskType,
+                    },
+                  });
+
+              }
+
+              await sails.helpers.storage.tasksUpdateJoi({
+                criteria: {
+                  guid: taskRecRaw.payload.guid,
                 },
+                data: {
+                  messageId: msgRes.payload.message_id || null,
+                }
+              });
+
+              await sails.helpers.storage.accountUpdateJoi({
+                criteria: {guid: acc.guid},
+                data: {
+                  posts_received_day: ++acc.posts_received_day,
+                  posts_received_total: ++acc.posts_received_total,
+                  requested_likes_day: ++acc.requested_likes_day,
+                  requested_comments_day: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+                    ? ++acc.requested_comments_day
+                    : acc.requested_comments_day,
+                  requested_likes_total: ++acc.requested_likes_total,
+                  requested_comments_total: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
+                    ? ++acc.requested_comments_total
+                    : acc.requested_comments_total,
+                },
+                createdBy: moduleName,
               });
 
             }
 
-            pushMessage = pushMessageGetRaw.payload;
-
-            messageDataPath = 'tasks.likes';
-            messageData = _.get(pushMessage, messageDataPath, null);
-
-            if (messageData == null) {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
-                location: moduleName,
-                message: 'No expected messageData',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
-                payload: {
-                  pushMessage,
-                  messageDataPath,
-                  messageData,
-                },
-              });
-            }
-
-            msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
-              client: acc.client,
-              messageData,
-              additionalTokens: [
-                {
-                  token: '$PostLink$',
-                  value: input.postLink,
-                },
-                {
-                  token: '$CurrentAccount$',
-                  value: acc.inst_profile,
-                },
-              ],
-              blockModifyHelperParams: {
-                taskGuid: taskRecRaw.payload.guid || '',
+            await sails.helpers.storage.accountUpdateJoi({
+              criteria: {guid: account.guid},
+              data: {
+                posts_made_day: ++account.posts_made_day,
+                posts_made_total: ++account.posts_made_total,
               },
-              disableWebPagePreview: true,
+              createdBy: moduleName,
             });
-            break;
-          case sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT:
 
-            /**
-             * Достаём данные PushMessage
-             */
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockGenerateTasks)
+              .usingConnection(db);
 
-            pushMessageName = currentAccount.service.push_message_name;
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseGenerateTasksLockResult', null);
 
-            pushMessageGetParams = {
-              pushMessageName,
-            };
-
-            pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
-
-            if (pushMessageGetRaw.status !== 'ok') {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: moduleName,
-                message: 'Wrong pushMessageGetJoi response',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
                 payload: {
-                  pushMessageGetParams,
-                  pushMessageGetRaw,
-                },
-              });
-
-            }
-
-            pushMessage = pushMessageGetRaw.payload;
-
-            messageDataPath = 'tasks.likes_comments';
-            messageData = _.get(pushMessage, messageDataPath, null);
-
-            if (messageData == null) {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
-                location: moduleName,
-                message: 'No expected messageData',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
-                payload: {
-                  pushMessage,
-                  messageDataPath,
-                  messageData,
+                  releaseLockRes,
                 },
               });
             }
 
-            msgRes = await sails.helpers.messageProcessor.sendMessageJoi({
-              client: acc.client,
-              messageData,
-              additionalTokens: [
-                {
-                  token: '$PostLink$',
-                  value: input.postLink,
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
                 },
-                {
-                  token: '$CurrentAccount$',
-                  value: acc.inst_profile,
+              });
+            }
+
+            return;
+            
+          } catch (ee) {
+
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockGenerateTasks)
+              .usingConnection(db);
+
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releaseGenerateTasksLockResult', null);
+
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
                 },
-              ],
-              blockModifyHelperParams: {
-                taskGuid: taskRecRaw.payload.guid || '',
-              },
-              disableWebPagePreview: true,
-            });
-            break;
-          default:
-            // throw new Error(`${moduleName}, error: Unknown task type: ${taskType}`);
+              });
+            }
 
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.ERROR,
-              location: moduleName,
-              message: 'Unknown task type',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.TASKS_ERROR.name,
-              payload: {
-                taskType,
-              },
-            });
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
 
-        }
+            const throwError = true;
+            if (throwError) {
+              return await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: true,
+              });
+            } else {
+              await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: false,
+              });
+              return exits.success({
+                status: 'ok',
+                message: `${moduleName} performed`,
+                payload: {},
+              });
+            }
 
-        await sails.helpers.storage.tasksUpdateJoi({
-          criteria: {
-            guid: taskRecRaw.payload.guid,
-          },
-          data: {
-            messageId: msgRes.payload.message_id || null,
           }
-        });
-
-        await sails.helpers.storage.accountUpdateJoi({
-          criteria: {guid: acc.guid},
-          data: {
-            posts_received_day: ++acc.posts_received_day,
-            posts_received_total: ++acc.posts_received_total,
-            requested_likes_day: ++acc.requested_likes_day,
-            requested_comments_day: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
-              ? ++acc.requested_comments_day
-              : acc.requested_comments_day,
-            requested_likes_total: ++acc.requested_likes_total,
-            requested_comments_total: taskType === sails.config.custom.config.tasks.task_types.LIKE_AND_COMMENT
-              ? ++acc.requested_comments_total
-              : acc.requested_comments_total,
-          },
-          createdBy: moduleName,
-        });
-
-      }
-
-      await sails.helpers.storage.accountUpdateJoi({
-        criteria: {guid: account.guid},
-        data: {
-          posts_made_day: ++account.posts_made_day,
-          posts_made_total: ++account.posts_made_total,
-        },
-        createdBy: moduleName,
-      });
+          
+        }); // .leaseConnection()
+      
+      
 
       return exits.success({
         status: 'ok',

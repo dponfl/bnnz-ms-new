@@ -500,36 +500,194 @@ module.exports = {
         postData.receivedLikes++;
         postData.allLikesDone = postData.receivedLikes >= postRec.requestedLikes;
 
-        /**
-         * Обновляем записи в таблицах Tasks & Posts
-         */
-
-        await sails.helpers.storage.tasksUpdateJoi({
-          criteria: {
-            guid: taskRec.guid,
-          },
-          data: taskData,
-        });
-
-        await sails.helpers.storage.postsUpdateJoi({
-          criteria: {
-            guid: postRec.guid,
-          },
-          data: postData,
-        });
 
         /**
-         * Обновляем запись в таблице Account
+         * Используем DB lock
          */
 
-        await sails.helpers.storage.accountUpdateJoi({
-          criteria: {guid: account.guid},
-          data: {
-            made_likes_day: ++account.made_likes_day,
-            made_likes_total: ++account.made_likes_total,
-          },
-          createdBy: moduleName,
-        });
+        const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
+
+        const sqlGetLockPerformTask = `
+    SELECT GET_LOCK('performTasksLock', ${lockTimeOut}) as getPerformTaskLockResult
+    `;
+
+        const sqlReleaseLockPerformTask = `
+    SELECT RELEASE_LOCK('performTasksLock') as releasePerformTaskLockResult
+    `;
+
+        await sails.getDatastore('clientDb')
+          .leaseConnection(async (db) => {
+
+            try {
+
+              const resGetLock = await sails
+                .sendNativeQuery(sqlGetLockPerformTask)
+                .usingConnection(db);
+
+              const getLockRes = _.get(resGetLock, 'rows[0].getPerformTaskLockResult', null);
+
+              if (getLockRes == null) {
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                  errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                  payload: {
+                    resGetLock,
+                  },
+                });
+              }
+
+              if (getLockRes === 0) {
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                  errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                  payload: {
+                    resGetLock,
+                  },
+                });
+              }
+
+              /**
+               * Обновляем записи в таблицах Tasks & Posts
+               */
+
+              await sails.helpers.storage.tasksUpdateJoi({
+                criteria: {
+                  guid: taskRec.guid,
+                },
+                data: taskData,
+              });
+
+              await sails.helpers.storage.postsUpdateJoi({
+                criteria: {
+                  guid: postRec.guid,
+                },
+                data: postData,
+              });
+
+              /**
+               * Обновляем запись в таблице Account
+               */
+
+              await sails.helpers.storage.accountUpdateJoi({
+                criteria: {guid: account.guid},
+                data: {
+                  made_likes_day: ++account.made_likes_day,
+                  made_likes_total: ++account.made_likes_total,
+                },
+                createdBy: moduleName,
+              });
+
+              const ReleaseLock = await sails
+                .sendNativeQuery(sqlReleaseLockPerformTask)
+                .usingConnection(db);
+
+              const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+              if (releaseLockRes == null) {
+                await LogProcessor.critical({
+                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  payload: {
+                    releaseLockRes,
+                  },
+                });
+              }
+
+              if (releaseLockRes === 0) {
+                await LogProcessor.critical({
+                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  payload: {
+                    releaseLockRes,
+                  },
+                });
+              }
+
+              return;
+
+            } catch (ee) {
+
+              const ReleaseLock = await sails
+                .sendNativeQuery(sqlReleaseLockPerformTask)
+                .usingConnection(db);
+
+              const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+              if (releaseLockRes == null) {
+                await LogProcessor.critical({
+                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  payload: {
+                    releaseLockRes,
+                  },
+                });
+              }
+
+              if (releaseLockRes === 0) {
+                await LogProcessor.critical({
+                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                  // clientGuid,
+                  // accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                  location: moduleName,
+                  payload: {
+                    releaseLockRes,
+                  },
+                });
+              }
+
+              const throwError = true;
+              if (throwError) {
+                return await sails.helpers.general.catchErrorJoi({
+                  error: ee,
+                  location: moduleName,
+                  throwError: true,
+                });
+              } else {
+                await sails.helpers.general.catchErrorJoi({
+                  error: ee,
+                  location: moduleName,
+                  throwError: false,
+                });
+                return exits.success({
+                  status: 'ok',
+                  message: `${moduleName} performed`,
+                  payload: {},
+                });
+              }
+
+            }
+
+          }); // .leaseConnection()
+
+
 
         /**
          * Трансформируем в чате аккаунта сообщение с требованием выполнить задание

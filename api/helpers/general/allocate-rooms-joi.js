@@ -793,8 +793,6 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
             roomRec = newRoomUpdated;
 
-            // roomRec = newRoom;
-
           } else {
 
             const roomRecId = roomRec.id;
