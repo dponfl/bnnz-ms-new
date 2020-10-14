@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'ref:link-account-tonew_account_guid-ref-joi';
+const moduleName = 'ref:link-account-to-ref-joi';
 
 
 module.exports = {
@@ -442,7 +442,7 @@ module.exports = {
 
               const omitArray = [new_account_guid];
 
-              const selectedRefRec = await getRandomRefRecordLessSomeAccounts(omitArray);
+              const selectedRefRec = await getRandomRefRecordLessSomeAccounts(db, omitArray);
 
               if (selectedRefRec == null) {
                 // throw new Error(`${moduleName}, error: Could not select Ref record for new_account_guid="${new_account_guid}" and omitArray=${omitArray}`);

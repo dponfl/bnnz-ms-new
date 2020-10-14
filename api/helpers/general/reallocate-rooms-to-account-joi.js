@@ -83,6 +83,8 @@ module.exports = {
         });
       }
 
+      const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
+
       const sqlGetLockReallocateRoomsToAccount = `
     SELECT GET_LOCK('reallocateRoomsLock', ${lockTimeOut}) as getReallocateRoomsLockResult
     `;

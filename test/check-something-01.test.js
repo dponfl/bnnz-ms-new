@@ -3042,7 +3042,7 @@ describe.skip('Test DB', function () {
 
   });
 
-  it.skip('should allocate rooms for created accounts', async function () {
+  it.skip('MAIN CASE: should allocate rooms for created accounts', async function () {
 
     this.timeout(700000);
 

@@ -83,6 +83,8 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let disableWebPagePreview;
+
 
     try {
 
@@ -137,6 +139,8 @@ module.exports = {
 
       }
 
+      disableWebPagePreview = block.disableWebPagePreview || false;
+
       if (
         block.enabled
         && !block.shown
@@ -181,6 +185,7 @@ module.exports = {
               chatId: input.client.chat_id,
               html: htmlSimple,
               removeKeyboard: block.removeKeyboard,
+              disableWebPagePreview,
             });
 
             block.message_id = simpleRes.payload.message_id;
@@ -543,6 +548,7 @@ module.exports = {
               html: htmlInline,
               inlineKeyboard,
               removeKeyboard: block.removeKeyboard,
+              disableWebPagePreview,
             });
 
             block.message_id = inlineRes.payload.message_id;

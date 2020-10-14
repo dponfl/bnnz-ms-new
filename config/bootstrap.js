@@ -65,7 +65,7 @@ module.exports.bootstrap = async function() {
    * Activate general actions on bootstrap
    */
 
-  // await sails.helpers.general.bootstrapActions();
+  await sails.helpers.general.bootstrapActions();
 
 
 

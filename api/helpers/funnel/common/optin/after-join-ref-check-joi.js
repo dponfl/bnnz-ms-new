@@ -236,6 +236,12 @@ module.exports = {
             },
           });
 
+          /**
+           * Передаём параметр для определения стартовой глубины поиска для повторной проверки
+           */
+
+          checkProfileSubscriptionParams.checkRenewIndex = checkProfileSubscriptionResRaw.payload.checkRenewIndex || 0;
+
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
 
         }
