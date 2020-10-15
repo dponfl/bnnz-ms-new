@@ -79,17 +79,17 @@ module.exports = {
 
     paymentDb: {
       adapter: 'sails-mysql',
-      url: process.env.JAWSDB_MARIA_NAVY_URL,
+      url: process.env.BF_PAYMENT_DB_URL,
     },
 
     configDb: {
       adapter: 'sails-mysql',
-      url: process.env.JAWSDB_MARIA_GRAY_URL,
+      url: process.env.BF_CONFIG_DB_URL,
     },
 
     performanceDb: {
       adapter: 'sails-mysql',
-      url: process.env.JAWSDB_MARIA_BLACK_URL,
+      url: process.env.BF_PERFORMANCE_DB_URL,
     },
 
 
