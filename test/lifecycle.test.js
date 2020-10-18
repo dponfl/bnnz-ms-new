@@ -20,12 +20,12 @@ before(function(done) {
 
       default: {
         adapter: 'sails-mysql',
-        url: process.env.BF_CLIENT_DB_URL,
+        url: process.env.JAWSDB_MARIA_ROSE_URL,
       },
 
       clientDb: {
         adapter: 'sails-mysql',
-        url: process.env.BF_CLIENT_DB_URL,
+        url: process.env.JAWSDB_MARIA_ROSE_URL,
       },
 
       paymentDb: {

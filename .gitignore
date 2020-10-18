@@ -130,4 +130,5 @@ lib-cov
 *.out
 *.pid
 
-/ecosystem.config.js
+/cluster-ecosystem.config.js
+/fork-ecosystem.config.js

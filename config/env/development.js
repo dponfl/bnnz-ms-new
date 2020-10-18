@@ -27,4 +27,66 @@ module.exports = {
 
   hookTimeout: 120000,
 
+  datastores: {
+
+    /***************************************************************************
+     *                                                                          *
+     * Configure your default production database.                              *
+     *                                                                          *
+     * 1. Choose an adapter:                                                    *
+     *    https://sailsjs.com/plugins/databases                                 *
+     *                                                                          *
+     * 2. Install it as a dependency of your Sails app.                         *
+     *    (For example:  npm install sails-mysql --save)                        *
+     *                                                                          *
+     * 3. Then set it here (`adapter`), along with a connection URL (`url`)     *
+     *    and any other, adapter-specific customizations.                       *
+     *    (See https://sailsjs.com/config/datastores for help.)                 *
+     *                                                                          *
+     ***************************************************************************/
+    default: {
+
+      /***************************************************************************
+       *                                                                          *
+       * Want to use a different database during development?                     *
+       *                                                                          *
+       * 1. Choose an adapter:                                                    *
+       *    https://sailsjs.com/plugins/databases                                 *
+       *                                                                          *
+       * 2. Install it as a dependency of your Sails app.                         *
+       *    (For example:  npm install sails-mysql --save)                        *
+       *                                                                          *
+       * 3. Then pass it in, along with a connection URL.                         *
+       *    (See https://sailsjs.com/config/datastores for help.)                 *
+       *                                                                          *
+       ***************************************************************************/
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_URL,
+
+    },
+
+    clientDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_URL,
+    },
+
+    paymentDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_NAVY_URL,
+    },
+
+    configDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_GRAY_URL,
+    },
+
+    performanceDb: {
+      adapter: 'sails-mysql',
+      url: process.env.JAWSDB_MARIA_BLACK_URL,
+    },
+
+
+  },
+
+
 };
