@@ -3,6 +3,9 @@
 const sleep = require('util').promisify(setTimeout);
 const mlog = require('mocha-logger');
 const moment = require('moment');
+
+const chai = require('chai');
+const expect = chai.expect;
 const sinon = require('sinon');
 
 const emoji = require('node-emoji');
@@ -3238,4 +3241,129 @@ describe.skip('Test DB', function () {
 
 });
 
+describe('Test post RegExp', function () {
 
+  // RegExp (initial): POST_REGEXP=^(?:http|https)://www.instagram.com/p/(\S+)
+  // RegExp (new): POST_REGEXP=^(?:http|https):\/\/www\.instagram\.com\/(?:p|tv)\/(\w+).*?
+
+  describe('Test simple post', function () {
+
+    const postCode = 'CFeg2X9Kcmr';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/?igshid=6at3cw3l4omd`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+  describe('Test several videos post', function () {
+
+    const postCode = 'CGfvyatJIa7';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/?igshid=sv4d37i6xsfo`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+  describe('Test several photos post', function () {
+
+    const postCode = 'CGfmRHoH0rc';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/?igshid=w170tfqh1nnk`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+  describe('Test one video post', function () {
+
+    const postCode = 'CGf3QFmJfyP';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/?igshid=1qo5v30xit1hb`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+  describe('Test one IGTV post', function () {
+
+    const postCode = 'CGdE7wMJ1T0';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/tv/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/tv/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/tv/${postCode}/?igshid=1cspxll7fu8gt`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+});

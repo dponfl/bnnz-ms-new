@@ -115,7 +115,10 @@ module.exports = {
           // childRequestId: null,
           errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.name,
           location: moduleName,
-          payload: requestRes,
+          payload: {
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
+          }
         });
 
         const performanceCreateParams = {
@@ -131,7 +134,7 @@ module.exports = {
             responseStatusMain,
             responseStatusInner,
             request_id: _.get(requestRes, 'request_id', null),
-            error: 'wrong parser response status',
+            error: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.message,
             requestParams: _.omit(options, 'qs.api_key'),
             rawResponse: requestRes,
           },
@@ -178,6 +181,8 @@ module.exports = {
             responseStatusInner,
             userPk: false,
             request_id: _.get(requestRes, 'request_id', null),
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
           },
         };
 
@@ -224,7 +229,10 @@ module.exports = {
           // childRequestId: null,
           errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
           location: moduleName,
-          payload: requestRes,
+          payload: {
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
+          },
         });
 
         const performanceCreateParams = {
@@ -236,7 +244,10 @@ module.exports = {
           status,
           clientGuid,
           accountGuid,
-          comments: requestRes,
+          comments: {
+            requestParams: _.omit(options, 'qs.api_key'),
+            rawResponse: requestRes,
+          },
         };
 
         await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
@@ -279,6 +290,8 @@ module.exports = {
           isVerified,
           hasAnonymousProfilePicture,
           request_id: _.get(requestRes, 'request_id', null),
+          requestParams: _.omit(options, 'qs.api_key'),
+          rawResponse: requestRes,
         },
       };
 
@@ -302,36 +315,6 @@ module.exports = {
 
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // await LogProcessor.error({
-      //   message: e.message || errorMsg,
-      //   clientGuid,
-      //   accountGuid,
-      //   // requestId: null,
-      //   // childRequestId: null,
-      //   errorName: e.name || 'none',
-      //   location: errorLocation,
-      //   payload: e.raw || {},
-      // });
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e.raw || {},
-      //     },
-      //   }
-      // };
-
-      // return await sails.helpers.general.catchErrorJoi({
-      //   error: e,
-      //   location: moduleName,
-      //   throwError: false,
-      // });
-
       const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -351,7 +334,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

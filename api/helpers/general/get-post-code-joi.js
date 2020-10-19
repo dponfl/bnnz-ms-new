@@ -54,9 +54,7 @@ module.exports = {
 
       const postCodeRaw = regExp.exec(input.postLink);
 
-      if (postCodeRaw.length !== 3) {
-        // throw new Error(`${moduleName}, Error: postLink has wrong format: ${input.postLink}`);
-
+      if (postCodeRaw.length !== 2) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.WARN,
           location: moduleName,
@@ -66,15 +64,12 @@ module.exports = {
             postLink: input.postLink,
           },
         });
-
       }
 
       // postCode = postCodeRaw[2];
-      postCode = _.replace(postCodeRaw[2], '/', '');
+      postCode = _.replace(postCodeRaw[1], '/', '');
 
       if (postCode === '') {
-        // throw new Error(`${moduleName}, Error: postCode is empty. postCodeRaw: \n${JSON.stringify(postCodeRaw, null, 3)}`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.WARN,
           location: moduleName,
@@ -84,7 +79,6 @@ module.exports = {
             postCodeRaw,
           },
         });
-
       }
 
       return exits.success(postCode);

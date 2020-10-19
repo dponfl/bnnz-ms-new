@@ -141,7 +141,10 @@ module.exports = {
             // childRequestId: null,
             errorName: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.name,
             location: moduleName,
-            payload: getFollowingsJoiRes,
+            payload: {
+              getFollowingsJoiParams,
+              getFollowingsJoiRes,
+            }
           });
 
           const performanceCreateParams = {
@@ -155,7 +158,8 @@ module.exports = {
             accountGuid,
             comments: {
               error: 'wrong getFollowingsJoi response status',
-              response: getFollowingsJoiRes.raw || {},
+              getFollowingsJoiParams,
+              getFollowingsJoiRes,
             },
           };
 
@@ -224,36 +228,6 @@ module.exports = {
 
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // await LogProcessor.error({
-      //   message: e.message || errorMsg,
-      //   clientGuid,
-      //   accountGuid,
-      //   // requestId: null,
-      //   // childRequestId: null,
-      //   errorName: e.name || 'none',
-      //   location: errorLocation,
-      //   payload: e.raw || {},
-      // });
-      //
-      // return exits.success({
-      //   status: 'error',
-      //   module: errorLocation,
-      //   message: errorMsg,
-      //   payload: {
-      //     error: e.raw || {},
-      //   },
-      // })
-
-      // return await sails.helpers.general.catchErrorJoi({
-      //   error: e,
-      //   location: moduleName,
-      //   throwError: false,
-      // });
-
       const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -273,7 +247,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

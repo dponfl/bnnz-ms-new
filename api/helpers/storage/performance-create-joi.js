@@ -103,11 +103,12 @@ module.exports = {
       };
 
       if (input.comments != null) {
-        if (_.isObject(input.comments)) {
-          performanceRec.comments = await MessageProcessor.clearStr(JSON.stringify(input.comments));
-        } else {
-          performanceRec.comments = await MessageProcessor.clearStr(input.comments);
-        }
+        // if (_.isObject(input.comments)) {
+        //   performanceRec.comments = await MessageProcessor.clearStr(JSON.stringify(input.comments));
+        // } else {
+        //   performanceRec.comments = await MessageProcessor.clearStr(input.comments);
+        // }
+        performanceRec.comments = input.comments;
       }
 
       await Performance.create(performanceRec)

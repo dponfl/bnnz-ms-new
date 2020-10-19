@@ -89,11 +89,12 @@ module.exports = {
       errorRec.guid = uuidApiKey.uuid;
 
       if (input.payload != null) {
-        if (_.isObject(input.payload)) {
-          errorRec.payload = await MessageProcessor.clearStr(JSON.stringify(input.payload));
-        } else {
-          errorRec.payload = await MessageProcessor.clearStr(input.payload);
-        }
+        // if (_.isObject(input.payload)) {
+        //   errorRec.payload = await MessageProcessor.clearStr(JSON.stringify(input.payload));
+        // } else {
+        //   errorRec.payload = await MessageProcessor.clearStr(input.payload);
+        // }
+        errorRec.payload = input.payload;
       }
 
       await Errors.create(errorRec)
