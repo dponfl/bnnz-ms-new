@@ -175,6 +175,7 @@ describe.skip('Test emoji', function () {
 - camera_with_flash :camera_with_flash:
 - cool :cool:
 - boom :boom:
+- clock3 :clock3:
 `;
 
     html = emoji.emojify(html, () => '');
@@ -2616,11 +2617,12 @@ describe.skip('Inapi requests', function () {
 
   it.skip('Check request result: getMediaIdJoi', async function () {
 
-    this.timeout(30000);
+    this.timeout(300000);
 
     const params = {
       client,
-      shortCode: 'BpZS90LBOwq',
+      // shortCode: 'BpZS90LBOwq',
+      shortCode: 'BpZS90LBOwq123',
     };
 
     const res = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(params);
@@ -3241,7 +3243,7 @@ describe.skip('Test DB', function () {
 
 });
 
-describe('Test post RegExp', function () {
+describe.skip('Test post RegExp', function () {
 
   // RegExp (initial): POST_REGEXP=^(?:http|https)://www.instagram.com/p/(\S+)
   // RegExp (new): POST_REGEXP=^(?:http|https):\/\/www\.instagram\.com\/(?:p|tv)\/(\w+).*?

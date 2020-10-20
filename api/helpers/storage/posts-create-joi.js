@@ -55,6 +55,10 @@ module.exports = {
         .description('link to the post')
         .pattern(RegExp(sails.config.custom.postRegExp))
         .required(),
+      mediaId: Joi
+        .string()
+        .description('mediaId of the post')
+        .required(),
       totalLikes: Joi
         .number()
         .description('количество внутренних лайков')
@@ -104,6 +108,7 @@ module.exports = {
         clientGuid: input.clientGuid,
         accountGuid: input.accountGuid,
         postLink: input.postLink,
+        mediaId: input.mediaId,
         totalLikes: input.totalLikes || 0,
         totalDislikes: input.totalDislikes || 0,
         requestedLikes: input.requestedLikes || 0,

@@ -51,7 +51,10 @@ module.exports = {
         .required(),
       postLink: Joi
         .string()
-        .pattern(RegExp(sails.config.custom.config.general.instagram_post_prefix))
+        .pattern(RegExp(sails.config.custom.postRegExp))
+        .required(),
+      mediaId: Joi
+        .string()
         .required(),
     });
 
@@ -163,6 +166,7 @@ module.exports = {
         clientGuid: input.client.guid,
         accountGuid: account.guid,
         postLink: input.postLink,
+        mediaId: input.mediaId,
       });
 
       const postRec = postRecRaw.payload;

@@ -285,6 +285,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
             location: moduleName,
             payload: {
+              pendingActionsCreateParams,
               pendingActionsCreateRaw,
             },
           });

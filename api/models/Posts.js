@@ -26,6 +26,9 @@ module.exports = {
     postLink: {
       type: 'string',
     },
+    mediaId: {
+      type: 'string',
+    },
     /**
      * количество внутренних лайков
      */

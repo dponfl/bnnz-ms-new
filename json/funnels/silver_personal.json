@@ -1284,6 +1284,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "wrong_parser_response",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::main::afterWrongParserResponseJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_GET_MEDIA_ID_ERROR_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_GET_MEDIA_ID_ERROR_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
     }
   ],
   "noRefJoin": [

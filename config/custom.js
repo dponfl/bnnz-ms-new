@@ -219,6 +219,7 @@ module.exports.custom = {
 
     pendingActionsNames: {
       REF_PROFILES_SUBSCRIPTION: 'ref_profiles_subscription',
+      GET_MEDIA_ID: 'get_media_id',
     }
 
   },
@@ -699,6 +700,11 @@ module.exports.custom = {
   INST_PARSER_CHECK_PROFILE_EXISTS_ERROR: {
     name: 'INST_PARSER_CHECK_PROFILE_EXISTS_ERROR',
     message: 'Unexpected response from checkProfileExistsJoi',
+  },
+
+  INST_PARSER_GET_MEDIA_ID_ERROR: {
+    name: 'INST_PARSER_GET_MEDIA_ID_ERROR',
+    message: 'Unexpected response from getMediaIdJoi',
   },
 
   INST_PARSER_CHECK_PROFILE_EXISTS_ERROR_FINAL: {
