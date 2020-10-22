@@ -239,9 +239,7 @@ module.exports = {
 
       const postRec = postRecRaw.payload[0];
 
-      const postLink = postRec.postLink;
-
-      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      const postMediaId = postRec.mediaId;
 
       /**
        * Отправляем сообщение, что начинаем проверку задания и убираем кнопку проверки задания
@@ -326,7 +324,7 @@ module.exports = {
       const checkLikesParams = {
         client,
         instProfile,
-        instPostCode,
+        postMediaId,
       };
 
       i = 0;
@@ -497,7 +495,7 @@ module.exports = {
       const checkCommentsParams = {
         client,
         instProfile,
-        instPostCode,
+        postMediaId,
       };
 
       i = 0;

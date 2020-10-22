@@ -3243,7 +3243,7 @@ describe.skip('Test DB', function () {
 
 });
 
-describe.skip('Test post RegExp', function () {
+describe('Test post RegExp', function () {
 
   // RegExp (initial): POST_REGEXP=^(?:http|https)://www.instagram.com/p/(\S+)
   // RegExp (new): POST_REGEXP=^(?:http|https):\/\/www\.instagram\.com\/(?:p|tv)\/(\w+).*?
@@ -3251,6 +3251,30 @@ describe.skip('Test post RegExp', function () {
   describe('Test simple post', function () {
 
     const postCode = 'CFeg2X9Kcmr';
+
+    it('Case 1', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 2', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+    it('Case 3', async function () {
+      const postLink = `https://www.instagram.com/p/${postCode}/?igshid=6at3cw3l4omd`;
+      const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
+      expect(instPostCode).to.be.eq(postCode);
+    });
+
+  });
+
+  describe('Test simple post with non-word character', function () {
+
+    const postCode = 'CGb-oqBHyI3';
 
     it('Case 1', async function () {
       const postLink = `https://www.instagram.com/p/${postCode}/`;

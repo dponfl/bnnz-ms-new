@@ -44,14 +44,18 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      instProfile: Joi.string()
+      instProfile: Joi
+        .string()
         .required(),
-      instPostCode: Joi.string()
+      postMediaId: Joi
+        .string()
         .required(),
     });
 
     let clientGuid;
     let accountGuid;
+
+    let mediaId;
 
     let commentMade = false;
     let commentText = '';
@@ -69,122 +73,11 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      mediaId = input.postMediaId;
+
       const client = input.client;
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
-
-      /**
-       * Получаем mediaId поста
-       */
-
-      const getMediaIdParams = {
-        client,
-        shortCode: input.instPostCode,
-      };
-
-      const getMediaIdRaw = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(getMediaIdParams);
-
-      if (getMediaIdRaw.status !== 'success') {
-
-        status = 'error';
-        const momentDone = moment();
-
-        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-        await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_STATUS.message,
-          clientGuid,
-          accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_STATUS.name,
-          location: moduleName,
-          payload: {
-            getMediaIdParams,
-            getMediaIdRaw,
-          }
-        });
-
-        const performanceCreateParams = {
-          platform,
-          action,
-          api,
-          requestType,
-          requestDuration,
-          status,
-          clientGuid,
-          accountGuid,
-          comments: {
-            error: 'wrong getMediaIdJoi response status',
-            getMediaIdParams,
-            getMediaIdRaw,
-          },
-        };
-
-        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        return exits.success({
-          status: 'error',
-          message: `${moduleName} performed with error`,
-          payload: {
-            error: 'wrong getMediaIdJoi response status',
-          },
-          raw: getMediaIdRaw,
-        })
-
-      }
-
-      const mediaId = _.get(getMediaIdRaw, 'payload.mediaId', null);
-
-      if (mediaId == null) {
-
-        status = 'error';
-        const momentDone = moment();
-
-        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-        await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE.message,
-          clientGuid,
-          accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.INST_PARSER_WRONG_GET_MEDIA_ID_RESPONSE.name,
-          location: moduleName,
-          payload: {
-            getMediaIdParams,
-            getMediaIdRaw,
-          },
-        });
-
-        const performanceCreateParams = {
-          platform,
-          action,
-          api,
-          requestType,
-          requestDuration,
-          status,
-          clientGuid,
-          accountGuid,
-          comments: {
-            error: 'wrong getMediaIdJoi response: no payload.mediaId',
-            getMediaIdParams,
-            getMediaIdRaw,
-          },
-        };
-
-        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        return exits.success({
-          status: 'error',
-          message: `${moduleName} performed with error`,
-          payload: {
-            error: 'wrong getMediaIdJoi response: no payload.mediaId',
-          },
-          raw: getMediaIdRaw,
-        })
-
-      }
 
       /**
        * Получаем данные о комментарии

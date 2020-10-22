@@ -259,7 +259,7 @@ module.exports = {
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
                 location: moduleName,
                 payload: {
-                  generateTasksParams,
+                  generateTasksParams: _.omit(generateTasksParams, 'client'),
                   generateTasksResult
                 },
               });
@@ -347,7 +347,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
             location: moduleName,
             payload: {
-              getMediaIdParams,
+              getMediaIdParams: _.omit(getMediaIdParams, 'client'),
               getMediaIdRaw,
             },
           });

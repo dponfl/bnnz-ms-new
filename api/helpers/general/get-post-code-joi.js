@@ -66,8 +66,8 @@ module.exports = {
         });
       }
 
-      // postCode = postCodeRaw[2];
-      postCode = _.replace(postCodeRaw[1], '/', '');
+      const splitRes = _.split(postCodeRaw[1], '/', 1);
+      postCode = splitRes[0] || '';
 
       if (postCode === '') {
         await sails.helpers.general.throwErrorJoi({
@@ -84,22 +84,6 @@ module.exports = {
       return exits.success(postCode);
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -119,7 +103,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

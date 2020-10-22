@@ -145,6 +145,59 @@ module.exports = {
 
       }
 
+      // if (!_.has(requestRes, 'response.api.media.shortcode_media.id')) {
+      //
+      //   status = 'error';
+      //   const momentDone = moment();
+      //
+      //   const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+      //
+      //   await LogProcessor.error({
+      //     message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.message,
+      //     clientGuid,
+      //     accountGuid,
+      //     // requestId: null,
+      //     // childRequestId: null,
+      //     errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.name,
+      //     location: moduleName,
+      //     payload: {
+      //       requestParams: _.omit(options, 'qs.api_key'),
+      //       rawResponse: requestRes,
+      //     },
+      //   });
+      //
+      //   const performanceCreateParams = {
+      //     platform,
+      //     action,
+      //     api,
+      //     requestType,
+      //     requestDuration,
+      //     status,
+      //     clientGuid,
+      //     accountGuid,
+      //     comments: {
+      //       responseStatusMain,
+      //       responseStatusInner,
+      //       request_id: _.get(requestRes, 'request_id', null),
+      //       error: 'wrong parser response content',
+      //       requestParams: _.omit(options, 'qs.api_key'),
+      //       rawResponse: requestRes,
+      //     },
+      //   };
+      //
+      //   await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+      //
+      //   return exits.success({
+      //     status: 'error',
+      //     message: `${moduleName} performed with error`,
+      //     payload: {
+      //       error: 'wrong parser response content',
+      //     },
+      //     raw: requestRes,
+      //   })
+      //
+      // }
+
       const mediaId = _.get(requestRes, 'response.api.media.shortcode_media.id', null);
 
       status = 'success';
