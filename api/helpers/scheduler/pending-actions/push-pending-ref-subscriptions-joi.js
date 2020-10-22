@@ -39,203 +39,358 @@ module.exports = {
     try {
 
       /**
-       * Получаем список записей, которые нужно обработать
+       * Используем DB lock
        */
 
-      const getPendingRefSubscriptionsParams = {
-        criteria: {
-          pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
-          checkInProgress: false,
-          done: false,
-          deleted: false,
-        }
-      };
+      const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
 
-      const pendingRefSubscriptionsRaw = await sails.helpers.storage.pendingActionsGetJoi(getPendingRefSubscriptionsParams);
+      const sqlGetLockPushPendingRefSubs = `
+    SELECT GET_LOCK('pushPendingRefSubsLock', ${lockTimeOut}) as getPushPendingRefSubsLockResult
+    `;
 
-      if (pendingRefSubscriptionsRaw.status !== 'ok') {
+      const sqlReleaseLockPushPendingRefSubs = `
+    SELECT RELEASE_LOCK('pushPendingRefSubsLock') as releasePushPendingRefSubsLockResult
+    `;
 
-        await LogProcessor.error({
-          message: 'Wrong "pendingActionsGetJoi" response: status',
-          // clientGuid,
-          // accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.SCHEDULER_ERROR.name,
-          location: moduleName,
-          payload: {
-            getPendingRefSubscriptionsParams,
-            pendingRefSubscriptionsRaw,
-          },
-        });
+      await sails.getDatastore('clientDb')
+        .leaseConnection(async (db) => {
 
-        return exits.success({
-          status: 'error',
-          message: `${moduleName} performed`,
-          payload: {},
-        })
+          try {
 
-      }
-      
-      const pendingRefSubscriptions = _.get(pendingRefSubscriptionsRaw, 'payload', null);
+            const resGetLock = await sails
+              .sendNativeQuery(sqlGetLockPushPendingRefSubs)
+              .usingConnection(db);
 
-      if (pendingRefSubscriptions == null) {
+            const getLockRes = _.get(resGetLock, 'rows[0].getPushPendingRefSubsLockResult', null);
 
-        await LogProcessor.error({
-          message: 'Wrong "pendingActionsGetJoi" response: payload',
-          // clientGuid,
-          // accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.SCHEDULER_ERROR.name,
-          location: moduleName,
-          payload: {
-            getPendingRefSubscriptionsParams,
-            pendingRefSubscriptionsRaw,
-          },
-        });
-
-        return exits.success({
-          status: 'error',
-          message: `${moduleName} performed`,
-          payload: {},
-        })
-
-      }
-
-      if (pendingRefSubscriptions.length > 0) {
-
-        // TODO: Delete after QA
-        await LogProcessor.info({
-          message: 'Найдены записи для отложенной проверки подписки',
-          // clientGuid,
-          // accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.SCHEDULER_ERROR.name,
-          location: moduleName,
-          payload: {
-            pendingRefSubscriptions,
-          },
-        });
-
-        _.forEach(pendingRefSubscriptions, async (pendingRefSubscription) => {
-
-          /**
-           * Для коммуникации выбираем клиентов, у которых account_use == pendingRefSubscription.accountGuid
-           */
-
-          const clientGetParams = {
-
-            criteria: {
-              guid: pendingRefSubscription.clientGuid,
-              account_use: pendingRefSubscription.accountGuid
+            if (getLockRes == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
             }
 
-          };
+            if (getLockRes === 0) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                payload: {
+                  resGetLock,
+                },
+              });
+            }
 
-          const clientsGetRaw = await sails.helpers.storage.clientGetByCriteriaJoi(clientGetParams);
+            /**
+             * Получаем список записей, которые нужно обработать
+             */
 
-          if (clientsGetRaw.status !== 'ok') {
+            const getPendingRefSubscriptionsParams = {
+              criteria: {
+                pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
+                checkInProgress: false,
+                done: false,
+                deleted: false,
+              }
+            };
 
-            await LogProcessor.error({
-              message: 'Wrong "clientGetByCriteriaJoi" response: status',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              errorName: sails.config.custom.SCHEDULER_ERROR.name,
-              location: moduleName,
-              payload: {
-                clientGetParams,
-                clientsGetRaw,
-              },
-            });
+            const pendingRefSubscriptionsRaw = await sails.helpers.storage.pendingActionsGetJoi(getPendingRefSubscriptionsParams);
 
-            return exits.success({
-              status: 'error',
-              message: `${moduleName} performed`,
-              payload: {},
-            })
+            if (pendingRefSubscriptionsRaw.status !== 'ok') {
+
+              await LogProcessor.error({
+                message: 'Wrong "pendingActionsGetJoi" response: status',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                location: moduleName,
+                payload: {
+                  getPendingRefSubscriptionsParams,
+                  pendingRefSubscriptionsRaw,
+                },
+              });
+
+              return exits.success({
+                status: 'error',
+                message: `${moduleName} performed`,
+                payload: {},
+              })
+
+            }
+
+            const pendingRefSubscriptions = _.get(pendingRefSubscriptionsRaw, 'payload', null);
+
+            if (pendingRefSubscriptions == null) {
+
+              await LogProcessor.error({
+                message: 'Wrong "pendingActionsGetJoi" response: payload',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                location: moduleName,
+                payload: {
+                  getPendingRefSubscriptionsParams,
+                  pendingRefSubscriptionsRaw,
+                },
+              });
+
+              return exits.success({
+                status: 'error',
+                message: `${moduleName} performed`,
+                payload: {},
+              })
+
+            }
+
+            if (pendingRefSubscriptions.length > 0) {
+
+              // TODO: Delete after QA
+              await LogProcessor.info({
+                message: 'Найдены записи для отложенной проверки подписки',
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                location: moduleName,
+                payload: {
+                  pendingRefSubscriptions,
+                },
+              });
+
+              _.forEach(pendingRefSubscriptions, async (pendingRefSubscription) => {
+
+                /**
+                 * Для коммуникации выбираем клиентов, у которых account_use == pendingRefSubscription.accountGuid
+                 */
+
+                const clientGetParams = {
+
+                  criteria: {
+                    guid: pendingRefSubscription.clientGuid,
+                    account_use: pendingRefSubscription.accountGuid
+                  }
+
+                };
+
+                const clientsGetRaw = await sails.helpers.storage.clientGetByCriteriaJoi(clientGetParams);
+
+                if (clientsGetRaw.status !== 'ok') {
+
+                  await LogProcessor.error({
+                    message: 'Wrong "clientGetByCriteriaJoi" response: status',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                    location: moduleName,
+                    payload: {
+                      clientGetParams,
+                      clientsGetRaw,
+                    },
+                  });
+
+                  return exits.success({
+                    status: 'error',
+                    message: `${moduleName} performed`,
+                    payload: {},
+                  })
+
+                }
+
+                const clients = _.get(clientsGetRaw, 'payload', null);
+
+                if (clients == null) {
+
+                  await LogProcessor.error({
+                    message: 'Wrong "clientGetByCriteriaJoi" response: payload',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                    location: moduleName,
+                    payload: {
+                      clientGetParams,
+                      clientsGetRaw,
+                    },
+                  });
+
+                  return exits.success({
+                    status: 'error',
+                    message: `${moduleName} performed`,
+                    payload: {},
+                  })
+
+                }
+
+                if (clients.length > 1) {
+
+                  await LogProcessor.error({
+                    message: 'Wrong "clientGetByCriteriaJoi" response: more then one record found',
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                    location: moduleName,
+                    payload: {
+                      clientGetParams,
+                      clientsGetRaw,
+                    },
+                  });
+
+                  return exits.success({
+                    status: 'error',
+                    message: `${moduleName} performed`,
+                    payload: {},
+                  })
+
+                }
+
+                const client = clients[0];
+                const account = _.find(client.accounts, {guid: client.account_use});
+
+                clientGuid = client.guid;
+                accountGuid = account.guid;
+
+                // TODO: Delete after QA
+                await LogProcessor.info({
+                  message: 'запускаем процесс обработки кейса',
+                  clientGuid,
+                  accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.SCHEDULER_ERROR.name,
+                  location: moduleName,
+                  payload: {
+                    pendingRefSubscription
+                  },
+                });
+
+                await processPendingRefSubscription(client, account, pendingRefSubscription);
+
+              });
+
+
+            }
+
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockPushPendingRefSubs)
+              .usingConnection(db);
+
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePushPendingRefSubsLockResult', null);
+
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
+
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
+
+            return;
+
+          } catch (ee) {
+
+            const ReleaseLock = await sails
+              .sendNativeQuery(sqlReleaseLockPushPendingRefSubs)
+              .usingConnection(db);
+
+            const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePushPendingRefSubsLockResult', null);
+
+            if (releaseLockRes == null) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
+
+            if (releaseLockRes === 0) {
+              await LogProcessor.critical({
+                message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                // clientGuid,
+                // accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                location: moduleName,
+                payload: {
+                  releaseLockRes,
+                },
+              });
+            }
+
+            const throwError = true;
+            if (throwError) {
+              return await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: true,
+              });
+            } else {
+              await sails.helpers.general.catchErrorJoi({
+                error: ee,
+                location: moduleName,
+                throwError: false,
+              });
+              return exits.success({
+                status: 'ok',
+                message: `${moduleName} performed`,
+                payload: {},
+              });
+            }
 
           }
 
-          const clients = _.get(clientsGetRaw, 'payload', null);
-
-          if (clients == null) {
-
-            await LogProcessor.error({
-              message: 'Wrong "clientGetByCriteriaJoi" response: payload',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              errorName: sails.config.custom.SCHEDULER_ERROR.name,
-              location: moduleName,
-              payload: {
-                clientGetParams,
-                clientsGetRaw,
-              },
-            });
-
-            return exits.success({
-              status: 'error',
-              message: `${moduleName} performed`,
-              payload: {},
-            })
-
-          }
-
-          if (clients.length > 1) {
-
-            await LogProcessor.error({
-              message: 'Wrong "clientGetByCriteriaJoi" response: more then one record found',
-              // clientGuid,
-              // accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              errorName: sails.config.custom.SCHEDULER_ERROR.name,
-              location: moduleName,
-              payload: {
-                clientGetParams,
-                clientsGetRaw,
-              },
-            });
-
-            return exits.success({
-              status: 'error',
-              message: `${moduleName} performed`,
-              payload: {},
-            })
-
-          }
-
-          const client = clients[0];
-          const account = _.find(client.accounts, {guid: client.account_use});
-
-          clientGuid = client.guid;
-          accountGuid = account.guid;
-
-          // TODO: Delete after QA
-          await LogProcessor.info({
-            message: 'запускаем процесс обработки кейса',
-            clientGuid,
-            accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.SCHEDULER_ERROR.name,
-            location: moduleName,
-            payload: {
-              pendingRefSubscription
-            },
-          });
-
-          await processPendingRefSubscription(client, account, pendingRefSubscription);
-
-        });
-
-
-      }
+        }); // .leaseConnection()
 
 
       return exits.success({
@@ -252,20 +407,12 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          }
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          }
         });
         return exits.success({
           status: 'ok',
