@@ -1062,7 +1062,14 @@
       {
         "rule": "*/3 * * * *",
         "location": "pendingActions",
-        "action": "pushPendingRefSubscriptionsJoi"
+        "action": "pushPendingRefSubscriptions",
+        "getRecordsLimit": 100
+      },
+      {
+        "rule": "*/4 * * * *",
+        "location": "pendingActions",
+        "action": "pushPendingPosts",
+        "getRecordsLimit": 100
       }
     ]
   },

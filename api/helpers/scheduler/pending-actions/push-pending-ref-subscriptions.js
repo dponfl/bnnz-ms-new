@@ -1,6 +1,5 @@
 "use strict";
 
-const Joi = require('@hapi/joi');
 const sleep = require('util').promisify(setTimeout);
 const moment = require('moment');
 
@@ -93,13 +92,16 @@ module.exports = {
              * Получаем список записей, которые нужно обработать
              */
 
+            const limit = _.find(sails.config.custom.config.schedule.rules, {action: "pushPendingRefSubscriptions"}).getRecordsLimit || 1000;
+
             const getPendingRefSubscriptionsParams = {
               criteria: {
                 pendingActionName: sails.config.custom.enums.pendingActionsNames.REF_PROFILES_SUBSCRIPTION,
                 checkInProgress: false,
                 done: false,
                 deleted: false,
-              }
+              },
+              limit,
             };
 
             const pendingRefSubscriptionsRaw = await sails.helpers.storage.pendingActionsGetJoi(getPendingRefSubscriptionsParams);
@@ -167,6 +169,7 @@ module.exports = {
                 location: moduleName,
                 payload: {
                   pendingRefSubscriptions,
+                  limit,
                 },
               });
 

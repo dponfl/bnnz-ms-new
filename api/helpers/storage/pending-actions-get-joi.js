@@ -44,6 +44,11 @@ module.exports = {
         .any()
         .description('search criteria')
         .required(),
+      limit: Joi
+        .number()
+        .integer()
+        .positive()
+        .default(1000),
     });
 
     let input;
@@ -57,6 +62,7 @@ module.exports = {
       pendingActionsRecs = await PendingActions.find({
         where: input.criteria,
       })
+        .limit(input.limit)
         .tolerate(async (err) => {
 
           err.details = {

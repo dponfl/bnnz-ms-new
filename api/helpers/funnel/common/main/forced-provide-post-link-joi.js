@@ -347,6 +347,7 @@ module.exports = {
             emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
             location: moduleName,
             payload: {
+              postLink: enteredPostLink,
               getMediaIdParams: _.omit(getMediaIdParams, 'client'),
               getMediaIdRaw,
             },
@@ -363,6 +364,7 @@ module.exports = {
             pendingActionName: sails.config.custom.enums.pendingActionsNames.GET_MEDIA_ID,
             actionsPerformed: 1,
             payload: {
+              postLink: enteredPostLink,
               getMediaIdParams: _.omit(getMediaIdParams, 'client'),
             },
           };

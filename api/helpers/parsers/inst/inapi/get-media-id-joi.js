@@ -89,6 +89,23 @@ module.exports = {
       // TODO: Убрать позже (использовалось для проверки работы при ошибке парсера)
       // const requestRes = {status: 'error'};
 
+      // const requestRes =  {
+      //     status: "success",
+      //     request_id: 6870,
+      //     response: {
+      //       status: "success",
+      //       instagram: {
+      //         media: []
+      //       },
+      //       api: {
+      //         media: []
+      //       }
+      //   },
+      //   message: "ok",
+      //   currentDomain: "api.inapi.io"
+      // };
+
+
       const responseStatusMain = _.get(requestRes, 'status', null);
       const responseStatusInner = _.get(requestRes, 'response.status', null);
 
