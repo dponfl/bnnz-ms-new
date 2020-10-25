@@ -142,7 +142,7 @@ module.exports = {
             errorName: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.name,
             location: moduleName,
             payload: {
-              getFollowingsJoiParams,
+              getFollowingsJoiParams: _.omit(getFollowingsJoiParams, 'client'),
               getFollowingsJoiRes,
             }
           });
@@ -158,7 +158,7 @@ module.exports = {
             accountGuid,
             comments: {
               error: 'wrong getFollowingsJoi response status',
-              getFollowingsJoiParams,
+              getFollowingsJoiParams: _.omit(getFollowingsJoiParams, 'client'),
               getFollowingsJoiRes,
             },
           };
