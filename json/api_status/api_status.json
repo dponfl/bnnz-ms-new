@@ -1,0 +1,20 @@
+{
+  "parsers": {
+    "instagram": {
+      "getUserMetadata": [
+        {
+          "name": "rapidApiLogicbuilder",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        },
+        {
+          "name": "inapi",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        }
+      ]
+    }
+  }
+}

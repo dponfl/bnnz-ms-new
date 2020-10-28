@@ -6,16 +6,16 @@ const errors = require('request-promise/errors');
 const moment = require('moment');
 
 
-const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-user-metadata-joi';
+const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-followings-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-user-metadata-joi',
+  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-followings-joi',
 
 
-  description: 'parsers:inst:rapid-api-logicbuilder:get-user-metadata-joi',
+  description: 'parsers:inst:rapid-api-logicbuilder:get-followings-joi',
 
 
   inputs: {
@@ -62,6 +62,9 @@ module.exports = {
         .string()
         .description('Instagram profile')
         .required(),
+      endCursor: Joi
+        .string()
+        .description('end_cursor parameter'),
     });
 
     let clientGuid;
@@ -80,11 +83,11 @@ module.exports = {
       const platform = 'Instagram';
       const action = 'parsing';
       const api = 'rapidApiLogicbuilder';
-      const requestType = 'getUserMetadata';
+      const requestType = 'getFollowing';
       let status = '';
 
       const parserUrl = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.url;
-      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getUserMetadata;
+      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getFollowing;
 
       const momentStart = moment();
 
@@ -100,6 +103,10 @@ module.exports = {
         },
         json: true,
       };
+
+      if (input.endCursor != null) {
+        options.qs.end_cursor = _.trim(input.endCursor);
+      }
 
       const requestRes = await rp(options)
         .catch(errors.StatusCodeError, async (reason) => {
@@ -237,65 +244,10 @@ module.exports = {
         return exits.success(requestError);
       }
 
-      const userId = _.get(requestRes, 'id', null);
-      const userName = _.get(requestRes, 'username', null);
-      const fullName = _.get(requestRes, 'full_name', null);
-      const isPrivate = _.get(requestRes, 'is_private', null);
-      const profilePicUrl = _.get(requestRes, 'profile_pic_url', null);
-      const isVerified = _.get(requestRes, 'is_verified', null);
-
-      if (
-        userId == null
-        || profilePicUrl == null
-      ) {
-
-        status = 'error';
-        const momentDone = moment();
-
-        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-        await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.message,
-          clientGuid,
-          accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
-          location: moduleName,
-          payload: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
-            rawResponse: requestRes,
-          },
-        });
-
-        const performanceCreateParams = {
-          platform,
-          action,
-          api,
-          requestType,
-          requestDuration,
-          status,
-          clientGuid,
-          accountGuid,
-          comments: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
-            rawResponse: requestRes,
-          },
-        };
-
-        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        return exits.success({
-          status: 'error',
-          subStatus: 'WrongResponseData',
-          message: `${moduleName} performed with error`,
-          payload: {
-            error: 'wrong parser response data',
-          },
-          raw: requestRes,
-        })
-
-      }
+      const users = _.get(requestRes, 'collector', []);
+      const count = _.get(requestRes, 'count', null);
+      const has_more = _.get(requestRes, 'has_more', null);
+      const end_cursor = _.get(requestRes, 'end_cursor', null);
 
       status = 'success';
 
@@ -313,12 +265,10 @@ module.exports = {
         clientGuid,
         accountGuid,
         comments: {
-          userId,
-          userName,
-          fullName,
-          isPrivate,
-          profilePicUrl,
-          isVerified,
+          users,
+          count,
+          has_more,
+          end_cursor,
           requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
           rawResponse: requestRes,
         },
@@ -331,12 +281,10 @@ module.exports = {
         subStatus: sails.config.custom.HTTP_STATUS_FOUND.message,
         message: `${moduleName} performed`,
         payload: {
-          userId,
-          userName,
-          fullName,
-          isPrivate,
-          profilePicUrl,
-          isVerified,
+          users,
+          count,
+          has_more,
+          end_cursor,
         },
         raw: requestRes,
       })

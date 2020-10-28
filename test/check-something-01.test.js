@@ -2756,7 +2756,7 @@ describe('rapidApiLogicbuilder requests', function () {
     await sleep(1500);
   });
 
-  it('Check request result: getUserMetadataJoi', async function () {
+  it('Check request result: getUserMetadataJoi (existing profile)', async function () {
 
     this.timeout(300000);
 
@@ -2781,6 +2781,22 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
+  it('Check request result: getUserMetadataJoi (non-existing profile)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      instProfile: 'lkwjflweou02934u32lwfw',
+      client,
+    };
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getUserMetadataJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_NOT_FOUND.message);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
   it('Check request result: checkProfileExistsJoi', async function () {
 
     this.timeout(300000);
@@ -2799,17 +2815,98 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: getFollowingsJoi', async function () {
+  it('Check request result: getFollowingsJoi (one page)', async function () {
 
-    this.timeout(30000);
+    this.timeout(300000);
 
     const params = {
       client,
-      profilePk: '434396103',
-      limit: 1,
+      instProfile: 'webstudiopro',
     };
-    const res = await sails.helpers.parsers.inst.inapi.getFollowingsJoi(params);
-    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getFollowingsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('users');
+    expect(res.payload.users).to.be.a('array');
+
+    expect(res.payload).to.have.property('count');
+    expect(res.payload.count).to.be.a('number');
+    expect(res.payload.count).to.be.eq(res.payload.users.length);
+
+    expect(res.payload).to.have.property('has_more', false);
+    expect(res.payload).to.have.property('end_cursor', null);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it('Check request result: getFollowingsJoi (several pages)', async function () {
+
+    this.timeout(300000);
+
+    /**
+     * Get first page
+     */
+
+    const params = {
+      client,
+      instProfile: 'dima_ponomarev1',
+    };
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getFollowingsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('users');
+    expect(res.payload.users).to.be.a('array');
+
+    expect(res.payload).to.have.property('count');
+    expect(res.payload.count).to.be.a('number');
+
+    expect(res.payload).to.have.property('has_more', true);
+    expect(res.payload).to.have.property('end_cursor');
+    expect(res.payload.end_cursor).to.be.a('string');
+
+    /**
+     * Get next page
+     */
+
+    const paramsNext = {
+      client,
+      instProfile: 'dima_ponomarev1',
+      endCursor: res.payload.end_cursor,
+    };
+
+    const resNext = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getFollowingsJoi(paramsNext);
+
+    expect(resNext).to.have.property('status', 'success');
+    expect(resNext).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(resNext.payload).to.have.property('users');
+    expect(resNext.payload.users).to.be.a('array');
+
+    expect(resNext.payload).to.have.property('count');
+    expect(resNext.payload.count).to.be.a('number');
+
+    expect(resNext.payload).to.have.property('has_more', true);
+    expect(resNext.payload).to.have.property('end_cursor');
+    expect(resNext.payload.end_cursor).to.be.a('string');
+
+    // mlog.success(`resNext: ${JSON.stringify(resNext, null, 3)}`);
+  });
+
+  it('Check request result: getFollowingsJoi (wrong profile)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      instProfile: 'dlkfjl3r3rwsdlksjfsdf',
+    };
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getFollowingsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_NOT_FOUND.message);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
   it.skip('Check request result: get necessary data from response', async function () {
@@ -4128,7 +4225,6 @@ describe('rapidApiLogicbuilder requests', function () {
 
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
-
 
 });
 
