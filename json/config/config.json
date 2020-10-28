@@ -228,7 +228,7 @@
   },
   "parsers": {
     "inst": {
-      "activeParserName": "inapi",
+      "activeParserName": "rapidApiLogicbuilder",
       "checkSteps": {
         "getFollowing": [1, 2, 3, 5, 8, 13, 21, 34, 1000000]
       },
@@ -352,6 +352,8 @@
       },
       "minWordsInComment": 2,
       "inapi": {
+        "url": "http://api.inapi.io",
+        "apiKey": "noJFDSuN534GFGvfgO9jgdfg",
         "paths": {
           "getUserId": "/api/v1/people/getinfobyname",
           "getFollowing": "/api/v1/people/getfollowing_v2",
@@ -360,6 +362,18 @@
           "getLikes": "/api/v1/media/getlikers",
           "getComments": "/api/v1/media/getcomments",
           "getLimits": "/api/s1/others/info"
+        }
+      },
+      "rapidApiLogicbuilder": {
+        "url": "https://instagram-data1.p.rapidapi.com",
+        "apiHost": "instagram-data1.p.rapidapi.com",
+        "apiKey": "645c9977cbmsh588d4360d97fa5ap126824jsn294fc2e3dc68",
+        "paths": {
+          "getUserMetadata": "/user/info",
+          "getFollowing": "/followings",
+          "getFollowers": "/followers",
+          "getLikes": "/likers",
+          "getComments": "/comments"
         }
       },
       "otherProviderXXX": {

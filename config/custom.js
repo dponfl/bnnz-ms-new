@@ -643,6 +643,23 @@ module.exports.custom = {
 
   /**
    * ----------------------------
+   * HTTP statuses
+   * ----------------------------
+   */
+
+  HTTP_STATUS_FOUND: {
+    name: 'HTTP_STATUS_FOUND',
+    message: '200-Found',
+  },
+
+  HTTP_STATUS_NOT_FOUND: {
+    name: 'HTTP_STATUS_NOT_FOUND',
+    message: '404-NotFound',
+  },
+
+
+  /**
+   * ----------------------------
    * Inst parser errors
    * ----------------------------
    */
@@ -650,6 +667,16 @@ module.exports.custom = {
   INST_PARSER_WRONG_RESPONSE_STATUS: {
     name: 'ERR_INST_PARSER_WRONG_RESPONSE_STATUS',
     message: 'Wrong parser response status',
+  },
+
+  INST_PARSER_REQUEST_ERROR: {
+    name: 'INST_PARSER_REQUEST_ERROR',
+    message: 'The request failed due to technical reasons',
+  },
+
+  INST_PARSER_STATUS_CODE_ERROR: {
+    name: 'INST_PARSER_STATUS_CODE_ERROR',
+    message: 'The server responded with a status codes other than 2xx',
   },
 
   INST_PARSER_WRONG_RESPONSE_DATA: {
@@ -675,6 +702,11 @@ module.exports.custom = {
   INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS: {
     name: 'INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS',
     message: 'Wrong getUserIdByProfileJoi response status',
+  },
+
+  INST_PARSER_GET_USER_METADATA_ERROR_STATUS: {
+    name: 'INST_PARSER_GET_USER_METADATA_ERROR_STATUS',
+    message: 'getUserMetadataJoi response has error status',
   },
 
   INST_PARSER_WRONG_GET_MEDIA_ID_STATUS: {

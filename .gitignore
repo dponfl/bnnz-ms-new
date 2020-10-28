@@ -132,3 +132,4 @@ lib-cov
 
 /cluster-ecosystem.config.js
 /fork-ecosystem.config.js
+/json/config/config.json
