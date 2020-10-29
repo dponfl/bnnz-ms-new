@@ -1,15 +1,71 @@
 {
   "parsers": {
     "instagram": {
-      "getUserMetadata": [
+      "checkProfileExistsJoi": [
         {
-          "name": "rapidApiLogicbuilder",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "name": "inapi",
+          "parserName": "inapi",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        }
+      ],
+      "checkProfileSubscriptionJoi": [
+        {
+          "parserName": "rapidApiLogicbuilder",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        },
+        {
+          "parserName": "inapi",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        }
+      ],
+      "checkLikesJoi": [
+        {
+          "parserName": "rapidApiLogicbuilder",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        },
+        {
+          "parserName": "inapi",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        }
+      ],
+      "checkCommentsJoi": [
+        {
+          "parserName": "rapidApiLogicbuilder",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        },
+        {
+          "parserName": "inapi",
+          "enabled": true,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        }
+      ],
+      "getMediaIdJoi": [
+        {
+          "parserName": "rapidApiLogicbuilder",
+          "enabled": false,
+          "active": true,
+          "updatedAt": "2020-10-26T20:36:49.669Z"
+        },
+        {
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"

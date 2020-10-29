@@ -699,6 +699,11 @@ module.exports.custom = {
     message: 'Wrong getFollowingsJoi response status',
   },
 
+  INST_PARSER_PROFILE_NOT_EXISTS: {
+    name: 'INST_PARSER_PROFILE_NOT_EXISTS',
+    message: 'Specified profile not found',
+  },
+
   INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS: {
     name: 'INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS',
     message: 'Wrong getUserIdByProfileJoi response status',
