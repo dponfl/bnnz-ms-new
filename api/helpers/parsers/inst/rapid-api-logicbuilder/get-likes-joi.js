@@ -6,16 +6,16 @@ const errors = require('request-promise/errors');
 const moment = require('moment');
 
 
-const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-followings-joi';
+const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-likers-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-followings-joi',
+  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-likes-joi',
 
 
-  description: 'parsers:inst:rapid-api-logicbuilder:get-followings-joi',
+  description: 'Получение информации о тех, кто поставил лайк',
 
 
   inputs: {
@@ -38,15 +38,7 @@ module.exports = {
 
     err: {
       description: 'Error',
-    },
-
-    BFErrorExit: {
-      description: 'BF customized error type 01',
-    },
-
-    BFErrorDetectedExit: {
-      description: 'BF customized error type 02',
-    },
+    }
 
   },
 
@@ -58,9 +50,9 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      instProfile: Joi
+      post: Joi
         .string()
-        .description('Instagram profile')
+        .description('Instagram post shortcode')
         .required(),
       endCursor: Joi
         .string()
@@ -83,11 +75,11 @@ module.exports = {
       const platform = 'Instagram';
       const action = 'parsing';
       const api = 'rapidApiLogicbuilder';
-      const requestType = 'getFollowing';
+      const requestType = 'getLikes';
       let status = '';
 
       const parserUrl = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.url;
-      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getFollowing;
+      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getLikes;
 
       const momentStart = moment();
 
@@ -99,7 +91,7 @@ module.exports = {
           "x-rapidapi-key": sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.apiKey,
         },
         qs: {
-          username: input.instProfile,
+          post: input.post,
         },
         json: true,
       };
@@ -124,70 +116,40 @@ module.exports = {
           const momentDone = moment();
           const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
-          const statusCode = _.get(reason, 'statusCode', null);
-
           let performanceCreateParams;
 
-          switch (statusCode) {
-            case 404:
-              status = 'success';
+          status = 'error';
+          await LogProcessor.error({
+            message: sails.config.custom.INST_PARSER_STATUS_CODE_ERROR.message,
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_STATUS_CODE_ERROR.name,
+            location: moduleName,
+            payload: reason,
+          });
 
-              performanceCreateParams = {
-                platform,
-                action,
-                api,
-                requestType,
-                requestDuration,
-                status,
-                clientGuid,
-                accountGuid,
-                comments: reason,
-              };
+          performanceCreateParams = {
+            platform,
+            action,
+            api,
+            requestType,
+            requestDuration,
+            status,
+            clientGuid,
+            accountGuid,
+            comments: reason,
+          };
 
-              await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
 
-              requestError = {
-                status: 'success',
-                subStatus: sails.config.custom.HTTP_STATUS_NOT_FOUND.message,
-                message: `${moduleName} performed`,
-                payload: reason,
-              };
-
-              break;
-            default:
-              status = 'error';
-              await LogProcessor.error({
-                message: sails.config.custom.INST_PARSER_STATUS_CODE_ERROR.message,
-                clientGuid,
-                accountGuid,
-                // requestId: null,
-                // childRequestId: null,
-                errorName: sails.config.custom.INST_PARSER_STATUS_CODE_ERROR.name,
-                location: moduleName,
-                payload: reason,
-              });
-
-              performanceCreateParams = {
-                platform,
-                action,
-                api,
-                requestType,
-                requestDuration,
-                status,
-                clientGuid,
-                accountGuid,
-                comments: reason,
-              };
-
-              await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-              requestError = {
-                status: 'error',
-                subStatus: 'StatusCodeError',
-                message: `${moduleName} performed with error`,
-                payload: reason,
-              };
-          }
+          requestError = {
+            status: 'error',
+            subStatus: 'StatusCodeError',
+            message: `${moduleName} performed with error`,
+            payload: reason,
+          };
 
         })
         .catch(errors.RequestError, async (reason) => {
@@ -240,14 +202,53 @@ module.exports = {
 
         });
 
+      if (_.has(requestRes, 'end_cursor')
+        && requestRes.end_cursor === ''
+      ) {
+
+        /**
+         * Пока не реализован endpoint для проверки наличия поста
+         * для этих целей используепм этот признак
+         */
+
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        status = 'success';
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            requestRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        requestError = {
+          status: 'success',
+          subStatus: sails.config.custom.HTTP_STATUS_NOT_FOUND.message,
+          message: `${moduleName} performed`,
+          payload: {
+            requestRes,
+          },
+        };
+
+      }
+
       if (requestError) {
         return exits.success(requestError);
       }
 
-      const users = _.get(requestRes, 'collector', []);
-      const count = _.get(requestRes, 'count', null);
-      const has_more = _.get(requestRes, 'has_more', null);
-      const end_cursor = _.get(requestRes, 'end_cursor', null);
+      const collector = _.get(requestRes, 'collector', []);
 
       status = 'success';
 
@@ -265,10 +266,6 @@ module.exports = {
         clientGuid,
         accountGuid,
         comments: {
-          users,
-          count,
-          has_more,
-          end_cursor,
           requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
           rawResponse: requestRes,
         },
@@ -281,14 +278,10 @@ module.exports = {
         subStatus: sails.config.custom.HTTP_STATUS_FOUND.message,
         message: `${moduleName} performed`,
         payload: {
-          users,
-          count,
-          has_more,
-          end_cursor,
+          collector,
         },
         raw: requestRes,
       })
-
 
     } catch (e) {
       const throwError = false;

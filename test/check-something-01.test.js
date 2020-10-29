@@ -2958,19 +2958,6 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: getPostCodeJoi', async function () {
-
-    this.timeout(30000);
-
-    const params = {
-      postLink: 'https://www.instagram.com/p/B7QmKU8FORo/',
-    };
-
-    const res = await sails.helpers.general.getPostCodeJoi(params);
-
-    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
-  });
-
   it.skip('Check request result: getMediaIdJoi', async function () {
 
     this.timeout(300000);
@@ -2985,17 +2972,61 @@ describe('rapidApiLogicbuilder requests', function () {
     mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: getLikesJoi', async function () {
+  it.skip('Check request result: getLikesJoi (post exists & has likes)', async function () {
 
-    this.timeout(30000);
+    this.timeout(300000);
 
     const params = {
       client,
-      mediaId: '1898632130658102314',
+      post: 'Bf3antMFqwr',
     };
 
-    const res = await sails.helpers.parsers.inst.inapi.getLikesJoi(params);
-    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getLikesJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('collector');
+    expect(res.payload.collector).to.be.a('array');
+    expect(res.payload.collector.length).to.be.eq(3);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: getLikesJoi (post exists & has no likes)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      post: 'CG79UYQBQvS',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getLikesJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('collector');
+    expect(res.payload.collector).to.be.a('array');
+    expect(res.payload.collector.length).to.be.eq(0);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it('Check request result: getLikesJoi (post does not exist)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      post: 'sdftSDFggsdgWETGGS',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getLikesJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_NOT_FOUND.message);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
   it.skip('Check request result: checkLikesJoi', async function () {
