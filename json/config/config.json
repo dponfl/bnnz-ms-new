@@ -358,7 +358,7 @@
           "getUserId": "/api/v1/people/getinfobyname",
           "getFollowing": "/api/v1/people/getfollowing_v2",
           "getFollowers": "/api/web1/people/getfollowers",
-          "getMediaId": "/api/web1/media/getpost",
+          "getPostMetadata": "/api/web1/media/getpost",
           "getLikes": "/api/v1/media/getlikers",
           "getComments": "/api/v1/media/getcomments",
           "getLimits": "/api/s1/others/info"

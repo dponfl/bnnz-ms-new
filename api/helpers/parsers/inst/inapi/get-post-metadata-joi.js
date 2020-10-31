@@ -77,7 +77,7 @@ module.exports = {
       const momentStart = moment();
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].paths.getMediaId,
+        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].paths.getPostMetadata,
         method: 'GET',
         qs: {
           api_key: sails.config.custom.instParserApiKey,
