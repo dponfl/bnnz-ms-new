@@ -2958,7 +2958,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: getPostMetadataJoi (post exists)', async function () {
+  it.skip('Check request result: getPostMetadataJoi (post exists)', async function () {
 
     this.timeout(300000);
 
@@ -2976,7 +2976,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: getPostMetadataJoi (post does not exist)', async function () {
+  it.skip('Check request result: getPostMetadataJoi (post does not exist)', async function () {
 
     this.timeout(300000);
 
@@ -3094,17 +3094,65 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: getCommentsJoi', async function () {
+  it('Check request result: getCommentsJoi (comments exist)', async function () {
 
-    this.timeout(30000);
+    this.timeout(300000);
+
+    // const params = {
+    //   client,
+    //   mediaId: '1747317351232356320', // https://www.instagram.com/p/Bg_t9-OFL_g/
+    // };
 
     const params = {
       client,
-      mediaId: '1747317351232356320', // https://www.instagram.com/p/Bg_t9-OFL_g/
+      shortCode: 'Bf3antMFqwr',
     };
 
-    const res = await sails.helpers.parsers.inst.inapi.getCommentsJoi(params);
-    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getCommentsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('collector');
+    expect(res.payload.collector).to.be.a('array');
+    expect(res.payload.collector.length).to.be.eq(3);
+
+    expect(res.payload.collector[0]).to.have.property('id');
+    expect(res.payload.collector[0]).to.have.property('text');
+    expect(res.payload.collector[0]).to.have.property('owner');
+    expect(res.payload.collector[0].owner).to.have.property('username');
+
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it('Check request result: getCommentsJoi (comments exist, many pages)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      shortCode: 'CGb-oqBHyI3',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getCommentsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('collector');
+    expect(res.payload.collector).to.be.a('array');
+    expect(res.payload.collector.length).to.be.eq(10);
+
+    expect(res.payload).to.have.property('has_more', true);
+    expect(res.payload).to.have.property('end_cursor');
+    expect(res.payload.end_cursor).to.be.a('string');
+
+    expect(res.payload.collector[0]).to.have.property('id');
+    expect(res.payload.collector[0]).to.have.property('text');
+    expect(res.payload.collector[0]).to.have.property('owner');
+    expect(res.payload.collector[0].owner).to.have.property('username');
+
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
   it.skip('Check request result: checkCommentsJoi', async function () {

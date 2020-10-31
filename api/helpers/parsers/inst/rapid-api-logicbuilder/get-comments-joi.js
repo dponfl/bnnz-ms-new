@@ -6,16 +6,16 @@ const errors = require('request-promise/errors');
 const moment = require('moment');
 
 
-const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-likers-joi';
+const moduleName = 'parsers:inst:rapid-api-logicbuilder:get-comments-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-likes-joi',
+  friendlyName: 'parsers:inst:rapid-api-logicbuilder:get-comments-joi',
 
 
-  description: 'Получение информации о тех, кто поставил лайк',
+  description: 'Получение информации о тех, кто оставил комментарий и текста комментария',
 
 
   inputs: {
@@ -75,11 +75,11 @@ module.exports = {
       const platform = 'Instagram';
       const action = 'parsing';
       const api = 'rapidApiLogicbuilder';
-      const requestType = 'getLikes';
+      const requestType = 'getComments';
       let status = '';
 
       const parserUrl = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.url;
-      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getLikes;
+      const parserAction = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.paths.getComments;
 
       const momentStart = moment();
 
