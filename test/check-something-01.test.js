@@ -2958,19 +2958,40 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  // it.skip('Check request result: getMediaIdJoi', async function () {
-  //
-  //   this.timeout(300000);
-  //
-  //   const params = {
-  //     client,
-  //     // shortCode: 'BpZS90LBOwq',
-  //     shortCode: 'BpZS90LBOwq123',
-  //   };
-  //
-  //   const res = await sails.helpers.parsers.inst.inapi.getMediaIdJoi(params);
-  //   mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
-  // });
+  it('Check request result: getPostMetadataJoi (post exists)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      shortCode: 'BpZS90LBOwq',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getPostMetadataJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_FOUND.message);
+    expect(res.payload).to.have.property('mediaId', "1898632130658102314");
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it('Check request result: getPostMetadataJoi (post does not exist)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      shortCode: 'BpZS90LBOwq123',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getPostMetadataJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res).to.have.property('subStatus', customConfig.HTTP_STATUS_NOT_FOUND.message);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
 
   it.skip('Check request result: getLikesJoi (post exists & has likes)', async function () {
 
@@ -3029,7 +3050,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: checkLikesJoi (like made)', async function () {
+  it.skip('Check request result: checkLikesJoi (like made)', async function () {
 
     this.timeout(300000);
 
@@ -3054,7 +3075,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: checkLikesJoi (like not made)', async function () {
+  it.skip('Check request result: checkLikesJoi (like not made)', async function () {
 
     this.timeout(300000);
 

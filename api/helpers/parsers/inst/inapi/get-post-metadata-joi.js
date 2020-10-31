@@ -5,13 +5,13 @@ const rp = require('request-promise');
 const moment = require('moment');
 
 
-const moduleName = 'parsers:inst:inapi:get-media-id-joi';
+const moduleName = 'parsers:inst:inapi:get-post-metadata-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:inapi:get-media-id-joi',
+  friendlyName: 'parsers:inst:inapi:get-post-metadata-joi',
 
 
   description: 'Получение mediaId по коду',
@@ -70,7 +70,9 @@ module.exports = {
       const action = 'parsing';
       const api = 'inapi';
       const requestType = 'getMediaId';
+
       let status = '';
+      let subStatus = '';
 
       const momentStart = moment();
 
@@ -217,6 +219,12 @@ module.exports = {
 
       const mediaId = _.get(requestRes, 'response.api.media.shortcode_media.id', null);
 
+      if (mediaId == null) {
+        subStatus = sails.config.custom.HTTP_STATUS_NOT_FOUND.message;
+      } else {
+        subStatus = sails.config.custom.HTTP_STATUS_FOUND.message;
+      }
+
       status = 'success';
 
       const momentDone = moment();
@@ -233,6 +241,7 @@ module.exports = {
         clientGuid,
         accountGuid,
         comments: {
+          mediaId,
           responseStatusMain,
           responseStatusInner,
           request_id: _.get(requestRes, 'request_id', null),
@@ -245,6 +254,7 @@ module.exports = {
 
       return exits.success({
         status: 'success',
+        subStatus,
         message: `${moduleName} performed`,
         payload: {
           mediaId,

@@ -59,6 +59,7 @@ module.exports = {
     let accountGuid;
 
     let parserStatus = '';
+    let parserSubStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.getMediaId.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
 
@@ -106,7 +107,7 @@ module.exports = {
 
         while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
 
-          getMediaIdRaw = await sails.helpers.parsers.inst[activeParser].getMediaIdJoi(getMediaIdParams);
+          getMediaIdRaw = await sails.helpers.parsers.inst[activeParser].getPostMetadataJoi(getMediaIdParams);
 
           parserStatus = getMediaIdRaw.status;
 
@@ -122,9 +123,13 @@ module.exports = {
 
         if (parserStatus === 'success') {
 
+          parserSubStatus = getMediaIdRaw.subStatus;
+
           const mediaId = _.get(getMediaIdRaw, 'payload.mediaId', null);
 
-          if (mediaId == null) {
+          if (mediaId == null
+            || parserSubStatus === sails.config.custom.HTTP_STATUS_NOT_FOUND.message
+          ) {
 
             /**
              * пост не найден парсером

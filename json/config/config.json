@@ -372,6 +372,7 @@
           "getUserMetadata": "/user/info",
           "getFollowing": "/followings",
           "getFollowers": "/followers",
+          "getPostMetadata": "/post/info",
           "getLikes": "/likers",
           "getComments": "/comments"
         }
