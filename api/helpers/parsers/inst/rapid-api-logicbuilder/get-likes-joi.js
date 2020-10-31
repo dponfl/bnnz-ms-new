@@ -50,7 +50,7 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      post: Joi
+      shortCode: Joi
         .string()
         .description('Instagram post shortcode')
         .required(),
@@ -91,7 +91,7 @@ module.exports = {
           "x-rapidapi-key": sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.apiKey,
         },
         qs: {
-          post: input.post,
+          post: input.shortCode,
         },
         json: true,
       };
@@ -248,8 +248,6 @@ module.exports = {
         return exits.success(requestError);
       }
 
-      const collector = _.get(requestRes, 'collector', []);
-
       status = 'success';
 
       const momentDone = moment();
@@ -277,10 +275,7 @@ module.exports = {
         status: 'success',
         subStatus: sails.config.custom.HTTP_STATUS_FOUND.message,
         message: `${moduleName} performed`,
-        payload: {
-          collector,
-        },
-        raw: requestRes,
+        payload: requestRes,
       })
 
     } catch (e) {

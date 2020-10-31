@@ -55,6 +55,10 @@ module.exports = {
         .description('link to the post')
         .pattern(RegExp(sails.config.custom.postRegExp))
         .required(),
+      shortCode: Joi
+        .string()
+        .description('post shortcode')
+        .required(),
       mediaId: Joi
         .string()
         .description('mediaId of the post')
@@ -108,6 +112,7 @@ module.exports = {
         clientGuid: input.clientGuid,
         accountGuid: input.accountGuid,
         postLink: input.postLink,
+        shortCode: input.shortCode,
         mediaId: input.mediaId,
         totalLikes: input.totalLikes || 0,
         totalDislikes: input.totalDislikes || 0,
@@ -119,7 +124,6 @@ module.exports = {
         allCommentsDone: input.allCommentsDone || false,
       };
 
-      // const postRecRaw = await Posts.create(postRec).fetch();
       await Posts.create(postRec)
         .tolerate(async (err) => {
 
@@ -151,22 +155,6 @@ module.exports = {
     })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -181,7 +169,7 @@ module.exports = {
           throwError: false,
         });
         return exits.success({
-          status: 'ok',
+          status: 'error',
           message: `${moduleName} performed`,
           payload: {},
         });

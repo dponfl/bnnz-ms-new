@@ -565,6 +565,7 @@ async function processPendingPost(pendingPost) {
         const generateTasksParams = {
           client,
           postLink,
+          shortCode,
           mediaId,
         };
 

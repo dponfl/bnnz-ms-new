@@ -232,6 +232,7 @@ module.exports = {
       const postRec = postRecRaw.payload[0];
 
       const postMediaId = postRec.mediaId;
+      const shortCode = postRec.shortCode;
 
       /**
        * Отправляем сообщение, что начинаем проверку задания и убираем кнопку проверки задания
@@ -312,6 +313,7 @@ module.exports = {
       const checkLikesParams = {
         client,
         instProfile,
+        shortCode,
         postMediaId,
       };
 

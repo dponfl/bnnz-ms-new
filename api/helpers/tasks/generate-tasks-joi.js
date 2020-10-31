@@ -53,6 +53,10 @@ module.exports = {
         .string()
         .pattern(RegExp(sails.config.custom.postRegExp))
         .required(),
+      shortCode: Joi
+        .string()
+        .description('post shortcode')
+        .required(),
       mediaId: Joi
         .string()
         .required(),
@@ -166,6 +170,7 @@ module.exports = {
         clientGuid: input.client.guid,
         accountGuid: account.guid,
         postLink: input.postLink,
+        shortCode: input.shortCode,
         mediaId: input.mediaId,
       });
 

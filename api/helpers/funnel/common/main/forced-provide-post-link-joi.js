@@ -188,6 +188,7 @@ module.exports = {
             const generateTasksParams = {
               client: input.client,
               postLink: enteredPostLink,
+              shortCode: instPostCode,
               mediaId,
             };
 

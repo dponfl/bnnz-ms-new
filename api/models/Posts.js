@@ -26,6 +26,9 @@ module.exports = {
     postLink: {
       type: 'string',
     },
+    shortCode: {
+      type: 'string',
+    },
     mediaId: {
       type: 'string',
     },

@@ -207,7 +207,7 @@ module.exports = {
           throwError: false,
         });
         return exits.success({
-          status: 'ok',
+          status: 'error',
           message: `${moduleName} performed`,
           payload: {},
         });

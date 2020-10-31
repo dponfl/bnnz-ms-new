@@ -50,8 +50,13 @@ module.exports = {
       instProfile: Joi
         .string()
         .required(),
+      shortCode: Joi
+        .string()
+        .description('Instagram post shortcode')
+        .required(),
       postMediaId: Joi
         .string()
+        .description('Instagram post media id')
         .required(),
     });
 

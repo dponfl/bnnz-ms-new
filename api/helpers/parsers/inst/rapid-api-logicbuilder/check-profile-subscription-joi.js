@@ -2,6 +2,7 @@
 
 const Joi = require('@hapi/joi');
 const moment = require('moment');
+const sleep = require('util').promisify(setTimeout);
 
 const moduleName = 'parsers:inst:rapid-api-logicbuilder:check-profile-subscription-joi';
 
@@ -236,6 +237,9 @@ module.exports = {
         if (endCursor == null) {
           hasMore = false;
         }
+
+        // TODO: Убрать после того, как лимит на 1 запрос в сек будет убран
+        await sleep(1000);
 
       }
 
