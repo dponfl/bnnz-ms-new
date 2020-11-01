@@ -112,7 +112,7 @@ module.exports = {
           errorName: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.name,
           location: moduleName,
           payload: {
-            getLikesParams,
+            getLikesParams: _.omit(getLikesParams, 'client'),
             getLikesJoiRaw,
           }
         });
@@ -128,7 +128,7 @@ module.exports = {
           accountGuid,
           comments: {
             error: 'wrong getLikesJoi response status',
-            getLikesParams,
+            getLikesParams: _.omit(getLikesParams, 'client'),
             getLikesJoiRaw,
           },
         };

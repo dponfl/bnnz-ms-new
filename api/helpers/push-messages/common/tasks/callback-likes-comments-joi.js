@@ -497,6 +497,7 @@ module.exports = {
       const checkCommentsParams = {
         client,
         instProfile,
+        shortCode,
         postMediaId,
       };
 

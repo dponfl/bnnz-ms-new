@@ -3094,7 +3094,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: getCommentsJoi (comments exist)', async function () {
+  it.skip('Check request result: getCommentsJoi (comments exist)', async function () {
 
     this.timeout(300000);
 
@@ -3125,7 +3125,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it('Check request result: getCommentsJoi (comments exist, many pages)', async function () {
+  it.skip('Check request result: getCommentsJoi (comments exist, many pages)', async function () {
 
     this.timeout(300000);
 
@@ -3155,7 +3155,7 @@ describe('rapidApiLogicbuilder requests', function () {
     // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
-  it.skip('Check request result: checkCommentsJoi', async function () {
+  it.skip('Check request result: checkCommentsJoi (comment made with two words)', async function () {
 
     this.timeout(30000);
 
@@ -3181,17 +3181,61 @@ describe('rapidApiLogicbuilder requests', function () {
 
     const params = {
       client,
-      instProfile: 'artemvast',
-      instPostCode: 'BeQkuYDlTR8',
+      instProfile: 'dmitrysnap',
+      shortCode: 'Bf3antMFqwr',
+      postMediaId: '100',
     };
 
-    const res = await sails.helpers.parsers.inst.inapi.checkCommentsJoi(params);
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.checkCommentsJoi(params);
 
-    const commentDone = _.get(res, 'payload.commentMade', 'none');
-    const commentText = _.get(res, 'payload.commentText', 'none');
-    const numberOfWords = _.get(res, 'payload.numberOfWords', 0);
+    expect(res).to.have.property('status', 'success');
+    expect(res.payload).to.have.property('commentMade', true);
+    expect(res.payload).to.have.property('commentText', 'Красивый вид!');
+    expect(res.payload).to.have.property('numberOfWords', 2);
 
-    mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: checkCommentsJoi (comment made with one word)', async function () {
+
+    this.timeout(300000);
+
+    const params = {
+      client,
+      instProfile: '__yuliya_0927__',
+      shortCode: 'Bg_t9-OFL_g',
+      postMediaId: '100',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.checkCommentsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res.payload).to.have.property('commentMade', false);
+    expect(res.payload).to.have.property('commentText', 'Красиво');
+    expect(res.payload).to.have.property('numberOfWords', 1);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
+  });
+
+  it.skip('Check request result: checkCommentsJoi (comment not made)', async function () {
+
+    this.timeout(30000);
+
+    const params = {
+      client,
+      instProfile: '__yuliya_0927__',
+      shortCode: 'Bf3antMFqwr',
+      postMediaId: '100',
+    };
+
+    const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.checkCommentsJoi(params);
+
+    expect(res).to.have.property('status', 'success');
+    expect(res.payload).to.have.property('commentMade', false);
+    expect(res.payload).to.have.property('commentText', '');
+    expect(res.payload).to.have.property('numberOfWords', 0);
+
+    // mlog.success(`res: ${JSON.stringify(res, null, 3)}`);
   });
 
 });

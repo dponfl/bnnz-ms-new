@@ -47,8 +47,13 @@ module.exports = {
       instProfile: Joi
         .string()
         .required(),
+      shortCode: Joi
+        .string()
+        .description('Instagram post shortcode')
+        .required(),
       postMediaId: Joi
         .string()
+        .description('Instagram post media id')
         .required(),
     });
 
@@ -106,7 +111,7 @@ module.exports = {
           errorName: sails.config.custom.INST_PARSER_WRONG_GET_COMMENTS_STATUS.name,
           location: moduleName,
           payload: {
-            getCommentsParams,
+            getCommentsParams: _.omit(getCommentsParams, 'client'),
             getCommentsJoiRaw,
           }
         });
@@ -122,7 +127,7 @@ module.exports = {
           accountGuid,
           comments: {
             error: 'wrong getCommentsJoi response status',
-            getCommentsParams,
+            getCommentsParams: _.omit(getCommentsParams, 'client'),
             getCommentsJoiRaw,
           },
         };
