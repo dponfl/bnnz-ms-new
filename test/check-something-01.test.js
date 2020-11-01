@@ -2720,7 +2720,7 @@ describe.skip('Inapi requests', function () {
 
 });
 
-describe('rapidApiLogicbuilder requests', function () {
+describe.skip('rapidApiLogicbuilder requests', function () {
 
   let customConfig;
   let account;
