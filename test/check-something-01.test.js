@@ -3067,6 +3067,13 @@ describe.skip('rapidApiLogicbuilder requests', function () {
       postMediaId: '1898632130658102314',
     };
 
+    // const params = {
+    //   client,
+    //   instProfile: 'andersonr997',
+    //   shortCode: 'CGb-oqBHyI3',
+    //   postMediaId: '1898632130658102314',
+    // };
+
     const res = await sails.helpers.parsers.inst.rapidApiLogicbuilder.checkLikesJoi(params);
 
     expect(res).to.have.property('status', 'success');
@@ -3909,6 +3916,41 @@ describe.skip('Test post RegExp', function () {
       const instPostCode = await sails.helpers.general.getPostCodeJoi({postLink});
       expect(instPostCode).to.be.eq(postCode);
     });
+
+  });
+
+});
+
+describe.skip('ApiStatus & ApiChanges', function () {
+
+  let customConfig;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    this.timeout(700000);
+
+  });
+
+  it.skip('Proceed ApiStatus update', async () => {
+
+    const apiStatusUpdateParams = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscriptionJoi',
+      parserName: 'inapi',
+      data: {
+        key: 'active',
+        value: false,
+      },
+      createdBy: 'Test'
+    };
+
+    const apiStatusUpdateRes = await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+    expect(apiStatusUpdateRes).to.have.property('status', 'success');
+
+    mlog.success(`res: ${JSON.stringify(apiStatusUpdateRes, null, 3)}`);
 
   });
 
