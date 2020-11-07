@@ -63,7 +63,10 @@ module.exports = {
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    // const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.notifications);
+
+    let activeParser = null;
+    const parserPlatformName = 'instagram';
+    const parserModuleName = 'checkProfileSubscription';
 
 
     try {
@@ -180,10 +183,19 @@ module.exports = {
       });
 
       /**
-       * Парсером проверяем подписки профиля
+       * Получаем имя парсера
        */
 
-      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+      const getParserParams = {
+        platformName: parserPlatformName,
+        moduleName: parserModuleName,
+      };
+
+      activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
+
+      /**
+       * Парсером проверяем подписки профиля
+       */
 
       const checkProfileSubscriptionParams = {
         client: input.client,
@@ -200,11 +212,40 @@ module.exports = {
         && i < parserRequestIntervals.length
       ) {
 
-        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+        if (activeParser != null) {
 
-        parserStatus = checkProfileSubscriptionResRaw.status;
+          checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+          parserStatus = checkProfileSubscriptionResRaw.status;
+
+        } else {
+
+          parserStatus = 'error';
+
+        }
 
         if (parserStatus !== 'success') {
+
+          if (activeParser != null) {
+
+            /**
+             * выставляем флаг, что парсер неактивен
+             */
+
+            const apiStatusUpdateParams = {
+              platformName: parserPlatformName,
+              moduleName: parserModuleName,
+              parserName: activeParser,
+              data: {
+                key: 'active',
+                value: false,
+              },
+              createdBy: moduleName,
+            };
+
+            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+          }
 
           /**
            * Логируем факт факапа парсера с фиксацией текущего интервала
@@ -233,6 +274,8 @@ module.exports = {
           });
 
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+          activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
         }
 

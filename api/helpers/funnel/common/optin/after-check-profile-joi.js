@@ -65,6 +65,11 @@ module.exports = {
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
     const notifications = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkProfile.notifications);
 
+    let activeParser = null;
+    const parserPlatformName = 'instagram';
+    const parserModuleName = 'checkProfileExists';
+
+
     let profileExists = false;
     let profileId = null;
     let profilePic = null;
@@ -89,7 +94,17 @@ module.exports = {
       const client = input.client;
 
       const instProfile = input.client.inst_profile_tmp;
-      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+
+      /**
+       * Получаем имя парсера
+       */
+
+      const getParserParams = {
+        platformName: parserPlatformName,
+        moduleName: parserModuleName,
+      };
+
+      activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
       notifications.map((item) => {
         item.clientNotified = false;
@@ -107,14 +122,44 @@ module.exports = {
 
       while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
 
-        checkProfileRaw = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
-          client,
-          instProfile,
-        });
+        if (activeParser != null) {
 
-        parserStatus = checkProfileRaw.status;
+          checkProfileRaw = await sails.helpers.parsers.inst[activeParser].checkProfileExistsJoi({
+            client,
+            instProfile,
+          });
+
+          parserStatus = checkProfileRaw.status;
+
+        } else {
+
+          parserStatus = 'error';
+
+        }
 
         if (parserStatus !== 'success') {
+
+          if (activeParser != null) {
+
+            /**
+             * выставляем флаг, что парсер неактивен
+             */
+
+            const apiStatusUpdateParams = {
+              platformName: parserPlatformName,
+              moduleName: parserModuleName,
+              parserName: activeParser,
+              data: {
+                key: 'active',
+                value: false,
+              },
+              createdBy: moduleName,
+            };
+
+            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+          }
+
 
           /**
            * Проверяем условие отправки информационного сообщения клиенту
@@ -243,6 +288,8 @@ module.exports = {
           }
 
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+          activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
         }
 

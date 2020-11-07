@@ -345,8 +345,12 @@ async function processPendingPost(pendingPost) {
   let parserStatus = '';
   let parserSubStatus = '';
 
-  const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.getMediaId.intervals;
+  const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.getPostMetadata.intervals;
   const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+
+  let activeParser = null;
+  const parserPlatformName = 'instagram';
+  const parserModuleName = 'getPostMetadata';
 
   let getMediaIdRaw = null;
 
@@ -483,7 +487,16 @@ async function processPendingPost(pendingPost) {
      * Получаем mediaId поста
      */
 
-    const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+    /**
+     * Получаем имя парсера
+     */
+
+    const getParserParams = {
+      platformName: parserPlatformName,
+      moduleName: parserModuleName,
+    };
+
+    activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
     const shortCode = _.get(pendingPost, 'payload.getMediaIdParams.shortCode', null);
 
@@ -517,13 +530,44 @@ async function processPendingPost(pendingPost) {
 
     while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
 
-      getMediaIdRaw = await sails.helpers.parsers.inst[activeParser].getPostMetadataJoi(getMediaIdParams);
+      if (activeParser != null) {
 
-      parserStatus = getMediaIdRaw.status;
+        getMediaIdRaw = await sails.helpers.parsers.inst[activeParser].getPostMetadataJoi(getMediaIdParams);
+
+        parserStatus = getMediaIdRaw.status;
+
+      } else {
+
+        parserStatus = 'error';
+
+      }
 
       if (parserStatus !== 'success') {
 
+        if (activeParser != null) {
+
+          /**
+           * выставляем флаг, что парсер неактивен
+           */
+
+          const apiStatusUpdateParams = {
+            platformName: parserPlatformName,
+            moduleName: parserModuleName,
+            parserName: activeParser,
+            data: {
+              key: 'active',
+              value: false,
+            },
+            createdBy: moduleName,
+          };
+
+          await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+        }
+
         await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
       }
 

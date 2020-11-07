@@ -67,6 +67,10 @@ module.exports = {
     const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notificationInterval;
     let infoMessageWasSend = false;
 
+    let activeParser = null;
+    const parserPlatformName = 'instagram';
+    const parserModuleName = 'checkLikes';
+
     let pushMessage;
 
     try {
@@ -308,7 +312,16 @@ module.exports = {
        * Проверка выполнения задания с использванием парсера
        */
 
-      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+      /**
+       * Получаем имя парсера
+       */
+
+      const getParserParams = {
+        platformName: parserPlatformName,
+        moduleName: parserModuleName,
+      };
+
+      activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
       const checkLikesParams = {
         client,
@@ -323,11 +336,41 @@ module.exports = {
 
       while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
 
-        checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+        if (activeParser != null) {
 
-        parserStatus = checkLikesJoiRaw.status;
+          checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+
+          parserStatus = checkLikesJoiRaw.status;
+
+        } else {
+
+          parserStatus = 'error';
+
+        }
+
 
         if (parserStatus !== 'success') {
+
+          if (activeParser != null) {
+
+            /**
+             * выставляем флаг, что парсер неактивен
+             */
+
+            const apiStatusUpdateParams = {
+              platformName: parserPlatformName,
+              moduleName: parserModuleName,
+              parserName: activeParser,
+              data: {
+                key: 'active',
+                value: false,
+              },
+              createdBy: moduleName,
+            };
+
+            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+          }
 
           /**
            * Проверяем условие отправки информационного сообщения клиенту
@@ -413,15 +456,9 @@ module.exports = {
 
           }
 
-          /**
-           * Логируем ошибку парсера
-           */
-
-          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
-
-          sails.log.error(`${moduleName} Instagram parser error: enable interval: ${parserRequestIntervals[i]}`);
-
           await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+          activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
         }
 

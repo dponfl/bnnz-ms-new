@@ -59,7 +59,6 @@ module.exports = {
 
     let checkLikesJoiRaw;
     let checkCommentsJoiRaw;
-    let taskPerformRes;
 
     let parserStatus = '';
     const parserRequestIntervalsLikes = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
@@ -67,6 +66,11 @@ module.exports = {
     const parserRequestIntervalsComments = sails.config.custom.config.parsers.inst.errorSteps.checkComments.intervals;
     const notificationIntervalComments = sails.config.custom.config.parsers.inst.errorSteps.checkComments.notificationInterval;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
+
+    let activeParser = null;
+    const parserPlatformName = 'instagram';
+    const parserModuleNameLikes = 'checkLikes';
+    const parserModuleNameComments = 'checkComments';
 
     let infoMessageWasSend = false;
 
@@ -316,7 +320,17 @@ module.exports = {
        * Проверка выполнения задания с использванием парсера
        */
 
-      const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+      /**
+       * Получаем имя парсера
+       */
+
+      const getParserParamsLikes = {
+        platformName: parserPlatformName,
+        moduleName: parserModuleNameLikes,
+      };
+
+      activeParser = await sails.helpers.parsers.getParserJoi(getParserParamsLikes);
+
 
       /**
        * Проверяем лайки
@@ -335,11 +349,41 @@ module.exports = {
 
       while (parserStatus !== 'success' && i < parserRequestIntervalsLikes.length) {
 
-        checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+        if (activeParser != null) {
 
-        parserStatus = checkLikesJoiRaw.status;
+          checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
+
+          parserStatus = checkLikesJoiRaw.status;
+
+        } else {
+
+          parserStatus = 'error';
+
+        }
 
         if (parserStatus !== 'success') {
+
+          if (activeParser != null) {
+
+            /**
+             * выставляем флаг, что парсер неактивен
+             */
+
+            const apiStatusUpdateParams = {
+              platformName: parserPlatformName,
+              moduleName: parserModuleNameLikes,
+              parserName: activeParser,
+              data: {
+                key: 'active',
+                value: false,
+              },
+              createdBy: moduleName,
+            };
+
+            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+          }
+
 
           /**
            * Проверяем условие отправки информационного сообщения клиенту
@@ -425,15 +469,9 @@ module.exports = {
 
           }
 
-          /**
-           * Логируем ошибку парсера
-           */
-
-          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
-
-          sails.log.error(`${moduleName} Instagram parser error on likes check: enable interval: ${parserRequestIntervalsLikes[i]}`);
-
           await sleep(parserRequestIntervalsLikes[i] * parserRequestIntervalTime);
+
+          activeParser = await sails.helpers.parsers.getParserJoi(getParserParamsLikes);
 
         }
 
@@ -447,10 +485,6 @@ module.exports = {
          * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
          */
 
-        // sails.log.error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
-        //
-        // throw new Error(`${moduleName}: Likes check: Успешный ответ от парсера так и не был получен`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
@@ -461,7 +495,6 @@ module.exports = {
           errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
           payload: {},
         });
-
 
       }
 
@@ -493,6 +526,16 @@ module.exports = {
        * Проверяем комменты
        */
 
+      /**
+       * Получаем имя парсера
+       */
+
+      const getParserParamsComments = {
+        platformName: parserPlatformName,
+        moduleName: parserModuleNameComments,
+      };
+
+      activeParser = await sails.helpers.parsers.getParserJoi(getParserParamsComments);
 
       const checkCommentsParams = {
         client,
@@ -507,11 +550,41 @@ module.exports = {
 
       while (parserStatus !== 'success' && i < parserRequestIntervalsComments.length) {
 
-        checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
+        if (activeParser != null) {
 
-        parserStatus = checkCommentsJoiRaw.status;
+          checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParser].checkCommentsJoi(checkCommentsParams);
+
+          parserStatus = checkCommentsJoiRaw.status;
+
+        } else {
+
+          parserStatus = 'error';
+
+        }
+
 
         if (parserStatus !== 'success') {
+
+          if (activeParser != null) {
+
+            /**
+             * выставляем флаг, что парсер неактивен
+             */
+
+            const apiStatusUpdateParams = {
+              platformName: parserPlatformName,
+              moduleName: parserModuleNameComments,
+              parserName: activeParser,
+              data: {
+                key: 'active',
+                value: false,
+              },
+              createdBy: moduleName,
+            };
+
+            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+          }
 
           /**
            * Проверяем условие отправки информационного сообщения клиенту
@@ -597,15 +670,9 @@ module.exports = {
 
           }
 
-          /**
-           * Логируем ошибку парсера
-           */
-
-          // TODO: Добавить нормальное логирование деталей ошибки и организовать отправку сообщения админу
-
-          sails.log.error(`${moduleName} Instagram parser error on comments check: enable interval: ${parserRequestIntervalsComments[i]}`);
-
           await sleep(parserRequestIntervalsComments[i] * parserRequestIntervalTime);
+
+          activeParser = await sails.helpers.parsers.getParserJoi(getParserParamsComments);
 
         }
 

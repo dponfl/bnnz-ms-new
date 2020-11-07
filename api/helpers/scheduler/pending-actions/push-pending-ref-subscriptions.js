@@ -444,6 +444,10 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
   const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkRefSubscription.intervals;
   const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
 
+  let activeParser = null;
+  const parserPlatformName = 'instagram';
+  const parserModuleName = 'checkProfileSubscription';
+
   let pushMessage;
 
 
@@ -790,7 +794,16 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
 
     }
 
-    const activeParser = sails.config.custom.config.parsers.inst.activeParserName;
+    /**
+     * Получаем имя парсера
+     */
+
+    const getParserParams = {
+      platformName: parserPlatformName,
+      moduleName: parserModuleName,
+    };
+
+    activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
     checkProfileSubscriptionParams = {
       client,
@@ -807,11 +820,41 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
       && i < parserRequestIntervals.length
     ) {
 
-      checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+      if (activeParser != null) {
 
-      parserStatus = checkProfileSubscriptionResRaw.status;
+        checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[activeParser].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+        parserStatus = checkProfileSubscriptionResRaw.status;
+
+      } else {
+
+        parserStatus = 'error';
+
+      }
+
 
       if (parserStatus !== 'success') {
+
+        if (activeParser != null) {
+
+          /**
+           * выставляем флаг, что парсер неактивен
+           */
+
+          const apiStatusUpdateParams = {
+            platformName: parserPlatformName,
+            moduleName: parserModuleName,
+            parserName: activeParser,
+            data: {
+              key: 'active',
+              value: false,
+            },
+            createdBy: moduleName,
+          };
+
+          await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+        }
 
         /**
          * Логируем факт факапа парсера с фиксацией текущего интервала
@@ -843,9 +886,11 @@ async function processPendingRefSubscription(client, account, pendingSubscriptio
          * Передаём параметр для определения стартовой глубины поиска для повторной проверки
          */
 
-        checkProfileSubscriptionParams.checkRenewIndex = checkProfileSubscriptionResRaw.payload.checkRenewIndex || 0;
+        // checkProfileSubscriptionParams.checkRenewIndex = checkProfileSubscriptionResRaw.payload.checkRenewIndex || 0;
 
         await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
+
+        activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
       }
 

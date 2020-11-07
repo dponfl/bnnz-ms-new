@@ -69,7 +69,7 @@ module.exports = {
       const platform = 'Instagram';
       const action = 'parsing';
       const api = 'inapi';
-      const requestType = 'getMediaId';
+      const requestType = 'getPostMetadata';
 
       let status = '';
       let subStatus = '';

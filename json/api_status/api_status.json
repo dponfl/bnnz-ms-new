@@ -1,7 +1,7 @@
 {
   "parsers": {
     "instagram": {
-      "checkProfileExistsJoi": [
+      "checkProfileExists": [
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
@@ -15,7 +15,7 @@
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
-      "checkProfileSubscriptionJoi": [
+      "checkProfileSubscription": [
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
@@ -29,7 +29,7 @@
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
-      "checkLikesJoi": [
+      "checkLikes": [
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
@@ -43,7 +43,7 @@
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
-      "checkCommentsJoi": [
+      "checkComments": [
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
@@ -57,10 +57,10 @@
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
-      "getMediaIdJoi": [
+      "getPostMetadata": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": false,
+          "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },

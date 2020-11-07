@@ -3921,7 +3921,7 @@ describe.skip('Test post RegExp', function () {
 
 });
 
-describe.skip('ApiStatus & ApiChanges', function () {
+describe('ApiStatus & ApiChanges', function () {
 
   let customConfig;
 
@@ -3937,7 +3937,7 @@ describe.skip('ApiStatus & ApiChanges', function () {
 
     const apiStatusUpdateParams = {
       platformName: 'instagram',
-      moduleName: 'checkProfileSubscriptionJoi',
+      moduleName: 'checkProfileSubscription',
       parserName: 'inapi',
       data: {
         key: 'active',
@@ -3951,6 +3951,71 @@ describe.skip('ApiStatus & ApiChanges', function () {
     expect(apiStatusUpdateRes).to.have.property('status', 'success');
 
     mlog.success(`res: ${JSON.stringify(apiStatusUpdateRes, null, 3)}`);
+
+  });
+
+  it('Get parser: parserName', async () => {
+
+    const apiStatusUpdateParams01 = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscription',
+      parserName: 'rapidApiLogicbuilder',
+      data: {
+        key: 'active',
+        value: true,
+      },
+      createdBy: 'Test'
+    };
+
+    await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams01);
+
+    const getParserParams = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscription',
+    };
+
+    const parserName = await sails.helpers.parsers.getParserJoi(getParserParams);
+
+    expect(parserName).to.be.eq('rapidApiLogicbuilder');
+
+  });
+
+  it('Get parser: null', async () => {
+
+    const apiStatusUpdateParams01 = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscription',
+      parserName: 'inapi',
+      data: {
+        key: 'active',
+        value: false,
+      },
+      createdBy: 'Test'
+    };
+
+    await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams01);
+
+    const apiStatusUpdateParams02 = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscription',
+      parserName: 'rapidApiLogicbuilder',
+      data: {
+        key: 'active',
+        value: false,
+      },
+      createdBy: 'Test'
+    };
+
+    await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams02);
+
+    const getParserParams = {
+      platformName: 'instagram',
+      moduleName: 'checkProfileSubscription',
+    };
+
+    const parserName = await sails.helpers.parsers.getParserJoi(getParserParams);
+
+    expect(parserName).to.be.eq(null);
 
   });
 
