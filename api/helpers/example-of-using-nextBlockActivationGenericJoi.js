@@ -1,28 +1,74 @@
 "use strict";
 
 
+"use strict";
+
+const Joi = require('@hapi/joi');
+
+const moduleName = 'example-of-using-nextBlockActivationGenericJoi';
+
+
+module.exports = {
+
+
+  friendlyName: 'example-of-using-nextBlockActivationGenericJoi',
+
+
+  description: 'example-of-using-nextBlockActivationGenericJoi',
+
+
+  inputs: {
+
+    params: {
+      friendlyName: 'input params',
+      description: 'input params',
+      type: 'ref',
+      required: true,
+    },
+
+  },
+
+
+  exits: {
+    success: {
+      description: 'All done.',
+    },
+    err: {
+      description: 'Error',
+    }
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    let currentAccount = null;
+
 // Пример использование из хелпера:
 // api/helpers/funnel/common/ref-profile-subscription-check/after-subscription-check-joi.js
 
 
-/**
- * Выполняем переход на join_ref_check_error
- */
+    /**
+     * Выполняем переход на join_ref_check_error
+     */
 
-const nextBlockActivationGenericParams = {
-  client: input.client,
-  account: currentAccount,
-  block: input.block,
-  updateElement: 'next',
-  updateElementValue: 'refProfileSubscriptionCheck::join_ref_check_error',
-  updateElementPreviousValue: 'refProfileSubscriptionCheck::join_ref_check',
-  createdBy: moduleName,
-  msg: input.msg,
-};
+    const nextBlockActivationGenericParams = {
+      client: input.client,
+      account: currentAccount,
+      block: input.block,
+      updateElement: 'next',
+      updateElementValue: 'refProfileSubscriptionCheck::join_ref_check_error',
+      updateElementPreviousValue: 'refProfileSubscriptionCheck::join_ref_check',
+      createdBy: moduleName,
+      msg: input.msg,
+    };
 
-await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
+    await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGenericParams);
 
+    /**
+     * Это то, что заменяет код выше
+     */
 
+//
 // input.block.next = 'refProfileSubscriptionCheck::join_ref_check_error';
 // input.block.done = true;
 // input.block.shown = true;
@@ -91,4 +137,14 @@ await sails.helpers.funnel.nextBlockActivationGenericJoi(nextBlockActivationGene
 //   switchFunnel: true,
 //   createdBy: moduleName,
 // });
+
+    return exits.success({
+      status: 'ok',
+      message: `${moduleName} performed`,
+      payload: {},
+    })
+
+  }
+
+};
 

@@ -3,13 +3,13 @@
     "instagram": {
       "checkProfileExists": [
         {
-          "parserName": "rapidApiLogicbuilder",
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "parserName": "inapi",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
@@ -17,13 +17,13 @@
       ],
       "checkProfileSubscription": [
         {
-          "parserName": "rapidApiLogicbuilder",
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "parserName": "inapi",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
@@ -31,13 +31,13 @@
       ],
       "checkLikes": [
         {
-          "parserName": "rapidApiLogicbuilder",
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "parserName": "inapi",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
@@ -45,13 +45,13 @@
       ],
       "checkComments": [
         {
-          "parserName": "rapidApiLogicbuilder",
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "parserName": "inapi",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
@@ -59,13 +59,13 @@
       ],
       "getPostMetadata": [
         {
-          "parserName": "rapidApiLogicbuilder",
+          "parserName": "inapi",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
-          "parserName": "inapi",
+          "parserName": "rapidApiLogicbuilder",
           "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
