@@ -64,8 +64,7 @@ module.exports = {
     let parserStatus = '';
     const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
-    const notificationInterval = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notificationInterval;
-    let infoMessageWasSend = false;
+    const notificationsLikes = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notifications);
 
     let activeParser = null;
     const parserPlatformName = 'instagram';
@@ -323,6 +322,11 @@ module.exports = {
 
       activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
 
+      notificationsLikes.map((item) => {
+        item.clientNotified = false;
+        item.adminNotified = false;
+      });
+
       const checkLikesParams = {
         client,
         instProfile,
@@ -381,78 +385,111 @@ module.exports = {
 
           const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
 
-          if (requestDuration > notificationInterval && !infoMessageWasSend) {
+          for (const likeErrorNotification of notificationsLikes) {
 
-            /**
-             * Трансформируем блок в информационное сообщение о факапе API
-             */
+            if (requestDuration > likeErrorNotification.notificationInterval * parserRequestIntervalTime) {
 
-            /**
-             * Достаём данные PushMessage
-             */
+              if (likeErrorNotification.sendMessageToClient && !likeErrorNotification.clientNotified) {
 
-            const pushMessageName = currentAccount.service.push_message_name;
+                /**
+                 * Трансформируем блок в информационное сообщение о факапе API
+                 */
 
-            const pushMessageGetParams = {
-              pushMessageName,
-            };
+                /**
+                 * Достаём данные PushMessage
+                 */
 
-            const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+                const pushMessageName = currentAccount.service.push_message_name;
 
-            if (pushMessageGetRaw.status !== 'ok') {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
-                location: moduleName,
-                message: 'Wrong pushMessageGetJoi response',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
-                payload: {
-                  pushMessageGetParams,
-                  pushMessageGetRaw,
-                },
-              });
+                const pushMessageGetParams = {
+                  pushMessageName,
+                };
 
-            }
+                const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
 
-            pushMessage = pushMessageGetRaw.payload;
+                if (pushMessageGetRaw.status !== 'ok') {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.ERROR,
+                    location: moduleName,
+                    message: 'Wrong pushMessageGetJoi response',
+                    clientGuid,
+                    accountGuid,
+                    errorName: sails.config.custom.STORAGE_ERROR.name,
+                    payload: {
+                      pushMessageGetParams,
+                      pushMessageGetRaw,
+                    },
+                  });
 
-            const messageDataPath = 'tasks.onParserError';
-            const messageData = _.get(pushMessage, messageDataPath, null);
+                }
 
-            if (messageData == null) {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.ERROR,
-                location: moduleName,
-                message: 'No expected messageData',
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.STORAGE_ERROR.name,
-                payload: {
-                  pushMessage,
-                  messageDataPath,
+                pushMessage = pushMessageGetRaw.payload;
+
+                const messageDataPath = 'tasks.onParserError';
+                const messageData = _.get(pushMessage, messageDataPath, null);
+
+                if (messageData == null) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.ERROR,
+                    location: moduleName,
+                    message: 'No expected messageData',
+                    clientGuid,
+                    accountGuid,
+                    errorName: sails.config.custom.STORAGE_ERROR.name,
+                    payload: {
+                      pushMessage,
+                      messageDataPath,
+                      messageData,
+                    },
+                  });
+                }
+
+                taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
+                  client: input.client,
                   messageData,
-                },
-              });
+                  additionalTokens: [
+                    {
+                      token: '$PostLink$',
+                      value: postRec.postLink,
+                    },
+                  ],
+                  additionalParams: {
+                    chat_id: input.client.chat_id,
+                    message_id: taskRec.messageId,
+                    disable_web_page_preview: true,
+                  },
+                });
+
+                likeErrorNotification.clientNotified = true;
+
+              }
+
+              if (likeErrorNotification.sendMessageToAdmin && !likeErrorNotification.adminNotified) {
+
+                /**
+                 * Генерим сообщение о критической ошибке
+                 */
+
+                await LogProcessor.critical({
+                  message: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.message,
+                  clientGuid,
+                  accountGuid,
+                  // requestId: null,
+                  // childRequestId: null,
+                  errorName: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.name,
+                  location: moduleName,
+                  emergencyLevel: likeErrorNotification.emergencyLevel,
+                  payload: {
+                    notificationInterval: `${likeErrorNotification.notificationInterval} seconds`,
+                    activeParser,
+                  },
+                });
+
+                likeErrorNotification.adminNotified = true;
+
+              }
+
             }
-
-            taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
-              client: input.client,
-              messageData,
-              additionalTokens: [
-                {
-                  token: '$PostLink$',
-                  value: postRec.postLink,
-                },
-              ],
-              additionalParams: {
-                chat_id: input.client.chat_id,
-                message_id: taskRec.messageId,
-                disable_web_page_preview: true,
-              },
-            });
-
-            infoMessageWasSend = true;
 
           }
 

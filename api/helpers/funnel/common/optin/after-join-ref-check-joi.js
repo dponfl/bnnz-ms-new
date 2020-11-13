@@ -266,12 +266,12 @@ module.exports = {
            */
 
           await LogProcessor.error({
-            message: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.message,
+            message: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.message,
             clientGuid,
             accountGuid,
             // requestId: null,
             // childRequestId: null,
-            errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_EXISTS_ERROR.name,
+            errorName: sails.config.custom.INST_PARSER_CHECK_PROFILE_SUBSCRIPTION_ERROR.name,
             location: moduleName,
             payload: {
               parserRequestInterval: parserRequestIntervals[i],

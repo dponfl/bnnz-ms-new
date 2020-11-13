@@ -82,20 +82,20 @@ module.exports = {
       const momentStart = moment();
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].paths.getFollowing,
+        uri: sails.config.custom.config.parsers.inst.inapi.url + sails.config.custom.config.parsers.inst.inapi.paths.getFollowing,
         method: 'GET',
         qs: {
-          api_key: sails.config.custom.instParserApiKey,
+          api_key: sails.config.custom.config.parsers.inst.inapi.apiKey,
           user_id: input.profilePk,
           limit: input.limit,
         },
         json: true,
       };
 
-      const requestRes = await rp(options);
+      // const requestRes = await rp(options);
 
       // TODO: Убрать позже (использовалось для проверки работы при ошибке парсера)
-      // const requestRes = {status: 'error'};
+      const requestRes = {status: 'error'};
 
       const responseStatusMain = _.get(requestRes, 'status', null);
       const responseStatusInner = _.get(requestRes, 'response.status', null);

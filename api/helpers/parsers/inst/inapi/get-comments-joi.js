@@ -71,10 +71,10 @@ module.exports = {
       const momentStart = moment();
 
       const options = {
-        uri: sails.config.custom.instParserUrl + sails.config.custom.config.parsers.inst[sails.config.custom.config.parsers.inst.activeParserName].paths.getComments,
+        uri: sails.config.custom.config.parsers.inst.inapi.url + sails.config.custom.config.parsers.inst.inapi.paths.getComments,
         method: 'GET',
         qs: {
-          api_key: sails.config.custom.instParserApiKey,
+          api_key: sails.config.custom.config.parsers.inst.inapi.apiKey,
           mediaId: input.mediaId,
         },
         json: true,

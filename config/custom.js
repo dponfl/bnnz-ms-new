@@ -739,6 +739,16 @@ module.exports.custom = {
     message: 'Unexpected response from checkProfileExistsJoi',
   },
 
+  INST_PARSER_CHECK_LIKES_ERROR: {
+    name: 'INST_PARSER_CHECK_LIKES_ERROR',
+    message: 'Unexpected response from checkLikesJoi or no enabled & active parser',
+  },
+
+  INST_PARSER_CHECK_COMMENTS_ERROR: {
+    name: 'INST_PARSER_CHECK_COMMENTS_ERROR',
+    message: 'Unexpected response from checkCommentsJoi or no enabled & active parser',
+  },
+
   INST_PARSER_GET_MEDIA_ID_ERROR: {
     name: 'INST_PARSER_GET_MEDIA_ID_ERROR',
     message: 'Unexpected response from getMediaIdJoi',
