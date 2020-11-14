@@ -104,20 +104,7 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = 'api/helpers/general/activate-schedule';
-      // const errorMsg = 'Error';
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {},
-      //   }
-      // };
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,

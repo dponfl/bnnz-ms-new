@@ -3921,7 +3921,7 @@ describe.skip('Test post RegExp', function () {
 
 });
 
-describe('ApiStatus & ApiChanges', function () {
+describe.skip('ApiStatus & ApiChanges', function () {
 
   let customConfig;
 
@@ -3954,7 +3954,7 @@ describe('ApiStatus & ApiChanges', function () {
 
   });
 
-  it('Get parser: parserName', async () => {
+  it.skip('Get parser: parserName', async () => {
 
     const apiStatusUpdateParams01 = {
       platformName: 'instagram',
@@ -3980,7 +3980,7 @@ describe('ApiStatus & ApiChanges', function () {
 
   });
 
-  it('Get parser: null', async () => {
+  it.skip('Get parser: null', async () => {
 
     const apiStatusUpdateParams01 = {
       platformName: 'instagram',
@@ -4020,3 +4020,14 @@ describe('ApiStatus & ApiChanges', function () {
   });
 
 });
+
+describe('API monitoring tests', function () {
+
+  it('check apiStatusRefresh', async function () {
+
+    await sails.helpers.scheduler.apiMonitoring.apiStatusRefresh();
+
+  });
+
+});
+

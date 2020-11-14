@@ -122,7 +122,17 @@ module.exports = {
               });
             }
 
+
+            /**
+             * Начало блока целевых действий внутри лока
+             */
+
             XXX
+
+            /**
+             * Окончание блока целевых действий внутри лока
+             */
+
 
             const ReleaseLock = await sails
               .sendNativeQuery(sqlReleaseLockGenerateTasks)

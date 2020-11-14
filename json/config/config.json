@@ -1084,6 +1084,11 @@
         "location": "pendingActions",
         "action": "pushPendingPosts",
         "getRecordsLimit": 100
+      },
+      {
+        "rule": "*/5 * * * *",
+        "location": "apiMonitoring",
+        "action": "apiStatusRefresh"
       }
     ]
   },

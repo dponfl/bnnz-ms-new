@@ -5,13 +5,13 @@
         {
           "parserName": "inapi",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
@@ -19,13 +19,13 @@
         {
           "parserName": "inapi",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
@@ -33,13 +33,13 @@
         {
           "parserName": "inapi",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
@@ -47,13 +47,13 @@
         {
           "parserName": "inapi",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ],
@@ -61,13 +61,13 @@
         {
           "parserName": "inapi",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
         {
           "parserName": "rapidApiLogicbuilder",
           "enabled": true,
-          "active": true,
+          "active": false,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         }
       ]

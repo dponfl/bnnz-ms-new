@@ -1,29 +1,20 @@
 "use strict";
 
-const Joi = require('@hapi/joi');
-const moment = require('moment');
+const sleep = require('util').promisify(setTimeout);
 
-const moduleName = 'storage:api-status-update-joi';
+const moduleName = 'scheduler:api-monitoring:api-status-refresh';
 
 
 module.exports = {
 
 
-  friendlyName: 'storage:api-status-update-joi',
+  friendlyName: 'scheduler:api-monitoring:api-status-refresh',
 
 
-  description: 'storage:api-status-update-joi',
+  description: 'scheduler:api-monitoring:api-status-refresh',
 
 
   inputs: {
-
-    params: {
-      friendlyName: 'input params',
-      description: 'input params',
-      type: 'ref',
-      required: true,
-    },
-
   },
 
 
@@ -39,39 +30,34 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    const schema = Joi.object({
-      platformName: Joi
-        .string()
-        .description('platform name')
-        .required(),
-      moduleName: Joi
-        .string()
-        .description('module name')
-        .required(),
-      parserName: Joi
-        .string()
-        .description('parser name')
-        .required(),
-      data: Joi
-        .any()
-        .description('Data to save')
-        .required(),
-      createdBy: Joi
-        .string()
-        .description('source of update')
-        .required(),
-    });
+    let platformName;
 
-    let input;
-
-    let apiStatusRec;
-
-    let exitResultData;
-    let performExit = false;
+    let client;
 
     try {
 
-      input = await schema.validateAsync(inputs.params);
+      const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
+        criteria: {
+          chat_id: '372204823'
+        }
+      });
+
+      if (clientRaw.status !== 'ok' || clientRaw.payload.length !== 1) {
+        await LogProcessor.critical({
+          message: 'Client record not found',
+          // requestId: null,
+          // childRequestId: null,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+          location: moduleName,
+          payload: {
+            criteria: {
+              chat_id: '372204823'
+            }
+          },
+        });
+      }
+
+      client = clientRaw.payload[0];
 
       /**
        * Используем DB lock
@@ -87,7 +73,7 @@ module.exports = {
     SELECT RELEASE_LOCK('apiStatusUpdateLock') as releaseApiStatusUpdateLockResult
     `;
 
-      await sails.getDatastore('clientDb')
+      await sails.getDatastore('configDb')
         .leaseConnection(async (db) => {
 
           try {
@@ -128,9 +114,10 @@ module.exports = {
              * Начало блока целевых действий внутри лока
              */
 
-            apiStatusRec = await ApiStatus.findOne({
+            const apiStatusRec = await ApiStatus.findOne({
               active: true,
             })
+              .usingConnection(db)
               .tolerate(async (err) => {
 
                 err.details = {
@@ -140,8 +127,6 @@ module.exports = {
                 await LogProcessor.dbError({
                   error: err,
                   message: 'ApiStatus.findOne() error',
-                  // clientGuid,
-                  // accountGuid,
                   // requestId: null,
                   // childRequestId: null,
                   location: moduleName,
@@ -170,15 +155,20 @@ module.exports = {
 
             }
 
+            /**
+             * Проверка статусов парсеров для Inst
+             */
 
-            const updateModule = _.get(apiStatusRec.data, `parsers.${input.platformName}.${input.moduleName}`, null);
+            platformName = 'instagram';
 
-            if (updateModule == null) {
+            const modules = _.get(apiStatusRec.data, `parsers.${platformName}`, null);
+
+            if (modules == null) {
               await sails.helpers.general.throwErrorJoi({
                 errorType: sails.config.custom.enums.errorType.CRITICAL,
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: moduleName,
-                message: `API status module for "parsers.${input.platformName}.${input.moduleName}" not found`,
+                message: `API status section for "parsers.${platformName}" not found`,
                 errorName: sails.config.custom.GENERAL_ERROR.name,
                 payload: {
                   apiStatusRec,
@@ -186,120 +176,24 @@ module.exports = {
               });
             }
 
-            const updateParser = _.find(updateModule, {parserName: input.parserName});
+            for (const module in modules) {
 
-            if (updateParser == null) {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.CRITICAL,
-                emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                location: moduleName,
-                message: `API status block for parserName:"${input.parserName}" not found`,
-                errorName: sails.config.custom.GENERAL_ERROR.name,
-                payload: {
-                  updateModule,
-                },
-              });
-            }
+              for (const parser of modules[module]) {
 
+                if (_.get(parser, 'enabled', false)
+                  && !_.get(parser, 'active', true)
+                ) {
 
-            if (input.data.value !== updateParser[input.data.key]) {
+                  /**
+                   * Выполняем проверку работоспособности парсера на тестовых данных
+                   */
 
-              const old_value = {};
-              const new_value = {};
+                  await checkInstParser(client, platformName, module, parser);
 
-              old_value[input.data.key] = updateParser[input.data.key];
-              new_value[input.data.key] = input.data.value;
+                  // TODO: Убрать после того, как лимит на 1 запрос в сек будет убран для logicbuilder
+                  await sleep(1000);
 
-              const apiChanges = {
-                platform: input.platformName,
-                module: input.moduleName,
-                parser: input.parserName,
-                old_value,
-                new_value,
-                created_by: `${input.createdBy} => ${moduleName}`,
-              };
-
-              await ApiChanges.create(apiChanges)
-                .tolerate(async (err) => {
-                  err.details = {
-                    apiChanges,
-                  };
-
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'ApiChanges.create() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      apiChanges,
-                    },
-                  });
-
-                  return true;
-                });
-
-              _.assign(updateParser, new_value);
-
-              updateParser.updatedAt = moment().format();
-
-              const apiStatusUpdateRes = await ApiStatus.update({
-                id: apiStatusRec.id,
-              }).set({data: apiStatusRec.data})
-                .tolerate(async (err) => {
-
-                  err.details = {
-                    criteria: {
-                      id: apiStatusRec.id,
-                    },
-                    data: apiStatusRec.data,
-                  };
-
-                  await LogProcessor.dbError({
-                    error: err,
-                    message: 'ApiStatus.update() error',
-                    // clientGuid,
-                    // accountGuid,
-                    // requestId: null,
-                    // childRequestId: null,
-                    location: moduleName,
-                    payload: {
-                      criteria: {
-                        id: apiStatusRec.id,
-                      },
-                      data: apiStatusRec.data,
-                    },
-                  });
-
-                  return null;
-                })
-                .fetch();
-
-              if (apiStatusUpdateRes == null) {
-
-                performExit = true;
-                exitResultData = {
-                  status: 'error',
-                  message: 'ApiStatus update error',
-                  payload: {
-                    input,
-                    apiStatusRec,
-                  },
-                };
-
-              } else {
-
-                performExit = true;
-                exitResultData = {
-                  status: 'success',
-                  message: 'ApiStatus updated & ApiChange record created',
-                  payload: {
-                    input,
-                    apiStatusRec,
-                  },
-                };
+                }
 
               }
 
@@ -386,13 +280,13 @@ module.exports = {
               return await sails.helpers.general.catchErrorJoi({
                 error: ee,
                 location: moduleName,
-                throwError: true,
+                throwError,
               });
             } else {
               await sails.helpers.general.catchErrorJoi({
                 error: ee,
                 location: moduleName,
-                throwError: false,
+                throwError,
               });
               return exits.success({
                 status: 'ok',
@@ -405,50 +299,183 @@ module.exports = {
 
         }); // .leaseConnection()
 
-      if (performExit) {
-        return exits.success(exitResultData);
-      }
-
       return exits.success({
-        status: 'success',
-        message: 'ApiChange: nothing to change',
-        payload: {
-          input,
-          apiStatusRec,
-        },
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: {},
       })
 
     } catch (e) {
+
       const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: true,
-          errorPayloadAdditional: {
-            input,
-          },
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: false,
-          errorPayloadAdditional: {
-            input,
-          },
+          throwError,
         });
         return exits.success({
-          status: 'error',
+          status: 'ok',
           message: `${moduleName} performed`,
-          payload: {
-            input,
-          },
+          payload: {},
         });
       }
+
     }
 
   }
 
 };
+
+async function checkInstParser(client, platform, module, parser) {
+
+  const methodName = 'checkInstParser';
+
+  const testData = {
+    checkProfileExists: {
+      instProfile: 'webstudiopro'
+    },
+    checkProfileSubscription: {
+      checkProfile: 'webstudiopro',
+      profileId: '7210053297',
+      profilesList: ['befame.ru'],
+    },
+    checkLikes: {
+      instProfile: 'dmitrysnap',
+      shortCode: 'Bf3antMFqwr',
+      postMediaId: '1726966059909950507',
+    },
+    checkComments: {
+      instProfile: 'dmitrysnap',
+      shortCode: 'Bf3antMFqwr',
+      postMediaId: '1726966059909950507',
+    },
+    getPostMetadata: {
+      shortCode: 'Bf3antMFqwr',
+    }
+  };
+
+
+  switch (module) {
+    case 'checkProfileExists':
+
+      const checkProfileExistsParams = {
+        client,
+        instProfile: testData[module].instProfile,
+      };
+
+      const checkProfileExistsRaw = await sails.helpers.parsers.inst[parser.parserName].checkProfileExistsJoi(checkProfileExistsParams);
+
+      if (checkProfileExistsRaw.status === 'success') {
+        await activateParser(platform, module, parser, `${moduleName}=>${methodName}`);
+      }
+
+      break;
+
+    case 'checkProfileSubscription':
+
+      const checkProfileSubscriptionParams = {
+        client,
+        checkProfile: testData[module].checkProfile,
+        profileId: testData[module].profileId,
+        profilesList: testData[module].profilesList,
+      };
+
+      const checkProfileSubscriptionResRaw = await sails.helpers.parsers.inst[parser.parserName].checkProfileSubscriptionJoi(checkProfileSubscriptionParams);
+
+      if (checkProfileSubscriptionResRaw.status === 'success') {
+        await activateParser(platform, module, parser, `${moduleName}=>${methodName}`);
+      }
+
+      break;
+
+    case 'checkLikes':
+
+      const checkLikesParams = {
+        client,
+        instProfile: testData[module].instProfile,
+        shortCode: testData[module].shortCode,
+        postMediaId: testData[module].postMediaId,
+      };
+
+      const checkLikesJoiRaw = await sails.helpers.parsers.inst[parser.parserName].checkLikesJoi(checkLikesParams);
+
+      if (checkLikesJoiRaw.status === 'success') {
+        await activateParser(platform, module, parser, `${moduleName}=>${methodName}`);
+      }
+
+      break;
+
+    case 'checkComments':
+
+      const checkCommentsParams = {
+        client,
+        instProfile: testData[module].instProfile,
+        shortCode: testData[module].shortCode,
+        postMediaId: testData[module].postMediaId,
+      };
+
+      const checkCommentsJoiRaw = await sails.helpers.parsers.inst[parser.parserName].checkCommentsJoi(checkCommentsParams);
+
+      if (checkCommentsJoiRaw.status === 'success') {
+        await activateParser(platform, module, parser, `${moduleName}=>${methodName}`);
+      }
+
+      break;
+
+    case 'getPostMetadata':
+
+      const getPostMetadataParams = {
+        client,
+        shortCode: testData[module].shortCode,
+      };
+
+      const getPostMetadataJoiRaw = await sails.helpers.parsers.inst[parser.parserName].getPostMetadataJoi(getPostMetadataParams);
+
+      if (getPostMetadataJoiRaw.status === 'success') {
+        await activateParser(platform, module, parser, `${moduleName}=>${methodName}`);
+      }
+
+      break;
+
+    default:
+      await LogProcessor.critical({
+        message: 'Unknown module name',
+        // requestId: null,
+        // childRequestId: null,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+        location: moduleName,
+        payload: {
+          module,
+        },
+      });
+  }
+
+}
+
+async function activateParser(platform, module, parser, createdBy) {
+
+  const methodName = 'activateParser';
+
+  const apiStatusUpdateParams = {
+    platformName: platform,
+    moduleName: module,
+    parserName: parser.parserName,
+    data: {
+      key: 'active',
+      value: true,
+    },
+    createdBy: `${createdBy}=>${methodName}`,
+  };
+
+  await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+
+}
 
