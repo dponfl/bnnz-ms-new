@@ -32,32 +32,35 @@ module.exports = {
 
     let platformName;
 
-    let client;
+    const client = {
+      guid: 'd5c38def-2c56-4fdc-be35-2157fd8589d6',
+      account_use: '88f93f36-99a0-46d6-b54f-f6279115784b',
+    };
 
     try {
 
-      const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
-        criteria: {
-          chat_id: '372204823'
-        }
-      });
-
-      if (clientRaw.status !== 'ok' || clientRaw.payload.length !== 1) {
-        await LogProcessor.critical({
-          message: 'Client record not found',
-          // requestId: null,
-          // childRequestId: null,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
-          location: moduleName,
-          payload: {
-            criteria: {
-              chat_id: '372204823'
-            }
-          },
-        });
-      }
-
-      client = clientRaw.payload[0];
+      // const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
+      //   criteria: {
+      //     chat_id: '372204823'
+      //   }
+      // });
+      //
+      // if (clientRaw.status !== 'ok' || clientRaw.payload.length !== 1) {
+      //   await LogProcessor.critical({
+      //     message: 'Client record not found',
+      //     // requestId: null,
+      //     // childRequestId: null,
+      //     emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+      //     location: moduleName,
+      //     payload: {
+      //       criteria: {
+      //         chat_id: '372204823'
+      //       }
+      //     },
+      //   });
+      // }
+      //
+      // client = clientRaw.payload[0];
 
       /**
        * Используем DB lock
