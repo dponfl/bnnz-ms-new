@@ -39,29 +39,6 @@ module.exports = {
 
     try {
 
-      // const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
-      //   criteria: {
-      //     chat_id: '372204823'
-      //   }
-      // });
-      //
-      // if (clientRaw.status !== 'ok' || clientRaw.payload.length !== 1) {
-      //   await LogProcessor.critical({
-      //     message: 'Client record not found',
-      //     // requestId: null,
-      //     // childRequestId: null,
-      //     emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
-      //     location: moduleName,
-      //     payload: {
-      //       criteria: {
-      //         chat_id: '372204823'
-      //       }
-      //     },
-      //   });
-      // }
-      //
-      // client = clientRaw.payload[0];
-
       /**
        * Используем DB lock
        */
