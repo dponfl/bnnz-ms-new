@@ -20,6 +20,7 @@
     }
   },
   "ref": {
+    "refLinkBase": "https://telegram.me/BeFameBot?start=srfJCDCGT4",
     "general": {
       "max_direct_links": 3,
       "max_ref_down_links": 20,
@@ -1292,8 +1293,6 @@
       },
       "token": {
         "$$$$$$$$$$$$$$$$$$$$$_COMMON": "*** ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ ВОРОНОК, КЛАВИАТУР И ПУШ-НОТИФИКАЦИЙ ***",
-        "COMMON_GENERAL_WRONG_MESSAGE": "Я получил сообщение из которого не вполне понятно, что ты хочешь. И поэтому я переправил его в Службу поддержки клиентов",
-        "COMMON_GENERAL_USE_KEYBOARD": "Используй специальную клавиатуру вместо отправки произвольного сообщения",
         "$$$$$$$$$$$$$$$$$$$$$_Common_Optin": "*** ТОКЕНЫ ДЛЯ ОБЩЕГО КЕЙСА Optin ***",
         "COMMON_START_01": "Привет, $FirstName$ :wave:",
         "COMMON_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
@@ -2011,7 +2010,14 @@
         "GEN_BEBUSINESS_INFO_03_10": "— Приоритетная поддержка",
         "GEN_BEBUSINESS_INFO_03_11": "Стоимость пакета: $BeLikePriceCurrent$ (вместо $BeLikePriceList$)",
         "GEN_BEBUSINESS_INFO_03_BTN_01": ":white_check_mark: Хочу пакет «BeBusiness»",
-        "GEN_BEBUSINESS_INFO_03_BTN_02": "Посмотреть другие пакеты продвижения"
+        "GEN_BEBUSINESS_INFO_03_BTN_02": "Посмотреть другие пакеты продвижения",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Push_Messages": "*** ТОКЕНЫ ДЛЯ BeFame Push Messages ***",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Push_Messages_General": "*** ТОКЕНЫ ДЛЯ BeFame Push Messages General Cases ***",
+        "COMMON_GENERAL_WRONG_MESSAGE": "Я получил сообщение из которого не вполне понятно, что ты хочешь. И поэтому я переправил его в Службу поддержки клиентов",
+        "COMMON_GENERAL_USE_KEYBOARD": "Используй специальную клавиатуру вместо отправки произвольного сообщения",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Push_Messages_Ref": "*** ТОКЕНЫ ДЛЯ BeFame Push Messages Ref ***",
+        "COMMON_REF_LINK_MST_01": "Твоя реферальная ссылка для аккаунта $CurrentAccount$ :point_down:",
+        "COMMON_REF_LINK_MST_02": "$RefLink$"
       }
     }
   }
