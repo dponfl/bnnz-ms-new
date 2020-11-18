@@ -265,19 +265,19 @@
       "buttons": [
         [
           {
-            "id": "stats",
+            "id": "ref_link",
             "text": "COMMON_KEYBOARD_REF_START_BTN_01",
-            "action": null
+            "action": "common::ref::getRefLinkJoi"
           }
         ],
         [
           {
-            "id": "ref",
+            "id": "statistics",
             "text": "COMMON_KEYBOARD_REF_START_BTN_02",
             "action": null
           },
           {
-            "id": "change_account",
+            "id": "get_ref_payout",
             "text": "COMMON_KEYBOARD_REF_START_BTN_03",
             "action": null
           }

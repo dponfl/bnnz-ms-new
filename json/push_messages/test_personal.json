@@ -564,6 +564,38 @@
           ]
         }
       }
+    },
+    "ref": {
+      "refLink": {
+        "id": "ref_link",
+        "description": "ref_link",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_REF_LINK_MST_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_REF_LINK_MST_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
     }
   },
   "scheduler": {
