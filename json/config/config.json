@@ -1087,7 +1087,7 @@
         "getRecordsLimit": 100
       },
       {
-        "rule": "*/5 * * * *",
+        "rule": "5 * * * *",
         "location": "apiMonitoring",
         "action": "apiStatusRefresh"
       }

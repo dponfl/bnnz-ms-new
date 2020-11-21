@@ -4021,13 +4021,21 @@ describe.skip('ApiStatus & ApiChanges', function () {
 
 });
 
-describe('API monitoring tests', function () {
+describe.skip('API monitoring tests', function () {
 
-  it('check apiStatusRefresh', async function () {
+  it.skip('check apiStatusRefresh', async function () {
 
     await sails.helpers.scheduler.apiMonitoring.apiStatusRefresh();
 
   });
 
+  it('moment()', async function () {
+
+    const timeStr = '2020-11-20T15:04:44.812Z';
+    mlog.log(`Display: ${moment(timeStr).format()}`);
+
+  });
+
 });
+
 
