@@ -1,0 +1,64 @@
+{
+  "chat_blasts_examples": {
+    "chat_blast_text_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "text",
+          "timeType": "absolute",
+          "showTime": "2020-11-20T15:04:44.812Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_text_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "text",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+  }
+}

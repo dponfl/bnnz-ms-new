@@ -89,13 +89,16 @@ module.exports = {
        * Call blockModifyHelper to update block if needed
        */
 
-      if (input.blockModifyHelperParams != null) {
+      if (messageData.blockModifyHelper != null) {
 
         const performBlockModifyHelperJoiParams = {
           client: input.client,
           messageData,
-          additionalParams: input.blockModifyHelperParams,
         };
+
+        if (input.blockModifyHelperParams != null) {
+          performBlockModifyHelperJoiParams.additionalParams = input.blockModifyHelperParams;
+        }
 
         messageData = await sails.helpers.messageProcessor.performBlockModifyHelperJoi(performBlockModifyHelperJoiParams);
 
@@ -435,32 +438,27 @@ module.exports = {
       }
 
       /**
-       * Call afterHelper to update block if needed
+       * Call afterHelper if needed
        */
 
-      // put "afterHelper" call here...
+      if (messageData.afterHelper != null) {
 
+        const performAfterHelperJoiParams = {
+          client: input.client,
+          messageData,
+        };
 
+        if (input.afterHelperParams != null) {
+          performAfterHelperJoiParams.additionalParams = input.afterHelperParams;
+        }
+
+        await sails.helpers.messageProcessor.performAfterHelperJoi(performAfterHelperJoiParams);
+
+      }
 
       return exits.success(sendMessageResult);
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -480,7 +478,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }
