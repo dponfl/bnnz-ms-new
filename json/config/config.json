@@ -1090,6 +1090,11 @@
         "rule": "5 * * * *",
         "location": "apiMonitoring",
         "action": "apiStatusRefresh"
+      },
+      {
+        "rule": "15 * * * *",
+        "location": "chatBlasts",
+        "action": "chatBlastsRun"
       }
     ]
   },
