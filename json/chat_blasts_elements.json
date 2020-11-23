@@ -1,5 +1,33 @@
 {
   "chat_blasts_examples": {
+    "chat_blast_text_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "text",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
     "chat_blast_text_absolute": {
       "actionName": "***",
       "actionsList": [
@@ -60,5 +88,51 @@
       "done": false,
       "deleted": false
     },
+    "chat_blast_inline_keyboard_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "inline_keyboard",
+          "timeType": "absolute",
+          "showTime": "2020-11-20T15:04:44.812Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    }
   }
 }
