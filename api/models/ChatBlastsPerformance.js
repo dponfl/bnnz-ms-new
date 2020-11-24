@@ -15,6 +15,12 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+    clientGuid: {
+      type: 'string',
+    },
+    accountGuid: {
+      type: 'string',
+    },
     actionTime: {
       type: 'string',
     },

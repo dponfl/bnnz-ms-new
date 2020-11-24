@@ -855,6 +855,16 @@ module.exports.custom = {
     message: 'Decline from RELEASE_LOCK()',
   },
 
+  CHAT_BLASTS_ERROR_NO_ELEMENT: {
+    name: 'CHAT_BLASTS_ERROR_NO_ELEMENT',
+    message: 'No element found by condition',
+  },
+
+  CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN: {
+    name: 'CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN',
+    message: 'Element was shown already',
+  },
+
 
 
 

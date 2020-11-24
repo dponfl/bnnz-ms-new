@@ -5,6 +5,7 @@ const uuid = require('uuid-apikey');
 
 const moduleName = 'scheduler:chat-blasts:chat-blasts-run';
 
+let requestId;
 
 module.exports = {
 
@@ -31,7 +32,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    const requestId = uuid.create().uuid;
+    requestId = uuid.create().uuid;
 
     let chatBlastsRecords;
 
@@ -295,11 +296,140 @@ module.exports = {
 
 };
 
-async function processChatBlast() {
+async function processChatBlast(rec) {
 
   const methodName = 'processChatBlast';
 
+  const clientGuid = rec.clientGuid;
+  const accountGuid = rec.accountGuid;
 
+  const childRequestId = uuid.create().uuid;
+
+  const currentElem = _.find(rec.actionsList, {id: rec.actionName});
+
+  if (currentElem == null) {
+
+    /**
+     * Не можем найти элемент по указанному значению
+     */
+
+    await LogProcessor.critical({
+      message: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.message,
+      requestId,
+      childRequestId,
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: {
+        chatBlastRecGuid: rec.guid,
+        actionName: rec.actionName,
+      },
+    });
+
+    return;
+
+  }
+
+  if (currentElem.shown) {
+
+    /**
+     * Этот элемент уже был обработан (сообщение было отправлено)
+     */
+
+    await LogProcessor.critical({
+      message: sails.config.custom.CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN.message,
+      requestId,
+      childRequestId,
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: {
+        chatBlastRecGuid: rec.guid,
+        actionName: rec.actionName,
+        currentElem,
+      },
+    });
+
+    return;
+
+  }
+
+  /**
+   * Достаём запись клиента
+   */
+
+  const clientRaw = await sails.helpers.storage.clientGetByCriteriaJoi({
+    criteria: {
+      guid: clientGuid,
+    }
+  });
+
+  if (clientRaw.status !== 'ok') {
+
+    await LogProcessor.critical({
+      message: 'client not found',
+      requestId,
+      childRequestId,
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.GENERAL_ERROR.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: null,
+    });
+
+    return;
+  }
+
+  if (clientRaw.payload.length !== 1) {
+
+    await LogProcessor.critical({
+      message: 'several or none client records found',
+      requestId,
+      childRequestId,
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.GENERAL_ERROR.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: null,
+    });
+
+    return;
+  }
+
+  const client = clientRaw.payload[0];
+
+  const sendMessageParams = {
+    client,
+    messageData: currentElem.message,
+  };
+
+  const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
+
+  if (msgRes.status !== 'ok') {
+
+    await LogProcessor.critical({
+      message: 'Wrong sendMessageJoi response',
+      requestId,
+      childRequestId,
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.GENERAL_ERROR.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: {
+        sendMessageParams,
+        msgRes,
+      },
+    });
+
+    return;
+  }
 
 }
 
