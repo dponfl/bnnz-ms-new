@@ -102,59 +102,36 @@ module.exports = {
              * Начало блока целевых действий внутри лока
              */
 
-            chatBlastsRecords = await ChatBlastsPerformance.find({
-              where: {
-                deleted: false,
-                done: false,
-                actionTime: {
-                  '<=': moment().format()
-                },
+            const findCriteria = {
+              deleted: false,
+              done: false,
+              actionTime: {
+                '<=': moment().format()
               },
+            };
+
+            chatBlastsRecords = await ChatBlastsPerformance.find({
+              where: findCriteria,
             })
               .tolerate(async (err) => {
 
-                err.details = {
-                  deleted: false,
-                  done: false,
-                  actionTime: {
-                    '<=': moment().format()
-                  },
-                };
+                err.details = findCriteria;
 
-                await LogProcessor.dbError({
-                  error: err,
-                  message: 'ChatBlastsPerformance.find error',
+                await sails.helpers.general.throwErrorJoi({
+                  errorType: sails.config.custom.enums.errorType.CRITICAL,
+                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                   requestId,
                   location: moduleName,
+                  message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_FIND_ERROR.message,
+                  errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_FIND_ERROR.name,
                   payload: {
-                    deleted: false,
-                    done: false,
-                    actionTime: {
-                      '<=': moment().format()
-                    },
+                    findCriteria,
+                    err,
                   },
                 });
 
                 return 'error';
               });
-
-            if (chatBlastsRecords === 'error') {
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.CRITICAL,
-                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-                requestId,
-                location: moduleName,
-                message: 'ChatBlastsPerformance.find error',
-                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-                payload: {
-                  deleted: false,
-                  done: false,
-                  actionTime: {
-                    '<=': moment().format()
-                  },
-                },
-              });
-            }
 
             await LogProcessor.info({
               message: `Chat Blasts Run: found ${chatBlastsRecords.length} records`,
@@ -404,6 +381,21 @@ async function processChatBlast(rec) {
 
   const client = clientRaw.payload[0];
 
+  await processChatBlastElement(client, rec, currentElem);
+
+}
+
+async function processChatBlastElement(client, rec, currentElem) {
+
+  const methodName = 'processChatBlastElement';
+
+  const childRequestId = uuid.create().uuid;
+
+  const clientGuid = rec.clientGuid;
+  const accountGuid = rec.accountGuid;
+
+  let performNextElementNow = false;
+
   const sendMessageParams = {
     client,
     messageData: currentElem.message,
@@ -431,13 +423,156 @@ async function processChatBlast(rec) {
     return;
   }
 
-}
+  currentElem.shown = true;
 
-async function bbb() {
+  if (currentElem.next != null) {
 
-  const methodName = 'bbb';
+    /**
+     * Выполняем неоходимые действия для подготовки активизации или
+     * выполняем активацию следующего элемента
+     */
+
+    rec.actionName = currentElem.next;
+
+    const nextElem = _.find(rec.actionsList, {id: currentElem.next});
+
+    if (nextElem == null) {
+
+      /**
+       * Не можем найти следующий элемент по указанному значению
+       */
+
+      await LogProcessor.critical({
+        message: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.message,
+        requestId,
+        childRequestId,
+        clientGuid,
+        accountGuid,
+        errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: `${moduleName}::${methodName}`,
+        payload: {
+          chatBlastRecGuid: rec.guid,
+          next: currentElem.next,
+        },
+      });
+
+      return;
+
+    }
+
+    if (nextElem.shown) {
+
+      /**
+       * Следующий элемент уже был обработан (сообщение было отправлено)
+       */
+
+      await LogProcessor.critical({
+        message: sails.config.custom.CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN.message,
+        requestId,
+        childRequestId,
+        clientGuid,
+        accountGuid,
+        errorName: sails.config.custom.CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN.name,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: `${moduleName}::${methodName}`,
+        payload: {
+          chatBlastRecGuid: rec.guid,
+          next: currentElem.next,
+          currentElem,
+          nextElem,
+        },
+      });
+
+      return;
+
+    }
+
+    switch (nextElem.timeType) {
+      case sails.config.custom.enums.chatBlastsTimeTypes.ABSOLUTE:
+        rec.actionTime = moment(nextElem.showTime).format();
+        break;
+
+      case sails.config.custom.enums.chatBlastsTimeTypes.RELATIVE:
+        rec.actionTime = moment(nextElem.showTime).format();
+        break;
+
+      case sails.config.custom.enums.chatBlastsTimeTypes.NOW:
+        rec.actionTime = moment().format();
+        performNextElementNow = true;
+        break;
+
+      default:
+        await LogProcessor.critical({
+          message: sails.config.custom.CHAT_BLASTS_ERROR_UNKNOWN_TIMETYPE.message,
+          requestId,
+          childRequestId,
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.CHAT_BLASTS_ERROR_UNKNOWN_TIMETYPE.name,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+          location: `${moduleName}::${methodName}`,
+          payload: {
+            chatBlastRecGuid: rec.guid,
+            nextElem,
+          },
+        });
+
+        return;
+    }
+
+  } else {
+
+    rec.done = true;
+
+  }
+
+  /**
+   * Сохраняем изменения, внесённые в значения элементов записи "rec"
+   */
+
+  const ChatBlastsPerformanceUpdateCriteria = {
+    guid: rec.guid,
+  };
+
+  await ChatBlastsPerformance
+    .updateOne(ChatBlastsPerformanceUpdateCriteria)
+    .set(rec)
+    .tolerate(async (err) => {
+
+      err.details = {
+        ChatBlastsPerformanceUpdateCriteria,
+      };
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+        requestId,
+        childRequestId,
+        location: `${moduleName}::${methodName}`,
+        message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.message,
+        errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.name,
+        payload: {
+          ChatBlastsPerformanceUpdateCriteria,
+          rec,
+          err,
+        },
+      });
+
+      return 'error';
+    });
 
 
+  /**
+   * Если следующий элемент необходимо выполнить немедленно,
+   * то запускаем текущий метод рекурсивно
+   */
+
+  if (performNextElementNow) {
+
+    await processChatBlastElement(client, rec, nextElem);
+
+  }
 
 }
 

@@ -220,6 +220,12 @@ module.exports.custom = {
     pendingActionsNames: {
       REF_PROFILES_SUBSCRIPTION: 'ref_profiles_subscription',
       GET_MEDIA_ID: 'get_media_id',
+    },
+
+    chatBlastsTimeTypes: {
+      NOW: "now",
+      ABSOLUTE: "absolute",
+      RELATIVE: "relative"
     }
 
   },
@@ -863,6 +869,36 @@ module.exports.custom = {
   CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN: {
     name: 'CHAT_BLASTS_ERROR_ELEMENT_ALREADY_SHOWN',
     message: 'Element was shown already',
+  },
+
+  CHAT_BLASTS_ERROR_UNKNOWN_TIMETYPE: {
+    name: 'CHAT_BLASTS_ERROR_UNKNOWN_TIMETYPE',
+    message: 'Unknown timeType value',
+  },
+
+  CHAT_BLASTS_ERROR_PERFORMANCE_REC_FIND_ERROR: {
+    name: 'CHAT_BLASTS_ERROR_PERFORMANCE_REC_FIND_ERROR',
+    message: 'Cannot find ChatBlastsPerformance record by criteria',
+  },
+
+  CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR: {
+    name: 'CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR',
+    message: 'Cannot update ChatBlastsPerformance record by criteria',
+  },
+
+  CHAT_BLASTS_ERROR_CHAT_BLAST_FIND_ERROR: {
+    name: 'CHAT_BLASTS_ERROR_CHAT_BLAST_FIND_ERROR',
+    message: 'Cannot find Chat Blast record by criteria',
+  },
+
+  CHAT_BLASTS_ERROR_CHAT_BLAST_NO_DATA: {
+    name: 'CHAT_BLASTS_ERROR_CHAT_BLAST_NO_DATA',
+    message: 'No Chat Blast data at record',
+  },
+
+  CHAT_BLASTS_ERROR_NO_CHAT_BLAST: {
+    name: 'CHAT_BLASTS_ERROR_NO_CHAT_BLAST',
+    message: 'No Chat Blast by name at Chat Blast data',
   },
 
 

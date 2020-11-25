@@ -138,6 +138,10 @@ module.exports = {
       errorParams.emergencyLevel = input.emergencyLevel || sails.config.custom.enums.emergencyLevels.LOW;
     }
 
+    // TODO: Добавить возможность исключать из текстовых логов (оставляя в лога в ДБ)
+    // часть данных передаваемых в omitData
+    // Сначала эту функциональность необходимо добавить в LogProcessor
+
 
     switch (input.errorType) {
       case sails.config.custom.enums.errorType.INFO:

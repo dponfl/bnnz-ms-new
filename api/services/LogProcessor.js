@@ -52,6 +52,9 @@ const moduleName = 'LogProcessor';
 
 module.exports = {
 
+  // TODO: Добавить возможность исключать из текстовых логов (оставляя в лога в ДБ)
+  // часть данных передаваемых в omitData
+
   critical: async function(params) {
 
     const methodName = 'critical';

@@ -45,6 +45,10 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    chat_blast_name: {
+      type: 'string',
+      allowNull: true,
+    },
     rooms: {
       type: 'number',
       columnType: 'integer',
