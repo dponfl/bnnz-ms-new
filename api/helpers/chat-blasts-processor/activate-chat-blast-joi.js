@@ -183,16 +183,38 @@ module.exports = {
 
       }
 
-      const chatBlastPerformanceRec = {
+      const chatBlastPerformanceRec = _.assign(chatBlast, {
         guid: uuid.create().uuid,
+        clientGuid,
+        accountGuid,
         actionTime,
-      };
+        done: false,
+        deleted: false,
+      });
 
       /**
        *  Создаём запись в таблице "chat_blasts_performance"
        */
 
-      
+      await ChatBlastsPerformance.create(chatBlastPerformanceRec)
+        .tolerate(async (err) => {
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+            location: moduleName,
+            clientGuid,
+            accountGuid,
+            message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_CREATE_ERROR.message,
+            errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_CREATE_ERROR.name,
+            payload: {
+              chatBlastPerformanceRec,
+              err,
+            },
+          });
+
+          return 'error';
+        });
 
       return exits.success({
         status: 'ok',

@@ -115,8 +115,6 @@ module.exports = {
             })
               .tolerate(async (err) => {
 
-                err.details = findCriteria;
-
                 await sails.helpers.general.throwErrorJoi({
                   errorType: sails.config.custom.enums.errorType.CRITICAL,
                   emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,

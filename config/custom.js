@@ -881,6 +881,11 @@ module.exports.custom = {
     message: 'Cannot find ChatBlastsPerformance record by criteria',
   },
 
+  CHAT_BLASTS_ERROR_PERFORMANCE_REC_CREATE_ERROR: {
+    name: 'CHAT_BLASTS_ERROR_PERFORMANCE_REC_CREATE_ERROR',
+    message: 'Cannot create ChatBlastsPerformance record',
+  },
+
   CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR: {
     name: 'CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR',
     message: 'Cannot update ChatBlastsPerformance record by criteria',
