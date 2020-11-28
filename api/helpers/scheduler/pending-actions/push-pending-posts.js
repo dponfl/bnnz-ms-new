@@ -31,6 +31,12 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const platform = 'core';
+    const action = 'scheduler';
+    const api = 'pendingActions';
+    const requestType = 'pushPendingPosts';
+    const momentStart = moment();
+
     try {
 
       /**
@@ -191,6 +197,25 @@ module.exports = {
               });
 
             }
+
+            const momentDone = moment();
+
+            const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+            const performanceCreateParams = {
+              platform,
+              action,
+              api,
+              requestType,
+              requestDuration,
+              status: 'success',
+              comments: {
+                numberOfPendingPosts: pendingPosts.length,
+              },
+            };
+
+            await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
 
 
             const ReleaseLock = await sails

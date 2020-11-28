@@ -30,6 +30,14 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const platform = 'core';
+    const action = 'scheduler';
+    const api = 'apiStatus';
+    const requestType = 'apiStatusRefresh';
+    const momentStart = moment();
+
+    let numberOfParsersChecked = 0;
+
     let platformName;
 
     const client = {
@@ -168,6 +176,8 @@ module.exports = {
                    * Выполняем проверку работоспособности парсера на тестовых данных
                    */
 
+                  numberOfParsersChecked++;
+
                   await checkInstParser(client, platformName, module, parser);
 
                   // TODO: Убрать после того, как лимит на 1 запрос в сек будет убран для logicbuilder
@@ -178,6 +188,25 @@ module.exports = {
               }
 
             }
+
+            const momentDone = moment();
+
+            const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+            const performanceCreateParams = {
+              platform,
+              action,
+              api,
+              requestType,
+              requestDuration,
+              status: 'success',
+              comments: {
+                numberOfParsersChecked,
+              },
+            };
+
+            await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
 
             /**
              * Окончание блока целевых действий внутри лока

@@ -32,6 +32,12 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    const platform = 'core';
+    const action = 'scheduler';
+    const api = 'ChatBlasts';
+    const requestType = 'chatBlastsRun';
+    const momentStart = moment();
+
     requestId = uuid.create().uuid;
 
     let chatBlastsRecords;
@@ -140,6 +146,25 @@ module.exports = {
             for (const chatBlastsRec of chatBlastsRecords) {
               await processChatBlast(chatBlastsRec);
             }
+
+            const momentDone = moment();
+
+            const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+            const performanceCreateParams = {
+              platform,
+              action,
+              api,
+              requestType,
+              requestDuration,
+              status: 'success',
+              comments: {
+                numberOfChatBlastsProcessed: chatBlastsRecords.length,
+              },
+            };
+
+            await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
 
             /**
              * Окончание блока целевых действий внутри лока
