@@ -2,6 +2,7 @@
 
 const Joi = require('@hapi/joi');
 const uuid = require('uuid-apikey');
+const moment = require('moment');
 
 const moduleName = 'chat-blasts-processor:activate-chat-blast-joi';
 
@@ -159,7 +160,7 @@ module.exports = {
           break;
 
         case sails.config.custom.enums.chatBlastsTimeTypes.RELATIVE:
-          actionTime = moment(actionElem.showTime).format();
+          actionTime = moment().add(actionElem.showTime).format();
           break;
 
         case sails.config.custom.enums.chatBlastsTimeTypes.NOW:
@@ -217,7 +218,7 @@ module.exports = {
         });
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: `${moduleName} performed`,
         payload: {},
       })

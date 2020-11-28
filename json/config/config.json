@@ -1092,7 +1092,7 @@
         "action": "apiStatusRefresh"
       },
       {
-        "rule": "15 * * * *",
+        "rule": "*/5 * * * *",
         "location": "chatBlasts",
         "action": "chatBlastsRun"
       }

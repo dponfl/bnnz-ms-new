@@ -7,7 +7,7 @@
 
 module.exports = {
   datastore: 'clientDb',
-  tableName: 'client',
+  tableName: 'chat_blasts_performance',
   migrate: 'safe',
   attributes: {
 

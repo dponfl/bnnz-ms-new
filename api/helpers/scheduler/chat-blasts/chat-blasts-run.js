@@ -45,7 +45,7 @@ module.exports = {
     try {
 
       await LogProcessor.info({
-        message: 'Chat Blasts Run: activated',
+        message: 'Chat Blasts Run: started',
         requestId,
         location: moduleName,
       });
@@ -418,15 +418,16 @@ async function processChatBlastElement(client, rec, currentElem) {
   const accountGuid = rec.accountGuid;
 
   let performNextElementNow = false;
+  let nextElem;
 
   const sendMessageParams = {
     client,
-    messageData: currentElem.message,
+    messageData: currentElem,
   };
 
   const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
 
-  if (msgRes.status !== 'ok') {
+  if (msgRes.status == null || msgRes.status !== 'ok') {
 
     await LogProcessor.critical({
       message: 'Wrong sendMessageJoi response',
@@ -457,7 +458,7 @@ async function processChatBlastElement(client, rec, currentElem) {
 
     rec.actionName = currentElem.next;
 
-    const nextElem = _.find(rec.actionsList, {id: currentElem.next});
+    nextElem = _.find(rec.actionsList, {id: currentElem.next});
 
     if (nextElem == null) {
 
@@ -517,7 +518,7 @@ async function processChatBlastElement(client, rec, currentElem) {
         break;
 
       case sails.config.custom.enums.chatBlastsTimeTypes.RELATIVE:
-        rec.actionTime = moment(nextElem.showTime).format();
+        rec.actionTime = moment().add(nextElem.showTime).format();
         break;
 
       case sails.config.custom.enums.chatBlastsTimeTypes.NOW:
@@ -560,7 +561,7 @@ async function processChatBlastElement(client, rec, currentElem) {
 
   await ChatBlastsPerformance
     .updateOne(ChatBlastsPerformanceUpdateCriteria)
-    .set(rec)
+    .set(_.omit(rec, ['createdAt', 'updatedAt', 'id', 'guid', 'clientGuid', 'accountGuid']))
     .tolerate(async (err) => {
 
       err.details = {
