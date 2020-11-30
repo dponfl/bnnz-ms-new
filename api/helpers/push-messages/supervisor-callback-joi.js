@@ -81,6 +81,8 @@ module.exports = {
        * (пока реализованы только вариант обработки callback для задач (префикс push_msg_tsk_)
        */
 
+      // TODO: Добавить вариант для обработки callback от Chat Blasts
+
       if (/^push_msg_tsk_/i.test(input.query.data)) {
 
         /**
@@ -175,8 +177,6 @@ module.exports = {
             });
 
           } else {
-            // throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes, null, 3)}`);
-
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -189,7 +189,6 @@ module.exports = {
                 pushMessagesTasksLikes: pushMessage.tasks.likes,
               },
             });
-
           }
 
 
@@ -248,8 +247,6 @@ module.exports = {
             });
 
           } else {
-            // throw new Error(`${moduleName}, critical error: initial block not found: \n${JSON.stringify(sails.config.custom.pushMessages.tasks.likes_comments, null, 3)}`);
-
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -262,12 +259,9 @@ module.exports = {
                 pushMessagesTasksLikes: pushMessage.tasks.likes_comments,
               },
             });
-
           }
 
         } else {
-          // throw new Error(`${moduleName}: unknown task category, query.data: ${input.query.data}`);
-
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
             location: moduleName,
@@ -279,12 +273,129 @@ module.exports = {
               queryData: input.query.data,
             },
           });
+        }
+
+      }
+      else if (/^push_msg_cb_/i.test(input.query.data)) {
+
+        /**
+         * Полученный callback относиться к типу Chat Blasts
+         */
+
+        const queryDataRegExp = /^push_msg_cb_(\S+)/;
+
+        const queryData = queryDataRegExp.exec(input.query.data);
+
+        if (queryData == null || queryData.length !== 2) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'query.data has wrong format',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+            payload: {
+              queryData: input.query.data,
+            },
+          });
+        }
+
+        const callBackParams = _.split(queryData[1], '_', 3);
+
+        if (callBackParams.length !== 3) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Chat Blast callback params string has wrong format',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+            payload: {
+              queryData: input.query.data,
+              paramsStr: queryData[1],
+              callBackParams,
+            },
+          });
+        }
+
+        const chatBlastGuid = callBackParams[0];
+        const elementId = callBackParams[1];
+        const buttonId = callBackParams[2];
+
+        const chatBlastsPerforamceGetParams = {
+          guid: chatBlastGuid,
+          done: false,
+          deleted: false,
+        };
+
+        const chatBlastsPerformanceRaw = await sails.helpers.storage.chatBlastsPerformanceGetByCriteria({
+          criteria: chatBlastsPerforamceGetParams,
+        });
+
+        if (chatBlastsPerformanceRaw.status !== 'ok') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong chatBlastsPerformanceGetByCriteria response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              chatBlastsPerforamceGetParams,
+              chatBlastsPerformanceRaw,
+            },
+          });
+        }
+
+        if (chatBlastsPerformanceRaw.payload.length !== 1) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Several or none chatBlastsPerformance records for criteria',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              chatBlastsPerforamceGetParams,
+              chatBlastsPerformanceRaw,
+            },
+          });
+        }
+
+        const chatBlastsPerformanceRec = chatBlastsPerformanceRaw.payload;
+
+        const chatBlastsElem = _.find(chatBlastsPerformanceRec, {id: elementId});
+
+        if (chatBlastsElem == null) {
+
+          /**
+           * Не можем найти элемент по указанному значению
+           */
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.message,
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
+            payload: {
+              chatBlastsPerformanceRec,
+              elementId,
+            },
+          });
 
         }
 
-      } else {
-        // throw new Error(`${moduleName}: unknown callback prefix, query.data: ${input.query.data}`);
+        await sails.helpers.pushMessages.proceedChatBlastsCallbackJoi({
+          client: input.client,
+          messageData: chatBlastsElem,
+          chatBlastsPerformanceRec,
+          buttonId,
+        });
 
+
+      } else {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
@@ -296,7 +407,6 @@ module.exports = {
             queryData: input.query.data,
           },
         });
-
       }
 
       return exits.success({
@@ -306,22 +416,6 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -341,7 +435,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

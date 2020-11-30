@@ -33,6 +33,9 @@ module.exports = {
     done: {
       type: 'boolean',
     },
+    callback: {
+      type: 'boolean',
+    },
     deleted: {
       type: 'boolean',
     },

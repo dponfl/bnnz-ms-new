@@ -68,10 +68,10 @@ module.exports = {
       if (blockModifyHelperCategory && blockModifyHelperBlock && blockModifyHelperName) {
 
         /**
-         * We managed to parse the specified callbackHelper and can perform it
+         * We managed to parse the specified blockModifyHelper and can perform it
          */
 
-        let beforeHelperParams = {
+        let blockModifyHelperParams = {
           client: input.client,
           messageData: input.messageData,
           additionalParams: input.additionalParams,
@@ -81,7 +81,7 @@ module.exports = {
 
         // const pushMessageName = currentAccount.service.push_message_name;
 
-        res = await sails.helpers.pushMessages[blockModifyHelperCategory][blockModifyHelperBlock][blockModifyHelperName](beforeHelperParams);
+        res = await sails.helpers.pushMessages[blockModifyHelperCategory][blockModifyHelperBlock][blockModifyHelperName](blockModifyHelperParams);
 
       } else {
         // throw new Error(`${moduleName}, critical error: could not parse callback helper name:

@@ -52,7 +52,7 @@
         "actionType": "text",
         "timeType": "absolute",
         "showTime": "2020-11-28T21:45:00.000Z",
-        "next": null,
+        "next": "four",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -65,6 +65,28 @@
               "cr": ""
             }
           ]
+        }
+      },
+      {
+        "id": "four",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "now",
+        "showTime": null,
+        "next": null,
+        "shown": false,
+        "callbackHelper": "common::chatBlasts::callbackTryJoi",
+        "blockModifyHelper": "common::chatBlasts::blockModifyTryJoi",
+        "afterHelper": "common::chatBlasts::afterTryJoi",
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAKE_PAYMENT_BTN_03",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": []
         }
       }
     ],

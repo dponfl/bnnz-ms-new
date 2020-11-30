@@ -190,6 +190,7 @@ module.exports = {
         accountGuid,
         actionTime,
         done: false,
+        callback: false,
         deleted: false,
       });
 

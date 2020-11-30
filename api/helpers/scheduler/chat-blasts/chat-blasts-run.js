@@ -111,6 +111,7 @@ module.exports = {
             const findCriteria = {
               deleted: false,
               done: false,
+              callback: false,
               actionTime: {
                 '<=': moment().format()
               },
@@ -368,7 +369,7 @@ async function processChatBlast(rec) {
     }
   });
 
-  if (clientRaw.status !== 'ok') {
+  if (clientRaw.status == null || clientRaw.status !== 'ok') {
 
     await LogProcessor.critical({
       message: 'client not found',
@@ -449,7 +450,7 @@ async function processChatBlastElement(client, rec, currentElem) {
 
   currentElem.shown = true;
 
-  if (currentElem.next != null) {
+  if (currentElem.next != null && currentElem.next !== '$callback$') {
 
     /**
      * Выполняем неоходимые действия для подготовки активизации или
@@ -545,10 +546,16 @@ async function processChatBlastElement(client, rec, currentElem) {
         return;
     }
 
+  }
+  else if (currentElem.next === '$callback$') {
+    rec.callback = true;
   } else {
 
-    rec.done = true;
+    /**
+     * Вариант, когда currentElem.next === null
+     */
 
+    rec.done = true;
   }
 
   /**
