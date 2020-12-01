@@ -424,6 +424,10 @@ async function processChatBlastElement(client, rec, currentElem) {
   const sendMessageParams = {
     client,
     messageData: currentElem,
+    blockModifyHelperParams: {
+      chatBlastGuid: rec.guid,
+      elementId: currentElem.id,
+    }
   };
 
   const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);

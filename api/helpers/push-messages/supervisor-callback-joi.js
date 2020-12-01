@@ -328,7 +328,7 @@ module.exports = {
           deleted: false,
         };
 
-        const chatBlastsPerformanceRaw = await sails.helpers.storage.chatBlastsPerformanceGetByCriteria({
+        const chatBlastsPerformanceRaw = await sails.helpers.storage.chatBlastsPerformanceGetByCriteriaJoi({
           criteria: chatBlastsPerforamceGetParams,
         });
 
@@ -364,7 +364,7 @@ module.exports = {
 
         const chatBlastsPerformanceRec = chatBlastsPerformanceRaw.payload;
 
-        const chatBlastsElem = _.find(chatBlastsPerformanceRec, {id: elementId});
+        const chatBlastsElem = _.find(chatBlastsPerformanceRec.actionsList, {id: elementId});
 
         if (chatBlastsElem == null) {
 
@@ -380,7 +380,7 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
             payload: {
-              chatBlastsPerformanceRec,
+              chatBlastsPerformanceRec_actionsList: chatBlastsPerformanceRec.actionsList,
               elementId,
             },
           });

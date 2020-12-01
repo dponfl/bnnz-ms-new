@@ -171,6 +171,9 @@ module.exports = {
           commentText = commentByProfile.text;
         }
 
+        // TODO: Предусмотреть случай, когда
+        //  getCommentsJoiRaw.payload.collector == undefined
+
         totalComments = getCommentsJoiRaw.payload.count;
         checkedComments = checkedComments + getCommentsJoiRaw.payload.collector.length;
 

@@ -73,7 +73,7 @@
         "actionType": "inline_keyboard",
         "timeType": "now",
         "showTime": null,
-        "next": null,
+        "next": "$callback$",
         "shown": false,
         "callbackHelper": "common::chatBlasts::callbackTryJoi",
         "blockModifyHelper": "common::chatBlasts::blockModifyTryJoi",

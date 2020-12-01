@@ -1,6 +1,7 @@
 "use strict";
 
 const sleep = require('util').promisify(setTimeout);
+const moment = require('moment');
 
 const moduleName = 'scheduler:api-monitoring:api-status-refresh';
 

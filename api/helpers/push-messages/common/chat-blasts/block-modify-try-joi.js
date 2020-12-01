@@ -71,7 +71,6 @@ module.exports = {
 
       let resBlock = input.messageData;
       let messageInlineKeyboard = [];
-      messageInlineKeyboard.push(resBlock.message.inline_keyboard[0]);
 
       if (!uuid.isUUID(input.additionalParams.chatBlastGuid)) {
         await sails.helpers.general.throwErrorJoi({
