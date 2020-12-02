@@ -362,7 +362,7 @@ module.exports = {
           });
         }
 
-        const chatBlastsPerformanceRec = chatBlastsPerformanceRaw.payload;
+        const chatBlastsPerformanceRec = chatBlastsPerformanceRaw.payload[0];
 
         const chatBlastsElem = _.find(chatBlastsPerformanceRec.actionsList, {id: elementId});
 
@@ -386,6 +386,41 @@ module.exports = {
           });
 
         }
+
+        /**
+         * Удаляем флаг "callback"
+         */
+
+        const ChatBlastsPerformanceUpdateCriteria = {
+          guid: chatBlastsPerformanceRec.guid,
+        };
+
+        await ChatBlastsPerformance
+          .updateOne(ChatBlastsPerformanceUpdateCriteria)
+          .set({
+            callback: false
+          })
+          .tolerate(async (err) => {
+
+            err.details = {
+              ChatBlastsPerformanceUpdateCriteria,
+            };
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.message,
+              errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.name,
+              payload: {
+                ChatBlastsPerformanceUpdateCriteria,
+                chatBlastsPerformanceRec,
+                err,
+              },
+            });
+
+            return 'error';
+          });
 
         await sails.helpers.pushMessages.proceedChatBlastsCallbackJoi({
           client: input.client,

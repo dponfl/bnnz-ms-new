@@ -47,12 +47,18 @@ module.exports = {
          * Get the client record from DB
          */
 
+          // TODO: Добавить сюда проверку, что клиент успешно найден в БД
+
         let getClientResponse = await sails.helpers.storage.clientGet.with({
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           msg: query,
         });
 
         // sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-callback-query, clientGet result:', getClientResponse);
+
+        // TODO: Добавить сюда:
+        //  - удаление кнопок из соответствующего inline_keyboard сообщения
+        //  - отправку PushMessage с текстом нажатой кнопки
 
 
         /**
