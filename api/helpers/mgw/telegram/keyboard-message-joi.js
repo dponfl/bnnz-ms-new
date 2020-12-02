@@ -101,6 +101,8 @@ module.exports = {
       //   }
       // };
 
+      // TODO: В errorPayloadAdditional добавить input.chatId
+
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
