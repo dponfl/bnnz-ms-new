@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-error-joi';
+const moduleName = 'funnel:common:optin:callback-make-payment-second-on-payment-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-error-joi',
+  friendlyName: 'funnel:common:optin:callback-make-payment-second-on-payment-error-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-make-payment-second-on-payment-error-joi',
+  description: 'funnel:common:optin:callback-make-payment-second-on-payment-error-joi',
 
 
   inputs: {

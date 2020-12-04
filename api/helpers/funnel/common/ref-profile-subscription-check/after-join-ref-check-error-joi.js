@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:ref-profile-subscription-check:after-join-ref-check-error-joi';
+const moduleName = 'funnel:common:ref-profile-subscription-check:after-join-ref-check-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:ref-profile-subscription-check:after-join-ref-check-error-joi',
+  friendlyName: 'funnel:common:ref-profile-subscription-check:after-join-ref-check-error-joi',
 
 
-  description: 'funnel:silver-personal:ref-profile-subscription-check:after-join-ref-check-error-joi',
+  description: 'funnel:common:ref-profile-subscription-check:after-join-ref-check-error-joi',
 
 
   inputs: {

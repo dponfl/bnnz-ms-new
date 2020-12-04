@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi';
+const moduleName = 'funnel:common:no-ref-join:after-join-ref-done-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi',
+  friendlyName: 'funnel:common:no-ref-join:after-join-ref-done-joi',
 
 
-  description: 'funnel:silver-personal:no-ref-join:after-join-ref-done-joi',
+  description: 'funnel:common:no-ref-join:after-join-ref-done-joi',
 
 
   inputs: {
@@ -69,6 +69,14 @@ module.exports = {
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       input.client.current_funnel = '';
+
+      await sails.helpers.storage.clientUpdateJoi({
+        criteria: {guid: input.client.guid},
+        data: {
+          current_funnel: ''
+        },
+        createdBy: moduleName,
+      });
 
       currentAccount.keyboard = "ref::start";
 

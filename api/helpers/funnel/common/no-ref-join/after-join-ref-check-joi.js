@@ -4,16 +4,16 @@ const Joi = require('@hapi/joi');
 const sleep = require('util').promisify(setTimeout);
 const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi';
+const moduleName = 'funnel:common:no-ref-join:after-join-ref-check-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi',
+  friendlyName: 'funnel:common:no-ref-join:after-join-ref-check-joi',
 
 
-  description: 'funnel:silver-personal:no-ref-join:after-join-ref-check-joi',
+  description: 'funnel:common:no-ref-join:after-join-ref-check-joi',
 
 
   inputs: {

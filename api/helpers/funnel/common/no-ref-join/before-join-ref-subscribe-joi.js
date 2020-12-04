@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:no-ref-join:before-join-ref-subscribe-joi';
+const moduleName = 'funnel:common:no-ref-join:before-join-ref-subscribe-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:no-ref-join:before-join-ref-subscribe-joi',
+  friendlyName: 'funnel:common:no-ref-join:before-join-ref-subscribe-joi',
 
 
-  description: 'funnel:silver-personal:no-ref-join:before-join-ref-subscribe-joi',
+  description: 'funnel:common:no-ref-join:before-join-ref-subscribe-joi',
 
 
   inputs: {

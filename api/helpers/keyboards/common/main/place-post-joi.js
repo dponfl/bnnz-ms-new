@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'keyboards:silver-personal:main:place-post-joi';
+const moduleName = 'keyboards:common:main:place-post-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'keyboards:silver-personal:main:place-post-joi',
+  friendlyName: 'keyboards:common:main:place-post-joi',
 
 
-  description: 'keyboards:silver-personal:main:place-post-joi',
+  description: 'keyboards:common:main:place-post-joi',
 
 
   inputs: {

@@ -63,6 +63,8 @@ module.exports = {
 
       currentAccount.keyboard = "help::start";
 
+      input.client.current_funnel = '';
+
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: input.client.guid},
         data: input.client,

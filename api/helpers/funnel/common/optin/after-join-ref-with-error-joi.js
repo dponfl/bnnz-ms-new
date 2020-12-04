@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-join-ref-with-error-joi';
+const moduleName = 'funnel:common:optin:after-join-ref-with-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-join-ref-with-error-joi',
+  friendlyName: 'funnel:common:optin:after-join-ref-with-error-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-join-ref-with-error-joi',
+  description: 'funnel:common:optin:after-join-ref-with-error-joi',
 
 
   inputs: {

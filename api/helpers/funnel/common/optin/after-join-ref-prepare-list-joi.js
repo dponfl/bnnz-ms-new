@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-join-ref-prepare-list-joi';
+const moduleName = 'funnel:common:optin:after-join-ref-prepare-list-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-join-ref-prepare-list-joi',
+  friendlyName: 'funnel:common:optin:after-join-ref-prepare-list-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-join-ref-prepare-list-joi',
+  description: 'funnel:common:optin:after-join-ref-prepare-list-joi',
 
 
   inputs: {

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-confirm-profile-joi';
+const moduleName = 'funnel:common:optin:callback-confirm-profile-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-confirm-profile-joi',
+  friendlyName: 'funnel:common:optin:callback-confirm-profile-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-confirm-profile-joi',
+  description: 'funnel:common:optin:callback-confirm-profile-joi',
 
 
   inputs: {

@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-optin-completed-joi';
+const moduleName = 'funnel:common:optin:after-optin-completed-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-optin-completed-joi',
+  friendlyName: 'funnel:common:optin:after-optin-completed-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-optin-completed-joi',
+  description: 'funnel:common:optin:after-optin-completed-joi',
 
 
   inputs: {

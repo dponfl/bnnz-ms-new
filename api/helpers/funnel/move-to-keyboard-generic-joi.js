@@ -112,6 +112,14 @@ module.exports = {
 
       input.client.current_funnel = '';
 
+      await sails.helpers.storage.clientUpdateJoi({
+        criteria: {guid: input.client.guid},
+        data: {
+          current_funnel: ''
+        },
+        createdBy: moduleName,
+      });
+
       currentAccount.keyboard = input.keyboardName;
 
       if (input.updateCurrentBlock) {

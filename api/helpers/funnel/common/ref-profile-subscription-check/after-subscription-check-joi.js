@@ -4,16 +4,16 @@ const Joi = require('@hapi/joi');
 const sleep = require('util').promisify(setTimeout);
 const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:ref-profile-subscription-check:after-subscription-check-joi';
+const moduleName = 'funnel:common:ref-profile-subscription-check:after-subscription-check-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:ref-profile-subscription-check:after-subscription-check-joi',
+  friendlyName: 'funnel:common:ref-profile-subscription-check:after-subscription-check-joi',
 
 
-  description: 'funnel:silver-personal:ref-profile-subscription-check:after-subscription-check-joi',
+  description: 'funnel:common:ref-profile-subscription-check:after-subscription-check-joi',
 
 
   inputs: {

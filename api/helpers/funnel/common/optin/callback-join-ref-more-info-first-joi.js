@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:callback-join-ref-more-info-first-joi';
+const moduleName = 'funnel:common:optin:callback-join-ref-more-info-first-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:callback-join-ref-more-info-first-joi',
+  friendlyName: 'funnel:common:optin:callback-join-ref-more-info-first-joi',
 
 
-  description: 'funnel:silver-personal:optin:callback-join-ref-more-info-first-joi',
+  description: 'funnel:common:optin:callback-join-ref-more-info-first-joi',
 
 
   inputs: {

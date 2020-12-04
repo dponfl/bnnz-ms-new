@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 const sleep = require('util').promisify(setTimeout);
 const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:optin:after-check-profile-joi';
+const moduleName = 'funnel:common:optin:after-check-profile-joi';
 
 
 module.exports = {

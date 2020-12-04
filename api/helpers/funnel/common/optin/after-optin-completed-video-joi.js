@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:optin:after-optin-completed-video-joi';
+const moduleName = 'funnel:common:optin:after-optin-completed-video-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-optin-completed-video-joi',
+  friendlyName: 'funnel:common:optin:after-optin-completed-video-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-optin-completed-video-joi',
+  description: 'funnel:common:optin:after-optin-completed-video-joi',
 
 
   inputs: {
@@ -74,6 +74,14 @@ module.exports = {
       currentAccount.keyboard = "main::place_post";
 
       input.client.current_funnel = '';
+
+      await sails.helpers.storage.clientUpdateJoi({
+        criteria: {guid: input.client.guid},
+        data: {
+          current_funnel: ''
+        },
+        createdBy: moduleName,
+      });
 
       input.block.shown = true;
       input.block.done = true;
