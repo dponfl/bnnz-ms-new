@@ -405,7 +405,15 @@ async function processChatBlast(rec) {
 
   const client = clientRaw.payload[0];
 
-  await processChatBlastElement(client, rec, currentElem);
+  /**
+   * Проверяем, что клиент находится в клавиатуре, а не в какой-то воронке
+   */
+
+  const currentAccount = _.find(client.accounts, {guid: client.account_use});
+
+  if (_.toString(currentAccount.keyboard) !== '') {
+    await processChatBlastElement(client, rec, currentElem);
+  }
 
 }
 
