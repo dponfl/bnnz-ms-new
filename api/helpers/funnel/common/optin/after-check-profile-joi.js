@@ -10,10 +10,10 @@ const moduleName = 'funnel:common:optin:after-check-profile-joi';
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:optin:after-check-profile-joi',
+  friendlyName: 'funnel:common:optin:after-check-profile-joi',
 
 
-  description: 'funnel:silver-personal:optin:after-check-profile-joi',
+  description: 'funnel:common:optin:after-check-profile-joi',
 
 
   inputs: {

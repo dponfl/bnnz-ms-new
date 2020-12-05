@@ -1222,7 +1222,7 @@
       "show_time": 25000,
       "previous": "optin::optin_completed",
       "next": null,
-      "switchToFunnel": "main",
+      "switchToFunnel": null,
       "beforeHelper": null,
       "afterHelper": "common::optin::afterOptinCompletedVideoJoi",
       "forcedHelper": null,

@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const moment = require('moment');
 
-const moduleName = 'funnel:silver-personal:main:after-post-performed-joi';
+const moduleName = 'funnel:common:main:after-post-performed-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:main:after-post-performed-joi',
+  friendlyName: 'funnel:common:main:after-post-performed-joi',
 
 
-  description: 'funnel:silver-personal:main:after-post-performed-joi',
+  description: 'funnel:common:main:after-post-performed-joi',
 
 
   inputs: {

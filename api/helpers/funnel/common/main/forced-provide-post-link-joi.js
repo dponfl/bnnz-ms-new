@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const sleep = require('util').promisify(setTimeout);
 
-const moduleName = 'funnel:silver-personal:main:forced-provide-post-link-joi';
+const moduleName = 'funnel:common:main:forced-provide-post-link-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:main:forced-provide-post-link-joi',
+  friendlyName: 'funnel:common:main:forced-provide-post-link-joi',
 
 
-  description: 'funnel:silver-personal:main:forced-provide-post-link-joi',
+  description: 'funnel:common:main:forced-provide-post-link-joi',
 
 
   inputs: {

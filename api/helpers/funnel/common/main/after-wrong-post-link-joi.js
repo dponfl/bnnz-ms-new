@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:silver-personal:main:after-wrong-post-link-joi';
+const moduleName = 'funnel:common:main:after-wrong-post-link-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:silver-personal:main:after-wrong-post-link-joi',
+  friendlyName: 'funnel:common:main:after-wrong-post-link-joi',
 
 
-  description: 'funnel:silver-personal:main:after-wrong-post-link-joi',
+  description: 'funnel:common:main:after-wrong-post-link-joi',
 
 
   inputs: {
