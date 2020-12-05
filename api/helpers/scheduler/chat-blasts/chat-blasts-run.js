@@ -413,6 +413,19 @@ async function processChatBlast(rec) {
 
   if (_.toString(currentAccount.keyboard) !== '') {
     await processChatBlastElement(client, rec, currentElem);
+  } else {
+    await LogProcessor.info({
+      message: `The client not in keyboard: skip processing Chat Blast element`,
+      clientGuid,
+      accountGuid,
+      requestId,
+      childRequestId,
+      location: moduleName,
+      payload: {
+        chatBlastRecGuid: rec.guid,
+        currentElem,
+      }
+    });
   }
 
 }
