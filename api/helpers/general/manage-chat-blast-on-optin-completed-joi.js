@@ -73,7 +73,7 @@ module.exports = {
 
         const activateChatBlastParams = {
           client,
-          chatBlastName: "testToPaid",
+          chatBlastName: "pushToPaid",
         };
 
         const activateChatBlastRaw = await sails.helpers.chatBlastsProcessor.activateChatBlastJoi(activateChatBlastParams);

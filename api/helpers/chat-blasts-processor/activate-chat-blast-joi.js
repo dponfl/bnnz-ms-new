@@ -218,6 +218,13 @@ module.exports = {
           return 'error';
         });
 
+      /**
+       * Если для этого Chat Blast должен использоваться переход в воронку,
+       * то вытаскиваем соответствующую воронку (по input.chatBlastName)
+       * из таблицы ChatBlastsFunnels и добавляем эту воронку в запись клиента (client)
+       * тоже с ключем input.chatBlastName и обновляем запись клиента в БД
+       */
+
       return exits.success({
         status: 'success',
         message: `${moduleName} performed`,

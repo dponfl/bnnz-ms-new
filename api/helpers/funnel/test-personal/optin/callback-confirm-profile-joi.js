@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:test_personal:optin:callback-confirm-profile-joi';
+const moduleName = 'funnel:test-personal:optin:callback-confirm-profile-joi';
 
 
 module.exports = {

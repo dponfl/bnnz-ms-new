@@ -1,5 +1,5 @@
 {
-  "testToPaid": {
+  "pushToPaid": {
     "actionName": "one",
     "actionsList": [
       {
