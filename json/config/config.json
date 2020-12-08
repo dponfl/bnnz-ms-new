@@ -2025,7 +2025,11 @@
         "COMMON_REF_LINK_MST_02": "$RefLink$",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts ***",
         "COMMON_CB_BTN_01": "Кнопка 1",
-        "COMMON_CB_BTN_02": "Кнопка 2"
+        "COMMON_CB_BTN_02": "Кнопка 2",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts_Funnels": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts Funnels ***",
+        "COMMON_CB_F_01": "Текст сообщения 01, $FirstName$ :wave:",
+        "COMMON_CB_F_02": "Текст сообщения 02, $ServiceLevelTitle$ :white_check_mark: ДА",
+        "COMMON_CB_F_03": "Текст сообщения 03, $instagramProfile$ :rocket:"
       }
     }
   }

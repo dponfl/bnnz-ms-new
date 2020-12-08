@@ -1,0 +1,89 @@
+[
+  {
+    "id": "01",
+    "description": "",
+    "actionType": "text",
+    "initial": true,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": "chatBlasts_pushToPaid_funnel01::02",
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "COMMON_CB_F_01",
+          "style": "",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "02",
+    "description": "",
+    "actionType": "text",
+    "initial": false,
+    "enabled": false,
+    "show_time": 3000,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": "chatBlasts_pushToPaid_funnel01::01",
+    "next": "chatBlasts_pushToPaid_funnel01::03",
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "COMMON_CB_F_02",
+          "style": "b",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "03",
+    "description": "",
+    "actionType": "text",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": "chatBlasts_pushToPaid_funnel01::02",
+    "next": null,
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "COMMON_CB_F_01",
+          "style": "i",
+          "cr": ""
+        }
+      ]
+    }
+  }
+]

@@ -218,12 +218,8 @@ module.exports = {
           return 'error';
         });
 
-      /**
-       * Если для этого Chat Blast должен использоваться переход в воронку,
-       * то вытаскиваем соответствующую воронку (по input.chatBlastName)
-       * из таблицы ChatBlastsFunnels и добавляем эту воронку в запись клиента (client)
-       * тоже с ключем input.chatBlastName и обновляем запись клиента в БД
-       */
+
+      await activateChatBlastFunnels(client, currentAccount, service.chat_blast_name, input.chatBlastName);
 
       return exits.success({
         status: 'success',
@@ -266,4 +262,82 @@ module.exports = {
   }
 
 };
+
+async function activateChatBlastFunnels(client, currentAccount, serviceChatBlastName, chatBlastName) {
+
+  /**
+   * Проверяем, должен ли использоваться переход в воронку для этого Chat Blast
+   * Для этого ищем соответствующую воронку (или воронки)
+   * в таблице ChatBlastsFunnels и если она/они есть, добавляем эту/эти воронку
+   * в запись клиента (client) и обновляем запись клиента в БД
+   */
+
+  const methodName = 'activateChatBlastFunnels';
+
+  const chatBlastsFunnelsGetByCriteriaParams = {
+    criteria: {
+      serviceChatBlastName,
+      chatBlastName,
+    }
+  };
+
+  const chatBlastsFunnelsGetByCriteriaRaw = await sails.helpers.storage.chatBlastsFunnelsGetByCriteriaJoi(chatBlastsFunnelsGetByCriteriaParams);
+
+  if (chatBlastsFunnelsGetByCriteriaRaw.status == null || chatBlastsFunnelsGetByCriteriaRaw.status !== 'ok') {
+
+    await LogProcessor.critical({
+      message: 'chatBlastsFunnelsGetByCriteriaJoi wrong response',
+      clientGuid: client.guid,
+      accountGuid: currentAccount.guid,
+      errorName: sails.config.custom.GENERAL_ERROR.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: {
+        chatBlastsFunnelsGetByCriteriaRaw,
+      },
+    });
+
+    return;
+  }
+
+  if (chatBlastsFunnelsGetByCriteriaRaw.payload.length === 0) {
+
+    await LogProcessor.critical({
+      message: 'Chat Blast Funnel not found by criteria',
+      clientGuid: client.guid,
+      accountGuid: currentAccount.guid,
+      errorName: sails.config.custom.GENERAL_ERROR.name,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+      location: `${moduleName}::${methodName}`,
+      payload: {
+        chatBlastsFunnelsGetByCriteriaRaw,
+      },
+    });
+
+    return;
+  }
+
+  const chatBlastFunnelsRecs = chatBlastsFunnelsGetByCriteriaRaw.payload;
+
+  const chatBlastFunnelsObj = {};
+
+  for (const rec of chatBlastFunnelsRecs) {
+
+    const chatBlastFunnelName = `chatBlasts_${chatBlastName}_${rec.chatBlastFunnel}`;
+
+    chatBlastFunnelsObj[chatBlastFunnelName] = rec.funnel_data;
+
+  }
+
+  _.assign(client.funnels, chatBlastFunnelsObj);
+
+  await sails.helpers.storage.clientUpdateJoi({
+    criteria: {guid: client.guid},
+    data: {
+      funnels: client.funnels,
+    },
+    createdBy: `${moduleName}::${methodName}`,
+  });
+
+}
 

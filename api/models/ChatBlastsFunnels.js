@@ -11,12 +11,17 @@ module.exports = {
   migrate: 'safe',
   attributes: {
 
-    name: {
+    serviceChatBlastName: {
       type: 'string',
       required: true,
     },
 
     chatBlastName: {
+      type: 'string',
+      required: true,
+    },
+
+    chatBlastFunnel: {
       type: 'string',
       required: true,
     },
