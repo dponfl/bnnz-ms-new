@@ -44,11 +44,11 @@ module.exports = {
 
     try {
 
-      await LogProcessor.info({
-        message: 'Chat Blasts Run: started',
-        requestId,
-        location: moduleName,
-      });
+      // await LogProcessor.info({
+      //   message: 'Chat Blasts Run: started...',
+      //   requestId,
+      //   location: moduleName,
+      // });
 
 
       /**
@@ -139,7 +139,7 @@ module.exports = {
               });
 
             await LogProcessor.info({
-              message: `Chat Blasts Run: found ${chatBlastsRecords.length} records`,
+              message: `Chat Blasts Run: found ${chatBlastsRecords.length} records to be processed`,
               requestId,
               location: moduleName,
             });

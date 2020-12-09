@@ -55,19 +55,28 @@ module.exports = {
 
     let input;
 
+    let client;
+    let currentAccount;
+
     let clientGuid;
     let accountGuid;
+
+    let chatBlastsPerformanceRec;
 
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
+
+      chatBlastsPerformanceRec = input.chatBlastsPerformanceRec;
 
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      currentAccount = _.find(client.accounts, {guid: client.account_use});
 
       switch (input.buttonId) {
         case 'BTN01':
@@ -79,6 +88,66 @@ module.exports = {
             location: moduleName,
             payload: {},
           });
+
+          /**
+           * Переводим клиента в воронку
+           */
+
+          currentAccount.keyboard = null;
+
+          /**
+           * Установить в client, что выполняется воронка "chatBlasts_pushToPaid_funnel01"
+           */
+
+          client.current_funnel = 'chatBlasts_pushToPaid_funnel01';
+
+          const initialBlock = _.find(client.funnels[client.current_funnel],
+            {initial: true});
+
+          initialBlock.enabled = true;
+
+          await sails.helpers.funnel.proceedNextBlockJoi({
+            client,
+            funnelName: client.current_funnel,
+            blockId: "01",
+            createdBy: moduleName,
+          });
+
+          /**
+           * Устанавливаем флаг "done"
+           */
+
+          const ChatBlastsPerformanceUpdateCriteria = {
+            guid: chatBlastsPerformanceRec.guid,
+          };
+
+          await ChatBlastsPerformance
+            .updateOne(ChatBlastsPerformanceUpdateCriteria)
+            .set({
+              done: true
+            })
+            .tolerate(async (err) => {
+
+              err.details = {
+                ChatBlastsPerformanceUpdateCriteria,
+              };
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.message,
+                errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.name,
+                payload: {
+                  ChatBlastsPerformanceUpdateCriteria,
+                  chatBlastsPerformanceRec,
+                  err,
+                },
+              });
+
+              return 'error';
+            });
+
 
           break;
         case 'BTN02':

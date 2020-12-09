@@ -185,6 +185,8 @@ module.exports = {
             location: moduleName,
             payload: {
               parserRequestInterval: parserRequestIntervals[i],
+              activeParser,
+              parserStatus,
             },
           });
 
