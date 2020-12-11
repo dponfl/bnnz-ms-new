@@ -5,12 +5,28 @@ const Joi = require('@hapi/joi');
 const winston = require('winston');
 const {Loggly} = require('winston-loggly-bulk');
 
-winston.add(new Loggly({
-  token: process.env.LOGGLY_TOKEN || '',
-  subdomain: process.env.LOGGLY_SUBDOMAIN || '',
-  tags: ["Winston-NodeJS"],
-  json: true
-}));
+const logger = winston.createLogger({
+  levels: {
+    criticalHighest: 0,
+    criticalHigh: 1,
+    criticalMedium: 2,
+    criticalLow: 3,
+    error: 4,
+    warn: 5,
+    debug: 6,
+    info: 7,
+    silly: 8,
+  },
+  transports: [
+    new Loggly({
+      token: process.env.LOGGLY_TOKEN || '',
+      subdomain: process.env.LOGGLY_SUBDOMAIN || '',
+      tags: [process.env.LOGGLY_TAG || "Winston-NodeJS"],
+      stripColors: true,
+      json: true
+    }),
+  ]
+});
 
 
 const schema = Joi.object({
@@ -79,26 +95,26 @@ module.exports = {
 
       input.level = 'critical';
 
-      if (input.emergencyLevel != null) {
-        switch (input.emergencyLevel) {
-          case sails.config.custom.enums.emergencyLevels.LOW:
-            input.sublevel = 'LOW';
-            break;
-          case sails.config.custom.enums.emergencyLevels.MEDIUM:
-            input.sublevel = 'MEDIUM';
-            break;
-          case sails.config.custom.enums.emergencyLevels.HIGH:
-            input.sublevel = 'HIGH';
-            break;
-          case sails.config.custom.enums.emergencyLevels.HIGHEST:
-            input.sublevel = 'HIGHEST';
-            break;
-          default:
-            input.sublevel = 'LOW';
-        }
-      } else {
-        input.sublevel = 'LOW';
-      }
+      // if (input.emergencyLevel != null) {
+      //   switch (input.emergencyLevel) {
+      //     case sails.config.custom.enums.emergencyLevels.LOW:
+      //       input.sublevel = 'LOW';
+      //       break;
+      //     case sails.config.custom.enums.emergencyLevels.MEDIUM:
+      //       input.sublevel = 'MEDIUM';
+      //       break;
+      //     case sails.config.custom.enums.emergencyLevels.HIGH:
+      //       input.sublevel = 'HIGH';
+      //       break;
+      //     case sails.config.custom.enums.emergencyLevels.HIGHEST:
+      //       input.sublevel = 'HIGHEST';
+      //       break;
+      //     default:
+      //       input.sublevel = 'LOW';
+      //   }
+      // } else {
+      //   input.sublevel = 'LOW';
+      // }
 
       /**
        * Информирование ответственных людей о возникновении критической ошибки
@@ -112,22 +128,22 @@ module.exports = {
       if (input.emergencyLevel != null) {
         switch (input.emergencyLevel) {
           case sails.config.custom.enums.emergencyLevels.LOW:
-            winston.log('crit', input.message, _.omit(input, 'message'));
+            logger.criticalLow(input.message, _.omit(input, 'message'));
             break;
           case sails.config.custom.enums.emergencyLevels.MEDIUM:
-            winston.log('crit', input.message, _.omit(input, 'message'));
+            logger.criticalMedium(input.message, _.omit(input, 'message'));
             break;
           case sails.config.custom.enums.emergencyLevels.HIGH:
-            winston.log('alert', input.message, _.omit(input, 'message'));
+            logger.criticalHigh(input.message, _.omit(input, 'message'));
             break;
           case sails.config.custom.enums.emergencyLevels.HIGHEST:
-            winston.log('emerg', input.message, _.omit(input, 'message'));
+            logger.criticalHighest(input.message, _.omit(input, 'message'));
             break;
           default:
-            winston.log('crit', input.message, _.omit(input, 'message'));
+            logger.criticalLow(input.message, _.omit(input, 'message'));
         }
       } else {
-        winston.log('crit', input.message, _.omit(input, 'message'));
+        logger.criticalLow(input.message, _.omit(input, 'message'));
       }
 
       await sails.helpers.storage.errorCreateJoi(input);
@@ -160,7 +176,7 @@ module.exports = {
       input.level = 'error';
 
       sails.log.error(input.message, _.omit(input, 'message'));
-      winston.log('error', input.message, _.omit(input, 'message'));
+      logger.error(input.message, _.omit(input, 'message'));
 
       await sails.helpers.storage.errorCreateJoi(input);
 
@@ -193,6 +209,7 @@ module.exports = {
       input.level = 'warn';
 
       sails.log.warn(input.message, _.omit(input, 'message'));
+      logger.warn(input.message, _.omit(input, 'message'));
 
       await sails.helpers.storage.errorCreateJoi(input);
 
@@ -224,6 +241,8 @@ module.exports = {
       input.level = 'debug';
 
       sails.log.debug(input.message, _.omit(input, 'message'));
+      logger.debug(input.message, _.omit(input, 'message'));
+
 
     } catch (e) {
 
@@ -253,7 +272,8 @@ module.exports = {
       input.level = 'info';
 
       sails.log.info(input.message, _.omit(input, 'message'));
-      winston.log('info', input.message, _.omit(input, 'message'));
+      logger.info(input.message, _.omit(input, 'message'));
+
 
     } catch (e) {
 

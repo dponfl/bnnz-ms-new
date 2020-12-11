@@ -4038,7 +4038,7 @@ describe.skip('API monitoring tests', function () {
 
 });
 
-describe('Check Loggly', function () {
+describe.skip('Check Loggly', function () {
 
   it('info level', async function () {
 
@@ -4114,7 +4114,7 @@ describe('Check Loggly', function () {
 
   it('error level', async function () {
 
-    await LogProcessor.warn({
+    await LogProcessor.error({
       message: 'Some error message here...',
       clientGuid: '6b8fd6e9-07f7-460a-bd3e-e81d0ea66cc0',
       accountGuid: '1dd34581-78bc-41ed-b605-b3fc3fbcfe9a',
