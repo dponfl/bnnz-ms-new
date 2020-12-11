@@ -13,6 +13,7 @@
 const { version } = require('../package');
 
 const { createLogger, format, transports } = require('winston');
+const {Loggly} = require('winston-loggly-bulk');
 const { PapertrailConnection, PapertrailTransport } = require('winston-3-papertrail');
 const { combine, timestamp, colorize, label, printf, align } = format;
 const { SPLAT } = require('triple-beam');
@@ -69,6 +70,13 @@ const customLogger = createLogger({
       hostname: process.env.PAPERTRAIL_HOSTNAME || 'Bonanza',
       program: process.env.PAPERTRAIL_PROGRAM || 'Server',
     }),
+    // new Loggly({
+    //   token: process.env.LOGGLY_TOKEN || '',
+    //   subdomain: process.env.LOGGLY_SUBDOMAIN || '',
+    //   tags: ["Winston-NodeJS"],
+    //   stripColors: true,
+    //   json: true
+    // }),
   ]
 });
 
