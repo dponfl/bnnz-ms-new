@@ -123,7 +123,7 @@ describe.skip('Test sendMessage', function () {
 
 });
 
-describe.skip('Test emoji', function () {
+describe('Test emoji', function () {
 
   let customConfig;
 
@@ -141,6 +141,7 @@ describe.skip('Test emoji', function () {
 - point_right :point_right:
 - point_left :point_left:
 - robot :robot:
+- robot_face :robot_face:
 - rocket :rocket:
 - wink :wink:
 - eyes :eyes:
@@ -176,6 +177,52 @@ describe.skip('Test emoji', function () {
 - cool :cool:
 - boom :boom:
 - clock3 :clock3:
+
+Квесты
+
+- fire :fire:
+- stuck_out_tongue_winking_eye :stuck_out_tongue_winking_eye:
+- v :v:
+- full_moon :full_moon:
+- one :one:
+- two :two:
+- three :three:
+- four :four:
+- five :five:
+- gear :gear:
+- raising_hand :raising_hand:
+- heavy_check_mark :heavy_check_mark:
+- iphone :iphone:
+- thumbsup :thumbsup:
+- clap :clap:
+- memo :memo:
+- pencil :pencil:
+- repeat_one :repeat_one:
+- stopwatch :stopwatch:
+- heavy_plus_sign :heavy_plus_sign:
+- point_up :point_up:
+- open_hands :open_hands:
+- bust_in_silhouette :bust_in_silhouette:
+- moneybag :moneybag:
+- bar_chart :bar_chart:
+- gift :gift:
+- trophy :trophy:
+- gift_heart :gift_heart:
+- love_letter :love_letter:
+- shaking_hands :shaking_hands:
+- handshake :handshake:
+- tada :tada:
+- first_place_medal :first_place_medal:
+- first_place :first_place:
+- thumbup :thumbup:
+- earth_americas :earth_americas:
+- bomb :bomb:
+- raised_hands :raised_hands:
+- hourglass_flowing_sand :hourglass_flowing_sand:
+- star2 :star2:
+- exclamation :exclamation:
+- dizzy :dizzy:
+- bangbang :bangbang:
 `;
 
     html = emoji.emojify(html, () => '');
