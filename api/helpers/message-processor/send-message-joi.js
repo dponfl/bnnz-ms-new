@@ -70,6 +70,8 @@ module.exports = {
     let sendMessageResult = null;
     let messageData = null;
 
+    let additionalTokens;
+
     let clientGuid;
     let accountGuid;
 
@@ -81,9 +83,98 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      // TODO: Нужно добавить контроль отправки сообщений только если
+      //  клиент находится в какой-то клавиатуре
+      //  (пример if (_.toString(currentAccount.keyboard) !== '')
+      //  (что-бы не разрывать воронок или цепочек сообщений Chat Blasts)
+      //  В противном случае формировать специальную pending-запись для последующей
+      //  её обработки шедуллером.
+      //  Также нужно добавить параметр "forced", который по умолчанию имеет значение
+      //  false (что-бы не нарушать работу текущей реализации кода) и в этом случае
+      //  действует правило, описанное выше. Если этот параметр имеет значение true,
+      //  то проверка того, где находится клиент не выполняется (для возможности
+      //  отправлять срочные сообщения).
+
+
       messageData = input.messageData;
 
+      additionalTokens = input.additionalTokens;
+
       const disableWebPagePreview = input.disableWebPagePreview || false;
+
+      /**
+       * Если задан additionalTokensHelper, то вызываем его и добавляем полученные
+       * токены к additionalTokens (если эта переменная задана)
+       * или присваиваем их в эту переменную
+       */
+
+      if (messageData.additionalTokensHelper != null) {
+
+        let splitAdditionalTokensHelperRes = _.split(messageData.additionalTokensHelper, sails.config.custom.JUNCTION, 3);
+        let additionalTokensHelperCategory = splitAdditionalTokensHelperRes[0];
+        let additionalTokensHelperBlock = splitAdditionalTokensHelperRes[1];
+        let additionalTokensHelperName = splitAdditionalTokensHelperRes[2];
+
+        if (additionalTokensHelperCategory && additionalTokensHelperBlock && additionalTokensHelperName) {
+
+          /**
+           * We managed to parse the specified blockModifyHelper and can perform it
+           */
+
+          let additionalTokensHelperParams = {
+            client: input.client,
+          };
+
+          const additionalTokensRes = await sails.helpers.pushMessages[additionalTokensHelperCategory][additionalTokensHelperBlock][additionalTokensHelperName](additionalTokensHelperParams);
+
+          if (additionalTokensRes.status == null || additionalTokensRes.status !== 'success') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'additionalTokensHelper wrong response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.MESSAGE_PROCESSOR_ERROR.name,
+              payload: {
+                additionalTokensHelperCategory,
+                additionalTokensHelperBlock,
+                additionalTokensHelperName,
+                additionalTokensRes,
+              },
+            });
+          }
+
+          if (additionalTokens != null) {
+
+            additionalTokens = _.concat(additionalTokens, additionalTokensRes.payload);
+
+          } else {
+
+            additionalTokens = additionalTokensRes.payload;
+
+          }
+
+        } else {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Cannot parse callback helper name',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.MESSAGE_PROCESSOR_ERROR.name,
+            payload: {
+              additionalTokensHelper: input.messageData.additionalTokensHelper,
+              additionalTokensHelperCategory,
+              additionalTokensHelperBlock,
+              additionalTokensHelperName,
+            },
+          });
+        }
+
+      }
+
 
       /**
        * Call blockModifyHelper to update block if needed
@@ -115,7 +206,7 @@ module.exports = {
           const htmlSimple = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           /**
@@ -159,7 +250,7 @@ module.exports = {
           const htmlImg = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
@@ -198,7 +289,7 @@ module.exports = {
           const htmlVideo = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
@@ -268,7 +359,7 @@ module.exports = {
           let htmlDoc = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
@@ -307,7 +398,7 @@ module.exports = {
           const htmlForced = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           const forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
@@ -342,13 +433,13 @@ module.exports = {
           const htmlInline = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           const inlineKeyboard = await MessageProcessor.mapDeep({
             client: input.client,
             data: input.messageData.message.inline_keyboard,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
           const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
@@ -386,7 +477,7 @@ module.exports = {
           const htmlEditMessageText = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
-            additionalTokens: input.additionalTokens,
+            additionalTokens,
           });
 
 
@@ -403,7 +494,7 @@ module.exports = {
             const editMessageInlineKeyboard = await MessageProcessor.mapDeep({
               client: input.client,
               data: input.messageData.message.inline_keyboard,
-              additionalTokens: input.additionalTokens,
+              additionalTokens,
             });
 
             const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
@@ -434,6 +525,19 @@ module.exports = {
 
           break;
 
+        case 'dummy':
+
+          /**
+           * Use this type to just perform the afterHelper
+           */
+
+          sendMessageResult = {
+            status: 'ok',
+            message: 'Dummy message type was performed',
+            payload: {},
+          };
+
+          break;
 
       }
 

@@ -14,6 +14,7 @@
           "callbackHelper": null,
           "blockModifyHelper": null,
           "afterHelper": null,
+          "additionalTokensHelper": null,
           "message": {
             "html": [
               {
@@ -36,12 +37,13 @@
           "description": "***",
           "actionType": "text",
           "timeType": "absolute",
-          "showTime": "2020-11-20T15:04:44.812Z",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
           "next": null,
           "shown": false,
           "callbackHelper": null,
           "blockModifyHelper": null,
           "afterHelper": null,
+          "additionalTokensHelper": null,
           "message": {
             "html": [
               {
@@ -74,6 +76,7 @@
           "callbackHelper": null,
           "blockModifyHelper": null,
           "afterHelper": null,
+          "additionalTokensHelper": null,
           "message": {
             "html": [
               {
@@ -88,20 +91,21 @@
       "done": false,
       "deleted": false
     },
-    "chat_blast_inline_keyboard_absolute": {
+    "chat_blast_inline_keyboard_now": {
       "actionName": "***",
       "actionsList": [
         {
           "id": "***",
           "description": "***",
           "actionType": "inline_keyboard",
-          "timeType": "absolute",
-          "showTime": "2020-11-20T15:04:44.812Z",
+          "timeType": "now",
+          "showTime": null,
           "next": null,
           "shown": false,
           "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
           "blockModifyHelper": null,
           "afterHelper": null,
+          "additionalTokensHelper": null,
           "message": {
             "html": [
               {
@@ -129,6 +133,462 @@
               ]
             ]
           }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_inline_keyboard_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "inline_keyboard",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_inline_keyboard_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "inline_keyboard",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_img_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_img_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_img_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_doc_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "doc",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "doc": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_doc_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "doc",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "doc": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_doc_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "doc",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "doc": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_dummy_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "dummy",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "additionalTokensHelper": null,
+          "message": {}
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_dummy_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "dummy",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "additionalTokensHelper": null,
+          "message": {}
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_dummy_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "dummy",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "afterHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "additionalTokensHelper": null,
+          "message": {}
         }
       ],
       "done": false,
