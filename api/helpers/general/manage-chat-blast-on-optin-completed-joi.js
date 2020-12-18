@@ -54,8 +54,8 @@ module.exports = {
     const testServiceNames = [
       'test_personal',
       'test_personal_initial',
-      'test_commercial',
-      'test_commercial_initial'
+      // 'test_commercial',
+      // 'test_commercial_initial'
     ];
 
 

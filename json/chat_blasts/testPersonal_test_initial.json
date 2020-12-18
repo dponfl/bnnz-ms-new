@@ -1,0 +1,96 @@
+{
+  "pushToPaid": {
+    "actionName": "one",
+    "actionsList": [
+      {
+        "id": "one",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "two",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_START_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "two",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "now",
+        "showTime": null,
+        "next": "three",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_START_04",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "three",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "absolute",
+        "showTime": "2020-11-28T21:45:00.000Z",
+        "next": "four",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "four",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "now",
+        "showTime": null,
+        "next": "$callback$",
+        "shown": false,
+        "callbackHelper": "common::chatBlasts::callbackTryJoi",
+        "blockModifyHelper": "common::chatBlasts::blockModifyTryJoi",
+        "afterHelper": "common::chatBlasts::afterTryJoi",
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAKE_PAYMENT_BTN_03",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": []
+        }
+      }
+    ],
+    "done": false,
+    "deleted": false
+  }
+}

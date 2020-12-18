@@ -124,7 +124,7 @@ module.exports = {
 
       /**
        * Запускаем хелпер, который активирует соответствующий Chat Blasts
-       * в зависимости от выбранного уровняя сервиса
+       * в зависимости от выбранного уровня сервиса
        */
 
       await sails.helpers.general.manageChatBlastOnOptinCompletedJoi({

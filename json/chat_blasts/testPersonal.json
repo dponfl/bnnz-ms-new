@@ -1,24 +1,770 @@
 {
   "pushToPaid": {
-    "actionName": "one",
+    "actionName": "intro",
     "actionsList": [
       {
-        "id": "one",
+        "id": "intro",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 30
+        },
+        "next": "rules",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_INTRO_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_04",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "rules",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "task_01",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_RULES_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_01",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_01_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_MSG_03",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_MSG_06",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_TASK_01_BTN_01",
+                "url": "https://befame.ru/wp-content/themes/befame/BeFame_1.pdf"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "task_01_done",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 10
+        },
+        "next": "task_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_01_DONE_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_02",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "task_02_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_02_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_05",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_06",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_08",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_09",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_10",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_11",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_12",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_13",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_14",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_MSG_15",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_02_done",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 10
+        },
+        "next": "task_03",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_02_DONE_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_03",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "task_03_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_03_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_05",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_09",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_10",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_11",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_MSG_12",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_TASK_03_BTN_01",
+                "url": "https://befame.ru/wp-content/themes/befame/BeFame_2.pdf"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "task_03_done",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 10
+        },
+        "next": "task_04_01",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_03_DONE_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_04_01",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "task_04_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_05",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_08",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_09",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_10",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_11",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_12",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_13",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_14",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_15",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_16",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_17",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_18",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_19",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_20",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_01_MSG_21",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_04_02",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 3
+        },
+        "next": "task_04_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_05",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+          ]
+        }
+      },
+      {
+        "id": "task_04_done",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 10
+        },
+        "next": "task_05",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_04_DONE_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_05",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "task_05_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_05",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_06",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_07",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_09",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_MSG_10",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+          ]
+        }
+      },
+      {
+        "id": "task_05_done",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 10
+        },
+        "next": "summary",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_DONE_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_DONE_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_DONE_MSG_03",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "summary",
         "description": "***",
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
           "minutes": 1
         },
-        "next": "two",
+        "next": "success_story_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
         "afterHelper": null,
+        "additionalTokensHelper": null,
         "message": {
           "html": [
             {
-              "text": "COMMON_START_02",
+              "text": "CB_Q01_SUMMARY_MSG_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_02",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_08",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_09",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_10",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_11",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_SUMMARY_MSG_12",
               "style": "",
               "cr": ""
             }
@@ -26,20 +772,23 @@
         }
       },
       {
-        "id": "two",
+        "id": "success_story_01",
         "description": "***",
-        "actionType": "text",
+        "actionType": "img",
         "timeType": "now",
         "showTime": null,
-        "next": "three",
+        "next": "success_story_02",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
         "afterHelper": null,
+        "additionalTokensHelper": null,
         "message": {
+          "img": "https://www.instagram.com/p/CIDuRhPHZy0",
+          "mediaLibrary": false,
           "html": [
             {
-              "text": "COMMON_START_04",
+              "text": "CB_Q01_SUCCESS_STORY_01_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -47,20 +796,23 @@
         }
       },
       {
-        "id": "three",
+        "id": "success_story_02",
         "description": "***",
-        "actionType": "text",
-        "timeType": "absolute",
-        "showTime": "2020-11-28T21:45:00.000Z",
-        "next": "four",
+        "actionType": "img",
+        "timeType": "now",
+        "showTime": null,
+        "next": "success_story_03",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
         "afterHelper": null,
+        "additionalTokensHelper": null,
         "message": {
+          "img": "https://www.instagram.com/p/CF00mvqJuaV",
+          "mediaLibrary": false,
           "html": [
             {
-              "text": "COMMON_CONFIRM_PROFILE_01",
+              "text": "CB_Q01_SUCCESS_STORY_02_MSG_01",
               "style": "",
               "cr": ""
             }
@@ -68,25 +820,267 @@
         }
       },
       {
-        "id": "four",
+        "id": "success_story_03",
+        "description": "***",
+        "actionType": "img",
+        "timeType": "now",
+        "showTime": null,
+        "next": "payment_call_01",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "img": "https://www.instagram.com/p/B0oBOBChJNu",
+          "mediaLibrary": false,
+          "html": [
+            {
+              "text": "CB_Q01_SUCCESS_STORY_03_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "call_to_action_01",
         "description": "***",
         "actionType": "inline_keyboard",
         "timeType": "now",
         "showTime": null,
-        "next": "$callback$",
+        "next": null,
         "shown": false,
-        "callbackHelper": "common::chatBlasts::callbackTryJoi",
-        "blockModifyHelper": "common::chatBlasts::blockModifyTryJoi",
-        "afterHelper": "common::chatBlasts::afterTryJoi",
+        "callbackHelper": "pushToPaid::chatBlasts::callbackCallToActionOne",
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
         "message": {
           "html": [
             {
-              "text": "COMMON_MAKE_PAYMENT_BTN_03",
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_04",
               "style": "",
               "cr": ""
             }
           ],
-          "inline_keyboard": []
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_CALL_TO_ACTION_01_BTN_01",
+                "callback_data": "make_action"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "call_to_action_02",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 5
+        },
+        "next": "call_to_action_03",
+        "shown": false,
+        "callbackHelper": "pushToPaid::chatBlasts::callbackCallToActionTwo",
+        "blockModifyHelper": null,
+        "afterHelper": "pushToPaid::chatBlasts::afterCallToActionTwo",
+        "additionalTokensHelper": "pushToPaid::chatBlasts::additionalTokensCallToActionTwo",
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_06",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_09",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_10",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_11",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_12",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_13",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_CALL_TO_ACTION_02_BTN_01",
+                "callback_data": "make_action"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "call_to_action_03",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "days": 1
+        },
+        "next": "call_to_action_04",
+        "shown": false,
+        "callbackHelper": "pushToPaid::chatBlasts::callbackCallToActionThree",
+        "blockModifyHelper": null,
+        "afterHelper": "pushToPaid::chatBlasts::afterCallToActionThree",
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_03_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_03_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_03_MSG_03",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_CALL_TO_ACTION_03_BTN_01",
+                "callback_data": "make_action"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "call_to_action_04",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "hours": 11
+        },
+        "next": "final",
+        "shown": false,
+        "callbackHelper": "pushToPaid::chatBlasts::callbackCallToActionFour",
+        "blockModifyHelper": null,
+        "afterHelper": "pushToPaid::chatBlasts::afterCallToActionFour",
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_04_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_04_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "CB_Q01_CALL_TO_ACTION_04_BTN_01",
+                "callback_data": "make_action"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "final",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "relative",
+        "showTime": {
+          "hours": 1
+        },
+        "next": null,
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": "pushToPaid::chatBlasts::afterFinal",
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_FINAL_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
         }
       }
     ],
