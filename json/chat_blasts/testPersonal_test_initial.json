@@ -73,11 +73,11 @@
         "actionType": "inline_keyboard",
         "timeType": "now",
         "showTime": null,
-        "next": "$callback$",
+        "next": "five",
         "shown": false,
         "callbackHelper": "common::chatBlasts::callbackTryJoi",
         "blockModifyHelper": "common::chatBlasts::blockModifyTryJoi",
-        "afterHelper": "common::chatBlasts::afterTryJoi",
+        "afterHelper": null,
         "message": {
           "html": [
             {
@@ -87,6 +87,27 @@
             }
           ],
           "inline_keyboard": []
+        }
+      },
+      {
+        "id": "five",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "absolute",
+        "showTime": "2020-11-28T21:45:00.000Z",
+        "next": null,
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": "common::chatBlasts::afterTryJoi",
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_JOIN_REF_NO_BTN_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
         }
       }
     ],

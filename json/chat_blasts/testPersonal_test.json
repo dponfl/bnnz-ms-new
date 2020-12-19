@@ -8,7 +8,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 30
+          "minutes": 1
         },
         "next": "rules",
         "shown": false,
@@ -47,7 +47,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "task_01",
         "shown": false,
@@ -126,7 +126,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 10
+          "minutes": 1
         },
         "next": "task_02",
         "shown": false,
@@ -155,7 +155,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "task_02_done",
         "shown": false,
@@ -249,7 +249,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 10
+          "minutes": 1
         },
         "next": "task_03",
         "shown": false,
@@ -278,7 +278,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "task_03_done",
         "shown": false,
@@ -365,7 +365,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 10
+          "minutes": 1
         },
         "next": "task_04_01",
         "shown": false,
@@ -394,7 +394,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "task_04_02",
         "shown": false,
@@ -518,7 +518,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "minutes": 3
+          "minutes": 1
         },
         "next": "task_04_done",
         "shown": false,
@@ -564,7 +564,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 10
+          "minutes": 1
         },
         "next": "task_05",
         "shown": false,
@@ -593,7 +593,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "task_05_done",
         "shown": false,
@@ -664,7 +664,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 10
+          "minutes": 1
         },
         "next": "summary",
         "shown": false,
@@ -894,7 +894,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "minutes": 5
+          "minutes": 1
         },
         "next": "call_to_action_03",
         "shown": false,
@@ -986,7 +986,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "call_to_action_04",
         "shown": false,
@@ -1028,7 +1028,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "hours": 11
+          "minutes": 1
         },
         "next": "final",
         "shown": false,
@@ -1065,7 +1065,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "hours": 1
+          "minutes": 1
         },
         "next": null,
         "shown": false,

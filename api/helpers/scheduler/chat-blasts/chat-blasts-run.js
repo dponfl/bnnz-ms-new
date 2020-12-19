@@ -448,12 +448,15 @@ async function processChatBlastElement(client, rec, currentElem) {
     blockModifyHelperParams: {
       chatBlastGuid: rec.guid,
       elementId: currentElem.id,
+    },
+    afterHelperParams: {
+      chatBlastPerformanceRec: rec,
     }
   };
 
   const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
 
-  if (msgRes.status == null || msgRes.status !== 'ok') {
+  if (msgRes.status == null || msgRes.status !== 'ok' || msgRes.payload == null) {
 
     await LogProcessor.critical({
       message: 'Wrong sendMessageJoi response',
@@ -472,6 +475,8 @@ async function processChatBlastElement(client, rec, currentElem) {
 
     return;
   }
+
+  currentElem.message_id = msgRes.payload.message_id || 0;
 
   currentElem.shown = true;
 

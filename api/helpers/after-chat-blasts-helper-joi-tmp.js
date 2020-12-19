@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'push-messages:common:chat-blasts:after-try-joi';
+const moduleName = 'module:helper';
 
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:common:chat-blasts:after-try-joi',
+  friendlyName: 'module:helper',
 
 
-  description: 'push-messages:common:chat-blasts:after-try-joi',
+  description: 'module:helper',
 
 
   inputs: {
@@ -61,17 +61,13 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-      await LogProcessor.info({
-        message: 'afterHelper initiated',
-        clientGuid,
-        accountGuid,
-        location: moduleName,
-        payload: {},
-      });
-
       const chatBlastPerformanceRec = input.additionalParams.chatBlastPerformanceRec;
 
-      const block = _.find(chatBlastPerformanceRec.actionsList, {id: 'four'});
+      const findCriteria = {
+        id: 'XXX',
+      };
+
+      const block = _.find(chatBlastPerformanceRec.actionsList, findCriteria);
 
       if (block) {
 
@@ -85,25 +81,14 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
             payload: {
-              block
+              block,
             },
           });
         }
 
-        setTimeout(async () => {
-
-          const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
-            replyMarkup: {
-              inline_keyboard: [],
-            },
-            optionalParams: {
-              chat_id: input.client.chat_id,
-              message_id: block.message_id,
-            },
-          });
-
-        }, 3000);
-
+        /**
+         * Действия с данными блока
+         */
 
       } else {
 
@@ -117,7 +102,7 @@ module.exports = {
           errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
           payload: {
             actionsList: chatBlastPerformanceRec.actionsList,
-            findCriteria: {id: 'four'},
+            findCriteria,
           },
         });
 

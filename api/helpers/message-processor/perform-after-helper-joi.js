@@ -64,7 +64,7 @@ module.exports = {
       if (afterHelperCategory && afterHelperBlock && afterHelperName) {
 
         /**
-         * We managed to parse the specified callbackHelper and can perform it
+         * We managed to parse the specified afterHelper and can perform it
          */
 
         let afterHelperParams = {

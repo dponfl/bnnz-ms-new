@@ -1115,131 +1115,157 @@
       "generic": {
         "period_01": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         },
         "period_03": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         }
       },
       "test_personal": {
         "period_01": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         },
         "period_03": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         }
       },
       "test_personal_initial": {
         "period_01": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         },
         "period_03": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         }
       },
       "bronze_personal": {
         "period_01": {
           "list_price": 1990,
-          "current_price": 1680
+          "current_price": 1680,
+          "pushToPaidPrice": 1380
         },
         "period_03": {
           "list_price": 10,
-          "current_price": 10
+          "current_price": 10,
+          "pushToPaidPrice": 10
         }
       },
       "silver_personal": {
         "period_01": {
           "list_price": 4620,
-          "current_price": 3780
+          "current_price": 3780,
+          "pushToPaidPrice": 3480
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       },
       "gold_personal": {
         "period_01": {
           "list_price": 8290,
-          "current_price": 7380
+          "current_price": 7380,
+          "pushToPaidPrice": 7080
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       },
       "platinum_personal": {
         "period_01": {
           "list_price": 24780,
-          "current_price": 22380
+          "current_price": 22380,
+          "pushToPaidPrice": 22080
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       },
       "test_commercial": {
         "period_01": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         },
         "period_03": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         }
       },
       "test_commercial_initial": {
         "period_01": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         },
         "period_03": {
           "list_price": 0,
-          "current_price": 0
+          "current_price": 0,
+          "pushToPaidPrice": 0
         }
       },
       "bronze_commercial": {
         "period_01": {
           "list_price": 2990,
-          "current_price": 2580
+          "current_price": 2580,
+          "pushToPaidPrice": 2280
         },
         "period_03": {
           "list_price": 10,
-          "current_price": 10
+          "current_price": 10,
+          "pushToPaidPrice": 10
         }
       },
       "silver_commercial": {
         "period_01": {
           "list_price": 8380,
-          "current_price": 7680
+          "current_price": 7680,
+          "pushToPaidPrice": 7380
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       },
       "gold_commercial": {
         "period_01": {
           "list_price": 17780,
-          "current_price": 16780
+          "current_price": 16780,
+          "pushToPaidPrice": 16480
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       },
       "platinum_commercial": {
         "period_01": {
           "list_price": 47780,
-          "current_price": 45780
+          "current_price": 45780,
+          "pushToPaidPrice": 45480
         },
         "period_03": {
           "list_price": 100,
-          "current_price": 100
+          "current_price": 100,
+          "pushToPaidPrice": 100
         }
       }
     }
@@ -2159,9 +2185,9 @@
         "CB_Q01_FINAL_MSG_01": "$FirstName$, срок действия скидки истёк и, к сожалению, ты не использовал свой шанс приобрести пакеты продвижения BeFame с персональной скидкой 300 руб.",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts_Funnels": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts Funnels ***",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts_Funnels test": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts Funnels test ***",
-        "COMMON_CB_F_01": "Текст сообщения 01, $FirstName$ :wave:",
-        "COMMON_CB_F_02": "Текст сообщения 02, $ServiceLevelTitle$ :white_check_mark: ДА",
-        "COMMON_CB_F_03": "Текст сообщения 03, $instagramProfile$ :rocket:"
+        "COMMON_CB_F_01": "Текст сообщения 01 :wave:",
+        "COMMON_CB_F_02": "Текст сообщения 02 :white_check_mark: ДА",
+        "COMMON_CB_F_03": "Текст сообщения 03 :rocket:"
       }
     }
   }

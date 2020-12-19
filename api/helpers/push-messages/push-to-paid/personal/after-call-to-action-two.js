@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'push-messages:common:chat-blasts:after-try-joi';
+const moduleName = 'push-messages:push-to-paid:personal:after-call-to-action-two';
 
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:common:chat-blasts:after-try-joi',
+  friendlyName: 'push-messages:push-to-paid:personal:after-call-to-action-two',
 
 
-  description: 'push-messages:common:chat-blasts:after-try-joi',
+  description: 'push-messages:push-to-paid:personal:after-call-to-action-two',
 
 
   inputs: {
@@ -61,17 +61,13 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-      await LogProcessor.info({
-        message: 'afterHelper initiated',
-        clientGuid,
-        accountGuid,
-        location: moduleName,
-        payload: {},
-      });
-
       const chatBlastPerformanceRec = input.additionalParams.chatBlastPerformanceRec;
 
-      const block = _.find(chatBlastPerformanceRec.actionsList, {id: 'four'});
+      const findCriteria = {
+        id: 'call_to_action_01',
+      };
+
+      const block = _.find(chatBlastPerformanceRec.actionsList, findCriteria);
 
       if (block) {
 
@@ -85,25 +81,24 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
             payload: {
-              block
+              block,
             },
           });
         }
 
-        setTimeout(async () => {
+        /**
+         * Удяляем inline-keyboard предшествующего блока
+         */
 
-          const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
-            replyMarkup: {
-              inline_keyboard: [],
-            },
-            optionalParams: {
-              chat_id: input.client.chat_id,
-              message_id: block.message_id,
-            },
-          });
-
-        }, 3000);
-
+        const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+          replyMarkup: {
+            inline_keyboard: [],
+          },
+          optionalParams: {
+            chat_id: input.client.chat_id,
+            message_id: block.message_id,
+          },
+        });
 
       } else {
 
@@ -117,13 +112,11 @@ module.exports = {
           errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
           payload: {
             actionsList: chatBlastPerformanceRec.actionsList,
-            findCriteria: {id: 'four'},
+            findCriteria,
           },
         });
 
       }
-
-
 
       return exits.success({
         status: 'ok',

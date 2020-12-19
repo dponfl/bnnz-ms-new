@@ -323,7 +323,7 @@ async function activateChatBlastFunnels(client, currentAccount, serviceChatBlast
 
   for (const rec of chatBlastFunnelsRecs) {
 
-    const chatBlastFunnelName = `chatBlasts_${chatBlastName}_${rec.chatBlastFunnel}`;
+    const chatBlastFunnelName = `chatBlasts.${serviceChatBlastName}.${chatBlastName}.${rec.chatBlastFunnel}`;
 
     chatBlastFunnelsObj[chatBlastFunnelName] = rec.funnel_data;
 
