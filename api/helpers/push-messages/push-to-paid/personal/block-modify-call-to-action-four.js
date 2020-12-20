@@ -4,15 +4,15 @@ const Joi = require('@hapi/joi');
 
 const uuid = require('uuid-apikey');
 
-const moduleName = 'push-messages:common:chat-blasts:block-modify-try-joi';
+const moduleName = 'push-messages:push-to-paid:personal:block-modify-call-to-action-four';
 
 module.exports = {
 
 
-  friendlyName: 'push-messages:common:chat-blasts:block-modify-try-joi',
+  friendlyName: 'push-messages:push-to-paid:personal:block-modify-call-to-action-four',
 
 
-  description: 'push-messages:common:chat-blasts:block-modify-try-joi',
+  description: 'push-messages:push-to-paid:personal:block-modify-call-to-action-four',
 
 
   inputs: {
@@ -70,7 +70,6 @@ module.exports = {
 
 
       let resBlock = input.messageData;
-      let messageInlineKeyboard = [];
 
       if (!uuid.isUUID(input.additionalParams.chatBlastGuid)) {
         await sails.helpers.general.throwErrorJoi({
@@ -91,24 +90,13 @@ module.exports = {
       //  guid записи ChatBlastsPerformance
       //  id элемента в этой серии Chat Blasts
       //  идентификатор кнопки этого элемента
+      //  ВАЖНО: "callback_data" не должна превышать 64 символов
+      //  поэтому суммарная длина "elementId" и "rootCallbackData"
+      //  должна быть не более 14 символов
 
-      messageInlineKeyboard = _.concat(messageInlineKeyboard,
-        [
-          [
-            {
-              "text": "COMMON_CB_BTN_01",
-              "callback_data": `push_msg_cb_${input.additionalParams.chatBlastGuid}_${input.additionalParams.elementId}_BTN01`
-            }
-          ],
-          [
-            {
-              "text": "COMMON_CB_BTN_02",
-              "callback_data": `push_msg_cb_${input.additionalParams.chatBlastGuid}_${input.additionalParams.elementId}_BTN02`
-            }
-          ]
-        ]);
+      const rootCallbackData = resBlock.message.inline_keyboard[0][0].callback_data;
 
-      resBlock.message.inline_keyboard = messageInlineKeyboard;
+      resBlock.message.inline_keyboard[0][0].callback_data = `push_msg_cb_${input.additionalParams.chatBlastGuid}_${input.additionalParams.elementId}_${rootCallbackData}`;
 
       return exits.success(resBlock);
 

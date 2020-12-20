@@ -118,7 +118,7 @@ module.exports = {
         if (additionalTokensHelperCategory && additionalTokensHelperBlock && additionalTokensHelperName) {
 
           /**
-           * We managed to parse the specified blockModifyHelper and can perform it
+           * We managed to parse the specified additionalTokensHelper and can perform it
            */
 
           let additionalTokensHelperParams = {

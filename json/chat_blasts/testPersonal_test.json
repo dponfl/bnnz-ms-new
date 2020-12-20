@@ -825,7 +825,7 @@
         "actionType": "img",
         "timeType": "now",
         "showTime": null,
-        "next": "payment_call_01",
+        "next": "a01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -844,15 +844,15 @@
         }
       },
       {
-        "id": "call_to_action_01",
-        "description": "***",
+        "id": "a01",
+        "description": "call_to_action_01",
         "actionType": "inline_keyboard",
         "timeType": "now",
         "showTime": null,
-        "next": null,
+        "next": "a02",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionOne",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionOne",
         "afterHelper": null,
         "additionalTokensHelper": null,
         "message": {
@@ -882,24 +882,24 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_01_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
         }
       },
       {
-        "id": "call_to_action_02",
-        "description": "***",
+        "id": "a02",
+        "description": "call_to_action_02",
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
           "minutes": 1
         },
-        "next": "call_to_action_03",
+        "next": "a03",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionTwo",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionTwo",
         "afterHelper": "pushToPaid::personal::afterCallToActionTwo",
         "additionalTokensHelper": "pushToPaid::personal::additionalTokensCallToActionTwo",
         "message": {
@@ -974,24 +974,24 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_02_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
         }
       },
       {
-        "id": "call_to_action_03",
-        "description": "***",
+        "id": "a03",
+        "description": "call_to_action_03",
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
           "minutes": 1
         },
-        "next": "call_to_action_04",
+        "next": "a04",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionThree",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionThree",
         "afterHelper": "pushToPaid::personal::afterCallToActionThree",
         "additionalTokensHelper": null,
         "message": {
@@ -1016,15 +1016,15 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_03_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
         }
       },
       {
-        "id": "call_to_action_04",
-        "description": "***",
+        "id": "a04",
+        "description": "call_to_action_04",
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
@@ -1033,7 +1033,7 @@
         "next": "final",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionFour",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionFour",
         "afterHelper": "pushToPaid::personal::afterCallToActionFour",
         "additionalTokensHelper": null,
         "message": {
@@ -1053,7 +1053,7 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_04_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]

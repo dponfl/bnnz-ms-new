@@ -77,65 +77,87 @@ module.exports = {
 
       currentAccount = _.find(client.accounts, {guid: client.account_use});
 
-      /**
-       * Устанавливаем флаг "done"
-       */
+      switch (input.buttonId) {
 
-      const ChatBlastsPerformanceUpdateCriteria = {
-        guid: chatBlastsPerformanceRec.guid,
-      };
+        case 'go':
 
-      await ChatBlastsPerformance
-        .updateOne(ChatBlastsPerformanceUpdateCriteria)
-        .set({
-          done: true
-        })
-        .tolerate(async (err) => {
+          /**
+           * Устанавливаем флаг "done"
+           */
 
-          err.details = {
-            ChatBlastsPerformanceUpdateCriteria,
+          const ChatBlastsPerformanceUpdateCriteria = {
+            guid: chatBlastsPerformanceRec.guid,
           };
 
+          await ChatBlastsPerformance
+            .updateOne(ChatBlastsPerformanceUpdateCriteria)
+            .set({
+              done: true
+            })
+            .tolerate(async (err) => {
+
+              err.details = {
+                ChatBlastsPerformanceUpdateCriteria,
+              };
+
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.message,
+                errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.name,
+                payload: {
+                  ChatBlastsPerformanceUpdateCriteria,
+                  chatBlastsPerformanceRec,
+                  err,
+                },
+              });
+
+              return 'error';
+            });
+
+
+          /**
+           * Переводим клиента в воронку
+           */
+
+          currentAccount.keyboard = null;
+
+          /**
+           * Установить в client, что выполняется воронка "chatBlasts.testPersonal.pushToPaid.funnel01"
+           */
+
+          client.current_funnel = 'chatBlasts.testPersonal.pushToPaid.funnel01';
+
+          const initialBlock = _.find(client.funnels[client.current_funnel],
+            {initial: true});
+
+          initialBlock.enabled = true;
+
+          await sails.helpers.funnel.proceedNextBlockJoi({
+            client,
+            funnelName: client.current_funnel,
+            blockId: initialBlock.id,
+            createdBy: moduleName,
+          });
+
+          break;
+
+        default:
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
             location: moduleName,
-            message: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.message,
-            errorName: sails.config.custom.CHAT_BLASTS_ERROR_PERFORMANCE_REC_UPDATE_ERROR.name,
+            message: 'Wrong callback button id',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
             payload: {
-              ChatBlastsPerformanceUpdateCriteria,
-              chatBlastsPerformanceRec,
-              err,
+              buttonId: input.buttonId,
             },
           });
+      }
 
-          return 'error';
-        });
-
-
-      /**
-       * Переводим клиента в воронку
-       */
-
-      currentAccount.keyboard = null;
-
-      /**
-       * Установить в client, что выполняется воронка "chatBlasts.testPersonal.pushToPaid.funnel01"
-       */
-
-      client.current_funnel = 'chatBlasts.testPersonal.pushToPaid.funnel01';
-
-      const initialBlock = _.find(client.funnels[client.current_funnel],
-        {initial: true});
-
-      initialBlock.enabled = true;
-
-      await sails.helpers.funnel.proceedNextBlockJoi({
-        client,
-        funnelName: client.current_funnel,
-        blockId: initialBlock.id,
-        createdBy: moduleName,
-      });
 
       return exits.success({
         status: 'ok',

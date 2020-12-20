@@ -106,7 +106,7 @@ module.exports = {
 
 
       additionalTokens.push({
-        token: 'BeHeroListPrice',
+        token: '$BeHeroListPrice$',
         value: `${beHeroListPrice} ${currentCurrencyText}`,
       });
 
