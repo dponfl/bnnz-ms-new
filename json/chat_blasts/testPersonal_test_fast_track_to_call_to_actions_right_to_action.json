@@ -8,9 +8,9 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "minutes": 30
+          "minutes": 1
         },
-        "next": "rules",
+        "next": "a01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -45,10 +45,8 @@
         "id": "rules",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "days": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_01",
         "shown": false,
         "callbackHelper": null,
@@ -124,10 +122,8 @@
         "id": "task_01_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 10
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_02",
         "shown": false,
         "callbackHelper": null,
@@ -153,10 +149,8 @@
         "id": "task_02",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "days": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_02_done",
         "shown": false,
         "callbackHelper": null,
@@ -247,10 +241,8 @@
         "id": "task_02_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 10
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_03",
         "shown": false,
         "callbackHelper": null,
@@ -276,10 +268,8 @@
         "id": "task_03",
         "description": "***",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "days": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_03_done",
         "shown": false,
         "callbackHelper": null,
@@ -363,10 +353,8 @@
         "id": "task_03_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 10
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_01",
         "shown": false,
         "callbackHelper": null,
@@ -392,10 +380,8 @@
         "id": "task_04_01",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "days": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_02",
         "shown": false,
         "callbackHelper": null,
@@ -516,10 +502,8 @@
         "id": "task_04_02",
         "description": "***",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 3
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_done",
         "shown": false,
         "callbackHelper": null,
@@ -562,10 +546,8 @@
         "id": "task_04_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 10
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_05",
         "shown": false,
         "callbackHelper": null,
@@ -591,10 +573,8 @@
         "id": "task_05",
         "description": "***",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "days": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_05_done",
         "shown": false,
         "callbackHelper": null,
@@ -662,10 +642,8 @@
         "id": "task_05_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 10
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "summary",
         "shown": false,
         "callbackHelper": null,
@@ -696,10 +674,8 @@
         "id": "summary",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "success_story_01",
         "shown": false,
         "callbackHelper": null,
@@ -894,7 +870,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "minutes": 5
+          "minutes": 1
         },
         "next": "a03",
         "shown": false,
@@ -986,7 +962,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "days": 1
+          "minutes": 1
         },
         "next": "a04",
         "shown": false,
@@ -1028,7 +1004,7 @@
         "actionType": "inline_keyboard",
         "timeType": "relative",
         "showTime": {
-          "hours": 11
+          "minutes": 1
         },
         "next": "final",
         "shown": false,
@@ -1065,7 +1041,7 @@
         "actionType": "text",
         "timeType": "relative",
         "showTime": {
-          "hours": 1
+          "minutes": 1
         },
         "next": null,
         "shown": false,

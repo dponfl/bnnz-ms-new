@@ -64,7 +64,7 @@ module.exports = {
       const chatBlastPerformanceRec = input.additionalParams.chatBlastPerformanceRec;
 
       const findCriteria = {
-        id: 'call_to_action_04',
+        id: 'a04',
       };
 
       const block = _.find(chatBlastPerformanceRec.actionsList, findCriteria);
