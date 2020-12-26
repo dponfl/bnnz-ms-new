@@ -269,7 +269,7 @@ module.exports = {
       });
       return exits.success({
         status: 'error',
-        message: `${moduleName} performed`,
+        message: `${moduleName} not performed`,
         payload: {},
       });
     }

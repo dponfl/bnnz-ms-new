@@ -238,7 +238,7 @@ module.exports.custom = {
 `,
 
   DCR: `
-  
+
 `,
 
   ERROR_MSG_LENGTH: 800,
@@ -904,6 +904,11 @@ module.exports.custom = {
   CHAT_BLASTS_ERROR_NO_CHAT_BLAST: {
     name: 'CHAT_BLASTS_ERROR_NO_CHAT_BLAST',
     message: 'No Chat Blast by name at Chat Blast data',
+  },
+
+  CHAT_BLASTS_FUNNELS_ERROR: {
+    name: 'CHAT_BLASTS_FUNNELS_ERROR',
+    message: 'Chat Blast funnels error',
   },
 
 

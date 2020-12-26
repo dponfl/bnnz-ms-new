@@ -360,7 +360,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
           location: moduleName,
-          message: 'Block parsing error',
+          message: 'paymentGroup.funnel_block parsing error',
           clientGuid,
           accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,

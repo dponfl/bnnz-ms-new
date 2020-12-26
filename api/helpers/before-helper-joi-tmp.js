@@ -70,9 +70,17 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      let resHtml = input.payload.text;
+      const resHtml = await MessageProcessor.parseSpecialTokens({
+        client: input.client,
+        message: input.payload.text,
+        additionalTokens: [
+          {
+            token: '$instagramProfile$',
+            value: instProfile,
+          },
+        ],
+      });
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
 
       return exits.success({
         text: resHtml,
