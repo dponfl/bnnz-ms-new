@@ -43,13 +43,13 @@ module.exports = {
         .any()
         .description('client record')
         .required(),
-      serviceName: Joi
+      chatBlastName: Joi
         .string()
-        .description('service name (e.g. silver_personal)')
+        .description('chatBlastName')
         .required(),
-      funnelName: Joi
+      chatBlastFunnel: Joi
         .string()
-        .description('funnel (e.g. optin)')
+        .description('chatBlastFunnel')
         .required(),
       blockId: Joi
         .string()
@@ -114,9 +114,6 @@ module.exports = {
     let accountGuid;
 
     let currentAccount;
-    let currentAccountInd;
-
-    let clientCategory;
 
 
     try {
@@ -128,57 +125,66 @@ module.exports = {
       accountGuid = client.account_use;
 
       currentAccount = _.find(client.accounts, {guid: client.account_use});
-      currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+
+      const serviceChatBlastName = currentAccount.service.chat_blast_name;
+      const chatBlastName = input.chatBlastName;
+      const chatBlastFunnel = input.chatBlastFunnel;
 
       /**
-       * Обновить данные по уровню сервиса для аккаунта client.account_use
+       * Загрузить девственную версию Chat Blast воронки для перехода
        */
 
-      const getServiceRes = await sails.helpers.storage.getService.with({serviceName: input.serviceName});
-
-      // client.accounts[currentAccountInd].service = getServiceRes.payload.id;
-      client.accounts[currentAccountInd].service = getServiceRes.payload;
-
-      clientCategory = getServiceRes.payload.funnel_name;
-
-      /**
-       * Загрузить девственную версию воронки для перехода
-       */
-
-      const loadInitialFunnelsJoiParams = {
+      const loadInitialChatBlastFunnelParams = {
         client,
-        clientCategory,
+        serviceChatBlastName,
+        chatBlastName,
+        chatBlastFunnel,
       };
 
-      const loadInitialFunnelsJoiRaw = await sails.helpers.general.loadInitialFunnelsAllJoi(loadInitialFunnelsJoiParams);
+      const loadInitialChatBlastFunnelRaw = await sails.helpers.general.loadInitialChatBlastFunnelJoi(loadInitialChatBlastFunnelParams);
 
-      if (loadInitialFunnelsJoiRaw.status !== 'ok') {
+      if (loadInitialChatBlastFunnelRaw.status !== 'ok') {
         await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
           location: moduleName,
-          message: 'Wrong loadInitialFunnelsJoi response',
+          message: 'Wrong loadInitialChatBlastFunnelJoi response',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.KEYBOARDS_ERROR.name,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
           payload: {
-            loadInitialFunnelsJoiParams,
-            loadInitialFunnelsJoiRaw,
+            loadInitialChatBlastFunnelParams,
           },
         });
       }
 
+      const chatBlastFunnelName = `chatBlasts.${serviceChatBlastName}.${chatBlastName}.${chatBlastFunnel}`;
+
+      if (loadInitialChatBlastFunnelRaw.payload.client.funnels[chatBlastFunnelName] == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'loadInitialChatBlastFunnelJoi response has no expected funnel',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.GENERAL_ERROR.name,
+          payload: {
+            chatBlastFunnelName,
+            funnels: loadInitialChatBlastFunnelRaw.payload.client.funnels,
+          },
+        });
+      }
+
+
       /**
-       * Установить в client, что выполняется воронка "input.funnelName"
+       * Установить в client, что выполняется воронка
        */
 
-      client.funnels = loadInitialFunnelsJoiRaw.payload.client.funnels;
 
       currentAccount.keyboard = null;
 
-      client.funnel_name = clientCategory;
-      client.current_funnel = input.funnelName;
+      client.current_funnel = chatBlastFunnelName;
 
       if (input.skipBlocks != null) {
 
@@ -187,7 +193,7 @@ module.exports = {
          */
 
         _.forEach(input.skipBlocks, (skipBlockObj) => {
-          const skipBlock = _.find(client.funnels[input.funnelName], {id: skipBlockObj.id});
+          const skipBlock = _.find(client.funnels[chatBlastFunnelName], {id: skipBlockObj.id});
           _.assign(skipBlock, skipBlockObj);
         });
 
@@ -197,7 +203,7 @@ module.exports = {
        * Активировать блок input.blockId
        */
 
-      const activateBlock = _.find(client.funnels[input.funnelName], {id: input.blockId});
+      const activateBlock = _.find(client.funnels[chatBlastFunnelName], {id: input.blockId});
 
       if (activateBlock == null) {
         await sails.helpers.general.throwErrorJoi({
@@ -210,7 +216,7 @@ module.exports = {
           errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
             blockId: input.blockId,
-            funnel: client.funnels[input.funnelName],
+            funnel: client.funnels[chatBlastFunnelName],
           },
         });
       }
@@ -267,7 +273,7 @@ module.exports = {
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }
