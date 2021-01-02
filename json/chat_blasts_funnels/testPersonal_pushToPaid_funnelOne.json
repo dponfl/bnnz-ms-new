@@ -1,0 +1,344 @@
+[
+  {
+    "id": "start",
+    "description": "",
+    "actionType": "inline_keyboard",
+    "initial": true,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": null,
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackSelectSubscriptionJoi",
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_START_MSG_01",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_START_MSG_02",
+          "style": "",
+          "cr": ""
+        }
+      ],
+      "inline_keyboard": [
+        [
+          {
+            "text": "CB_Q01_F_01_START_BTN_01",
+            "callback_data": "check_belike"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_START_BTN_02",
+            "callback_data": "check_behero"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_START_BTN_03",
+            "callback_data": "check_bestar"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_START_BTN_04",
+            "callback_data": "check_belegend"
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "id": "belike_info_01",
+    "description": "",
+    "actionType": "text",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": "chatBlasts.testPersonal.pushToPaid.funnelOne::belike_info_02",
+    "switchToFunnel": null,
+    "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBelikeInfoOneJoi",
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_01",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_02",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_03",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_04",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_05",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_01_MSG_06",
+          "style": "",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "belike_info_02",
+    "description": "",
+    "actionType": "text",
+    "initial": false,
+    "enabled": false,
+    "show_time": 3000,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": "chatBlasts.testPersonal.pushToPaid.funnelOne::belike_make_payment",
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_01",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_02",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_03",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_04",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_05",
+          "style": "",
+          "cr": "SCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_06",
+          "style": "",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "belike_make_payment",
+    "description": "",
+    "actionType": "inline_keyboard",
+    "initial": false,
+    "enabled": false,
+    "show_time": 3000,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": null,
+    "switchToFunnel": null,
+    "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBelikeMakePaymentJoi",
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBelikeMakePaymentJoi",
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_MSG_01",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_MSG_02",
+          "style": "",
+          "cr": ""
+        }
+      ],
+      "inline_keyboard": [
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_BTN_01",
+            "callback_data": "make_payment"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_BTN_02",
+            "callback_data": "select_another_option"
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "id": "belike_payment_success",
+    "description": "",
+    "actionType": "text",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": "chatBlasts.testPersonal.pushToPaid.funnelOne::belike_subscription_completed",
+    "switchToFunnel": null,
+    "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBelikePaymentSuccessJoi",
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_PAYMENT_SUCCESSFUL_MSG_01",
+          "style": "",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "belike_payment_error",
+    "description": "",
+    "actionType": "inline_keyboard",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": null,
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBelikeMakePaymentAgainJoi",
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_MSG_01",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_MSG_02",
+          "style": "",
+          "cr": ""
+        }
+      ],
+      "inline_keyboard": [
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_BTN_01",
+            "callback_data": "make_payment"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_BTN_02",
+            "callback_data": "contact_support"
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "id": "belike_subscription_completed",
+    "description": "",
+    "actionType": "inline_keyboard",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": null,
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": "chatBlasts::testPersonalPushToPaid::afterBelikeSubscriptionCompletedJoi",
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_MSG_01",
+          "style": "",
+          "cr": ""
+        }
+      ],
+      "inline_keyboard": [
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_BTN_01",
+            "url": "https://drive.google.com/drive/folders/1QTIkrJi5EcY-Hq541Q0M09RYrPopkwf-"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_BTN_02",
+            "url": "https://befame.ru/"
+          }
+        ],
+        [
+          {
+            "text": "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_BTN_03",
+            "url": "https://befame.ru/"
+          }
+        ]
+      ]
+    }
+  }
+]
