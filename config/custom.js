@@ -798,6 +798,10 @@ module.exports.custom = {
     message: 'COULD NOT GET THE EXPECTED RESPONSE FROM CHECKPROFILESUBSCRIPTIONJOI',
   },
 
+  GENERAL_LOGGER: {
+    name: 'GENERAL_LOGGER',
+  },
+
   ANALITICS_ERROR: {
     name: 'ERR_ANALITICS_GENERAL',
   },
