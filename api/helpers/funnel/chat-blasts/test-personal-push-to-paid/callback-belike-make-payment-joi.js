@@ -1,5 +1,6 @@
 "use strict";
 
+const moment = require('moment');
 const Joi = require('@hapi/joi');
 
 const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-belike-make-payment-joi';
@@ -416,11 +417,11 @@ module.exports = {
         case 'select_another_option':
 
           const switchChatBlastFunnelToAnyBlockParams = {
-            client,
+            client: input.client,
             chatBlastName: 'pushToPaid',
             chatBlastFunnel: 'funnelOne',
             blockId: 'start',
-            skipBlocks: null,
+            skipBlocks: [],
             proceedNextBlock: false,
             createdBy: moduleName,
           };

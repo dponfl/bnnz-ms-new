@@ -116,7 +116,7 @@ module.exports = {
         });
       }
 
-      if (chatBlastsFunnelsGetByCriteriaRaw.payload.length === 1) {
+      if (chatBlastsFunnelsGetByCriteriaRaw.payload.length !== 1) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
@@ -128,11 +128,28 @@ module.exports = {
           payload: {
             chatBlastsFunnelsGetByCriteriaParams,
             chatBlastsFunnelsGetByCriteriaRaw,
+            numberOfChatBlastsFound: chatBlastsFunnelsGetByCriteriaRaw.payload.length,
           },
         });
       }
 
-      input.client.funnels[chatBlastFunnelName] = chatBlastsFunnelsGetByCriteriaRaw.payload;
+      if (chatBlastsFunnelsGetByCriteriaRaw.payload[0].funnel_data == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'No "funnel_data" at chatBlastsFunnelsGetByCriteriaJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.CHAT_BLASTS_FUNNELS_ERROR.name,
+          payload: {
+            chatBlastsFunnelsGetByCriteriaParams,
+            chatBlastsFunnelsGetByCriteriaRaw,
+          },
+        });
+      }
+
+      input.client.funnels[chatBlastFunnelName] = chatBlastsFunnelsGetByCriteriaRaw.payload[0].funnel_data;
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: clientGuid},

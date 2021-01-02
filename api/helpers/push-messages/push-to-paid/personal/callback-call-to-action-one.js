@@ -124,10 +124,10 @@ module.exports = {
           currentAccount.keyboard = null;
 
           /**
-           * Установить в client, что выполняется воронка "chatBlasts.testPersonal.pushToPaid.funnel01"
+           * Установить в client, что выполняется воронка "chatBlasts.testPersonal.pushToPaid.funnelOne"
            */
 
-          client.current_funnel = 'chatBlasts.testPersonal.pushToPaid.funnel01';
+          client.current_funnel = 'chatBlasts.testPersonal.pushToPaid.funnelOne';
 
           const initialBlock = _.find(client.funnels[client.current_funnel],
             {initial: true});

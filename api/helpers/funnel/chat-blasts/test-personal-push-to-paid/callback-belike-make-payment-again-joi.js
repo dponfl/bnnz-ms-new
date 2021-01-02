@@ -1,5 +1,6 @@
 "use strict";
 
+const moment = require('moment');
 const Joi = require('@hapi/joi');
 
 const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-belike-make-payment-again-joi';
