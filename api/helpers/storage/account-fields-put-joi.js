@@ -71,6 +71,8 @@ module.exports = {
         'subscription_active',
         'subscription_from',
         'subscription_until',
+        'payment_amount',
+        'payment_currency',
         'service',
         'payment_plan',
         'payment_made',

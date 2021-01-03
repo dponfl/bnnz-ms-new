@@ -447,6 +447,18 @@ module.exports = {
           });
       }
 
+      input.block.done = true;
+
+      await sails.helpers.funnel.afterHelperGenericJoi({
+        client: input.client,
+        block: input.block,
+        msg: input.query,
+        next: true,
+        previous: true,
+        switchFunnel: false,
+        createdBy: moduleName,
+      });
+
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
