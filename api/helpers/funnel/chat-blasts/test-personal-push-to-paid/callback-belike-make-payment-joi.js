@@ -73,6 +73,7 @@ module.exports = {
     const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
 
 
+
     try {
 
       input = await schema.validateAsync(inputs.params);
@@ -119,6 +120,8 @@ module.exports = {
       currentAmount = priceConfigGeneral[currentRegion][currentServiceName].period_01.pushToPaidPrice;
       currentCurrency = priceConfigGeneral[currentRegion].currency;
       currentCurrencyText = priceConfigText.currency[currentCurrency];
+
+      const serviceTitle = sails.config.custom.config.lang[useLang].price.service_title[currentServiceName].title;
 
 
       switch (input.query.data) {
@@ -301,19 +304,23 @@ module.exports = {
 //
 //           const title = await MessageProcessor.parseStr({
 //             client: input.client,
-//             token: "COMMON_MAKE_PAYMENT_PMT_TITLE",
+//             token: "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_PMT_TITLE",
 //             additionalTokens: [
 //               {
-//                 token: "$paymentPeriod$",
-//                 value: priceConfigText.payment_periods.period_01,
+//                 token: "$ServiceTitle$",
+//                 value: serviceTitle,
 //               }
 //             ]
 //           });
 //
 //           const description = await MessageProcessor.parseStr({
 //             client: input.client,
-//             token: "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
+//             token: "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_PMT_DESCRIPTION",
 //             additionalTokens: [
+//               {
+//                 token: "$ServiceTitle$",
+//                 value: serviceTitle,
+//               },
 //               {
 //                 token: "$paymentPeriod$",
 //                 value: priceConfigText.payment_periods.period_01,
@@ -325,18 +332,17 @@ module.exports = {
 //
 //           const item01Description = await MessageProcessor.parseStr({
 //           client: input.client,
-//           token: "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+//           token: "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
 //             additionalTokens: [
+//               {
+//                 token: "$ServiceTitle$",
+//                 value: serviceTitle,
+//               },
 //               {
 //                 token: "$paymentPeriod$",
 //                 value: priceConfigText.payment_periods.period_01,
 //               }
 //             ]
-//           });
-//
-//           const item02Description = await MessageProcessor.parseStr({
-//           client: input.client,
-//           token: "COMMON_MAKE_PAYMENT_PMT_ITEM2_DESCRIPTION",
 //           });
 //
 // /*
@@ -412,6 +418,11 @@ module.exports = {
 //               },
 //             });
 //           }
+//
+//           /**
+//            * Инициировать последовательность действий по оплате: окончание
+//            */
+
 
           break;
         case 'select_another_option':
