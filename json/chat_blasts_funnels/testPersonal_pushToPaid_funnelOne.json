@@ -2,11 +2,40 @@
   {
     "id": "start",
     "description": "",
-    "actionType": "inline_keyboard",
+    "actionType": "text",
     "initial": true,
     "enabled": false,
     "show_time": 0,
     "removeKeyboard": true,
+    "disableWebPagePreview": false,
+    "previous": null,
+    "next": "chatBlasts.testPersonal.pushToPaid.funnelOne::select",
+    "switchToFunnel": null,
+    "beforeHelper": null,
+    "afterHelper": null,
+    "forcedHelper": null,
+    "callbackHelper": null,
+    "blockModifyHelper": null,
+    "shown": false,
+    "done": false,
+    "message": {
+      "html": [
+        {
+          "text": "CB_Q01_F_01_START_MSG_01",
+          "style": "",
+          "cr": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "select",
+    "description": "",
+    "actionType": "inline_keyboard",
+    "initial": false,
+    "enabled": false,
+    "show_time": 0,
+    "removeKeyboard": false,
     "disableWebPagePreview": false,
     "previous": null,
     "next": null,
@@ -21,12 +50,7 @@
     "message": {
       "html": [
         {
-          "text": "CB_Q01_F_01_START_MSG_01",
-          "style": "",
-          "cr": "DCR"
-        },
-        {
-          "text": "CB_Q01_F_01_START_MSG_02",
+          "text": "CB_Q01_F_01_SELECT_MSG_01",
           "style": "",
           "cr": ""
         }
@@ -34,25 +58,25 @@
       "inline_keyboard": [
         [
           {
-            "text": "CB_Q01_F_01_START_BTN_01",
+            "text": "CB_Q01_F_01_SELECT_BTN_01",
             "callback_data": "check_belike"
           }
         ],
         [
           {
-            "text": "CB_Q01_F_01_START_BTN_02",
+            "text": "CB_Q01_F_01_SELECT_BTN_02",
             "callback_data": "check_behero"
           }
         ],
         [
           {
-            "text": "CB_Q01_F_01_START_BTN_03",
+            "text": "CB_Q01_F_01_SELECT_BTN_03",
             "callback_data": "check_bestar"
           }
         ],
         [
           {
-            "text": "CB_Q01_F_01_START_BTN_04",
+            "text": "CB_Q01_F_01_SELECT_BTN_04",
             "callback_data": "check_belegend"
           }
         ]
@@ -122,7 +146,7 @@
     "show_time": 3000,
     "removeKeyboard": false,
     "disableWebPagePreview": false,
-    "previous": null,
+    "previous": "chatBlasts.testPersonal.pushToPaid.funnelOne::belike_info_01",
     "next": "chatBlasts.testPersonal.pushToPaid.funnelOne::belike_make_payment",
     "switchToFunnel": null,
     "beforeHelper": null,
@@ -161,6 +185,11 @@
         },
         {
           "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_06",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_INFO_02_MSG_07",
           "style": "",
           "cr": ""
         }

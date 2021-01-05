@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi';
+const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-make-payment-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi',
+  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-make-payment-joi',
 
 
-  description: 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi',
+  description: 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-make-payment-joi',
 
 
   inputs: {
@@ -63,8 +63,7 @@ module.exports = {
 
     let client;
 
-    const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
-
+    const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
 
     try {
 
@@ -75,24 +74,45 @@ module.exports = {
       clientGuid = client.guid;
       accountGuid = client.account_use;
 
-      const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
-      const useLang = (_.has(sails.config.custom.config.lang, client.lang) ? client.lang : defaultLang);
+      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
+      const currentRegion = currentAccount.region;
 
-      const serviceName = sails.config.custom.config.lang[useLang].price.service_title[currentServiceName].title;
+      const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
+      const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : defaultLang);
+
+      const priceConfigText = sails.config.custom.config.lang[useLang].price;
+      const priceConfigGeneral = sails.config.custom.config.price;
+
+      const currentCurrency = priceConfigGeneral[currentRegion].currency;
+      const currentCurrencyText = priceConfigText.currency[currentCurrency];
+
+      const listPrice = priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price;
+      const pushToPaidPrice = priceConfigGeneral[currentRegion][currentServiceName].period_01.pushToPaidPrice;
+      const pushToPaidDiscount = listPrice - pushToPaidPrice;
+
 
       const resHtml = await MessageProcessor.parseSpecialTokens({
         client,
         message: input.payload.text,
         additionalTokens: [
           {
-            token: '$ServiceName$',
-            value: serviceName,
+            token: '$ListPrice$',
+            value: `${listPrice} ${currentCurrencyText}`,
+          },
+          {
+            token: '$PushToPaidPrice$',
+            value: `${pushToPaidPrice} ${currentCurrencyText}`,
+          },
+          {
+            token: '$PushToPaidDiscount$',
+            value: `${pushToPaidDiscount} ${currentCurrencyText}`,
           },
         ],
       });
 
       return exits.success({
         text: resHtml,
+        inline_keyboard: input.payload.inline_keyboard,
       });
 
     } catch (e) {
@@ -120,7 +140,7 @@ module.exports = {
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} not performed`,
+          message: `${moduleName} performed`,
           payload: {},
         });
       }

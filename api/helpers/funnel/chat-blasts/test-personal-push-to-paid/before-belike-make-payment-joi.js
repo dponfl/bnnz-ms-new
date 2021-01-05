@@ -63,6 +63,7 @@ module.exports = {
 
     let client;
 
+    const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
 
     try {
 
@@ -85,9 +86,9 @@ module.exports = {
       const currentCurrency = priceConfigGeneral[currentRegion].currency;
       const currentCurrencyText = priceConfigText.currency[currentCurrency];
 
-      const beLikeListPrice = priceConfigGeneral[currentRegion]['bronze_personal'].period_01.list_price;
-      const beLikePushToPaidPrice = priceConfigGeneral[currentRegion]['bronze_personal'].period_01.pushToPaidPrice;
-      const beLikePushToPaidDiscount = beLikeListPrice - beLikePushToPaidPrice;
+      const listPrice = priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price;
+      const pushToPaidPrice = priceConfigGeneral[currentRegion][currentServiceName].period_01.pushToPaidPrice;
+      const pushToPaidDiscount = listPrice - pushToPaidPrice;
 
 
       const resHtml = await MessageProcessor.parseSpecialTokens({
@@ -96,15 +97,15 @@ module.exports = {
         additionalTokens: [
           {
             token: '$ListPrice$',
-            value: `${beLikeListPrice} ${currentCurrencyText}`,
+            value: `${listPrice} ${currentCurrencyText}`,
           },
           {
             token: '$PushToPaidPrice$',
-            value: `${beLikePushToPaidPrice} ${currentCurrencyText}`,
+            value: `${pushToPaidPrice} ${currentCurrencyText}`,
           },
           {
             token: '$PushToPaidDiscount$',
-            value: `${beLikePushToPaidDiscount} ${currentCurrencyText}`,
+            value: `${pushToPaidDiscount} ${currentCurrencyText}`,
           },
         ],
       });

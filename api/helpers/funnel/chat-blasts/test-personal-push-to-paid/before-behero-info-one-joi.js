@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi';
+const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-info-one-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi',
+  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-info-one-joi',
 
 
-  description: 'funnel:chat-blasts:test-personal-push-to-paid:before-belike-info-one-joi',
+  description: 'funnel:chat-blasts:test-personal-push-to-paid:before-behero-info-one-joi',
 
 
   inputs: {
@@ -63,7 +63,7 @@ module.exports = {
 
     let client;
 
-    const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
+    const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
 
 
     try {
