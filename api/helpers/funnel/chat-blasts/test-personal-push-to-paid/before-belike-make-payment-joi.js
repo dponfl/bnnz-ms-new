@@ -63,7 +63,7 @@ module.exports = {
 
     let client;
 
-    const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
+    const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
 
     try {
 

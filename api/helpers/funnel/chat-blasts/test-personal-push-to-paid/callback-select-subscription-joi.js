@@ -81,7 +81,7 @@ module.exports = {
             block: input.block,
             updateElement: 'next',
             updateElementValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::belike_info_01',
-            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::start',
+            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::select',
             createdBy: moduleName,
             msg: input.msg,
           };
@@ -97,7 +97,7 @@ module.exports = {
             block: input.block,
             updateElement: 'next',
             updateElementValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_info_01',
-            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::start',
+            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::select',
             createdBy: moduleName,
             msg: input.msg,
           };
@@ -113,7 +113,7 @@ module.exports = {
             block: input.block,
             updateElement: 'next',
             updateElementValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_info_01',
-            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::start',
+            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::select',
             createdBy: moduleName,
             msg: input.msg,
           };
@@ -129,7 +129,7 @@ module.exports = {
             block: input.block,
             updateElement: 'next',
             updateElementValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::belegend_info_01',
-            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::start',
+            updateElementPreviousValue: 'chatBlasts.testPersonal.pushToPaid.funnelOne::select',
             createdBy: moduleName,
             msg: input.msg,
           };

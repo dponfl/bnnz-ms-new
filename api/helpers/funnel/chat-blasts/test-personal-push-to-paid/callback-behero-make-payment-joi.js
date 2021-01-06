@@ -72,6 +72,7 @@ module.exports = {
     let currentCurrencyText;
     const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
 
+    const usePaymentSystem = false;
 
 
     try {
@@ -127,302 +128,319 @@ module.exports = {
       switch (input.query.data) {
         case 'make_payment':
 
-// TODO: Временная заглушка по причине нереботы тестовых платежей: Начало
-
-          const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-            return o.guid === currentAccount.guid;
-          });
+          if (usePaymentSystem) {
 
           /**
-           * Обновляем поля записи текущего аккаунта
+           * Инициировать последовательность действий по оплате
            */
 
-          const getServiceRes = await sails.helpers.storage.getService.with({serviceName: currentServiceName});
+          const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
 
-          if (getServiceRes.status == null
-            || getServiceRes.status !== 'ok'
-            || getServiceRes.payload == null
-          ) {
+          if (paymentProvider == null) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
               location: moduleName,
-              message: 'Unexpected getService response',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.STORAGE_ERROR.name,
-              payload: {
-                serviceName: currentServiceName,
-              },
-            });
-          }
-
-          input.client.accounts[currentAccountInd].service = getServiceRes.payload;
-
-          input.client.accounts[currentAccountInd].payment_made = true;
-          input.client.accounts[currentAccountInd].subscription_from = moment()
-            .format();
-          input.client.accounts[currentAccountInd].subscription_until = moment()
-            .add(priceConfigGeneral.payment_periods.period_01.value, priceConfigGeneral.payment_periods.period_01.period)
-            .format();
-
-          /**
-           * Обновляем данные клиента
-           * для сохранения важных изменений п оаккаунту
-           */
-
-          await sails.helpers.storage.clientUpdateJoi({
-            criteria: {guid: input.client.guid},
-            data: input.client,
-            createdBy: moduleName,
-          });
-
-          /**
-           * Прописываем клиента в комнаты
-           */
-
-          const reallocateRoomsToAccountJoiParams = {
-            account: currentAccount,
-          };
-
-          const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
-
-          if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.ERROR,
-              location: moduleName,
-              message: 'Wrong reallocateRoomsToAccountJoi response',
+              message: 'No payment provider config for messenger',
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
-                reallocateRoomsToAccountJoiParams,
-                reallocateRoomsToAccountJoiRaw,
+                inputClientMessenger: input.client.messenger,
               },
             });
           }
 
 
-          input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_payment_success';
+          const title = await MessageProcessor.parseStr({
+            client: input.client,
+            token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_TITLE",
+            additionalTokens: [
+              {
+                token: "$ServiceTitle$",
+                value: serviceTitle,
+              }
+            ]
+          });
 
-          /**
-           * Устанавливае у следующего блока значение для предшествующего блока
-           */
-
-          const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-          const updateFunnel = splitRes[0];
-          const updateId = splitRes[1];
-
-
-          const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-          if (getBlock) {
-            getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_make_payment';
-            getBlock.enabled = true;
-          }
-
-          /**
-           * Создаём запись о получении платежа
-           */
+          const description = await MessageProcessor.parseStr({
+            client: input.client,
+            token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
+            additionalTokens: [
+              {
+                token: "$ServiceTitle$",
+                value: serviceTitle,
+              },
+              {
+                token: "$paymentPeriod$",
+                value: priceConfigText.payment_periods.period_01,
+              }
+            ]
+          });
 
           const currency = currentCurrency;
 
-          input.client.accounts[currentAccountInd].payment_amount = currentAmount;
-          input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
+          const item01Description = await MessageProcessor.parseStr({
+          client: input.client,
+          token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+            additionalTokens: [
+              {
+                token: "$ServiceTitle$",
+                value: serviceTitle,
+              },
+              {
+                token: "$paymentPeriod$",
+                value: priceConfigText.payment_periods.period_01,
+              }
+            ]
+          });
 
+/*
           const invoiceItems = [
             {
+              description: item01Description,
               quantity: '1.0',
-              price: currentAmount,
+              price: priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
+              currency,
+              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
             }
           ];
 
-          const messenger = input.client.messenger;
-          const clientId = input.client.id;
-
-          const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
-            '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
-
-          let invoiceAmount = 0;
-
-          for (const elem of invoiceItems) {
-            invoiceAmount = invoiceAmount + elem.price * elem.quantity;
+          if (priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price !== priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price) {
+            invoiceItems.push({
+              description: item02Description,
+              quantity: '1.0',
+              price: priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price - priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
+              currency,
+              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+            });
           }
+*/
 
-          const paymentGroupRecRaw = await sails.helpers.storage.paymentGroupCreateJoi({
-            clientId,
-            clientGuid,
-            accountGuid,
-            amount: invoiceAmount,
+          const invoiceItems = [
+            {
+              description: item01Description,
+              quantity: '1.0',
+              price: currentAmount,
+              currency,
+              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+            }
+          ];
+
+
+          const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
+            client: input.client,
+            title,
+            description,
+            startParameter: 'start',
             currency,
-            type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
-            status: sails.config.custom.enums.paymentGroupStatus.SUCCESS,
-            paymentProvider,
-            messenger,
+            invoiceItems,
             funnelBlockName: `chatBlasts.testPersonal.pushToPaid.funnelOne::${input.block.id}`,
           });
 
-          if (paymentGroupRecRaw.status !== 'ok') {
+          if (sendInvoiceResultRaw.status !== 'ok') {
             await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              errorType: sails.config.custom.enums.errorType.ERROR,
               location: moduleName,
-              message: 'Payment group record create error',
+              message: 'Wrong sendInvoice response',
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.FUNNELS_ERROR.name,
               payload: {
-                paymentGroupRecRaw,
+                sendInvoiceResultRaw,
               },
             });
-
           }
+
+          const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
+
+          if (accountIndex < 0) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'account not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                account_use: input.client.account_use,
+                accounts: input.client.accounts,
+              },
+            });
+          }
+
+          /**
+           * Инициировать последовательность действий по оплате: окончание
+           */
+
+          } else {
+
+// TODO: Временная заглушка по причине нереботы тестовых платежей: Начало
+
+            const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
+              return o.guid === currentAccount.guid;
+            });
+
+            /**
+             * Обновляем поля записи текущего аккаунта
+             */
+
+            const getServiceRes = await sails.helpers.storage.getService.with({serviceName: currentServiceName});
+
+            if (getServiceRes.status == null
+              || getServiceRes.status !== 'ok'
+              || getServiceRes.payload == null
+            ) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Unexpected getService response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.STORAGE_ERROR.name,
+                payload: {
+                  serviceName: currentServiceName,
+                },
+              });
+            }
+
+            input.client.accounts[currentAccountInd].service = getServiceRes.payload;
+
+            input.client.accounts[currentAccountInd].payment_made = true;
+            input.client.accounts[currentAccountInd].subscription_from = moment()
+              .format();
+            input.client.accounts[currentAccountInd].subscription_until = moment()
+              .add(priceConfigGeneral.payment_periods.period_01.value, priceConfigGeneral.payment_periods.period_01.period)
+              .format();
+
+            /**
+             * Обновляем данные клиента
+             * для сохранения важных изменений п оаккаунту
+             */
+
+            await sails.helpers.storage.clientUpdateJoi({
+              criteria: {guid: input.client.guid},
+              data: input.client,
+              createdBy: moduleName,
+            });
+
+            /**
+             * Прописываем клиента в комнаты
+             */
+
+            const reallocateRoomsToAccountJoiParams = {
+              account: currentAccount,
+            };
+
+            const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
+
+            if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong reallocateRoomsToAccountJoi response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
+                payload: {
+                  reallocateRoomsToAccountJoiParams,
+                  reallocateRoomsToAccountJoiRaw,
+                },
+              });
+            }
+
+
+            input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_payment_success';
+
+            /**
+             * Устанавливае у следующего блока значение для предшествующего блока
+             */
+
+            const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
+            const updateFunnel = splitRes[0];
+            const updateId = splitRes[1];
+
+
+            const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+
+            if (getBlock) {
+              getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_make_payment';
+              getBlock.enabled = true;
+            }
+
+            /**
+             * Создаём запись о получении платежа
+             */
+
+            const currency = currentCurrency;
+
+            input.client.accounts[currentAccountInd].payment_amount = currentAmount;
+            input.client.accounts[currentAccountInd].payment_currency = currentCurrency;
+
+            const invoiceItems = [
+              {
+                quantity: '1.0',
+                price: currentAmount,
+              }
+            ];
+
+            const messenger = input.client.messenger;
+            const clientId = input.client.id;
+
+            const paymentProvider = sails.config.custom.config.payments[messenger]['provider'].toUpperCase() +
+              '_' + sails.config.custom.config.payments[messenger]['env'].toUpperCase();
+
+            let invoiceAmount = 0;
+
+            for (const elem of invoiceItems) {
+              invoiceAmount = invoiceAmount + elem.price * elem.quantity;
+            }
+
+            const paymentGroupRecRaw = await sails.helpers.storage.paymentGroupCreateJoi({
+              clientId,
+              clientGuid,
+              accountGuid,
+              amount: invoiceAmount,
+              currency,
+              type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
+              status: sails.config.custom.enums.paymentGroupStatus.SUCCESS,
+              paymentProvider,
+              messenger,
+              funnelBlockName: `chatBlasts.testPersonal.pushToPaid.funnelOne::${input.block.id}`,
+            });
+
+            if (paymentGroupRecRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+                location: moduleName,
+                message: 'Payment group record create error',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
+                payload: {
+                  paymentGroupRecRaw,
+                },
+              });
+
+            }
 
 // TODO: Временная заглушка по причине нереботы тестовых платежей: Окончание
 
-//           /**
-//            * Инициировать последовательность действий по оплате
-//            */
-//
-//           const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
-//
-//           if (paymentProvider == null) {
-//             await sails.helpers.general.throwErrorJoi({
-//               errorType: sails.config.custom.enums.errorType.CRITICAL,
-//               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-//               location: moduleName,
-//               message: 'No payment provider config for messenger',
-//               clientGuid,
-//               accountGuid,
-//               errorName: sails.config.custom.FUNNELS_ERROR.name,
-//               payload: {
-//                 inputClientMessenger: input.client.messenger,
-//               },
-//             });
-//           }
-//
-//
-//           const title = await MessageProcessor.parseStr({
-//             client: input.client,
-//             token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_TITLE",
-//             additionalTokens: [
-//               {
-//                 token: "$ServiceTitle$",
-//                 value: serviceTitle,
-//               }
-//             ]
-//           });
-//
-//           const description = await MessageProcessor.parseStr({
-//             client: input.client,
-//             token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
-//             additionalTokens: [
-//               {
-//                 token: "$ServiceTitle$",
-//                 value: serviceTitle,
-//               },
-//               {
-//                 token: "$paymentPeriod$",
-//                 value: priceConfigText.payment_periods.period_01,
-//               }
-//             ]
-//           });
-//
-//           const currency = currentCurrency;
-//
-//           const item01Description = await MessageProcessor.parseStr({
-//           client: input.client,
-//           token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
-//             additionalTokens: [
-//               {
-//                 token: "$ServiceTitle$",
-//                 value: serviceTitle,
-//               },
-//               {
-//                 token: "$paymentPeriod$",
-//                 value: priceConfigText.payment_periods.period_01,
-//               }
-//             ]
-//           });
-//
-// /*
-//           const invoiceItems = [
-//             {
-//               description: item01Description,
-//               quantity: '1.0',
-//               price: priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
-//               currency,
-//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
-//             }
-//           ];
-//
-//           if (priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price !== priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price) {
-//             invoiceItems.push({
-//               description: item02Description,
-//               quantity: '1.0',
-//               price: priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price - priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
-//               currency,
-//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
-//             });
-//           }
-// */
-//
-//           const invoiceItems = [
-//             {
-//               description: item01Description,
-//               quantity: '1.0',
-//               price: currentAmount,
-//               currency,
-//               transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
-//             }
-//           ];
-//
-//
-//           const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
-//             client: input.client,
-//             title,
-//             description,
-//             startParameter: 'start',
-//             currency,
-//             invoiceItems,
-//             funnelBlockName: `chatBlasts.testPersonal.pushToPaid.funnelOne::${input.block.id}`,
-//           });
-//
-//           if (sendInvoiceResultRaw.status !== 'ok') {
-//             await sails.helpers.general.throwErrorJoi({
-//               errorType: sails.config.custom.enums.errorType.ERROR,
-//               location: moduleName,
-//               message: 'Wrong sendInvoice response',
-//               clientGuid,
-//               accountGuid,
-//               errorName: sails.config.custom.FUNNELS_ERROR.name,
-//               payload: {
-//                 sendInvoiceResultRaw,
-//               },
-//             });
-//           }
-//
-//           const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
-//
-//           if (accountIndex < 0) {
-//             await sails.helpers.general.throwErrorJoi({
-//               errorType: sails.config.custom.enums.errorType.ERROR,
-//               location: moduleName,
-//               message: 'account not found',
-//               clientGuid,
-//               accountGuid,
-//               errorName: sails.config.custom.FUNNELS_ERROR.name,
-//               payload: {
-//                 account_use: input.client.account_use,
-//                 accounts: input.client.accounts,
-//               },
-//             });
-//           }
-//
-//           /**
-//            * Инициировать последовательность действий по оплате: окончание
-//            */
+          }
 
+          input.block.done = true;
+
+          await sails.helpers.funnel.afterHelperGenericJoi({
+            client: input.client,
+            block: input.block,
+            msg: input.query,
+            next: true,
+            previous: true,
+            switchFunnel: false,
+            createdBy: moduleName,
+          });
 
           break;
         case 'select_another_option':
@@ -455,17 +473,6 @@ module.exports = {
           });
       }
 
-      input.block.done = true;
-
-      await sails.helpers.funnel.afterHelperGenericJoi({
-        client: input.client,
-        block: input.block,
-        msg: input.query,
-        next: true,
-        previous: true,
-        switchFunnel: false,
-        createdBy: moduleName,
-      });
 
       return exits.success({
         status: 'ok',

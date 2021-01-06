@@ -115,6 +115,8 @@ module.exports = {
 
     let currentAccount;
 
+    let skipBlocks;
+
 
     try {
 
@@ -125,6 +127,12 @@ module.exports = {
       accountGuid = client.account_use;
 
       currentAccount = _.find(client.accounts, {guid: client.account_use});
+
+      if (input.skipBlocks.length === 0) {
+        skipBlocks = null;
+      } else {
+        skipBlocks = input.skipBlocks;
+      }
 
       const serviceChatBlastName = currentAccount.service.chat_blast_name;
       const chatBlastName = input.chatBlastName;
@@ -181,18 +189,19 @@ module.exports = {
        * Установить в client, что выполняется воронка
        */
 
+      client.funnels[chatBlastFunnelName] = loadInitialChatBlastFunnelRaw.payload.client.funnels[chatBlastFunnelName];
 
       currentAccount.keyboard = null;
 
       client.current_funnel = chatBlastFunnelName;
 
-      if (input.skipBlocks != null) {
+      if (skipBlocks != null) {
 
         /**
          * Update блоки, которые не нужно выполнять, используя переданные данные
          */
 
-        _.forEach(input.skipBlocks, (skipBlockObj) => {
+        _.forEach(skipBlocks, (skipBlockObj) => {
           const skipBlock = _.find(client.funnels[chatBlastFunnelName], {id: skipBlockObj.id});
           _.assign(skipBlock, skipBlockObj);
         });
