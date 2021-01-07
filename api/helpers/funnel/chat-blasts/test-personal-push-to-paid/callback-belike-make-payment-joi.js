@@ -72,7 +72,7 @@ module.exports = {
     let currentCurrencyText;
     const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
 
-    const usePaymentSystem = false;
+    const usePaymentSystem = sails.config.custom.usePaymentSystem;
 
     try {
 

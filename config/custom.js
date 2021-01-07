@@ -33,6 +33,8 @@ module.exports.custom = {
 
   apiUuid: process.env.API_UUID || '',
 
+  usePaymentSystem: process.env.USE_PAYMENT_SYSTEM.toLowerCase().trim() === 'true',
+
   postRegExp: process.env.POST_REGEXP || '\^\(http\|https\):\\/\\/www\\.instagram\\.com\\/p\\/(\\S+)',
 
   tokens: {},
