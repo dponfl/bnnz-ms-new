@@ -52,6 +52,10 @@ module.exports = {
         .any()
         .description('account record')
         .required(),
+      previousServiceName: Joi
+        .string()
+        .description('previous service level name')
+        .default(null),
     });
 
     let input;
@@ -60,16 +64,23 @@ module.exports = {
 
     let resultRooms;
 
+    let useServiceName;
+
     try {
 
       input = await schema.validateAsync(inputs.params);
 
       accountGuid = input.account.guid;
 
-      const accountCategory = sails.config.custom.config.rooms.category_by_service[input.account.service.name];
+      if (input.previousServiceName != null) {
+        useServiceName= input.previousServiceName;
+      } else {
+        useServiceName = input.account.service.name;
+      }
+
+      const accountCategory = sails.config.custom.config.rooms.category_by_service[useServiceName];
 
       if (accountCategory == null) {
-        // throw new Error(`${moduleName}, error: Unknown account category for the following input.account.service.name="${input.account.service.name}"`);
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,

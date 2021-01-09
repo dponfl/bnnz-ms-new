@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const moment = require('moment');
 
-const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-success-joi';
+const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi-on-payment-success-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-success-joi',
+  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi-on-payment-success-joi',
 
 
-  description: 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-success-joi',
+  description: 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi-on-payment-success-joi',
 
 
   inputs: {
@@ -59,7 +59,7 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
-    const currentServiceName = sails.config.custom.enums.serviceNames.silverPersonal;
+    const currentServiceName = sails.config.custom.enums.serviceNames.goldPersonal;
 
     let splitRes;
     let updateFunnel;
@@ -157,7 +157,7 @@ module.exports = {
        * Устанавливаем значение для следующего блока
        */
 
-      input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_payment_success';
+      input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_payment_success';
 
       /**
        * Устанавливае у следующего блока значение для предшествующего блока
@@ -171,7 +171,7 @@ module.exports = {
       getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_make_payment';
+        getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_payment_error';
         getBlock.enabled = true;
       }
 

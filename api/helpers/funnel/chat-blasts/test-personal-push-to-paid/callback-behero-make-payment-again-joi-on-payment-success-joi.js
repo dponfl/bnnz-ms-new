@@ -79,6 +79,8 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
+      const previousServiceName = currentAccount.service.name;
+
       /**
        * Обновляем поля записи текущего аккаунта
        */
@@ -131,6 +133,7 @@ module.exports = {
 
       const reallocateRoomsToAccountJoiParams = {
         account: currentAccount,
+        previousServiceName,
       };
 
       const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);

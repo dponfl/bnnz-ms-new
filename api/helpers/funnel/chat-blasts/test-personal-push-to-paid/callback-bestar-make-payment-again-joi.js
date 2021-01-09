@@ -3,16 +3,16 @@
 const moment = require('moment');
 const Joi = require('@hapi/joi');
 
-const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-belike-make-payment-again-joi';
+const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:callback-belike-make-payment-again-joi',
+  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi',
 
 
-  description: 'funnel:chat-blasts:test-personal-push-to-paid:callback-belike-make-payment-again-joi',
+  description: 'funnel:chat-blasts:test-personal-push-to-paid:callback-bestar-make-payment-again-joi',
 
 
   inputs: {
@@ -70,7 +70,7 @@ module.exports = {
     let currentAmount;
     let currentCurrency;
     let currentCurrencyText;
-    const currentServiceName = sails.config.custom.enums.serviceNames.bronzePersonal;
+    const currentServiceName = sails.config.custom.enums.serviceNames.goldPersonal;
 
     const usePaymentSystem = sails.config.custom.usePaymentSystem;
 
@@ -128,149 +128,149 @@ module.exports = {
 
           if (usePaymentSystem) {
 
-          /**
-           * Инициировать последовательность действий по оплате
-           */
+            /**
+             * Инициировать последовательность действий по оплате
+             */
 
-          const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
+            const paymentProvider = sails.config.custom.config.payments[input.client.messenger]['provider'].toLowerCase();
 
-          if (paymentProvider == null) {
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-              location: moduleName,
-              message: 'No payment provider config for messenger',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                inputClientMessenger: input.client.messenger,
-              },
-            });
-          }
-
-
-          const title = await MessageProcessor.parseStr({
-            client: input.client,
-            token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_TITLE",
-            additionalTokens: [
-              {
-                token: "$ServiceTitle$",
-                value: serviceTitle,
-              }
-            ]
-          });
-
-          const description = await MessageProcessor.parseStr({
-            client: input.client,
-            token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
-            additionalTokens: [
-              {
-                token: "$ServiceTitle$",
-                value: serviceTitle,
-              },
-              {
-                token: "$paymentPeriod$",
-                value: priceConfigText.payment_periods.period_01,
-              }
-            ]
-          });
-
-          const currency = currentCurrency;
-
-          const item01Description = await MessageProcessor.parseStr({
-            client: input.client,
-            token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
-            additionalTokens: [
-              {
-                token: "$ServiceTitle$",
-                value: serviceTitle,
-              },
-              {
-                token: "$paymentPeriod$",
-                value: priceConfigText.payment_periods.period_01,
-              }
-            ]
-          });
-
-
-/*
-          const invoiceItems = [
-            {
-              description: item01Description,
-              quantity: '1.0',
-              price: priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
-              currency,
-              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+            if (paymentProvider == null) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.CRITICAL,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                message: 'No payment provider config for messenger',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
+                payload: {
+                  inputClientMessenger: input.client.messenger,
+                },
+              });
             }
-          ];
 
-          if (priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price !== priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price) {
-            invoiceItems.push({
-              description: item02Description,
-              quantity: '1.0',
-              price: priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price - priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
-              currency,
-              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+
+            const title = await MessageProcessor.parseStr({
+              client: input.client,
+              token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_TITLE",
+              additionalTokens: [
+                {
+                  token: "$ServiceTitle$",
+                  value: serviceTitle,
+                }
+              ]
             });
-          }
-*/
 
-          const invoiceItems = [
-            {
-              description: item01Description,
-              quantity: '1.0',
-              price: currentAmount,
+            const description = await MessageProcessor.parseStr({
+              client: input.client,
+              token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_DESCRIPTION",
+              additionalTokens: [
+                {
+                  token: "$ServiceTitle$",
+                  value: serviceTitle,
+                },
+                {
+                  token: "$paymentPeriod$",
+                  value: priceConfigText.payment_periods.period_01,
+                }
+              ]
+            });
+
+            const currency = currentCurrency;
+
+            const item01Description = await MessageProcessor.parseStr({
+              client: input.client,
+              token: "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION",
+              additionalTokens: [
+                {
+                  token: "$ServiceTitle$",
+                  value: serviceTitle,
+                },
+                {
+                  token: "$paymentPeriod$",
+                  value: priceConfigText.payment_periods.period_01,
+                }
+              ]
+            });
+
+
+            /*
+                      const invoiceItems = [
+                        {
+                          description: item01Description,
+                          quantity: '1.0',
+                          price: priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
+                          currency,
+                          transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+                        }
+                      ];
+
+                      if (priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price !== priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price) {
+                        invoiceItems.push({
+                          description: item02Description,
+                          quantity: '1.0',
+                          price: priceConfigGeneral[currentRegion][currentServiceName].period_01.current_price - priceConfigGeneral[currentRegion][currentServiceName].period_01.list_price,
+                          currency,
+                          transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+                        });
+                      }
+            */
+
+            const invoiceItems = [
+              {
+                description: item01Description,
+                quantity: '1.0',
+                price: currentAmount,
+                currency,
+                transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+              }
+            ];
+
+
+            const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
+              client: input.client,
+              title,
+              description,
+              startParameter: 'start',
               currency,
-              transform_to_min_price_unit: priceConfigGeneral[currentRegion].transform_to_min_price_unit,
+              invoiceItems,
+              funnelBlockName: `chatBlasts.testPersonal.pushToPaid.funnelOne::${input.block.id}`,
+            });
+
+            if (sendInvoiceResultRaw.status !== 'ok') {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'Wrong sendInvoice response',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
+                payload: {
+                  sendInvoiceResultRaw,
+                },
+              });
             }
-          ];
 
+            const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
 
-          const sendInvoiceResultRaw = await sails.helpers.pgw[paymentProvider]['sendInvoiceJoi']({
-            client: input.client,
-            title,
-            description,
-            startParameter: 'start',
-            currency,
-            invoiceItems,
-            funnelBlockName: `chatBlasts.testPersonal.pushToPaid.funnelOne::${input.block.id}`,
-          });
+            if (accountIndex < 0) {
+              await sails.helpers.general.throwErrorJoi({
+                errorType: sails.config.custom.enums.errorType.ERROR,
+                location: moduleName,
+                message: 'account not found',
+                clientGuid,
+                accountGuid,
+                errorName: sails.config.custom.FUNNELS_ERROR.name,
+                payload: {
+                  account_use: input.client.account_use,
+                  accounts: input.client.accounts,
+                },
+              });
+            }
 
-          if (sendInvoiceResultRaw.status !== 'ok') {
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.ERROR,
-              location: moduleName,
-              message: 'Wrong sendInvoice response',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                sendInvoiceResultRaw,
-              },
-            });
-          }
-
-          const accountIndex = _.findIndex(input.client.accounts, {guid: input.client.account_use});
-
-          if (accountIndex < 0) {
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.ERROR,
-              location: moduleName,
-              message: 'account not found',
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                account_use: input.client.account_use,
-                accounts: input.client.accounts,
-              },
-            });
-          }
-
-          /**
-           * Инициировать последовательность действий по оплате: окончание
-           */
+            /**
+             * Инициировать последовательность действий по оплате: окончание
+             */
 
           } else {
 
@@ -353,7 +353,7 @@ module.exports = {
             }
 
 
-            input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::belike_payment_success';
+            input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_payment_success';
 
             /**
              * Устанавливае у следующего блока значение для предшествующего блока
@@ -367,7 +367,7 @@ module.exports = {
             const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
 
             if (getBlock) {
-              getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::belike_payment_error';
+              getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_payment_error';
               getBlock.enabled = true;
             }
 
