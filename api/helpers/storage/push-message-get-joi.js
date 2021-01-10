@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'message-processor:push-message-get-joi';
+const moduleName = 'storage:push-message-get-joi';
 
 
 module.exports = {

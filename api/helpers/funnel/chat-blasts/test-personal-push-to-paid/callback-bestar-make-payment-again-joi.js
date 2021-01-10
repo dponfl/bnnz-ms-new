@@ -122,6 +122,8 @@ module.exports = {
       currentCurrency = priceConfigGeneral[currentRegion].currency;
       currentCurrencyText = priceConfigText.currency[currentCurrency];
 
+      const serviceTitle = sails.config.custom.config.lang[useLang].price.service_title[currentServiceName].title;
+
 
       switch (input.query.data) {
         case 'make_payment':

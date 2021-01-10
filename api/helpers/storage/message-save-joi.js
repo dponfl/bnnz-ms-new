@@ -3,6 +3,8 @@
 const Joi = require('@hapi/joi');
 const uuid = require('uuid-apikey');
 
+const moduleName = 'storage:message-save-joi';
+
 module.exports = {
 
 
