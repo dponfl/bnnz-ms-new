@@ -58,10 +58,13 @@ module.exports = {
       fileOptions: Joi
         .any()
         .description('fileOptions'),
+      inlineKeyboard: Joi
+        .any()
+        .description('inline keyboard for the video message')
     });
 
-    let sendVideoParams = {};
     let sendMessageRes;
+    let sendVideoParams;
 
     try {
 
@@ -73,6 +76,12 @@ module.exports = {
 
       if (input.html) {
         messageObj.caption = input.html;
+      }
+
+      if (input.inlineKeyboard) {
+        messageObj.reply_markup = {
+          inline_keyboard: input.inlineKeyboard,
+        };
       }
 
       sendVideoParams = {

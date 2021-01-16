@@ -123,7 +123,7 @@ describe.skip('Test sendMessage', function () {
 
 });
 
-describe('Test emoji', function () {
+describe.skip('Test emoji', function () {
 
   let customConfig;
 
@@ -342,39 +342,25 @@ describe.skip('Test sendDocument with inline keyboard', function () {
 describe.skip('Test sendPhoto with inline keyboard', function () {
 
   let customConfig;
+  let  client;
 
   before(async function () {
     const customConfigRaw =   await sails.helpers.general.getConfig();
     customConfig = customConfigRaw.payload;
+
+    client = await Client.findOne({
+      guid: '4a660715-38e8-49ae-9dc0-3f23c28073e6'
+    });
+
+    client.accounts = await Account.find({client: client.id})
+      .populate('service')
+      .populate('next_service')
+      .populate('room');
+
   });
 
   it('should send one img with inline keyboard', async function () {
 
-    const client = await Client.findOne({
-      guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-    });
-
-    client.accounts = await Account.find({client: client.id});
-
-    if (client.accounts.length === 0) {
-
-      const account = await accountSdk.createAccountDB({
-        client: client.id,
-      });
-
-      await clientSdk.updateClientDB(
-        {
-          guid: client.guid,
-        },
-        {
-          account_use: account.guid,
-        }
-      );
-
-      client.accounts = [account];
-      client.account_use = client.accounts[0].guid;
-
-    }
 
     const chatId = client.chat_id;
     const html = 'Красивая картинка)';
@@ -394,7 +380,7 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
     ];
 
     const inlineKeyboard = await MessageProcessor.mapDeep({
-      client: client,
+      client,
       data: inlineKeyboardRaw,
     });
 
@@ -3446,11 +3432,11 @@ describe.skip('Test DB', function () {
   it.skip('Check GET_LOCK', async function () {
 
     const sqlGetLock01 = `
-    SELECT GET_LOCK('lock01', 600) 
+    SELECT GET_LOCK('lock01', 600)
     `;
 
     const sqlGetLock02 = `
-    SELECT GET_LOCK('lock02', 600) 
+    SELECT GET_LOCK('lock02', 600)
     `;
 
     const sqlReleaseLock = `
@@ -3488,15 +3474,15 @@ describe.skip('Test DB', function () {
   it.skip('Check concurrent GET_LOCKs', async function () {
 
     const sqlGetLock01 = `
-    SELECT GET_LOCK('lock01', 60) 
+    SELECT GET_LOCK('lock01', 60)
     `;
 
     const sqlGetLock02 = `
-    SELECT GET_LOCK('lock02', 60) 
+    SELECT GET_LOCK('lock02', 60)
     `;
 
     const sqlGetLock03 = `
-    SELECT GET_LOCK('lock03', 60) 
+    SELECT GET_LOCK('lock03', 60)
     `;
 
     // const sqlSetTransactionSerializable = `
@@ -3541,36 +3527,36 @@ describe.skip('Test DB', function () {
     this.timeout(700000);
 
     const sqlGetLock01 = `
-    SELECT GET_LOCK('lock01', 20) 
+    SELECT GET_LOCK('lock01', 20)
     `;
 
     const sqlGetLock02 = `
-    SELECT GET_LOCK('lock02', 20) 
+    SELECT GET_LOCK('lock02', 20)
     `;
 
     const sqlGetLock03 = `
-    SELECT GET_LOCK('lock03', 20) 
+    SELECT GET_LOCK('lock03', 20)
     `;
 
     const sqlGetLock04 = `
-    SELECT GET_LOCK('lock01', 60) 
+    SELECT GET_LOCK('lock01', 60)
     `;
 
 
     const sqlReleaseLock01 = `
-    SELECT RELEASE_LOCK('lock01') 
+    SELECT RELEASE_LOCK('lock01')
     `;
 
     const sqlReleaseLock02 = `
-    SELECT RELEASE_LOCK('lock02') 
+    SELECT RELEASE_LOCK('lock02')
     `;
 
     const sqlReleaseLock03 = `
-    SELECT RELEASE_LOCK('lock03') 
+    SELECT RELEASE_LOCK('lock03')
     `;
 
     const sqlReleaseLock04 = `
-    SELECT RELEASE_LOCK('lock01') 
+    SELECT RELEASE_LOCK('lock01')
     `;
 
 
@@ -4280,6 +4266,179 @@ describe.skip('Check Loggly', function () {
         }
       },
     });
+
+  });
+
+});
+
+describe('Test pushMessages', function () {
+
+  let customConfig;
+  let  client;
+
+  before(async function () {
+    const customConfigRaw =   await sails.helpers.general.getConfig();
+    customConfig = customConfigRaw.payload;
+
+    client = await Client.findOne({
+      guid: '4a660715-38e8-49ae-9dc0-3f23c28073e6'
+    });
+
+    client.accounts = await Account.find({client: client.id})
+      .populate('service')
+      .populate('next_service')
+      .populate('room');
+
+  });
+
+  it.skip('should send doc message', async function () {
+
+    this.timeout(100000);
+
+    const messageData = {
+      "id": "lesson_01",
+      "description": "Lesson 01",
+      "actionType": "doc",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "doc": "v1598970039/BeFame_Dev/Univer/UNIVER_Lesson_01_V001_001.pdf",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_PM_UNIVER_LESSON_01_MSG_01",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    };
+
+    const sendMessageParams = {
+      client,
+      messageData,
+    };
+
+    const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
+
+  });
+
+  it.skip('should send img + inline_keyboard message', async function () {
+
+    this.timeout(100000);
+
+    const messageData = {
+      "id": "test_img_inline_keyboard",
+      "description": "***",
+      "actionType": "img_inline_keyboard",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "img": "v1549212141/sample.jpg",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_START_02",
+            "style": "b",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_YES",
+              "callback_data": "yes"
+            }
+          ],
+          [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_NO",
+              "callback_data": "no"
+            }
+          ]
+        ]
+      }
+    };
+
+    const sendMessageParams = {
+      client,
+      messageData,
+    };
+
+    const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
+
+  });
+
+  it('should send video + inline_keyboard message', async function () {
+
+    this.timeout(100000);
+
+    const messageData = {
+      "id": "test_video_inline_keyboard",
+      "description": "***",
+      "actionType": "video_inline_keyboard",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "video": "v1597490269/BeFame_Dev/INFO_How_Make_Post_v001_002.mp4",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_START_02",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_YES",
+              "callback_data": "yes"
+            }
+          ],
+          [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_NO",
+              "callback_data": "no"
+            }
+          ]
+        ]
+      }
+    };
+
+    const sendMessageParams = {
+      client,
+      messageData,
+    };
+
+    const msgRes = await sails.helpers.messageProcessor.sendMessageJoi(sendMessageParams);
 
   });
 

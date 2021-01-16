@@ -221,6 +221,96 @@
           "sticker": "XXXXXXX",
           "mediaLibrary": true
         }
+      },
+      {
+        "id": "img_inline_keyboard",
+        "description": "***",
+        "actionType": "img_inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+        "blockModifyHelper": null,
+        "message": {
+          "img": "XXXXXXX",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "XXXXXXX",
+                "callback_data": "XXXXXXX"
+              }
+            ],
+            [
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              },
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "id": "video_inline_keyboard",
+        "description": "***",
+        "actionType": "video_inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+        "blockModifyHelper": null,
+        "message": {
+          "video": "XXXXXXX",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "***",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "XXXXXXX",
+                "callback_data": "XXXXXXX"
+              }
+            ],
+            [
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              },
+              {
+                "text": "XXXXXXX",
+                "url": "XXXXXXX"
+              }
+            ]
+          ]
+        }
       }
     ]
   }

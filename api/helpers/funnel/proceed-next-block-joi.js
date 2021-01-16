@@ -222,9 +222,11 @@ module.exports = {
 
             let {text: htmlImg} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgRaw);
 
+            const imgPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.img : block.message.img;
+
             let imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
               chatId: input.client.chat_id,
-              imgPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.img : block.message.img,
+              imgPath,
               html: htmlImg,
             });
 
@@ -239,7 +241,7 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: imgRes.payload.message_id || 0,
               message: JSON.stringify({
-                img: sails.config.custom.cloudinaryImgUrl + block.message.img,
+                img: imgPath,
                 html: htmlImg,
               }),
               message_format: sails.config.custom.enums.messageFormat.IMG,
@@ -265,11 +267,11 @@ module.exports = {
 
             let {text: htmlImgInlineKeyboard, inline_keyboard: keyboardInlineImg, img: parsedImgPath} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgInlineKeyboardRaw);
 
-            const imgPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + parsedImgPath : parsedImgPath;
+            const imgInlineKeyboardPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + parsedImgPath : parsedImgPath;
 
             const imgMessageJoiParams = {
               chatId: input.client.chat_id,
-              imgPath,
+              imgPath: imgInlineKeyboardPath,
               html: htmlImgInlineKeyboard,
             };
 
@@ -296,10 +298,11 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: imgInlineKeyboardRes.payload.message_id || 0,
               message: JSON.stringify({
-                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                img: imgInlineKeyboardPath,
                 html: htmlImgInlineKeyboard,
               }),
-              message_format: sails.config.custom.enums.messageFormat.DOC,
+              message_buttons: imgMessageJoiParams.inlineKeyboard,
+              message_format: sails.config.custom.enums.messageFormat.IMGCALLBACK,
               messenger: input.client.messenger,
               message_originator: sails.config.custom.enums.messageOriginator.BOT,
               client_id: input.client.id,
@@ -322,9 +325,12 @@ module.exports = {
 
             let {text: htmlVideo} = await activateBeforeHelper(input.client, block, input.msg || null, htmlVideoRaw);
 
+            const videoPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + block.message.video : block.message.video;
+
+
             let videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
               chatId: input.client.chat_id,
-              videoPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + block.message.video : block.message.video,
+              videoPath,
               html: htmlVideo,
             });
 
@@ -339,7 +345,7 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: videoRes.payload.message_id || 0,
               message: JSON.stringify({
-                video: sails.config.custom.cloudinaryVideoUrl + block.message.video,
+                video: videoPath,
                 html: htmlVideo,
               }),
               message_format: sails.config.custom.enums.messageFormat.VIDEO,
@@ -357,9 +363,12 @@ module.exports = {
              * Send sticker message
              */
 
+            const stickerPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.sticker : block.message.sticker;
+
+
             let stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
               chatId: input.client.chat_id,
-              stickerPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.sticker : block.message.sticker,
+              stickerPath,
             });
 
             block.message_id = stickerRes.payload.message_id;
@@ -373,7 +382,7 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: stickerRes.payload.message_id || 0,
               message: JSON.stringify({
-                sticker: sails.config.custom.cloudinaryImgUrl + block.message.sticker,
+                sticker: stickerPath,
               }),
               message_format: sails.config.custom.enums.messageFormat.STICKER,
               messenger: input.client.messenger,
@@ -398,9 +407,11 @@ module.exports = {
 
             let {text: htmlDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocRaw);
 
+            const docPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc;
+
             let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
               chatId: input.client.chat_id,
-              docPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc,
+              docPath,
               html: htmlDoc,
             });
 
@@ -415,7 +426,7 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: docRes.payload.message_id || 0,
               message: JSON.stringify({
-                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                doc: docPath,
                 html: htmlDoc,
               }),
               message_format: sails.config.custom.enums.messageFormat.DOC,
@@ -441,9 +452,11 @@ module.exports = {
 
             let {text: htmlDocInlineKeyboard, inline_keyboard: keyboardInlineDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocInlineKeyboardRaw);
 
+            const docInlineKeyboardPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc;
+
             const docMessageJoiParams = {
               chatId: input.client.chat_id,
-              docPath: (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc,
+              docPath: docInlineKeyboardPath,
               html: htmlDocInlineKeyboard,
             };
 
@@ -470,9 +483,10 @@ module.exports = {
             await sails.helpers.storage.messageSaveJoi({
               message_id: docInlineKeyboardRes.payload.message_id || 0,
               message: JSON.stringify({
-                doc: sails.config.custom.cloudinaryDocUrl + block.message.doc,
+                doc: docInlineKeyboardPath,
                 html: htmlDocInlineKeyboard,
               }),
+              message_buttons: docMessageJoiParams.inlineKeyboard,
               message_format: sails.config.custom.enums.messageFormat.DOC,
               messenger: input.client.messenger,
               message_originator: sails.config.custom.enums.messageOriginator.BOT,
