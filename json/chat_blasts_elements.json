@@ -333,6 +333,157 @@
       "done": false,
       "deleted": false
     },
+    "chat_blast_img_inline_keyboard_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img_inline_keyboard",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_img_inline_keyboard_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img_inline_keyboard",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_img_inline_keyboard_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "img_inline_keyboard",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "img": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
     "chat_blast_video_now": {
       "actionName": "***",
       "actionsList": [
@@ -423,6 +574,157 @@
                 "style": "",
                 "cr": ""
               }
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_inline_keyboard_now": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video_inline_keyboard",
+          "timeType": "now",
+          "showTime": null,
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_inline_keyboard_absolute": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video_inline_keyboard",
+          "timeType": "absolute",
+          "showTime": "YYYY-MM-DDTHH:MM:SS.000Z",
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
+            ]
+          }
+        }
+      ],
+      "done": false,
+      "deleted": false
+    },
+    "chat_blast_video_inline_keyboard_relative": {
+      "actionName": "***",
+      "actionsList": [
+        {
+          "id": "***",
+          "description": "***",
+          "actionType": "video_inline_keyboard",
+          "timeType": "relative",
+          "showTime": {
+            "days": 0,
+            "hours": 0,
+            "minutes": 0
+          },
+          "next": null,
+          "shown": false,
+          "callbackHelper": "XXXXXXX::XXXXXXX::XXXXXXX",
+          "blockModifyHelper": null,
+          "afterHelper": null,
+          "additionalTokensHelper": null,
+          "message": {
+            "video": "XXXXXXX",
+            "mediaLibrary": true,
+            "html": [
+              {
+                "text": "***",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+              [
+                {
+                  "text": "XXXXXXX",
+                  "callback_data": "XXXXXXX"
+                }
+              ],
+              [
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                },
+                {
+                  "text": "XXXXXXX",
+                  "url": "XXXXXXX"
+                }
+              ]
             ]
           }
         }
