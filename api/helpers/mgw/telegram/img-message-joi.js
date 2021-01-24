@@ -60,12 +60,15 @@ module.exports = {
         .description('inline keyboard for the img message')
     });
 
+    let messageObj;
+    let params;
+
 
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
-      let messageObj = {
+      messageObj = {
         parse_mode: 'HTML'
       };
 
@@ -77,6 +80,12 @@ module.exports = {
         messageObj.reply_markup = {
           inline_keyboard: input.inlineKeyboard,
         };
+      }
+
+      params = {
+        chatId: input.chatId,
+        imgPath: input.imgPath,
+        messageObj,
       }
 
       let sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(
@@ -117,12 +126,18 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            params,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            params,
+          },
         });
         return exits.success({
           status: 'ok',

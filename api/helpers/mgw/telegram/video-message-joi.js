@@ -137,14 +137,18 @@ module.exports = {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          errorPayloadAdditional: sendVideoParams,
+          errorPayloadAdditional: {
+            sendVideoParams
+          },
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          errorPayloadAdditional: sendVideoParams,
+          errorPayloadAdditional: {
+            sendVideoParams
+          },
           throwError: false,
         });
         return exits.success({
