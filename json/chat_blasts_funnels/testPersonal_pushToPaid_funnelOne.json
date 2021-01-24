@@ -23,6 +23,11 @@
         {
           "text": "CB_Q01_F_01_START_MSG_01",
           "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_START_MSG_02",
+          "style": "",
           "cr": ""
         }
       ]
@@ -225,6 +230,16 @@
         {
           "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_MSG_02",
           "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_MSG_03",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_MSG_04",
+          "style": "b",
           "cr": ""
         }
       ],
@@ -551,6 +566,16 @@
         {
           "text": "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_02",
           "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_03",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_04",
+          "style": "b",
           "cr": ""
         }
       ],
@@ -902,6 +927,16 @@
         {
           "text": "CB_Q01_F_01_BESTAR_MAKE_PAYMENT_MSG_02",
           "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BESTAR_MAKE_PAYMENT_MSG_03",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BESTAR_MAKE_PAYMENT_MSG_04",
+          "style": "b",
           "cr": ""
         }
       ],
@@ -1278,6 +1313,16 @@
         {
           "text": "CB_Q01_F_01_BELEGEND_MAKE_PAYMENT_MSG_02",
           "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELEGEND_MAKE_PAYMENT_MSG_03",
+          "style": "",
+          "cr": "DCR"
+        },
+        {
+          "text": "CB_Q01_F_01_BELEGEND_MAKE_PAYMENT_MSG_04",
+          "style": "b",
           "cr": ""
         }
       ],
