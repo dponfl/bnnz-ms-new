@@ -401,7 +401,7 @@
         "showTime": {
           "minutes": 1
         },
-        "next": "task_03",
+        "next": "task_03_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -423,14 +423,14 @@
         }
       },
       {
-        "id": "task_03",
+        "id": "task_03_01",
         "description": "***",
-        "actionType": "img_inline_keyboard",
+        "actionType": "img",
         "timeType": "relative",
         "showTime": {
           "minutes": 1
         },
-        "next": "task_03_done",
+        "next": "task_03_02",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -441,67 +441,84 @@
           "mediaLibrary": true,
           "html": [
             {
-              "text": "CB_Q01_TASK_03_MSG_01",
+              "text": "CB_Q01_TASK_03_01_MSG_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_02",
+              "text": "CB_Q01_TASK_03_01_MSG_02",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_03",
+              "text": "CB_Q01_TASK_03_01_MSG_03",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_04",
+              "text": "CB_Q01_TASK_03_01_MSG_04",
               "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_03_02",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_03_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_03_02_MSG_01",
+              "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_05",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_03_MSG_06",
+              "text": "CB_Q01_TASK_03_02_MSG_02",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_07",
+              "text": "CB_Q01_TASK_03_02_MSG_03",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_08",
+              "text": "CB_Q01_TASK_03_02_MSG_04",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_09",
+              "text": "CB_Q01_TASK_03_02_MSG_05",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_10",
+              "text": "CB_Q01_TASK_03_02_MSG_06",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_11",
+              "text": "CB_Q01_TASK_03_02_MSG_07",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_12",
+              "text": "CB_Q01_TASK_03_02_MSG_08",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_13",
+              "text": "CB_Q01_TASK_03_02_MSG_09",
               "style": "",
               "cr": ""
             }
@@ -509,7 +526,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "CB_Q01_TASK_03_BTN_01",
+                "text": "CB_Q01_TASK_03_02_BTN_01",
                 "url": "https://befame.ru/wp-content/themes/befame/BeFame_2.pdf"
               }
             ]
@@ -772,7 +789,7 @@
         "showTime": {
           "minutes": 1
         },
-        "next": "task_05",
+        "next": "task_05_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -824,16 +841,6 @@
             {
               "text": "CB_Q01_TASK_05_01_MSG_03",
               "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_01_MSG_04",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_01_MSG_05",
-              "style": "",
               "cr": ""
             }
           ]
@@ -855,16 +862,11 @@
           "html": [
             {
               "text": "CB_Q01_TASK_05_02_MSG_01",
-              "style": "b",
+              "style": "",
               "cr": "DCR"
             },
             {
               "text": "CB_Q01_TASK_05_02_MSG_02",
-              "style": "",
-              "cr": ""
-            },
-            {
-              "text": "CB_Q01_TASK_05_02_MSG_03",
               "style": "",
               "cr": ""
             }
@@ -874,10 +876,10 @@
       {
         "id": "task_05_03",
         "description": "***",
-        "actionType": "inline_keyboard",
+        "actionType": "text",
         "timeType": "now",
         "showTime": null,
-        "next": "task_05_done",
+        "next": "task_05_04",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -893,15 +895,47 @@
             {
               "text": "CB_Q01_TASK_05_03_MSG_02",
               "style": "",
-              "cr": "DCR"
+              "cr": ""
             },
             {
               "text": "CB_Q01_TASK_05_03_MSG_03",
               "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_05_04",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_05_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_04_MSG_01",
+              "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_05_03_MSG_04",
+              "text": "CB_Q01_TASK_05_04_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_04_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_04_MSG_04",
               "style": "",
               "cr": ""
             }
