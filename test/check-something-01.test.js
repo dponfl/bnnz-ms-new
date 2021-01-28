@@ -123,7 +123,7 @@ describe.skip('Test sendMessage', function () {
 
 });
 
-describe.skip('Test emoji', function () {
+describe('Test emoji', function () {
 
   let customConfig;
 
@@ -223,6 +223,9 @@ describe.skip('Test emoji', function () {
 - exclamation :exclamation:
 - dizzy :dizzy:
 - bangbang :bangbang:
+- money_mouth_face :money_mouth_face:
+- money_mouth :money_mouth:
+- unlock :unlock:
 `;
 
     html = emoji.emojify(html, () => '');
@@ -4271,7 +4274,7 @@ describe.skip('Check Loggly', function () {
 
 });
 
-describe('Test pushMessages', function () {
+describe.skip('Test pushMessages', function () {
 
   let customConfig;
   let  client;
