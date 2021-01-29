@@ -1182,7 +1182,7 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_01_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
@@ -1332,7 +1332,7 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_02_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
@@ -1377,7 +1377,7 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_03_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]
@@ -1417,7 +1417,7 @@
             [
               {
                 "text": "CB_Q01_CALL_TO_ACTION_04_BTN_01",
-                "callback_data": "make_action"
+                "callback_data": "go"
               }
             ]
           ]

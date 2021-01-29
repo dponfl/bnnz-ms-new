@@ -36,6 +36,31 @@
             {
               "text": "CB_Q01_INTRO_MSG_04",
               "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_07",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_INTRO_MSG_09",
+              "style": "",
               "cr": ""
             }
           ]
@@ -45,9 +70,11 @@
         "id": "rules",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
-        "next": "task_01",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_01_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -58,13 +85,82 @@
             {
               "text": "CB_Q01_RULES_MSG_01",
               "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_RULES_MSG_02",
+              "style": "",
               "cr": ""
             }
           ]
         }
       },
       {
-        "id": "task_01",
+        "id": "task_01_01",
+        "description": "***",
+        "actionType": "img",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_01_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "img": "v1549212141/sample.jpg",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_01_01_MSG_09",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_01_02",
         "description": "***",
         "actionType": "inline_keyboard",
         "timeType": "now",
@@ -78,32 +174,12 @@
         "message": {
           "html": [
             {
-              "text": "CB_Q01_TASK_01_MSG_01",
-              "style": "b",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_01_MSG_02",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_01_MSG_03",
+              "text": "CB_Q01_TASK_01_02_MSG_01",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_01_MSG_04",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_01_MSG_05",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_01_MSG_06",
+              "text": "CB_Q01_TASK_01_02_MSG_02",
               "style": "",
               "cr": ""
             }
@@ -111,7 +187,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "CB_Q01_TASK_01_BTN_01",
+                "text": "CB_Q01_TASK_01_02_BTN_01",
                 "url": "https://befame.ru/wp-content/themes/befame/BeFame_1.pdf"
               }
             ]
@@ -122,9 +198,11 @@
         "id": "task_01_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
-        "next": "task_02",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_02_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -139,6 +217,52 @@
             },
             {
               "text": "CB_Q01_TASK_01_DONE_MSG_02",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_02_01",
+        "description": "***",
+        "actionType": "img",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_02_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "img": "v1549212141/sample.jpg",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "CB_Q01_TASK_02_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_01_MSG_02",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_01_MSG_05",
               "style": "",
               "cr": ""
             }
@@ -146,7 +270,69 @@
         }
       },
       {
-        "id": "task_02",
+        "id": "task_02_02",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_02_03",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_02",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_03",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_05",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_07",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_02_02_MSG_09",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_02_03",
         "description": "***",
         "actionType": "text",
         "timeType": "now",
@@ -160,78 +346,48 @@
         "message": {
           "html": [
             {
-              "text": "CB_Q01_TASK_02_MSG_01",
+              "text": "CB_Q01_TASK_02_03_MSG_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_02",
+              "text": "CB_Q01_TASK_02_03_MSG_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_03",
+              "text": "CB_Q01_TASK_02_03_MSG_03",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_04",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_05",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_06",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_07",
+              "text": "CB_Q01_TASK_02_03_MSG_04",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_08",
+              "text": "CB_Q01_TASK_02_03_MSG_05",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_09",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_10",
+              "text": "CB_Q01_TASK_02_03_MSG_06",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_11",
+              "text": "CB_Q01_TASK_02_03_MSG_07",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_12",
+              "text": "CB_Q01_TASK_02_03_MSG_08",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_02_MSG_13",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_14",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_02_MSG_15",
-              "style": "",
+              "text": "CB_Q01_TASK_02_03_MSG_09",
+              "style": "b",
               "cr": ""
             }
           ]
@@ -241,9 +397,11 @@
         "id": "task_02_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
-        "next": "task_03",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_03_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -258,6 +416,47 @@
             },
             {
               "text": "CB_Q01_TASK_02_DONE_MSG_02",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_03_01",
+        "description": "***",
+        "actionType": "img",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_03_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "img": "v1549212141/sample.jpg",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "CB_Q01_TASK_03_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_01_MSG_02",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_01_MSG_04",
               "style": "",
               "cr": ""
             }
@@ -265,7 +464,7 @@
         }
       },
       {
-        "id": "task_03",
+        "id": "task_03_02",
         "description": "***",
         "actionType": "inline_keyboard",
         "timeType": "now",
@@ -279,62 +478,47 @@
         "message": {
           "html": [
             {
-              "text": "CB_Q01_TASK_03_MSG_01",
+              "text": "CB_Q01_TASK_03_02_MSG_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_02",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_03_MSG_03",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_03_MSG_04",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_03_MSG_05",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_03_MSG_06",
+              "text": "CB_Q01_TASK_03_02_MSG_02",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_07",
+              "text": "CB_Q01_TASK_03_02_MSG_03",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_08",
+              "text": "CB_Q01_TASK_03_02_MSG_04",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_09",
+              "text": "CB_Q01_TASK_03_02_MSG_05",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_10",
+              "text": "CB_Q01_TASK_03_02_MSG_06",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_11",
+              "text": "CB_Q01_TASK_03_02_MSG_07",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_03_MSG_12",
+              "text": "CB_Q01_TASK_03_02_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_03_02_MSG_09",
               "style": "",
               "cr": ""
             }
@@ -342,7 +526,7 @@
           "inline_keyboard": [
             [
               {
-                "text": "CB_Q01_TASK_03_BTN_01",
+                "text": "CB_Q01_TASK_03_02_BTN_01",
                 "url": "https://befame.ru/wp-content/themes/befame/BeFame_2.pdf"
               }
             ]
@@ -353,8 +537,10 @@
         "id": "task_03_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
         "next": "task_04_01",
         "shown": false,
         "callbackHelper": null,
@@ -370,7 +556,7 @@
             },
             {
               "text": "CB_Q01_TASK_03_DONE_MSG_02",
-              "style": "",
+              "style": "b",
               "cr": ""
             }
           ]
@@ -379,9 +565,11 @@
       {
         "id": "task_04_01",
         "description": "***",
-        "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
+        "actionType": "img",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
         "next": "task_04_02",
         "shown": false,
         "callbackHelper": null,
@@ -389,6 +577,8 @@
         "afterHelper": null,
         "additionalTokensHelper": null,
         "message": {
+          "img": "v1549212141/sample.jpg",
+          "mediaLibrary": true,
           "html": [
             {
               "text": "CB_Q01_TASK_04_01_MSG_01",
@@ -397,7 +587,7 @@
             },
             {
               "text": "CB_Q01_TASK_04_01_MSG_02",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
@@ -408,90 +598,10 @@
             {
               "text": "CB_Q01_TASK_04_01_MSG_04",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_TASK_04_01_MSG_05",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_06",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_07",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_08",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_09",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_10",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_11",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_12",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_13",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_14",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_15",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_16",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_17",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_18",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_19",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_20",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_TASK_04_01_MSG_21",
               "style": "",
               "cr": ""
             }
@@ -501,10 +611,10 @@
       {
         "id": "task_04_02",
         "description": "***",
-        "actionType": "inline_keyboard",
+        "actionType": "text",
         "timeType": "now",
         "showTime": null,
-        "next": "task_04_done",
+        "next": "task_04_03",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -519,21 +629,150 @@
             },
             {
               "text": "CB_Q01_TASK_04_02_MSG_02",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
               "text": "CB_Q01_TASK_04_02_MSG_03",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_TASK_04_02_MSG_04",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_TASK_04_02_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_06",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_07",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_08",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_09",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_10",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_11",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_12",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_13",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_14",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_15",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_16",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_17",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_02_MSG_18",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_04_03",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_04_done",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_04",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_05",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_06",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_07",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_08",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_04_03_MSG_09",
               "style": "",
               "cr": ""
             }
@@ -546,9 +785,11 @@
         "id": "task_04_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
-        "next": "task_05",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_05_01",
         "shown": false,
         "callbackHelper": null,
         "blockModifyHelper": null,
@@ -563,6 +804,52 @@
             },
             {
               "text": "CB_Q01_TASK_04_DONE_MSG_02",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_05_01",
+        "description": "***",
+        "actionType": "img",
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
+        "next": "task_05_02",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "img": "v1549212141/sample.jpg",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_02",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_05",
               "style": "",
               "cr": ""
             }
@@ -570,7 +857,76 @@
         }
       },
       {
-        "id": "task_05",
+        "id": "task_05_02",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_05_03",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_04",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_05_03",
+        "description": "***",
+        "actionType": "text",
+        "timeType": "now",
+        "showTime": null,
+        "next": "task_05_04",
+        "shown": false,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "afterHelper": null,
+        "additionalTokensHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "CB_Q01_TASK_05_03_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_03_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_03_MSG_03",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "task_05_04",
         "description": "***",
         "actionType": "inline_keyboard",
         "timeType": "now",
@@ -584,52 +940,22 @@
         "message": {
           "html": [
             {
-              "text": "CB_Q01_TASK_05_MSG_01",
+              "text": "CB_Q01_TASK_05_04_MSG_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_05_MSG_02",
+              "text": "CB_Q01_TASK_05_04_MSG_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_05_MSG_03",
+              "text": "CB_Q01_TASK_05_04_MSG_03",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_TASK_05_MSG_04",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_05",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_06",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_07",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_08",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_09",
-              "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_TASK_05_MSG_10",
+              "text": "CB_Q01_TASK_05_04_MSG_04",
               "style": "",
               "cr": ""
             }
@@ -642,8 +968,10 @@
         "id": "task_05_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
         "next": "summary",
         "shown": false,
         "callbackHelper": null,
@@ -664,7 +992,7 @@
             },
             {
               "text": "CB_Q01_TASK_05_DONE_MSG_03",
-              "style": "",
+              "style": "b",
               "cr": ""
             }
           ]
@@ -674,8 +1002,10 @@
         "id": "summary",
         "description": "***",
         "actionType": "text",
-        "timeType": "now",
-        "showTime": null,
+        "timeType": "relative",
+        "showTime": {
+          "minutes": 1
+        },
         "next": "success_story_01",
         "shown": false,
         "callbackHelper": null,
@@ -692,7 +1022,7 @@
             {
               "text": "CB_Q01_SUMMARY_MSG_02",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_SUMMARY_MSG_03",
@@ -851,6 +1181,26 @@
             {
               "text": "CB_Q01_CALL_TO_ACTION_01_MSG_04",
               "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_05",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_06",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_07",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_01_MSG_08",
+              "style": "b",
               "cr": ""
             }
           ],
@@ -875,15 +1225,15 @@
         "next": "a03",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionTwo",
-        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionTwo",
+        "blockModifyHelper": null,
         "afterHelper": "pushToPaid::personal::afterCallToActionTwo",
         "additionalTokensHelper": "pushToPaid::personal::additionalTokensCallToActionTwo",
         "message": {
           "html": [
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_01",
-              "style": "",
-              "cr": "SCR"
+              "style": "b",
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_02",
@@ -902,37 +1252,37 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_05",
-              "style": "",
-              "cr": "SCR"
+              "style": "b",
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_06",
-              "style": "",
-              "cr": "DCR"
+              "style": "b",
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_07",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_08",
               "style": "",
-              "cr": "DCR"
-            },
-            {
-              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_09",
-              "style": "",
               "cr": "SCR"
             },
             {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_09",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_10",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_11",
-              "style": "",
+              "style": "b",
               "cr": "SCR"
             },
             {
@@ -942,6 +1292,66 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_13",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_14",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_15",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_16",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_17",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_18",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_19",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_20",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_21",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_22",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_23",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_24",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_25",
               "style": "",
               "cr": ""
             }
@@ -967,14 +1377,14 @@
         "next": "a04",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionThree",
-        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionThree",
+        "blockModifyHelper": null,
         "afterHelper": "pushToPaid::personal::afterCallToActionThree",
         "additionalTokensHelper": null,
         "message": {
           "html": [
             {
               "text": "CB_Q01_CALL_TO_ACTION_03_MSG_01",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
@@ -984,6 +1394,11 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_03_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_03_MSG_04",
               "style": "",
               "cr": ""
             }
@@ -1009,19 +1424,24 @@
         "next": "final",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionFour",
-        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionFour",
+        "blockModifyHelper": null,
         "afterHelper": "pushToPaid::personal::afterCallToActionFour",
         "additionalTokensHelper": null,
         "message": {
           "html": [
             {
               "text": "CB_Q01_CALL_TO_ACTION_04_MSG_01",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_04_MSG_02",
               "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_04_MSG_03",
+              "style": "b",
               "cr": ""
             }
           ],
@@ -1053,6 +1473,11 @@
           "html": [
             {
               "text": "CB_Q01_FINAL_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_FINAL_MSG_02",
               "style": "",
               "cr": ""
             }
