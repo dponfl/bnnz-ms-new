@@ -26,7 +26,7 @@
             {
               "text": "CB_Q01_INTRO_MSG_02",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_INTRO_MSG_03",
@@ -744,7 +744,7 @@
             {
               "text": "CB_Q01_TASK_04_03_MSG_03",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_TASK_04_03_MSG_04",
@@ -759,7 +759,7 @@
             {
               "text": "CB_Q01_TASK_04_03_MSG_06",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_TASK_04_03_MSG_07",
@@ -841,6 +841,16 @@
             {
               "text": "CB_Q01_TASK_05_01_MSG_03",
               "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_01_MSG_05",
+              "style": "",
               "cr": ""
             }
           ]
@@ -867,6 +877,16 @@
             },
             {
               "text": "CB_Q01_TASK_05_02_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_TASK_05_02_MSG_04",
               "style": "",
               "cr": ""
             }
@@ -895,7 +915,7 @@
             {
               "text": "CB_Q01_TASK_05_03_MSG_02",
               "style": "",
-              "cr": ""
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_TASK_05_03_MSG_03",
@@ -1213,7 +1233,7 @@
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_01",
               "style": "b",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_02",
@@ -1223,7 +1243,8 @@
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_03",
               "style": "",
-              "cr": "DCR"            },
+              "cr": "DCR"
+            },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_04",
               "style": "",
@@ -1236,38 +1257,38 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_06",
-              "style": "",
+              "style": "b",
               "cr": "SCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_07",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_08",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_09",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_09",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_10",
-              "style": "",
-              "cr": "SCR"
+              "style": "b",
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_11",
               "style": "b",
-              "cr": "DCR"
+              "cr": "SCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_12",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_13",
@@ -1281,21 +1302,56 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_15",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_16",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_17",
               "style": "b",
               "cr": "DCR"
             },
             {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_16",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_17",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
               "text": "CB_Q01_CALL_TO_ACTION_02_MSG_18",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_19",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_20",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_21",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_22",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_23",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_24",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "CB_Q01_CALL_TO_ACTION_02_MSG_25",
               "style": "",
               "cr": ""
             }
@@ -1385,7 +1441,7 @@
             },
             {
               "text": "CB_Q01_CALL_TO_ACTION_04_MSG_03",
-              "style": "",
+              "style": "b",
               "cr": ""
             }
           ],
