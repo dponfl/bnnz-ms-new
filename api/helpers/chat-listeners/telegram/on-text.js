@@ -117,11 +117,17 @@ module.exports = {
           getLangRes = await sails.helpers.chatListeners.telegram.getUserLang(msg);
           useLang = getLangRes.payload.lang;
 
+          const first_name_c = await MessageProcessor.clearStr(msg.chat.first_name || '');
+          const last_name_c = await MessageProcessor.clearStr(msg.chat.last_name || '');
+
+
           params = {
             messenger: sails.config.custom.enums.messenger.TELEGRAM,
             chat_id: msg.chat.id,
             first_name: msg.chat.first_name || '',
+            first_name_c,
             last_name: msg.chat.last_name || '',
+            last_name_c,
             username: msg.chat.username,
             lang: useLang,
             ref_key: useRefKey,

@@ -68,8 +68,8 @@ module.exports = {
       const clientFieldsData = _.pick(inputs.data, [
         'guid',
         'key',
-        'first_name',
-        'last_name',
+        'first_name_c',
+        'last_name_c',
         'chat_id',
         'username',
         'ref_key',

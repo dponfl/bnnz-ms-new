@@ -18,9 +18,17 @@ module.exports = {
       unique: true,
     },
     first_name: {
+      type: 'ref',
+      columnType: 'text CHARACTER SET utf8mb4',
+    },
+    first_name_c: {
       type: 'string',
     },
     last_name: {
+      type: 'ref',
+      columnType: 'text CHARACTER SET utf8mb4',
+    },
+    last_name_c: {
       type: 'string',
     },
     chat_id: {

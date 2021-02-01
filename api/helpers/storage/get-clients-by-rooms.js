@@ -151,8 +151,8 @@ module.exports = {
                 client: _.pick(clientRecord, [
                   'id',
                   'guid',
-                  'first_name',
-                  'last_name',
+                  'first_name_c',
+                  'last_name_c',
                   'chat_id',
                   'username',
                   'messenger',
