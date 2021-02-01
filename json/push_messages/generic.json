@@ -1,0 +1,51 @@
+{
+  "general": {
+    "inlineKeyboardButtonPressed": {
+      "deleteInlineKeyboard": {
+        "id": "inlineKeyboardButtonPressed",
+        "description": "***",
+        "actionType": "edit_message_markup",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "inline_keyboard": [
+          ]
+        }
+      },
+      "textMessageToSend": {
+        "id": "textMessageToSend",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "KEY_SELECTED_",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    }
+  }
+}

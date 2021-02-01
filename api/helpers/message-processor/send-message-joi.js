@@ -653,6 +653,35 @@ module.exports = {
 
           break;
 
+        case 'edit_message_markup':
+
+          /**
+           * Edit message markup
+           */
+
+          if (input.messageData.message.inline_keyboard != null
+            || _.isArray(input.messageData.message.inline_keyboard)
+          ) {
+
+            const editMessageMarkupInlineKeyboard = await MessageProcessor.mapDeep({
+              client: input.client,
+              data: input.messageData.message.inline_keyboard,
+              additionalTokens,
+            });
+
+            const editMessageMarkupReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+              replyMarkup: {
+                inline_keyboard: editMessageMarkupInlineKeyboard
+              },
+              optionalParams: input.additionalParams,
+            });
+
+            sendMessageResult = editMessageMarkupReplyMarkupRes;
+
+          }
+
+          break;
+
         case 'dummy':
 
           /**

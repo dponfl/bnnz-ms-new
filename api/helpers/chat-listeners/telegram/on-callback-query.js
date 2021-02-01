@@ -33,7 +33,13 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info('******************** telegramListener.onCallbackQuery ********************');
+    let client;
+    let clientGuid;
+    let accountGuid;
+    let currentAccount;
+    let pushMessage;
+
+    // sails.log.info('******************** telegramListener.onCallbackQuery ********************');
 
     sails.config.custom.telegramBot.on('callback_query', async (query) => {
 
@@ -47,19 +53,152 @@ module.exports = {
          * Get the client record from DB
          */
 
-          // TODO: Добавить сюда проверку, что клиент успешно найден в БД
-
         let getClientResponse = await sails.helpers.storage.clientGet.with({
           messenger: sails.config.custom.enums.messenger.TELEGRAM,
           msg: query,
         });
 
-        // sails.log.warn('!!!!!!!!!!!!!!!!!!!! on-callback-query, clientGet result:', getClientResponse);
+        if (getClientResponse.status == null
+          || getClientResponse.status !== 'found'
+          || getClientResponse.payload == null
+        ) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: 'Wrong clientGet response',
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              messenger: sails.config.custom.enums.messenger.TELEGRAM,
+              msg: query,
+            },
+          });
+        }
 
-        // TODO: Добавить сюда:
-        //  - удаление кнопок из соответствующего inline_keyboard сообщения
-        //  - отправку PushMessage с текстом нажатой кнопки
+        client = getClientResponse.payload;
+        clientGuid = client.guid;
+        accountGuid = client.account_use;
 
+        currentAccount = _.find(client.accounts, {guid: accountGuid});
+
+        /**
+         * удаление кнопок из соответствующего inline_keyboard сообщения
+         */
+
+        /**
+         * Достаём данные PushMessage
+         */
+
+        const pushMessageName = currentAccount.service.push_message_name;
+
+        const pushMessageGetParams = {
+          pushMessageName,
+        };
+
+        const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+        if (pushMessageGetRaw.status !== 'ok') {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Wrong pushMessageGetJoi response',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessageGetParams,
+              pushMessageGetRaw,
+            },
+          });
+
+        }
+
+        pushMessage = pushMessageGetRaw.payload;
+
+        let messageDataPath = 'general.inlineKeyboardButtonPressed.deleteInlineKeyboard';
+        let messageData = _.get(pushMessage, messageDataPath, null);
+
+        if (messageData == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected messageData',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessage,
+              messageDataPath,
+              messageData,
+            },
+          });
+        }
+
+        const sendMessageUpdateRes = await sails.helpers.messageProcessor.sendMessageJoi({
+          client,
+          messageData,
+          additionalParams: {
+            chat_id: client.chat_id,
+            message_id: query.message.message_id,
+            disable_web_page_preview: true,
+          },
+        });
+
+        /**
+         * отправка PushMessage с текстом нажатой кнопки
+         */
+
+        messageDataPath = 'general.inlineKeyboardButtonPressed.textMessageToSend';
+        messageData = _.get(pushMessage, messageDataPath, null);
+
+        if (messageData == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected messageData',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessage,
+              messageDataPath,
+              messageData,
+            },
+          });
+        }
+
+        messageData.message.html[0].text = `${messageData.message.html[0].text}${_.random(1, 6)}`;
+
+        const replyMarkupData = _.flattenDeep(query.message.reply_markup.inline_keyboard);
+
+        const keyObj = _.find(replyMarkupData, {callback_data: query.data});
+
+        if (keyObj == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected data at callback query',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.GENERAL_ERROR.name,
+            payload: {
+              queryInlineKeyboard: query.message.reply_markup.inline_keyboard,
+              replyMarkupData,
+              queryData: query.data,
+            },
+          });
+        }
+
+        const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi({
+          client,
+          messageData,
+          additionalTokens: [
+            {
+              token: '$KeyText$',
+              value: keyObj.text,
+            },
+          ],
+        });
 
         /**
          * Call the respective Supervisor helper
@@ -90,23 +229,6 @@ module.exports = {
         }
 
       } catch (e) {
-
-
-        // const errorLocation = moduleName;
-        // const errorMsg = `${moduleName}: ${sails.config.custom.ON_CALLBACK_QUERY_ERROR}`;
-        //
-        // sails.log.error(errorLocation + ', error: ' + errorMsg);
-        // sails.log.error(errorLocation + ', error details: ', e);
-        //
-        // throw {err: {
-        //     module: errorLocation,
-        //     message: errorMsg,
-        //     payload: {
-        //       error: e,
-        //     },
-        //   }
-        // };
-
         const throwError = true;
         if (throwError) {
           return await sails.helpers.general.catchErrorJoi({
@@ -126,7 +248,6 @@ module.exports = {
             payload: {},
           });
         }
-
       }
 
     });

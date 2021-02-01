@@ -1324,6 +1324,13 @@
       },
       "token": {
         "$$$$$$$$$$$$$$$$$$$$$_COMMON": "*** ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ ВОРОНОК, КЛАВИАТУР И ПУШ-НОТИФИКАЦИЙ ***",
+        "$$$$$$$$$$$$$$$$$$$$$_COMMON_General": "ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ КЕЙСОВ",
+        "KEY_SELECTED_1": ":clock2: Тобой выбрана опция: «$KeyText$»",
+        "KEY_SELECTED_2": ":robot_face: Была выбрана опция: «$KeyText$»",
+        "KEY_SELECTED_3": ":hourglass_flowing_sand: Тобой была нажата клавиша : «$KeyText$»",
+        "KEY_SELECTED_4": ":hourglass: Была нажата клавиша: «$KeyText$»",
+        "KEY_SELECTED_5": ":robot_face: Тобою выбран вариант: «$KeyText$»",
+        "KEY_SELECTED_6": ":point_right: Был выбран вариант: «$KeyText$»",
         "$$$$$$$$$$$$$$$$$$$$$_Common_Optin": "*** ТОКЕНЫ ДЛЯ ОБЩЕГО КЕЙСА Optin ***",
         "COMMON_START_01": "Привет, $FirstName$ :wave:",
         "COMMON_START_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
