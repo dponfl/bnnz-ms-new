@@ -4410,7 +4410,7 @@ describe.skip('Test pushMessages', function () {
       "callbackHelper": null,
       "blockModifyHelper": null,
       "message": {
-        "video": "v1597490269/BeFame_Dev/INFO_How_Make_Post_v001_002.mp4",
+        "video": "video/f/general/INFO_How_Make_Post_v001_002.mp4",
         "mediaLibrary": true,
         "html": [
           {
