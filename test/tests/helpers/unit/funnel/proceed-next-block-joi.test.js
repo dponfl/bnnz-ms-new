@@ -659,7 +659,7 @@ describe('funnel.proceedNextBlockJoi test', function () {
       expect(imgMessageJoiStub.callCount).to.be.eq(1);
       expect(imgMessageJoiStub).to.have.been.calledWith({
         chatId: client.chat_id,
-        imgPath: customConfig.cloudinaryImgUrl + imgPath,
+        imgPath: customConfig.mediaUrl + imgPath,
         html: 'Here is additionalToken: Text for SomeToken',
       });
       expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -723,7 +723,7 @@ describe('funnel.proceedNextBlockJoi test', function () {
       expect(videoMessageJoiStub.callCount).to.be.eq(1);
       expect(videoMessageJoiStub).to.have.been.calledWith({
         chatId: client.chat_id,
-        videoPath: customConfig.cloudinaryVideoUrl + videoPath,
+        videoPath: customConfig.mediaUrl + videoPath,
         html: 'Here is additionalToken: Text for SomeToken',
       });
       expect(messageSaveJoiStub.callCount).to.be.eq(1);
@@ -787,7 +787,7 @@ describe('funnel.proceedNextBlockJoi test', function () {
       expect(docMessageJoiStub.callCount).to.be.eq(1);
       expect(docMessageJoiStub).to.have.been.calledWith({
         chatId: client.chat_id,
-        docPath: customConfig.cloudinaryDocUrl + docPath,
+        docPath: customConfig.mediaUrl + docPath,
         html: 'Here is additionalToken: Text for SomeToken',
       });
       expect(messageSaveJoiStub.callCount).to.be.eq(1);

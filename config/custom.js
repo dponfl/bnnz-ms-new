@@ -24,9 +24,7 @@ module.exports.custom = {
 
   telegramBot: null,
 
-  cloudinaryImgUrl: process.env.CLOUDINARY_IMG_URL || '',
-  cloudinaryVideoUrl: process.env.CLOUDINARY_VIDEO_URL || '',
-  cloudinaryDocUrl: process.env.CLOUDINARY_DOC_URL || '',
+  mediaUrl: process.env.MEDIA_URL || '',
 
   instParserUrl: process.env.INST_PARSER_URL || '',
   instParserApiKey: process.env.INST_PARSER_API_KEY || '',

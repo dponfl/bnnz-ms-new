@@ -195,6 +195,9 @@ module.exports = {
 
       }
 
+      const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
+      const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : defaultLang);
+
       switch (messageData.actionType) {
 
         case 'text':
@@ -253,7 +256,7 @@ module.exports = {
             additionalTokens,
           });
 
-          const imgPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + input.messageData.message.img : input.messageData.message.img;
+          const imgPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.img}` : input.messageData.message.img;
 
           const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
             chatId: input.client.chat_id,
@@ -294,7 +297,7 @@ module.exports = {
             additionalTokens,
           });
 
-          const videoPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + input.messageData.message.video : input.messageData.message.video;
+          const videoPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.video}` : input.messageData.message.video;
 
           const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
             chatId: input.client.chat_id,
@@ -329,7 +332,7 @@ module.exports = {
            * Send sticker message
            */
 
-          const stickerPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + input.messageData.message.sticker : input.messageData.message.sticker;
+          const stickerPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.sticker}` : input.messageData.message.sticker;
 
           const stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
             chatId: input.client.chat_id,
@@ -368,7 +371,7 @@ module.exports = {
             additionalTokens,
           });
 
-          const docPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + input.messageData.message.doc : input.messageData.message.doc;
+          const docPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.doc}` : input.messageData.message.doc;
 
           let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
             chatId: input.client.chat_id,
@@ -488,7 +491,7 @@ module.exports = {
             additionalTokens,
           });
 
-          const imgInlineKeyboardPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + input.messageData.message.img : input.messageData.message.img;
+          const imgInlineKeyboardPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.img}` : input.messageData.message.img;
 
           const imgInlineKeyboard = await MessageProcessor.mapDeep({
             client: input.client,
@@ -539,7 +542,7 @@ module.exports = {
             additionalTokens,
           });
 
-          const videoInlineKeyboardPath = (input.messageData.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + input.messageData.message.video : input.messageData.message.video;
+          const videoInlineKeyboardPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.video}` : input.messageData.message.video;
 
           const videoInlineKeyboard = await MessageProcessor.mapDeep({
             client: input.client,

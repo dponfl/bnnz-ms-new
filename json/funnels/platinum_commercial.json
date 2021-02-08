@@ -18,7 +18,7 @@
       "shown": false,
       "done": false,
       "message": {
-        "sticker": "befame_sticker.webp",
+        "sticker": "img/f/general/befame_sticker.webp",
         "mediaLibrary": true
       }
     },
@@ -325,7 +325,7 @@
       "shown": false,
       "done": false,
       "message": {
-        "doc": "v1595085603/BeFame_Dev/BeFame_About_v001_001.pdf",
+        "doc": "doc/f/general/%D0%9E%20%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%B5%20BeFame.pdf",
         "mediaLibrary": true,
         "html": [
           {
@@ -1086,7 +1086,7 @@
       "shown": false,
       "done": false,
       "message": {
-        "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "doc": "doc/f/general/%D0%9E%20%D1%80%D0%B5%D1%84%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B5%20BeFame.pdf",
         "mediaLibrary": true,
         "html": [
           {
@@ -1175,7 +1175,7 @@
       "shown": false,
       "done": false,
       "message": {
-        "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "doc": "doc/f/general/%D0%9E%20%D1%80%D0%B5%D1%84%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B5%20BeFame.pdf",
         "mediaLibrary": true,
         "html": [
           {
@@ -1796,7 +1796,7 @@
       "shown": false,
       "done": false,
       "message": {
-        "doc": "v1595085622/BeFame_Dev/BeFame_Ref_v001_001.pdf",
+        "doc": "doc/f/general/%D0%9E%20%D1%80%D0%B5%D1%84%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B5%20BeFame.pdf",
         "mediaLibrary": true,
         "html": [
           {

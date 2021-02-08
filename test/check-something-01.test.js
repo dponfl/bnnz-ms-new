@@ -46,7 +46,7 @@ describe.skip('Test sendDocument', function () {
 
     const chatId = client.chat_id;
     const html = 'Документ';
-    const docPath = customConfig.cloudinaryDocUrl + 'v1586616265/CY_Tax_2019.pdf';
+    const docPath = customConfig.mediaUrl + 'v1586616265/CY_Tax_2019.pdf';
 
     const res = await sails.helpers.mgw.telegram.docMessageJoi({
       chatId,
@@ -259,7 +259,7 @@ describe.skip('Test sendSticker', function () {
     client.accounts = await Account.find({client: client.id});
 
     const chatId = client.chat_id;
-    const stickerPath = customConfig.cloudinaryImgUrl + `befame_sticker.webp`;
+    const stickerPath = customConfig.mediaUrl + `img/f/general/befame_sticker.webp`;
 
     const res = await sails.helpers.mgw.telegram.stickerMessageJoi({
       chatId,
@@ -329,7 +329,7 @@ describe.skip('Test sendDocument with inline keyboard', function () {
       data: inlineKeyboardRaw,
     });
 
-    const docPath = customConfig.cloudinaryDocUrl + 'v1586616265/CY_Tax_2019.pdf';
+    const docPath = customConfig.mediaUrl + 'v1586616265/CY_Tax_2019.pdf';
 
     const res = await sails.helpers.mgw.telegram.docMessageJoi({
       chatId,
@@ -387,7 +387,7 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
       data: inlineKeyboardRaw,
     });
 
-    const imgPath = customConfig.cloudinaryImgUrl + 'v1549212141/sample.jpg';
+    const imgPath = customConfig.mediaUrl + 'v1549212141/sample.jpg';
 
     const res = await sails.helpers.mgw.telegram.imgMessageJoi({
       chatId,
@@ -426,8 +426,8 @@ describe.skip('Test sendVideo with inline keyboard', function () {
 
     const chatId = client.chat_id;
 
-    // const videoPath = customConfig.cloudinaryVideoUrl + 'v1597401314/BeFame_Dev/INFO_How_Make_Post_v001_001.mp4';
-    // const videoPath = customConfig.cloudinaryVideoUrl + 'v1597401420/BeFame_Dev/INFO_How_Perform_Task_v001_001.mp4';
+    // const videoPath = customConfig.mediaUrl + 'v1597401314/BeFame_Dev/INFO_How_Make_Post_v001_001.mp4';
+    // const videoPath = customConfig.mediaUrl + 'v1597401420/BeFame_Dev/INFO_How_Perform_Task_v001_001.mp4';
     // const videoPath = './media/INFO_How_Perform_Task_v001_001.mp4';
     const videoPath = './media/INFO_How_Make_Post_v001_001.mp4';
     // const videoPath = 'BAACAgQAAxkDAAIKgV82xzYNE1aTNY_cKpfo6lqeD5QiAAIwBwAC3Ie5UbFY66eyWPS6GgQ';

@@ -165,6 +165,9 @@ module.exports = {
 
         block = await activateBlockModifyHelper(input.client, block);
 
+        const defaultLang = sails.config.custom.config.general.defaultLang.toLowerCase();
+        const useLang = (_.has(sails.config.custom.config.lang, input.client.lang) ? input.client.lang : defaultLang);
+
         switch (block.actionType) {
 
           case 'text':
@@ -222,7 +225,7 @@ module.exports = {
 
             let {text: htmlImg} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgRaw);
 
-            const imgPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.img : block.message.img;
+            const imgPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${block.message.img}` : block.message.img;
 
             let imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
               chatId: input.client.chat_id,
@@ -267,7 +270,7 @@ module.exports = {
 
             let {text: htmlImgInlineKeyboard, inline_keyboard: keyboardInlineImg, img: parsedImgPath} = await activateBeforeHelper(input.client, block, input.msg || null, htmlImgInlineKeyboardRaw);
 
-            const imgInlineKeyboardPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + parsedImgPath : parsedImgPath;
+            const imgInlineKeyboardPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${parsedImgPath}` : parsedImgPath;
 
             const imgMessageJoiParams = {
               chatId: input.client.chat_id,
@@ -325,7 +328,7 @@ module.exports = {
 
             let {text: htmlVideo} = await activateBeforeHelper(input.client, block, input.msg || null, htmlVideoRaw);
 
-            const videoPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryVideoUrl + block.message.video : block.message.video;
+            const videoPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${block.message.video}` : block.message.video;
 
 
             let videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
@@ -363,7 +366,7 @@ module.exports = {
              * Send sticker message
              */
 
-            const stickerPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryImgUrl + block.message.sticker : block.message.sticker;
+            const stickerPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${block.message.sticker}` : block.message.sticker;
 
 
             let stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
@@ -407,7 +410,7 @@ module.exports = {
 
             let {text: htmlDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocRaw);
 
-            const docPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc;
+            const docPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${block.message.doc}` : block.message.doc;
 
             let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
               chatId: input.client.chat_id,
@@ -452,7 +455,7 @@ module.exports = {
 
             let {text: htmlDocInlineKeyboard, inline_keyboard: keyboardInlineDoc} = await activateBeforeHelper(input.client, block, input.msg || null, htmlDocInlineKeyboardRaw);
 
-            const docInlineKeyboardPath = (block.message.mediaLibrary) ? sails.config.custom.cloudinaryDocUrl + block.message.doc : block.message.doc;
+            const docInlineKeyboardPath = (block.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${block.message.doc}` : block.message.doc;
 
             const docMessageJoiParams = {
               chatId: input.client.chat_id,
