@@ -12,8 +12,13 @@
       "message": {
         "html": [
           {
-            "text": "COMMON_KEYBOARD_PLACE_POST_MSG",
+            "text": "COMMON_KEYBOARD_PLACE_POST_MSG_01",
             "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_KEYBOARD_PLACE_POST_MSG_02",
+            "style": "",
             "cr": ""
           }
         ]
