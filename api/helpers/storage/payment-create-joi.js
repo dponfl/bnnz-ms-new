@@ -100,34 +100,46 @@ module.exports = {
       const guid = uuid.create().uuid;
 
       let paymentData = {};
+      let paymentResponse = {};
       let paymentId = '';
 
-      if (input.paymentData.options != null) {
-
+      if (input.paymentData != null) {
         paymentData = input.paymentData;
+      }
+
+      if (input.paymentResponse != null) {
+        paymentResponse = input.paymentResponse;
+      }
+
+      if (input.paymentData.options != null) {
         paymentData.options.provider_token = '***';
         paymentData.options.provider_data = JSON.parse(paymentData.options.provider_data);
         paymentData.options.reply_markup = JSON.parse(paymentData.options.reply_markup);
         paymentData.options.prices = JSON.parse(paymentData.options.prices);
         paymentId = paymentData.options.payload;
-
       }
 
       if (input.paymentResponse.invoice_payload != null) {
-
         paymentId = input.paymentResponse.invoice_payload;
-
       }
 
-      if (input.paymentData.preCheckoutQuery != null) {
+      // if (input.paymentData != null
+      //   && input.paymentData.preCheckoutQuery != null
+      //   && input.paymentData.preCheckoutQuery.invoice_payload != null) {
+      //   paymentId = input.paymentData.preCheckoutQuery.invoice_payload;
+      // }
 
-        paymentData = input.paymentData;
+      if (_.has(input.paymentData, 'preCheckoutQuery.invoice_payload')) {
         paymentId = input.paymentData.preCheckoutQuery.invoice_payload;
       }
 
-      if (input.paymentData.successfulPayment != null) {
+      // if (input.paymentData != null
+      //   && input.paymentData.successfulPayment != null
+      //   && input.paymentData.successfulPayment.invoice_payload != null) {
+      //   paymentId = input.paymentData.successfulPayment.invoice_payload;
+      // }
 
-        paymentData = input.paymentData;
+      if (_.has(input.paymentData, 'successfulPayment.invoice_payload')) {
         paymentId = input.paymentData.successfulPayment.invoice_payload;
       }
 
@@ -162,7 +174,24 @@ module.exports = {
           return [];
         });
 
+      if (_.has(paymentData, 'preCheckoutQuery.from.first_name')) {
+        paymentData.preCheckoutQuery.from.first_name = await MessageProcessor.clearStr(paymentData.preCheckoutQuery.from.first_name);
+      }
+
       const paymentRecsNum = paymentRecs.length;
+
+      if (_.has(paymentResponse, 'chat.first_name')) {
+        paymentResponse.chat.first_name = await MessageProcessor.clearStr(paymentResponse.chat.first_name);
+      }
+      if (_.has(paymentResponse, 'chat.last_name')) {
+        paymentResponse.chat.last_name = await MessageProcessor.clearStr(paymentResponse.chat.last_name);
+      }
+      if (_.has(paymentResponse, 'from.first_name')) {
+        paymentResponse.from.first_name = await MessageProcessor.clearStr(paymentResponse.from.first_name);
+      }
+      if (_.has(paymentResponse, 'from.last_name')) {
+        paymentResponse.from.last_name = await MessageProcessor.clearStr(paymentResponse.from.last_name);
+      }
 
       await Payments.create({
         guid,
@@ -171,7 +200,7 @@ module.exports = {
         paymentGroupGuid: input.paymentGroupGuid,
         order: paymentRecsNum + 1,
         payment_data: paymentData,
-        payment_response: input.paymentResponse,
+        payment_response: paymentResponse,
         comments: input.comments || '',
         client_id: input.clientId,
         client_guid: input.clientGuid,
@@ -188,7 +217,7 @@ module.exports = {
             paymentGroupGuid: input.paymentGroupGuid,
             order: paymentRecsNum + 1,
             payment_data: paymentData,
-            payment_response: input.paymentResponse,
+            payment_response: paymentResponse,
             comments: input.comments || '',
             client_id: input.clientId,
             client_guid: input.clientGuid,
@@ -212,7 +241,7 @@ module.exports = {
               paymentGroupGuid: input.paymentGroupGuid,
               order: paymentRecsNum + 1,
               payment_data: paymentData,
-              payment_response: input.paymentResponse,
+              payment_response: paymentResponse,
               comments: input.comments || '',
               client_id: input.clientId,
               client_guid: input.clientGuid,
@@ -232,21 +261,6 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}, error: ${sails.config.custom.PAYMENT_CREATE_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
 
       const throwError = true;
       if (throwError) {
