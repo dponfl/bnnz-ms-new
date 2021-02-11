@@ -4,14 +4,44 @@ const {expect} = require('chai');
 const mlog = require('mocha-logger');
 const casual = require('casual');
 
-describe.skip('Test sending and updating Telegram message', function () {
+describe('Test sending and updating Telegram message', function () {
 
-  let customConfig;
-  const timeout = 3000;
+  let pushMessageName;
+  let pushMessageGetParams;
+  let pushMessageGetRaw;
+  let pushMessage;
 
-  beforeEach(async function () {
-    const customConfigRaw =   await sails.helpers.general.getConfig();
-    customConfig = customConfigRaw.payload;
+  let client;
+  let currentAccount;
+
+  const timeout = 10000;
+
+  before(async function () {
+
+    const getClientRes = await sails.helpers.storage.clientGetByCriteriaJoi({
+      criteria: {
+        guid: 'ddb6d16d-d91f-4a34-9653-2e000425b0d5'
+      }
+    });
+
+    client = getClientRes.payload[0];
+
+    currentAccount = _.find(client.accounts, {guid: client.account_use});
+
+    /**
+     * Достаём данные PushMessage
+     */
+
+    pushMessageName = currentAccount.service.push_message_name;
+
+    pushMessageGetParams = {
+      pushMessageName,
+    };
+
+    pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+    pushMessage = pushMessageGetRaw.payload;
+
   });
 
   it('should perform task message (like) and its transformation to done message with delay between them', async function () {
@@ -20,26 +50,19 @@ describe.skip('Test sending and updating Telegram message', function () {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes.messages[0];
 
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_done.messages[0];
+      const editMessageDataPath = 'tasks.likes_done';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
       let msgRes, editMsgRes;
 
@@ -51,7 +74,15 @@ describe.skip('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
@@ -85,38 +116,25 @@ describe.skip('Test sending and updating Telegram message', function () {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes.messages[0];
+      const editMessageDataPath = 'tasks.likes_not_done';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_not_done.messages[0];
-
-      editMessageData.message.inline_keyboard = _.concat(editMessageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
+      editMessageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
       let msgRes, editMsgRes;
 
@@ -128,7 +146,15 @@ describe.skip('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
@@ -156,7 +182,7 @@ describe.skip('Test sending and updating Telegram message', function () {
 
   });
 
-  it('should perform task message (like + comment) and its transformation to done message with delay between them', async function () {
+  it.skip('should perform task message (like + comment) and its transformation to done message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
@@ -221,7 +247,7 @@ describe.skip('Test sending and updating Telegram message', function () {
 
   });
 
-  it('should perform task message (like + comment) and its transformation to not done (no like & no comment) message with delay between them', async function () {
+  it.skip('should perform task message (like + comment) and its transformation to not done (no like & no comment) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
@@ -298,7 +324,7 @@ describe.skip('Test sending and updating Telegram message', function () {
 
   });
 
-  it('should perform task message (like + comment) and its transformation to not done (no like) message with delay between them', async function () {
+  it.skip('should perform task message (like + comment) and its transformation to not done (no like) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
@@ -375,7 +401,7 @@ describe.skip('Test sending and updating Telegram message', function () {
 
   });
 
-  it('should perform task message (like + comment) and its transformation to not done (no comment) message with delay between them', async function () {
+  it.skip('should perform task message (like + comment) and its transformation to not done (no comment) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
@@ -454,7 +480,7 @@ describe.skip('Test sending and updating Telegram message', function () {
 
 });
 
-describe('Test doc push message', function () {
+describe.skip('Test doc push message', function () {
 
   it('should send doc push message', async function () {
 

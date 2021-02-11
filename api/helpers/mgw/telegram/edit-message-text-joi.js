@@ -53,9 +53,17 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
+      let optionalParams = {
+        parse_mode: 'HTML',
+      };
+
+      if (input.optionalParams != null) {
+        optionalParams = _.assign(optionalParams, input.optionalParams);
+      }
+
       let editTextMessageRes = await sails.config.custom.telegramBot.editMessageText(
         input.html,
-        input.optionalParams,
+        optionalParams,
       );
 
       return exits.success({
