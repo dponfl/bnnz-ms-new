@@ -535,7 +535,7 @@
     "wrongMessage": {
       "id": "wrong_message",
       "description": "",
-      "actionType": "text",
+      "actionType": "video",
       "initial": true,
       "enabled": true,
       "show_time": 0,
@@ -548,6 +548,8 @@
       "callbackHelper": null,
       "blockModifyHelper": null,
       "message": {
+        "video": "video/p/general/how_use_keyboard.mp4",
+        "mediaLibrary": true,
         "html": [
           {
             "text": "COMMON_GENERAL_USE_KEYBOARD",
