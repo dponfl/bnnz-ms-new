@@ -68,11 +68,16 @@
           "html": [
             {
               "text": "COMMON_MSG_TASK_ACCOUNT",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_01",
               "style": "b",
               "cr": "DCR"
             },
             {
-              "text": "COMMON_MSG_TASK_LIKE",
+              "text": "COMMON_MSG_TASK_LIKE_02",
               "style": "",
               "cr": "DCR"
             },
@@ -111,17 +116,32 @@
           "html": [
             {
               "text": "COMMON_MSG_TASK_ACCOUNT",
-              "style": "b",
+              "style": "",
               "cr": "DCR"
             },
             {
-              "text": "COMMON_MSG_TASK_LIKE_COMMENT",
-              "style": "",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_01",
+              "style": "b",
               "cr": "SCR"
             },
             {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
               "text": "COMMON_MSG_TASK",
-              "style": "bi",
+              "style": "",
               "cr": ""
             }
           ],
@@ -153,9 +173,14 @@
         "message": {
           "html": [
             {
-              "text": "COMMON_MSG_TASK_LIKE_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_DONE_01",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_DONE_02",
+              "style": "",
+              "cr": ""
             }
           ],
           "inline_keyboard": [
@@ -185,7 +210,12 @@
               "cr": "DCR"
             },
             {
-              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION",
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION_02",
               "style": "",
               "cr": ""
             }
@@ -218,9 +248,14 @@
         "message": {
           "html": [
             {
-              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE_01",
               "style": "",
-              "cr": "DCR"
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE_02",
+              "style": "",
+              "cr": ""
             }
           ],
           "inline_keyboard": [
@@ -245,7 +280,22 @@
         "message": {
           "html": [
             {
-              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE",
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_03",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_04",
               "style": "",
               "cr": "DCR"
             },
@@ -285,11 +335,11 @@
             {
               "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_01",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_02",
-              "style": "",
+              "style": "b",
               "cr": "DCR"
             },
             {
@@ -328,10 +378,15 @@
             {
               "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_01",
               "style": "",
-              "cr": "SCR"
+              "cr": "DCR"
             },
             {
               "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_03",
               "style": "",
               "cr": "DCR"
             },
@@ -524,6 +579,87 @@
           "html": [
             {
               "text": "COMMON_PM_UNIVER_LESSON_01_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson02": {
+        "id": "lesson_02",
+        "description": "Lesson 02",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%92%D0%BE%D0%B2%D0%BB%D0%B5%D0%BA%D0%B0%D1%8E%D1%89%D0%B8%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82.%20%D0%9A%D0%B0%D0%BA%20%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D1%8B%D0%B5%20%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%81.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_02_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson03": {
+        "id": "lesson_03",
+        "description": "Lesson 03",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%A4%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B0%D1%83%D0%B4%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%B8.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_03_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson04": {
+        "id": "lesson_04",
+        "description": "Lesson 04",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%98%D0%B4%D0%B5%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5%20%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D0%B8.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_04_MSG_01",
               "style": "",
               "cr": ""
             }

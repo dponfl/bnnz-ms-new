@@ -182,32 +182,24 @@ describe('Test sending and updating Telegram message', function () {
 
   });
 
-  it.skip('should perform task message (like + comment) and its transformation to done message with delay between them', async function () {
+  it('should perform task message (like + comment) and its transformation to done message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes_comments';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes_comments.messages[0];
-
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_comments_done.messages[0];
+      const editMessageDataPath = 'tasks.likes_comments_done';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
       let msgRes, editMsgRes;
 
@@ -219,7 +211,15 @@ describe('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
@@ -247,44 +247,31 @@ describe('Test sending and updating Telegram message', function () {
 
   });
 
-  it.skip('should perform task message (like + comment) and its transformation to not done (no like & no comment) message with delay between them', async function () {
+  it('should perform task message (like + comment) and its transformation to not done (no like & no comment) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes_comments';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes_comments.messages[0];
+      const editMessageDataPath = 'tasks.likes_comments_not_done';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_comments_not_done.messages[0];
-
-      editMessageData.message.inline_keyboard = _.concat(editMessageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
+      editMessageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
       let msgRes, editMsgRes;
 
@@ -296,7 +283,15 @@ describe('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
@@ -324,44 +319,31 @@ describe('Test sending and updating Telegram message', function () {
 
   });
 
-  it.skip('should perform task message (like + comment) and its transformation to not done (no like) message with delay between them', async function () {
+  it('should perform task message (like + comment) and its transformation to not done (no like) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes_comments';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes_comments.messages[0];
+      const editMessageDataPath = 'tasks.likes_comments_no_like';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_comments_no_like.messages[0];
-
-      editMessageData.message.inline_keyboard = _.concat(editMessageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
+      editMessageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
       let msgRes, editMsgRes;
 
@@ -373,7 +355,15 @@ describe('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
@@ -401,44 +391,31 @@ describe('Test sending and updating Telegram message', function () {
 
   });
 
-  it.skip('should perform task message (like + comment) and its transformation to not done (no comment) message with delay between them', async function () {
+  it('should perform task message (like + comment) and its transformation to not done (no comment) message with delay between them', async function () {
 
     return new Promise(async (resolve) => {
 
       this.timeout(100000);
 
-      const client = await Client.findOne({
-        guid: 'f079a758-a530-4c19-83fb-fca217c07639'
-      });
+      const messageDataPath = 'tasks.likes_comments';
+      const messageData = _.get(pushMessage, messageDataPath, null);
 
-      client.accounts = await Account.find({client: client.id});
+      messageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
-      const messageData = customConfig.pushMessages.tasks.likes_comments.messages[0];
+      const editMessageDataPath = 'tasks.likes_comments_no_comment';
+      const editMessageData = _.get(pushMessage, editMessageDataPath, null);
 
-      messageData.message.inline_keyboard = _.concat(messageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
-
-
-      const editMessageData = customConfig.pushMessages.tasks.likes_comments_no_comment.messages[0];
-
-      editMessageData.message.inline_keyboard = _.concat(editMessageData.message.inline_keyboard,
-        [
-          [
-            {
-              "text": "MSG_TASK_PERFORM_BTN",
-              "callback_data": "push_msg_tsk_l_" + casual.uuid
-            }
-          ]
-        ]
-      );
+      editMessageData.message.inline_keyboard[1] = [
+        {
+          "text": "COMMON_MSG_TASK_PERFORM_BTN",
+          "callback_data": "push_msg_tsk_l_" + casual.uuid
+        }
+      ];
 
       let msgRes, editMsgRes;
 
@@ -450,7 +427,15 @@ describe('Test sending and updating Telegram message', function () {
             token: '$PostLink$',
             value: `https://www.instagram.com/p/B7QmKU8FORo`,
           },
+          {
+            token: '$CurrentAccount$',
+            value: currentAccount.inst_profile,
+          },
         ],
+        blockModifyHelperParams: {
+          taskGuid: casual.uuid,
+        },
+        disableWebPagePreview: true,
       });
 
       setTimeout(async function () {
