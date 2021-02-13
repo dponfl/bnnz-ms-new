@@ -258,7 +258,7 @@ module.exports = {
          * Отрабытываем, если были вызваны зарегистрированные команды
          */
 
-        if (_.trim(msg.text).match(/^\/main$/i)) {
+        if (_.trim(msg.text).match(/^\/home$/i)) {
 
           const currentAccount = _.find(client.accounts, {guid: client.account_use});
 

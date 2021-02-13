@@ -419,6 +419,22 @@ module.exports = {
 
           sendMessageResult = forcedRes;
 
+          // TODO: Выставить флаг "forced_reply_expected"
+          //  который означает, что клиенту было отправлено ForcedMessage
+          //  и мы ожидаем получить ответ в виде ответа на ForcedMessage
+          //  а не простым сообщением
+
+          input.client.forced_reply_expected = true;
+
+          await sails.helpers.storage.clientUpdateJoi({
+            criteria: {guid: input.client.guid},
+            data: {
+              forced_reply_expected: input.client.forced_reply_expected,
+            },
+            createdBy: `${moduleName}`,
+          });
+
+
           /**
            * Save the sent message
            */

@@ -91,6 +91,9 @@ module.exports = {
       type: 'string',
       allowNull: true,
     },
+    forced_reply_expected: {
+      type: 'boolean',
+    },
 
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

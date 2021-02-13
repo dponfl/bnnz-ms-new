@@ -71,6 +71,17 @@ module.exports = {
       if (!_.isNil(input.msg.reply_to_message)
         && !_.isNil(input.msg.reply_to_message.message_id)) {
 
+        input.client.forced_reply_expected = false;
+
+        await sails.helpers.storage.clientUpdateJoi({
+          criteria: {guid: input.client.guid},
+          data: {
+            forced_reply_expected: input.client.forced_reply_expected,
+          },
+          createdBy: `${moduleName}`,
+        });
+
+
         /**
          * Save the received forced message
          */
@@ -165,6 +176,16 @@ module.exports = {
         /**
          * Proceed the generic text message
          */
+
+        /**
+         * Проверяем не ожидается ли ответ на forced message
+         */
+
+        if (input.client.forced_reply_expected) {
+
+          await onWrongForcedMessageReply(input.client);
+
+        }
 
         /**
          * Save the received simple message
@@ -279,4 +300,147 @@ module.exports = {
   }
 
 };
+
+async function onWrongForcedMessageReply(client) {
+
+  let messageDataPath;
+  let messageData;
+
+  /**
+   * Достаём данные PushMessage
+   */
+
+  const currentAccount = _.find(client.accounts, {guid: client.account_use});
+
+  const clientGuid = client.guid;
+  const accountGuid = currentAccount.guid;
+
+  const pushMessageName = currentAccount.service.push_message_name;
+
+  const pushMessageGetParams = {
+    pushMessageName,
+  };
+
+  const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+  if (pushMessageGetRaw.status !== 'ok') {
+    await sails.helpers.general.throwErrorJoi({
+      errorType: sails.config.custom.enums.errorType.ERROR,
+      location: moduleName,
+      message: 'Wrong pushMessageGetJoi response',
+      clientGuid,
+      accountGuid,
+      errorName: sails.config.custom.STORAGE_ERROR.name,
+      payload: {
+        pushMessageGetParams,
+        pushMessageGetRaw,
+      },
+    });
+
+  }
+
+  const pushMessage = pushMessageGetRaw.payload;
+
+  switch (client.current_funnel) {
+
+    case 'optin':
+
+      messageDataPath = 'general.wrongForcedMessageReply.howEnterInstProfile';
+      messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
+
+      await sails.helpers.messageProcessor.sendMessageJoi({
+        client,
+        messageData,
+      });
+
+      break;
+
+    case 'main':
+
+      messageDataPath = 'general.wrongForcedMessageReply.howSendPost';
+      messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
+
+      await sails.helpers.messageProcessor.sendMessageJoi({
+        client,
+        messageData,
+      });
+
+      messageDataPath = 'general.wrongForcedMessageReply.howGetToMainMenu';
+      messageData = _.get(pushMessage, messageDataPath, null);
+
+      if (messageData == null) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'No expected messageData',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.STORAGE_ERROR.name,
+          payload: {
+            pushMessage,
+            messageDataPath,
+            messageData,
+          },
+        });
+      }
+
+      await sails.helpers.messageProcessor.sendMessageJoi({
+        client,
+        messageData,
+      });
+
+      break;
+
+    default:
+
+      await LogProcessor.critical({
+        message: 'Unexpected current_funnel value',
+        clientGuid,
+        accountGuid,
+        // requestId: null,
+        // childRequestId: null,
+        errorName: sails.config.custom.GENERAL_ERROR.name,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: moduleName,
+        payload: {
+          client
+        },
+      });
+
+  }
+
+
+}
 

@@ -193,7 +193,6 @@ module.exports = {
 
             block.message_id = simpleRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -235,7 +234,6 @@ module.exports = {
 
             block.message_id = imgRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -292,7 +290,6 @@ module.exports = {
 
             block.message_id = imgInlineKeyboardRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -339,7 +336,6 @@ module.exports = {
 
             block.message_id = videoRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -376,7 +372,6 @@ module.exports = {
 
             block.message_id = stickerRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -420,7 +415,6 @@ module.exports = {
 
             block.message_id = docRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -477,7 +471,6 @@ module.exports = {
 
             block.message_id = docInlineKeyboardRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -521,7 +514,12 @@ module.exports = {
 
             block.message_id = forcedRes.payload.message_id;
 
-            // block.shown = true;
+            // TODO: Выставить флаг "forced_reply_expected"
+            //  который означает, что клиенту было отправлено ForcedMessage
+            //  и мы ожидаем получить ответ в виде ответа на ForcedMessage
+            //  а не простым сообщением
+
+            input.client.forced_reply_expected = true;
 
             /**
              * Save the sent message
@@ -570,7 +568,6 @@ module.exports = {
 
             block.message_id = inlineRes.payload.message_id;
 
-            // block.shown = true;
 
             /**
              * Save the sent message
@@ -595,9 +592,9 @@ module.exports = {
           criteria: {guid: input.client.guid},
           data: {
             current_funnel: input.client.current_funnel,
-            // funnels: funnel,
             funnels: input.client.funnels,
             accounts: input.client.accounts,
+            forced_reply_expected: input.client.forced_reply_expected
           },
           createdBy: `${input.createdBy} => ${moduleName}`,
         });

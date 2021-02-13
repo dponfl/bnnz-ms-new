@@ -46,6 +46,89 @@
           ]
         }
       }
+    },
+    "wrongForcedMessageReply": {
+      "howEnterInstProfile": {
+        "id": "how_enter_inst_profile",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_enter_inst_profile.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_ENTER_INST_PROFILE",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "howSendPost": {
+        "id": "how_send_post",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_send_post_link.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_SEND_POST",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "howGetToMainMenu": {
+        "id": "how_get_to_main_menu",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_get_to_main_menu.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_GET_TO_MAIN_MENU",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      }
     }
   },
   "tasks": {
