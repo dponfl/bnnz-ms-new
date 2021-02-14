@@ -84,6 +84,11 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      input.block.done = false;
+      input.block.shown = false;
+      input.block.next = null;
+      input.block.previous = null;
+
 
       const enteredPostLink = _.trim(input.msg.text);
 

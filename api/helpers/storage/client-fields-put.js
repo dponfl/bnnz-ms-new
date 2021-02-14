@@ -86,6 +86,7 @@ module.exports = {
         'account_use',
         'account_tmp',
         'inst_profile_tmp',
+        'forced_reply_expected',
       ]);
 
       // sails.log.debug('*** storage:clientFieldsPut, clientFieldsData: ', clientFieldsData);
