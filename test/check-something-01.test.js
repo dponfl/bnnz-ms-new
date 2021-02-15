@@ -4410,7 +4410,7 @@ describe.skip('Test pushMessages', function () {
       "callbackHelper": null,
       "blockModifyHelper": null,
       "message": {
-        "video": "video/f/general/INFO_How_Make_Post_v001_002.mp4",
+        "video": "video/f/general/how_send_post_link.mp4",
         "mediaLibrary": true,
         "html": [
           {
