@@ -1,0 +1,837 @@
+{
+  "optin": [
+    {
+      "id": "start_sticker",
+      "description": "",
+      "actionType": "sticker",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": "optin::start",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "sticker": "img/f/general/befame_sticker.webp",
+        "mediaLibrary": true
+      }
+    },
+    {
+      "id": "start",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::start_sticker",
+      "next": "optin::intro",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BESTAR_START_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BESTAR_START_MSG_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BESTAR_START_MSG_03",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "BESTAR_START_MSG_04",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "intro",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::start",
+      "next": "optin::get_profile",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_INTRO",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "get_profile",
+      "description": "",
+      "actionType": "forced",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::intro",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "common::optin::forcedGetProfileJoi",
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_GET_PROFILE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "check_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::get_profile",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::optin::afterCheckProfileJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_CHECK_PROFILE_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_CHECK_PROFILE_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong_profile",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::get_profile",
+      "next": "optin::get_profile",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::optin::afterWrongProfileJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_WRONG_PROFILE",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "confirm_profile",
+      "description": "",
+      "actionType": "img_inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::get_profile",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "common::optin::beforeConfirmProfileJoi",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "star::optin::callbackConfirmProfileJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "img": "$profilePicUrl$",
+        "mediaLibrary": false,
+        "html": [
+          {
+            "text": "COMMON_CONFIRM_PROFILE_01",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "COMMON_CONFIRM_PROFILE_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_CONFIRM_PROFILE_03",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_YES",
+              "callback_data": "profile_confirm_yes"
+            },
+            {
+              "text": "COMMON_CONFIRM_PROFILE_BTN_NO",
+              "callback_data": "profile_confirm_no"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "try_again",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::confirm_profile",
+      "next": "optin::get_profile",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::optin::afterTryAgainJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NEXT_TRY",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "optin_completed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": false,
+      "disableWebPagePreview": false,
+      "previous": null,
+      "next": "optin::optin_completed_video",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "BESTAR_OPTIN_COMPLITED_MSG_01",
+            "style": "b",
+            "cr": "DCR"
+          },
+          {
+            "text": "BESTAR_OPTIN_COMPLITED_MSG_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "BESTAR_OPTIN_COMPLITED_MSG_03",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "optin_completed_video",
+      "description": "",
+      "actionType": "video",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": "optin::optin_completed",
+      "next": null,
+      "switchToFunnel": "main",
+      "beforeHelper": null,
+      "afterHelper": "common::optin::afterOptinCompletedVideoJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "video": "video/f/general/how_send_post_link.mp4",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_OPTIN_COMPLETED_VIDEO_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_OPTIN_COMPLETED_VIDEO_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "main": [
+    {
+      "id": "provide_post_link",
+      "description": "",
+      "actionType": "forced",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": "common::main::forcedProvidePostLinkJoi",
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_MAIN_PROVIDE_POST_LINK",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong_post_link",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": "main::provide_post_link",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::main::afterWrongPostLinkJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_MAIN_WRONG_POST_LINK_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_MAIN_WRONG_POST_LINK_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "post_performed",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::main::afterPostPerformedJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_MAIN_POST_PERFORMED",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong_parser_response",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::main::afterWrongParserResponseJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_GET_MEDIA_ID_ERROR_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_GET_MEDIA_ID_ERROR_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "noRefJoin": [
+    {
+      "id": "join_ref_prepare_list",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": true,
+      "previous": null,
+      "next": "noRefJoin::join_ref_subscribe",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::noRefJoin::afterJoinRefPrepareListJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_PREPARE_LIST",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_subscribe",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "disableWebPagePreview": true,
+      "previous": "noRefJoin::join_ref_prepare_list",
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "common::noRefJoin::beforeJoinRefSubscribeJoi",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "common::noRefJoin::callbackJoinRefSubscribeJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE_PROFILES",
+            "style": "",
+            "cr": "DCR"
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_NOREFJOIN_JOIN_REF_SUBSCRIBE_BTN_CHECK",
+              "callback_data": "check"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "join_ref_check",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::noRefJoin::afterJoinRefCheckJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_check_error",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::noRefJoin::afterJoinRefCheckErrorJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_02",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_CHECK_ERROR_03",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::noRefJoin::afterJoinRefDoneJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_DONE_01",
+            "style": "",
+            "cr": "DCR"
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_missed_profiles",
+      "description": "",
+      "actionType": "inline_keyboard",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": "common::noRefJoin::beforeJoinRefMissedProfilesJoi",
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": "common::noRefJoin::callbackJoinRefMissedProfilesJoi",
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_03",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_NOREFJOIN_JOIN_REF_MISSED_PROFILES_BTN_CHECK",
+              "callback_data": "check"
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "refProfileSubscriptionCheck": [
+    {
+      "id": "join_ref_check",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": true,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::refProfileSubscriptionCheck::afterSubscriptionCheckJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_KB_JOIN_REF_CHECK_MSG",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_done",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::refProfileSubscriptionCheck::afterJoinRefDoneJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_KB_JOIN_REF_DONE_MSG",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "join_ref_check_error",
+      "description": "",
+      "actionType": "text",
+      "initial": false,
+      "enabled": false,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::refProfileSubscriptionCheck::afterJoinRefCheckErrorJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_02",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "COMMON_KB_JOIN_REF_CHECK_ERROR_MSG_03",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "noRefInfo": [
+    {
+      "id": "more_info_one",
+      "description": "",
+      "actionType": "text",
+      "initial": true,
+      "enabled": false,
+      "show_time": 0,
+      "removeKeyboard": true,
+      "previous": null,
+      "next": "noRefInfo::more_info_two",
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_02",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_03",
+            "style": "",
+            "cr": "SCR"
+          },
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_04",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_05",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_ONE_MSG_06",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "more_info_two",
+      "description": "",
+      "actionType": "doc",
+      "initial": false,
+      "enabled": false,
+      "show_time": 3000,
+      "previous": null,
+      "next": null,
+      "switchToFunnel": null,
+      "beforeHelper": null,
+      "afterHelper": "common::noRefInfo::afterMoreInfoJoi",
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "shown": false,
+      "done": false,
+      "message": {
+        "doc": "doc/f/general/%D0%9E%20%D1%80%D0%B5%D1%84%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B5%20BeFame.pdf",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_NOREFINFO_MORE_INFO_TWO_MSG",
+            "style": "",
+            "cr": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1124,6 +1124,18 @@
           "pushToPaidPrice": 0
         }
       },
+      "star054": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
       "test_personal": {
         "period_01": {
           "list_price": 0,
@@ -1284,6 +1296,9 @@
           "generic": {
             "title": "BeFame"
           },
+          "star054": {
+            "title": "BeFame-Star"
+          },
           "test_personal": {
             "title": "BeFree"
           },
@@ -1412,6 +1427,14 @@
         "COMMON_CHECK_PROFILE_ERROR_MSG_03": "Мы сразу же оповестим тебе, когда сервер возобновит свою работу :gear: Благодарим за ожидание :pray:",
         "COMMON_GET_MEDIA_ID_ERROR_MSG_01": "$FirstName$, система проверяет твою публикацию, это может занять некоторое время :clock3:",
         "COMMON_GET_MEDIA_ID_ERROR_MSG_02": "После проверки на твой пост сразу же начнет приходить активность :heart: :speech_balloon:",
+        "$$$$$$$$$$$$$$$$$$$$$_Star_Optin": "*** ТОКЕНЫ ДЛЯ STAR КЕЙСА Optin ***",
+        "BESTAR_START_MSG_01": "Привет, $FirstName$ :wave:",
+        "BESTAR_START_MSG_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
+        "BESTAR_START_MSG_03": "Поздравляю! :tada:",
+        "BESTAR_START_MSG_04": "Ты получаешь бесплатный доступ к сервису BeFame на персональных условиях :sunglasses:",
+        "BESTAR_OPTIN_COMPLITED_MSG_01": "Твой профиль успешно зарегистрирован в BeFame :confetti_ball:",
+        "BESTAR_OPTIN_COMPLITED_MSG_02": "Теперь ты можешь выкладывать посты в сервис и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры) :rocket:",
+        "BESTAR_OPTIN_COMPLITED_MSG_03": "Добро пожаловать! :robot_face: :vulcan:",
         "$$$$$$$$$$$$$$$$$$$$$_Common_Main": "*** ТОКЕНЫ ДЛЯ ОБЩЕГО КЕЙСА Main ***",
         "COMMON_KEYBOARD_PLACE_POST_MSG_01": "Чтобы начать продвижение отправь ссылку на новый пост, нажав кнопку: «ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ»",
         "COMMON_KEYBOARD_PLACE_POST_MSG_02": "Если кнопки скрыты, нажми на [::] в строке отправки сообщения :wink:",
