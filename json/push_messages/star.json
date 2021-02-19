@@ -630,17 +630,17 @@
         "message": {
           "html": [
             {
-              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_01",
+              "text": "STAR_AFTER_CONFIRM_PROFILE_MSG_01",
               "style": "",
               "cr": "SCR"
             },
             {
-              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_02",
+              "text": "STAR_AFTER_CONFIRM_PROFILE_MSG_02",
               "style": "",
               "cr": "DCR"
             },
             {
-              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_03",
+              "text": "STAR_AFTER_CONFIRM_PROFILE_MSG_03",
               "style": "",
               "cr": ""
             }
