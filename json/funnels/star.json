@@ -42,22 +42,22 @@
       "message": {
         "html": [
           {
-            "text": "BESTAR_START_MSG_01",
+            "text": "STAR_START_MSG_01",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BESTAR_START_MSG_02",
+            "text": "STAR_START_MSG_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BESTAR_START_MSG_03",
+            "text": "STAR_START_MSG_03",
             "style": "",
             "cr": "SCR"
           },
           {
-            "text": "BESTAR_START_MSG_04",
+            "text": "STAR_START_MSG_04",
             "style": "",
             "cr": ""
           }
@@ -277,17 +277,17 @@
       "message": {
         "html": [
           {
-            "text": "BESTAR_OPTIN_COMPLITED_MSG_01",
+            "text": "STAR_OPTIN_COMPLITED_MSG_01",
             "style": "b",
             "cr": "DCR"
           },
           {
-            "text": "BESTAR_OPTIN_COMPLITED_MSG_02",
+            "text": "STAR_OPTIN_COMPLITED_MSG_02",
             "style": "",
             "cr": "DCR"
           },
           {
-            "text": "BESTAR_OPTIN_COMPLITED_MSG_03",
+            "text": "STAR_OPTIN_COMPLITED_MSG_03",
             "style": "",
             "cr": ""
           }
