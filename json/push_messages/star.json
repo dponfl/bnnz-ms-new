@@ -611,6 +611,41 @@
             ]
           }
         }
+      },
+      "afterProfileConfirmed": {
+        "id": "after_confirm_profile",
+        "description": "",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": "now",
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "BESTAR_AFTER_CONFIRM_PROFILE_MSG_03",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
       }
     }
   },

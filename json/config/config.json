@@ -1136,6 +1136,66 @@
           "pushToPaidPrice": 0
         }
       },
+      "star108": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
+      "star153": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
+      "star306": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
+      "star504": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
+      "star810": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
       "test_personal": {
         "period_01": {
           "list_price": 0,
@@ -1299,6 +1359,21 @@
           "star054": {
             "title": "BeFame-Star"
           },
+          "star108": {
+            "title": "BeFame-Star"
+          },
+          "star153": {
+            "title": "BeFame-Star"
+          },
+          "star306": {
+            "title": "BeFame-Star"
+          },
+          "star504": {
+            "title": "BeFame-Star"
+          },
+          "star810": {
+            "title": "BeFame-Star"
+          },
           "test_personal": {
             "title": "BeFree"
           },
@@ -1432,6 +1507,9 @@
         "BESTAR_START_MSG_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
         "BESTAR_START_MSG_03": "Поздравляю! :tada:",
         "BESTAR_START_MSG_04": "Ты получаешь бесплатный доступ к сервису BeFame на персональных условиях :sunglasses:",
+        "BESTAR_AFTER_CONFIRM_PROFILE_MSG_01": "Отлично :thumbsup:",
+        "BESTAR_AFTER_CONFIRM_PROFILE_MSG_02": "Я завершаю определять твои интересы и увлечения :robot_face: :mag_right:",
+        "BESTAR_AFTER_CONFIRM_PROFILE_MSG_03": "Это может занять какое-то время :clock2:",
         "BESTAR_OPTIN_COMPLITED_MSG_01": "Твой профиль успешно зарегистрирован в BeFame :confetti_ball:",
         "BESTAR_OPTIN_COMPLITED_MSG_02": "Теперь ты можешь выкладывать посты в сервис и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры) :rocket:",
         "BESTAR_OPTIN_COMPLITED_MSG_03": "Добро пожаловать! :robot_face: :vulcan:",

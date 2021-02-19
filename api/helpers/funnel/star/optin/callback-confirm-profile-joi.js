@@ -80,6 +80,68 @@ module.exports = {
           input.client.accounts[currentAccountInd].profile_confirmed = true;
           input.block.next = 'optin::optin_completed';
 
+          /**
+           * Отправляем информационное сообщение клиенту
+           * о том, что выполняются действия, которые могут занять
+           * определённое время
+           */
+
+          /**
+           * Достаём данные PushMessage
+           */
+
+          const pushMessageName = currentAccount.service.push_message_name;
+
+          const pushMessageGetParams = {
+            pushMessageName,
+          };
+
+          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+
+          if (pushMessageGetRaw.status !== 'ok') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong pushMessageGetJoi response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessageGetParams,
+                pushMessageGetRaw,
+              },
+            });
+
+          }
+
+          const pushMessage = pushMessageGetRaw.payload;
+
+          const messageDataPath = 'funnels.optin.afterProfileConfirmed';
+          const messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
+
+          const infoMessageParams = {
+            client: input.client,
+            messageData,
+          };
+
+          await sails.helpers.messageProcessor.sendMessageJoi(infoMessageParams);
+
           await linkToRef(input.client);
 
           await updateDataAndAllocateRooms(input.client);
