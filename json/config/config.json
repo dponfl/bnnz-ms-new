@@ -1196,6 +1196,18 @@
           "pushToPaidPrice": 0
         }
       },
+      "friend": {
+        "period_01": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        },
+        "period_03": {
+          "list_price": 0,
+          "current_price": 0,
+          "pushToPaidPrice": 0
+        }
+      },
       "test_personal": {
         "period_01": {
           "list_price": 0,
@@ -1374,6 +1386,9 @@
           "star810": {
             "title": "BeFame-Star"
           },
+          "friend": {
+            "title": "BeFame-Friend"
+          },
           "test_personal": {
             "title": "BeFree"
           },
@@ -1393,10 +1408,10 @@
             "title": "BeLegend"
           },
           "test_commercial": {
-            "title": "BeFree"
+            "title": "BeFree-Commercial"
           },
           "test_commercial_initial": {
-            "title": "BeFree"
+            "title": "BeFree-Commercial"
           },
           "bronze_commercial": {
             "title": "BeMaster"
@@ -1513,6 +1528,21 @@
         "STAR_OPTIN_COMPLITED_MSG_01": "Твой профиль успешно зарегистрирован в BeFame :confetti_ball:",
         "STAR_OPTIN_COMPLITED_MSG_02": "Теперь ты можешь выкладывать посты в сервис и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры) :rocket:",
         "STAR_OPTIN_COMPLITED_MSG_03": "Добро пожаловать! :robot_face: :vulcan:",
+        "$$$$$$$$$$$$$$$$$$$$$_Friend_Optin": "*** ТОКЕНЫ ДЛЯ FRIEND КЕЙСА Optin ***",
+        "FR_START_MSG_01": "Привет, $FirstName$ :wave:",
+        "FR_START_MSG_02": "Меня зовут Робби — я искусственный интеллект BeFame.",
+        "FR_START_MSG_03": "Поздравляю! :tada:",
+        "FR_START_MSG_04": "Ты получаешь бесплатный доступ к сервису BeFame на персональных условиях :sunglasses:",
+        "FR_JOIN_REF_PREPARE_LIST_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе :tada:",
+        "FR_JOIN_REF_PREPARE_LIST_02": "Сервис готовит список профилей для подписки... Это может занять некоторое время :clock5:",
+        "FR_JOIN_REF_SUBSCRIBE_01": "Подпишись всего на 8 человек, после чего нажми на кнопку ниже, чтобы проверить подписку:",
+        "FR_JOIN_REF_DONE_01": "Отлично, проверка прошла успешно! :tada:",
+        "FR_JOIN_REF_DONE_02": "Твоя реферальная ссылка доступна в разделе ГЛАВНОЕ МЕНЮ => ЛИЧНЫЙ КАБИНЕТ => РЕФЕРАЛЬНАЯ ПРОГРАММА",
+        "FR_JOIN_REF_DONE_03": "Также ты можешь выкладывать посты и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры) и много других полезных функций :sunglasses:",
+        "FR_JOIN_REF_WITH_ERROR_MSG": "Пока система проверяем твою подписку, ты можешь выкладывать посты и получать комплексное продвижение своего аккаунта в Instagram (комментарии, лайки, сохранения, просмотры) и много других полезных функций :sunglasses:",
+        "FR_OPTIN_COMPLETED_01": "Если у тебя возникнут какие-либо вопросы, ты всегда можешь обратиться в тех поддержку :gear:",
+        "FR_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
+        "FR_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
         "$$$$$$$$$$$$$$$$$$$$$_Common_Main": "*** ТОКЕНЫ ДЛЯ ОБЩЕГО КЕЙСА Main ***",
         "COMMON_KEYBOARD_PLACE_POST_MSG_01": "Чтобы начать продвижение отправь ссылку на новый пост, нажав кнопку: «ЗАГРУЗИТЬ ССЫЛКУ НА ПОСТ»",
         "COMMON_KEYBOARD_PLACE_POST_MSG_02": "Если кнопки скрыты, нажми на [::] в строке отправки сообщения :wink:",

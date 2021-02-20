@@ -1,0 +1,847 @@
+{
+  "general": {
+    "inlineKeyboardButtonPressed": {
+      "deleteInlineKeyboard": {
+        "id": "inlineKeyboardButtonPressed",
+        "description": "***",
+        "actionType": "edit_message_markup",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "inline_keyboard": [
+          ]
+        }
+      },
+      "textMessageToSend": {
+        "id": "textMessageToSend",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "KEY_SELECTED_",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    },
+    "wrongForcedMessageReply": {
+      "howEnterInstProfile": {
+        "id": "how_enter_inst_profile",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_enter_inst_profile.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_ENTER_INST_PROFILE",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "howSendPost": {
+        "id": "how_send_post",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_send_post_link.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_SEND_POST",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "howGetToMainMenu": {
+        "id": "how_get_to_main_menu",
+        "description": "",
+        "actionType": "video",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "video": "video/p/general/how_get_to_main_menu.mp4",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_GENERAL_WRONG_FM_REPLY_HOW_GET_TO_MAIN_MENU",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    }
+  },
+  "tasks": {
+    "likes": {
+        "id": "start",
+        "description": "Задача: поставить лайк",
+        "actionType": "inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "common::tasks::callbackLikesJoi",
+        "blockModifyHelper": "common::tasks::blockModifyLikesJoi",
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_ACCOUNT",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_02",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "likes_comments": {
+        "id": "start",
+        "description": "Задача: оставить комментарий и поставить лайк",
+        "actionType": "inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "common::tasks::callbackLikesCommentsJoi",
+        "blockModifyHelper": "common::tasks::blockModifyLikesCommentsJoi",
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_ACCOUNT",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_01",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "likes_done": {
+        "id": "start",
+        "description": "Задание поставить лайк выполнено",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_DONE_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_DONE_02",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+          ]
+        }
+      },
+    "likes_not_done": {
+        "id": "start",
+        "description": "Задание поставить лайк не выполнено",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_NOT_DONE_ACTION_02",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "likes_comments_done": {
+        "id": "start",
+        "description": "Задание поставить лайк и оставить комментарий выполнено",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE_01",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_DONE_02",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+          ]
+        }
+      },
+    "likes_comments_not_done": {
+        "id": "start",
+        "description": "Задание поставить лайк и оставить комментарий не выполнено",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_03",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_04",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NOT_DONE_ACTION",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "likes_comments_no_like": {
+        "id": "start",
+        "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет лайка",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_02",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_LIKE_ACTION",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "likes_comments_no_comment": {
+        "id": "start",
+        "description": "Задание поставить лайк и оставить комментарий выполнено частично: нет комментария",
+        "actionType": "edit_message_text",
+        "initial": true,
+        "enabled": true,
+        "previous": null,
+        "show_time": 0,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_01",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_02",
+              "style": "b",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_03",
+              "style": "",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MSG_TASK_LIKE_COMMENT_NO_COMMENT_ACTION",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+                "url": "$PostLink$"
+              }
+            ]
+          ]
+        }
+      },
+    "onCheckButtonPressed": {
+      "id": "check_button_pressed",
+      "description": "Message on Check button pressed",
+      "actionType": "edit_message_text",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "show_time": 0,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_MSG_CHECK_BUTTON_PRESSED_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_MSG_CHECK_BUTTON_PRESSED_MSG_02",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+              "url": "$PostLink$"
+            }
+          ]
+        ]
+      }
+    },
+    "onParserError": {
+      "id": "on_parser_error",
+      "description": "Message on parser error > configured interval",
+      "actionType": "edit_message_text",
+      "initial": true,
+      "enabled": true,
+      "previous": null,
+      "show_time": 0,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "html": [
+          {
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_01",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_02",
+            "style": "",
+            "cr": "DCR"
+          },
+          {
+            "text": "COMMON_MSG_ON_PARSER_ERROR_MSG_03",
+            "style": "",
+            "cr": ""
+          }
+        ],
+        "inline_keyboard": [
+          [
+            {
+              "text": "COMMON_MSG_TASK_POST_LINK_BTN",
+              "url": "$PostLink$"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "funnels": {
+    "optin": {
+      "instParserErrorResponse": {
+        "checkProfile": {
+          "id": "check_profile_error",
+          "description": "",
+          "actionType": "text",
+          "initial": true,
+          "enabled": true,
+          "previous": null,
+          "show_time": 0,
+          "next": null,
+          "shown": false,
+          "beforeHelper": null,
+          "afterHelper": null,
+          "forcedHelper": null,
+          "callbackHelper": null,
+          "blockModifyHelper": null,
+          "message": {
+            "html": [
+              {
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_01",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_02",
+                "style": "",
+                "cr": "DCR"
+              },
+              {
+                "text": "COMMON_CHECK_PROFILE_ERROR_MSG_03",
+                "style": "",
+                "cr": ""
+              }
+            ],
+            "inline_keyboard": [
+            ]
+          }
+        }
+      }
+    }
+  },
+  "keyboards": {
+    "wrongMessage": {
+      "id": "wrong_message",
+      "description": "",
+      "actionType": "video",
+      "initial": true,
+      "enabled": true,
+      "show_time": 0,
+      "previous": null,
+      "next": null,
+      "shown": false,
+      "beforeHelper": null,
+      "afterHelper": null,
+      "forcedHelper": null,
+      "callbackHelper": null,
+      "blockModifyHelper": null,
+      "message": {
+        "video": "video/p/general/how_use_keyboard.mp4",
+        "mediaLibrary": true,
+        "html": [
+          {
+            "text": "COMMON_GENERAL_USE_KEYBOARD",
+            "style": "b",
+            "cr": ""
+          }
+        ]
+      }
+    },
+    "univer": {
+      "lesson01": {
+        "id": "lesson_01",
+        "description": "Lesson 01",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%9E%D1%81%D0%BD%D0%BE%D0%B2%D1%8B.%20%D0%9E%D1%84%D0%BE%D1%80%D0%BC%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B0%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%D0%B0%20%D0%B8%20%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D0%B9.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_01_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson02": {
+        "id": "lesson_02",
+        "description": "Lesson 02",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%92%D0%BE%D0%B2%D0%BB%D0%B5%D0%BA%D0%B0%D1%8E%D1%89%D0%B8%D0%B9%20%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82.%20%D0%9A%D0%B0%D0%BA%20%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D1%8B%D0%B5%20%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%81.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_02_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson03": {
+        "id": "lesson_03",
+        "description": "Lesson 03",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%A4%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B0%D1%83%D0%B4%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%B8.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_03_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "lesson04": {
+        "id": "lesson_04",
+        "description": "Lesson 04",
+        "actionType": "doc",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "doc": "doc/school/personal/%D0%98%D0%B4%D0%B5%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5%20%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D0%B8.pdf",
+          "mediaLibrary": true,
+          "html": [
+            {
+              "text": "COMMON_PM_UNIVER_LESSON_04_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    },
+    "ref": {
+      "refLink": {
+        "id": "ref_link",
+        "description": "ref_link",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_REF_LINK_MST_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_REF_LINK_MST_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    }
+  },
+  "scheduler": {
+    "refProfileSubscriptionCheck": {
+      "joinRefDone": {
+        "id": "join_ref_done",
+        "description": "",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_PM_DONE_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_PM_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "disableMainMenu": {
+        "id": "disable_main_menu",
+        "description": "",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_PM_DISABLE_MAIN_MENU_MSG",
+              "style": "b",
+              "cr": ""
+            }
+          ]
+        }
+      }
+    }
+  }
+}
