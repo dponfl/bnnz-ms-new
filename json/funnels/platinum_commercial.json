@@ -697,7 +697,7 @@
           [
             {
               "text": "COMMON_PAYMENT_ERROR_BTN_02",
-              "callback_data": "contact_support"
+              "url": "https://t.me/BeFameSupportBot"
             }
           ]
         ]
@@ -1262,7 +1262,7 @@
           [
             {
               "text": "BEBUSINESS_OPTIN_COMPLETED_BTN_02",
-              "url": "https://befame.ru/"
+              "url": "https://t.me/BeFameSupportBot"
             }
           ]
         ]
