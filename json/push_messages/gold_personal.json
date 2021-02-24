@@ -783,6 +783,41 @@
           ]
         }
       }
+    },
+    "presets": {
+      "presets": {
+        "id": "presets",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_PRESETS_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_PRESETS_BTN_01",
+                "url": "https://drive.google.com/drive/folders/1fbTtqBwYPCdW1L39mLvjdwdGBb56JBS7"
+              }
+            ]
+          ]
+        }
+      }
     }
   },
   "scheduler": {
