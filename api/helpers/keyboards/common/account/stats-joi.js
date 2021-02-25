@@ -120,7 +120,7 @@ module.exports = {
       });
 
 
-      const intervalStart = moment().subtract(5, 'days').startOf('day').format();
+      const intervalStart = moment().subtract(30, 'days').startOf('day').format();
       const intervalEnd = moment().format();
 
       /**
@@ -192,7 +192,7 @@ module.exports = {
 
           await LogProcessor.dbError({
             error: err,
-            message: 'Posts.count() error',
+            message: 'Posts.sum("receivedLikes") error',
             clientGuid,
             accountGuid,
             // requestId: null,
@@ -234,7 +234,7 @@ module.exports = {
 
           await LogProcessor.dbError({
             error: err,
-            message: 'Posts.count() error',
+            message: 'Posts.sum("receivedComments") error',
             clientGuid,
             accountGuid,
             // requestId: null,
