@@ -129,6 +129,33 @@
           ]
         }
       }
+    },
+    "holdOnMessages": {
+      "performsCalculation": {
+        "id": "text",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_GENERAL_HOLD_ON_PERFORMS_CALCULATINO",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      }
     }
   },
   "tasks": {
@@ -815,6 +842,48 @@
                 "url": "https://drive.google.com/drive/folders/1qmEaX0o7HqpaFDmr-ZFxPPYm8xSEEc_I"
               }
             ]
+          ]
+        }
+      }
+    },
+    "account": {
+      "stats": {
+        "id": "start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_ACCOUNT_STATS_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_ACCOUNT_STATS_MSG_02",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_ACCOUNT_STATS_MSG_03",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_ACCOUNT_STATS_MSG_04",
+              "style": "",
+              "cr": ""
+            }
           ]
         }
       }

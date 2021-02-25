@@ -178,7 +178,7 @@
           {
             "id": "stats",
             "text": "COMMON_KEYBOARD_ACCOUNT_START_BTN_01",
-            "action": null
+            "action": "common::account::statsJoi"
           },
           {
             "id": "ref",
