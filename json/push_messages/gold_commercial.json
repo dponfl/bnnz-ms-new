@@ -886,6 +886,56 @@
             }
           ]
         }
+      },
+      "changeAccount": {
+        "id": "start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_GENERAL_NEXT_RELEASE_OPTION",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "addAccount": {
+        "id": "start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_GENERAL_NEXT_RELEASE_OPTION",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
       }
     }
   },

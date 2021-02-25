@@ -190,12 +190,12 @@
           {
             "id": "change_account",
             "text": "COMMON_KEYBOARD_ACCOUNT_START_BTN_03",
-            "action": null
+            "action": "common::account::changeAccountJoi"
           },
           {
             "id": "new_account",
             "text": "COMMON_KEYBOARD_ACCOUNT_START_BTN_04",
-            "action": null
+            "action": "common::account::addAccountJoi"
           }
         ],
         [
