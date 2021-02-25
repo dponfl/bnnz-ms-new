@@ -120,7 +120,7 @@ module.exports = {
       });
 
 
-      const intervalStart = moment().subtract(3, 'days').startOf('day').format();
+      const intervalStart = moment().subtract(5, 'days').startOf('day').format();
       const intervalEnd = moment().format();
 
       /**
@@ -165,6 +165,91 @@ module.exports = {
         });
 
 
+      /**
+       * Количество полученных лайков
+       */
+
+      const numLikes = await Posts.sum('receivedLikes', {
+        where: {
+          createdAt: {
+            '>=': moment(intervalStart).format(),
+            '<=': moment(intervalEnd).format()
+          },
+          accountGuid,
+        },
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              createdAt: {
+                '>=': moment(intervalStart).format(),
+                '<=': moment(intervalEnd).format()
+              },
+              accountGuid,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.count() error',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              conditions: err.details,
+            },
+          });
+
+          return 0;
+        });
+
+
+      /**
+       * Количество полученных комментариев
+       */
+
+      const numComments = await Posts.sum('receivedComments', {
+        where: {
+          createdAt: {
+            '>=': moment(intervalStart).format(),
+            '<=': moment(intervalEnd).format()
+          },
+          accountGuid,
+        },
+      })
+        .tolerate(async (err) => {
+
+          err.details = {
+            where: {
+              createdAt: {
+                '>=': moment(intervalStart).format(),
+                '<=': moment(intervalEnd).format()
+              },
+              accountGuid,
+            },
+          };
+
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Posts.count() error',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: {
+              conditions: err.details,
+            },
+          });
+
+          return 0;
+        });
+
+
+
       messageDataPath = 'keyboards.account.stats';
       messageData = _.get(pushMessage, messageDataPath, null);
 
@@ -198,11 +283,11 @@ module.exports = {
           },
           {
             token: '$NumLikesReceived$',
-            value: 100,
+            value: numLikes,
           },
           {
             token: '$NumCommentsReceived$',
-            value: 100,
+            value: numComments,
           },
         ],
         disableWebPagePreview: true,
