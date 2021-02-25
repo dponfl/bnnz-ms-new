@@ -298,12 +298,12 @@
           {
             "id": "statistics",
             "text": "COMMON_KEYBOARD_REF_START_BTN_02",
-            "action": null
+            "action": "common::ref::refStatsJoi"
           },
           {
             "id": "get_ref_payout",
             "text": "COMMON_KEYBOARD_REF_START_BTN_03",
-            "action": null
+            "action": "common::ref::getRefPayoutJoi"
           }
         ],
         [

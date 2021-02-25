@@ -177,6 +177,7 @@ describe('Test emoji', function () {
 - cool :cool:
 - boom :boom:
 - clock3 :clock3:
+- globe_with_meridians :globe_with_meridians:
 
 Квесты
 

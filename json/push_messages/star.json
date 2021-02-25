@@ -844,6 +844,66 @@
             }
           ]
         }
+      },
+      "refStats": {
+        "id": "start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_REF_STATS_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_REF_STATS_MSG_02",
+              "style": "",
+              "cr": "SCR"
+            },
+            {
+              "text": "COMMON_REF_STATS_MSG_03",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "refPayout": {
+        "id": "start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_GENERAL_NEXT_RELEASE_OPTION",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
       }
     },
     "account": {
