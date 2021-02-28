@@ -250,11 +250,6 @@
             "id": "three",
             "text": "COMMON_KEYBOARD_UNIVER_START_BTN_03",
             "action": "common::univer::threeJoi"
-          },
-          {
-            "id": "four",
-            "text": "COMMON_KEYBOARD_UNIVER_START_BTN_04",
-            "action": "common::univer::fourJoi"
           }
         ],
         [
@@ -437,12 +432,19 @@
           {
             "id": "how_make_post",
             "text": "COMMON_KEYBOARD_HELP_START_BTN_01",
-            "action": null
+            "action": "common::help::howMakePostJoi"
           },
           {
             "id": "how_perform_task",
             "text": "COMMON_KEYBOARD_HELP_START_BTN_02",
-            "action": null
+            "action": "common::help::howPerformTaskJoi"
+          }
+        ],
+        [
+          {
+            "id": "get_support",
+            "text": "COMMON_HELP_GET_SUPPORT_MSG_01",
+            "action": "common::help::getSupportJoi"
           }
         ],
         [

@@ -130,9 +130,7 @@
             "id": "presets",
             "text": "COMMON_KEYBOARD_PRESETS_BTN_01",
             "action": "common::home::presetsJoi"
-          }
-        ],
-        [
+          },
           {
             "id": "help_menu",
             "text": "COMMON_KEYBOARD_HOME_START_BTN_03",
