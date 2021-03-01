@@ -78,10 +78,11 @@ module.exports = {
 
       /**
        * Определяем к какой категории push messages относиться callback
-       * (пока реализованы только вариант обработки callback для задач (префикс push_msg_tsk_)
+       * Реализованы только варианты обработки callback для:
+       *    1) задач (префикс push_msg_tsk_)
+       *    2) Chat Blasts (префикс push_msg_cb_)
        */
 
-      // TODO: Добавить вариант для обработки callback от Chat Blasts
 
       if (/^push_msg_tsk_/i.test(input.query.data)) {
 
