@@ -2231,6 +2231,8 @@
         "COMMON_MAIN_PENDING_TASKS_BTN_01": "Проверить выполнение заданий",
         "COMMON_MAIN_PENDING_TASKS_DONE_MSG_01": "Ты выполнил все полученные задания :thumbsup:",
         "COMMON_MAIN_PENDING_TASKS_DONE_MSG_02": "Спасибо!",
+        "COMMON_MAIN_PENDING_TASKS_SEARCH_MSG_01": "Система проверят выполнение заданий :recycle:",
+        "COMMON_MAIN_PENDING_TASKS_SEARCH_MSG_02": "Это может занять некоторое время :hourglass_flowing_sand:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts ***",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts test": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts test ***",
         "COMMON_CB_BTN_01": "Кнопка 1",
