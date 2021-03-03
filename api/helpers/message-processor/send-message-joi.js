@@ -206,7 +206,7 @@ module.exports = {
            * Send simple text message
            */
 
-          const htmlSimple = await MessageProcessor.parseMessageStyle({
+          const htmlSimpleRaw = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: messageData.message,
             additionalTokens,
@@ -216,9 +216,7 @@ module.exports = {
            * Call beforeHelper to update block if needed
            */
 
-            // put "beforeHelper" call here...
-
-
+          let {text: htmlSimple} = await activateBeforeHelper(input.client, messageData, htmlSimpleRaw, input.beforeHelperParams || null);
 
           const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
             chatId: input.client.chat_id,
@@ -457,15 +455,17 @@ module.exports = {
            * Send inline keyboard message
            */
 
-          const htmlInline = await MessageProcessor.parseMessageStyle({
+          const htmlInlineRaw = await MessageProcessor.parseMessageStyle({
             client: input.client,
             message: input.messageData.message,
             additionalTokens,
           });
 
+          let {text: htmlInline, inline_keyboard: keyboardInline} = await activateBeforeHelper(input.client, messageData, htmlInlineRaw, input.beforeHelperParams || null);
+
           const inlineKeyboard = await MessageProcessor.mapDeep({
             client: input.client,
-            data: input.messageData.message.inline_keyboard,
+            data: keyboardInline,
             additionalTokens,
           });
 
@@ -772,3 +772,66 @@ module.exports = {
 
 };
 
+async function activateBeforeHelper(client, block, htmlMsg, params) {
+
+  const clientGuid = client.guid;
+  const accountGuid = client.account_use;
+
+  let messageContent = {
+    text: htmlMsg,
+    inline_keyboard: block.message.inline_keyboard || null,
+    img: block.message.img || null,
+    video: block.message.video || null,
+    doc: block.message.doc || null,
+  };
+
+  if (!_.isNil(block.beforeHelper)) {
+
+    let splitBeforeHelperRes = _.split(block.beforeHelper, sails.config.custom.JUNCTION, 3);
+    let beforeHelperCategory = splitBeforeHelperRes[0];
+    let beforeHelperBlock = splitBeforeHelperRes[1];
+    let beforeHelperName = splitBeforeHelperRes[2];
+
+    if (beforeHelperCategory && beforeHelperBlock && beforeHelperName) {
+
+      /**
+       * We managed to parse the specified beforeHelper and can perform it
+       */
+
+      let beforeHelperParams = {
+        client: client,
+        messageContent,
+        additionalParams: params || null,
+      };
+
+      messageContent = await sails.helpers.pushMessages[beforeHelperCategory][beforeHelperBlock][beforeHelperName](beforeHelperParams);
+
+    } else {
+
+      /**
+       * Throw error: we could not parse the specified beforeHelper
+       */
+
+      await sails.helpers.general.throwErrorJoi({
+        errorType: sails.config.custom.enums.errorType.CRITICAL,
+        emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+        location: moduleName,
+        message: 'Could not parse beforeHelper name',
+        clientGuid,
+        accountGuid,
+        errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+        payload: {
+          beforeHelper: block.beforeHelper,
+          beforeHelperCategory,
+          beforeHelperBlock,
+          beforeHelperName,
+        },
+      });
+
+    }
+
+  }
+
+  return messageContent;
+
+}

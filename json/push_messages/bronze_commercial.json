@@ -1128,11 +1128,11 @@
         "previous": null,
         "next": null,
         "shown": false,
-        "beforeHelper": null,
+        "beforeHelper": "common::main::beforeHelperPendingTasksJoi",
         "afterHelper": null,
         "forcedHelper": null,
-        "callbackHelper": "common::tasks::callbackPendingTasksJoi",
-        "blockModifyHelper": "common::tasks::blockModifyPendingTasksJoi",
+        "callbackHelper": "common::main::callbackPendingTasksJoi",
+        "blockModifyHelper": null,
         "message": {
           "html": [
             {
@@ -1150,7 +1150,7 @@
             [
               {
                 "text": "COMMON_MAIN_PENDING_TASKS_BTN_01",
-                "callback_data": "check_tasks"
+                "callback_data": "push_msg_tsk_pending"
               }
             ]
           ]

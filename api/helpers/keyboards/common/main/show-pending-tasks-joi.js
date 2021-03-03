@@ -189,7 +189,7 @@ module.exports = {
          * Отправляем сообщение, что есть невыполненные задания
          */
 
-        const blockModifyHelperParams = pendingTasks;
+        const beforeHelperParams = pendingTasks;
 
         const messageDataPath = 'keyboards.main.pending_tasks';
         const messageData = _.get(pushMessage, messageDataPath, null);
@@ -213,7 +213,8 @@ module.exports = {
         await sails.helpers.messageProcessor.sendMessageJoi({
           client,
           messageData,
-          blockModifyHelperParams,
+          beforeHelperParams,
+          disableWebPagePreview: true,
         });
 
 
