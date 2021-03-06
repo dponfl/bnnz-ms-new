@@ -1108,11 +1108,6 @@
             {
               "text": "COMMON_MAIN_NO_PENDING_TASKS_MSG_01",
               "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "COMMON_MAIN_NO_PENDING_TASKS_MSG_02",
-              "style": "",
               "cr": ""
             }
           ]
@@ -1175,11 +1170,6 @@
           "html": [
             {
               "text": "COMMON_MAIN_PENDING_TASKS_DONE_MSG_01",
-              "style": "",
-              "cr": "SCR"
-            },
-            {
-              "text": "COMMON_MAIN_PENDING_TASKS_DONE_MSG_02",
               "style": "",
               "cr": ""
             }

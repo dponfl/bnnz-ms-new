@@ -80,14 +80,14 @@ module.exports = {
         token: "COMMON_MAIN_PENDING_TASKS_MAKE_LIKE",
       });
 
-      const putCommentStr = await MessageProcessor.parseStr({
+      const putCommentStr01 = await MessageProcessor.parseStr({
         client,
-        token: "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT",
+        token: "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT_01",
       });
 
-      const andStr = await MessageProcessor.parseStr({
+      const putCommentStr02 = await MessageProcessor.parseStr({
         client,
-        token: "COMMON_MAIN_PENDING_TASKS_AND",
+        token: "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT_02",
       });
 
       for (const pendingTask of pendingTasks) {
@@ -137,15 +137,15 @@ module.exports = {
         && !pendingTask.makeLikePerformed
         && pendingTask.makeComment
         && !pendingTask.makeCommentPerformed) {
-          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink} :point_left: ${makeLikeStr} ${andStr} ${putCommentStr}${sails.config.custom.SCR}`;
+          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink}${sails.config.custom.SCR}${makeLikeStr}${sails.config.custom.SCR}${putCommentStr01}${sails.config.custom.SCR}${putCommentStr02}${sails.config.custom.DCR}`;
         }
         else if (pendingTask.makeLike
           && !pendingTask.makeLikePerformed) {
-          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink} :point_left: ${makeLikeStr}${sails.config.custom.SCR}`;
+          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink}${sails.config.custom.SCR}${makeLikeStr}${sails.config.custom.DCR}`;
         }
         else if (pendingTask.makeComment
           && !pendingTask.makeCommentPerformed) {
-          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink} :point_left: ${putCommentStr}${sails.config.custom.SCR}`;
+          postsAndActions = postsAndActions + `:point_right: ${postRec.postLink}${sails.config.custom.SCR}${putCommentStr01}${sails.config.custom.SCR}${putCommentStr02}${sails.config.custom.DCR}`;
         }
 
       }

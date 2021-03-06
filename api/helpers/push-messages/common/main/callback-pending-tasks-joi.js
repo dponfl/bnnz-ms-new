@@ -1175,7 +1175,7 @@ module.exports = {
            * Отправляем сообщение, что нет невыполненных заданий
            */
 
-          messageDataPath = 'keyboards.main.no_pending_tasks';
+          messageDataPath = 'keyboards.main.pending_tasks_done';
           messageData = _.get(pushMessage, messageDataPath, null);
 
           if (messageData == null) {
