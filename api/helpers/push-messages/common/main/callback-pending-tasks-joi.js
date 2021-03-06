@@ -55,203 +55,69 @@ module.exports = {
 
     let input;
 
+    let client;
     let clientGuid;
     let accountGuid;
 
     let checkLikesJoiRaw;
-    let taskPerformRes;
+    let checkCommentsJoiRaw;
 
     let parserStatus = '';
-    const parserRequestIntervals = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
+    const parserRequestIntervalsLikes = sails.config.custom.config.parsers.inst.errorSteps.checkLikes.intervals;
+    const parserRequestIntervalsComments = sails.config.custom.config.parsers.inst.errorSteps.checkComments.intervals;
     const parserRequestIntervalTime = sails.config.custom.config.parsers.inst.errorSteps.intervalTime;
     const notificationsLikes = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkLikes.notifications);
+    const notificationsComments = _.cloneDeep(sails.config.custom.config.parsers.inst.errorSteps.checkComments.notifications);
 
-    let activeParser = null;
+    let activeParserLikes = null;
+    let activeParserComments = null;
+
     const parserPlatformName = 'instagram';
-    const parserModuleName = 'checkLikes';
+    const parserModuleNameLikes = 'checkLikes';
+    const parserModuleNameComments = 'checkComments';
+
+    let momentStart;
+    let iLikes;
+    let iComments;
 
     let pushMessage;
+    let pushMessageName;
+    let pushMessageGetParams;
+    let pushMessageGetRaw;
+    let messageDataPath;
+    let messageData;
+
+    let pendingTasks;
+
+    let checkLikesList = [];
+    let checkCommentsList = [];
+
+    let instProfile;
 
     try {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
-
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-
       const client = input.client;
 
-      const queryDataRegExp = /push_msg_tsk_l_(\S+)/;
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const queryData = queryDataRegExp.exec(input.query.data);
+      const currentAccount = _.find(client.accounts, {guid: client.account_use});
 
-      if (queryData == null || queryData.length !== 2) {
-        // throw new Error(`${moduleName}, Error: query.data has wrong format: ${input.query.data}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'query.data has wrong format',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            queryData: input.query.data,
-          },
-        });
-
-      }
-
-      const taskGuid = queryData[1];
-
-      if (!uuid.isUUID(taskGuid)) {
-        // throw new Error(`${moduleName}, Error: query.data task code is not a guid: ${taskGuid}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'query.data task code is not a guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskGuid,
-          },
-        });
-
-      }
-
-      /**
-       * Получаем информацию по заданию
-       */
-
-      const taskRecRaw = await sails.helpers.storage.tasksGetJoi({
-        guid: taskGuid,
-      });
-
-      if (taskRecRaw.payload.length > 1) {
-        // throw new Error(`${moduleName}, Error: Several tasks with the same guid:
-        // guid: ${taskGuid}
-        // tasks: ${JSON.stringify(taskRecRaw.payload, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'Several tasks with the same guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskGuid,
-            taskRecRaw,
-          },
-        });
-
-      }
-
-      if (taskRecRaw.payload.length === 0) {
-        // throw new Error(`${moduleName}, Error: No tasks for this guid: ${taskGuid}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'No tasks for this guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskGuid,
-          },
-        });
-
-      }
-
-      const taskRec = taskRecRaw.payload[0];
-
-      const account = _.find(input.client.accounts, {guid: taskRec.accountGuid});
-
-      if (account == null) {
-        // throw new Error(`${moduleName}, Error: No account found for this guid: ${taskRec.accountGuid}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'No account found for this guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskRecAccountGuid: taskRec.accountGuid,
-          },
-        });
-
-      }
-
-      const instProfile = account.inst_profile;
-
-      const postRecRaw = await sails.helpers.storage.postsGetJoi({guid: taskRec.postGuid});
-
-      if (
-        _.isArray(postRecRaw.payload)
-        && postRecRaw.payload.length === 0
-      ) {
-        // throw new Error(`${moduleName}, Error: No post found for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'No post found for this guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskRecPostGuid: taskRec.postGuid,
-            postRecRaw,
-          },
-        });
-
-      }
-
-      if (postRecRaw.payload.length !== 1) {
-        // throw new Error(`${moduleName}, Error: More than one record for this guid: ${taskRec.postGuid}, res: \n${JSON.stringify(postRecRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'More than one record for this guid',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            taskRecPostGuid: taskRec.postGuid,
-            postRecRaw,
-          },
-        });
-
-      }
-
-      const postRec = postRecRaw.payload[0];
-
-      const postMediaId = postRec.mediaId;
-      const shortCode = postRec.shortCode;
-
-      /**
-       * Отправляем сообщение, что начинаем проверку задания и убираем кнопку проверки задания
-       */
+      instProfile = currentAccount.inst_profile;
 
       /**
        * Достаём данные PushMessage
        */
 
-      const pushMessageName = currentAccount.service.push_message_name;
+      pushMessageName = currentAccount.service.push_message_name;
 
-      const pushMessageGetParams = {
+      pushMessageGetParams = {
         pushMessageName,
       };
 
-      const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
+      pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
 
       if (pushMessageGetRaw.status !== 'ok') {
         await sails.helpers.general.throwErrorJoi({
@@ -271,8 +137,13 @@ module.exports = {
 
       pushMessage = pushMessageGetRaw.payload;
 
-      const messageDataPath = 'tasks.onCheckButtonPressed';
-      const messageData = _.get(pushMessage, messageDataPath, null);
+      /**
+       * Отправляем сообщение, что начинаем проверку заданий
+       */
+
+
+      messageDataPath = 'keyboards.main.pending_tasks_search';
+      messageData = _.get(pushMessage, messageDataPath, null);
 
       if (messageData == null) {
         await sails.helpers.general.throwErrorJoi({
@@ -290,517 +161,988 @@ module.exports = {
         });
       }
 
-      taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
-        client: input.client,
-        messageData,
-        additionalTokens: [
-          {
-            token: '$PostLink$',
-            value: postRec.postLink,
-          },
-        ],
-        additionalParams: {
-          chat_id: input.client.chat_id,
-          message_id: taskRec.messageId,
-          disable_web_page_preview: true,
-        },
-      });
-
-
-      /**
-       * Проверка выполнения задания с использванием парсера
-       */
-
-      /**
-       * Получаем имя парсера
-       */
-
-      const getParserParams = {
-        platformName: parserPlatformName,
-        moduleName: parserModuleName,
-      };
-
-      activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
-
-      notificationsLikes.map((item) => {
-        item.clientNotified = false;
-        item.adminNotified = false;
-      });
-
-      const checkLikesParams = {
+      await sails.helpers.messageProcessor.sendMessageJoi({
         client,
-        instProfile,
-        shortCode,
-        postMediaId,
-      };
-
-      let i = 0;
-
-      const momentStart = moment();
-
-      while (parserStatus !== 'success' && i < parserRequestIntervals.length) {
-
-        if (activeParser != null) {
-
-          checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParser].checkLikesJoi(checkLikesParams);
-
-          parserStatus = checkLikesJoiRaw.status;
-
-        } else {
-
-          parserStatus = 'error';
-
-        }
+        messageData,
+      });
 
 
-        if (parserStatus !== 'success') {
+      /**
+       * Получаем список невыполненных заданий на текущий момент
+       */
 
-          if (activeParser != null) {
-
-            /**
-             * выставляем флаг, что парсер неактивен
-             */
-
-            const apiStatusUpdateParams = {
-              platformName: parserPlatformName,
-              moduleName: parserModuleName,
-              parserName: activeParser,
-              data: {
-                key: 'active',
-                value: false,
-              },
-              createdBy: moduleName,
-            };
-
-            await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
-
+      const pendingTasksGetParams = {
+        or: [
+          {
+            accountGuid,
+            makeLike: true,
+            makeLikePerformed: false,
+          },
+          {
+            accountGuid,
+            makeComment: true,
+            makeCommentPerformed: false,
           }
-
-          /**
-           * Проверяем условие отправки информационного сообщения клиенту
-           * и логируем факт факапа парсера с фиксацией текущего интервала
-           */
-
-          const momentNow = moment();
-
-          const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
-
-          for (const likeErrorNotification of notificationsLikes) {
-
-            if (requestDuration > likeErrorNotification.notificationInterval * parserRequestIntervalTime) {
-
-              if (likeErrorNotification.sendMessageToClient && !likeErrorNotification.clientNotified) {
-
-                /**
-                 * Трансформируем блок в информационное сообщение о факапе API
-                 */
-
-                /**
-                 * Достаём данные PushMessage
-                 */
-
-                const pushMessageName = currentAccount.service.push_message_name;
-
-                const pushMessageGetParams = {
-                  pushMessageName,
-                };
-
-                const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
-
-                if (pushMessageGetRaw.status !== 'ok') {
-                  await sails.helpers.general.throwErrorJoi({
-                    errorType: sails.config.custom.enums.errorType.ERROR,
-                    location: moduleName,
-                    message: 'Wrong pushMessageGetJoi response',
-                    clientGuid,
-                    accountGuid,
-                    errorName: sails.config.custom.STORAGE_ERROR.name,
-                    payload: {
-                      pushMessageGetParams,
-                      pushMessageGetRaw,
-                    },
-                  });
-
-                }
-
-                pushMessage = pushMessageGetRaw.payload;
-
-                const messageDataPath = 'tasks.onParserError';
-                const messageData = _.get(pushMessage, messageDataPath, null);
-
-                if (messageData == null) {
-                  await sails.helpers.general.throwErrorJoi({
-                    errorType: sails.config.custom.enums.errorType.ERROR,
-                    location: moduleName,
-                    message: 'No expected messageData',
-                    clientGuid,
-                    accountGuid,
-                    errorName: sails.config.custom.STORAGE_ERROR.name,
-                    payload: {
-                      pushMessage,
-                      messageDataPath,
-                      messageData,
-                    },
-                  });
-                }
-
-                taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
-                  client: input.client,
-                  messageData,
-                  additionalTokens: [
-                    {
-                      token: '$PostLink$',
-                      value: postRec.postLink,
-                    },
-                  ],
-                  additionalParams: {
-                    chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId,
-                    disable_web_page_preview: true,
-                  },
-                });
-
-                likeErrorNotification.clientNotified = true;
-
-              }
-
-              if (likeErrorNotification.sendMessageToAdmin && !likeErrorNotification.adminNotified) {
-
-                /**
-                 * Генерим сообщение о критической ошибке
-                 */
-
-                await LogProcessor.critical({
-                  message: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.message,
-                  clientGuid,
-                  accountGuid,
-                  // requestId: null,
-                  // childRequestId: null,
-                  errorName: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.name,
-                  location: moduleName,
-                  emergencyLevel: likeErrorNotification.emergencyLevel,
-                  payload: {
-                    notificationInterval: `${likeErrorNotification.notificationInterval} seconds`,
-                    activeParser,
-                  },
-                });
-
-                likeErrorNotification.adminNotified = true;
-
-              }
-
-            }
-
-          }
-
-          await sleep(parserRequestIntervals[i] * parserRequestIntervalTime);
-
-          activeParser = await sails.helpers.parsers.getParserJoi(getParserParams);
-
-        }
-
-        i++;
-
+        ]
       }
 
-      if (parserStatus !== 'success') {
+      pendingTasks = await Tasks.find(pendingTasksGetParams)
+        .tolerate(async (err) => {
 
-        /**
-         * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
-         */
+          err.details = pendingTasksGetParams;
 
-        // sails.log.error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
-        //
-        // throw new Error(`${moduleName}: Успешный ответ от парсера так и не был получен`);
+          await LogProcessor.dbError({
+            error: err,
+            message: 'Tasks.find() error',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            location: moduleName,
+            payload: pendingTasksGetParams,
+          });
 
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
-          location: moduleName,
-          message: 'Successful response WAS NOT RECEIVED from parser',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {},
+          return null;
         });
 
-      }
-
-      /**
-       * Корректный ответ от парсера БЫЛ ПОЛУЧЕН
-       */
-
-      const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
-
-      if (likeDone === 'none') {
-        // throw new Error(`${moduleName}, error: wrong checkLikesJoi response: no payload.likeMade
-        // checkLikesParams: ${JSON.stringify(checkLikesParams, null, 3)}
-        // checkLikesJoiRaw: ${JSON.stringify(checkLikesJoiRaw, null, 3)}`);
-
+      if (pendingTasks == null) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
-          message: 'Wrong checkLikesJoi response: no payload.likeMade',
+          message: 'Tasks.find() error',
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
-          payload: {
-            checkLikesParams,
-            checkLikesJoiRaw,
-          },
+          errorName: sails.config.custom.DB_ERROR_MEDIUM.name,
+          payload: pendingTasksGetParams,
         });
-
       }
 
-      let taskData = {
-        makeLikePerformed: taskRec.makeLikePerformed,
-        makeCommentPerformed: taskRec.makeCommentPerformed,
-      };
+      if (pendingTasks.length > 0) {
 
-      let postData = {
-        receivedLikes: postRec.receivedLikes,
-        receivedComments: postRec.receivedComments,
-        allLikesDone: postRec.allLikesDone,
-        allCommentsDone: postRec.allCommentsDone,
-      };
-
-      if (likeDone) {
-
-        /**
-         * Выполняем действия для случая успешного выполнения задания
-         */
-
-        taskData.makeLikePerformed = true;
-        postData.receivedLikes++;
-        postData.allLikesDone = postData.receivedLikes >= postRec.requestedLikes;
-
-
-        /**
-         * Используем DB lock
-         */
-
-        const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
-
-        const sqlGetLockPerformTask = `
-    SELECT GET_LOCK('performTasksLock', ${lockTimeOut}) as getPerformTaskLockResult
-    `;
-
-        const sqlReleaseLockPerformTask = `
-    SELECT RELEASE_LOCK('performTasksLock') as releasePerformTaskLockResult
-    `;
-
-        await sails.getDatastore('clientDb')
-          .leaseConnection(async (db) => {
-
-            try {
-
-              const resGetLock = await sails
-                .sendNativeQuery(sqlGetLockPerformTask)
-                .usingConnection(db);
-
-              const getLockRes = _.get(resGetLock, 'rows[0].getPerformTaskLockResult', null);
-
-              if (getLockRes == null) {
-                await sails.helpers.general.throwErrorJoi({
-                  errorType: sails.config.custom.enums.errorType.CRITICAL,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
-                  errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
-                  payload: {
-                    resGetLock,
-                  },
-                });
-              }
-
-              if (getLockRes === 0) {
-                await sails.helpers.general.throwErrorJoi({
-                  errorType: sails.config.custom.enums.errorType.CRITICAL,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
-                  errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
-                  payload: {
-                    resGetLock,
-                  },
-                });
-              }
-
-              /**
-               * Обновляем записи в таблицах Tasks & Posts
-               */
-
-              await sails.helpers.storage.tasksUpdateJoi({
-                criteria: {
-                  guid: taskRec.guid,
-                },
-                data: taskData,
-              });
-
-              await sails.helpers.storage.postsUpdateJoi({
-                criteria: {
-                  guid: postRec.guid,
-                },
-                data: postData,
-              });
-
-              /**
-               * Обновляем запись в таблице Account
-               */
-
-              await sails.helpers.storage.accountUpdateJoi({
-                criteria: {guid: account.guid},
-                data: {
-                  made_likes_day: ++account.made_likes_day,
-                  made_likes_total: ++account.made_likes_total,
-                },
-                createdBy: moduleName,
-              });
-
-              const ReleaseLock = await sails
-                .sendNativeQuery(sqlReleaseLockPerformTask)
-                .usingConnection(db);
-
-              const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
-
-              if (releaseLockRes == null) {
-                await LogProcessor.critical({
-                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                  // clientGuid,
-                  // accountGuid,
-                  // requestId: null,
-                  // childRequestId: null,
-                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  payload: {
-                    releaseLockRes,
-                  },
-                });
-              }
-
-              if (releaseLockRes === 0) {
-                await LogProcessor.critical({
-                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                  // clientGuid,
-                  // accountGuid,
-                  // requestId: null,
-                  // childRequestId: null,
-                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  payload: {
-                    releaseLockRes,
-                  },
-                });
-              }
-
-              return;
-
-            } catch (ee) {
-
-              const ReleaseLock = await sails
-                .sendNativeQuery(sqlReleaseLockPerformTask)
-                .usingConnection(db);
-
-              const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
-
-              if (releaseLockRes == null) {
-                await LogProcessor.critical({
-                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                  // clientGuid,
-                  // accountGuid,
-                  // requestId: null,
-                  // childRequestId: null,
-                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  payload: {
-                    releaseLockRes,
-                  },
-                });
-              }
-
-              if (releaseLockRes === 0) {
-                await LogProcessor.critical({
-                  message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                  // clientGuid,
-                  // accountGuid,
-                  // requestId: null,
-                  // childRequestId: null,
-                  errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
-                  emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-                  location: moduleName,
-                  payload: {
-                    releaseLockRes,
-                  },
-                });
-              }
-
-              const throwError = true;
-              if (throwError) {
-                return await sails.helpers.general.catchErrorJoi({
-                  error: ee,
-                  location: moduleName,
-                  throwError: true,
-                });
-              } else {
-                await sails.helpers.general.catchErrorJoi({
-                  error: ee,
-                  location: moduleName,
-                  throwError: false,
-                });
-                return exits.success({
-                  status: 'ok',
-                  message: `${moduleName} performed`,
-                  payload: {},
-                });
-              }
-
-            }
-
-          }); // .leaseConnection()
-
-
-
-        /**
-         * Трансформируем в чате аккаунта сообщение с требованием выполнить задание
-         * в сообщение, что задание успешно выполнено
-         */
-
-        if (taskRec.messageId != null) {
+        for (const pendingTask of pendingTasks) {
 
           /**
-           * Достаём данные PushMessage
+           * Добавляем в структуру задач информацию о параметрах shortCode & mediaId
+           * из таблицы Posts
            */
 
-          const pushMessageName = currentAccount.service.push_message_name;
+          /**
+           * Вытаскиваем данные поста
+           */
 
-          const pushMessageGetParams = {
-            pushMessageName,
-          };
+          const postRecRaw = await sails.helpers.storage.postsGetJoi({guid: pendingTask.postGuid});
 
-          const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
-
-          if (pushMessageGetRaw.status !== 'ok') {
+          if (
+            _.isArray(postRecRaw.payload)
+            && postRecRaw.payload.length === 0
+          ) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.ERROR,
               location: moduleName,
-              message: 'Wrong pushMessageGetJoi response',
+              message: 'No post found for this guid',
               clientGuid,
               accountGuid,
-              errorName: sails.config.custom.STORAGE_ERROR.name,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessageGetParams,
-                pushMessageGetRaw,
+                taskRecPostGuid: pendingTask.postGuid,
+                postRecRaw,
               },
+            });
+          }
+
+          if (postRecRaw.payload.length !== 1) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'More than one record for this guid',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                taskRecPostGuid: pendingTask.postGuid,
+                postRecRaw,
+              },
+            });
+          }
+
+          const postRec = postRecRaw.payload[0];
+
+          _.assign(pendingTask, {postRec});
+
+          /**
+           * Формируем список для проверки лайков
+           */
+
+          if (pendingTask.makeLike && !pendingTask.makeLikePerformed) {
+            checkLikesList.push(pendingTask);
+          }
+
+          /**
+           * Формируем список для проверки комментариев
+           */
+
+          if (pendingTask.makeComment && !pendingTask.makeCommentPerformed) {
+            checkCommentsList.push(pendingTask);
+          }
+
+        }
+
+
+        notificationsLikes.map((item) => {
+          item.clientNotified = false;
+          item.adminNotified = false;
+        });
+
+        notificationsComments.map((item) => {
+          item.clientNotified = false;
+          item.adminNotified = false;
+        });
+
+        /**
+         * Проверяем парсером каждое задание из списка для проверки лайков
+         */
+
+        /**
+         * Получаем имя парсера
+         */
+
+        const getParserParamsLikes = {
+          platformName: parserPlatformName,
+          moduleName: parserModuleNameLikes,
+        };
+
+        activeParserLikes = await sails.helpers.parsers.getParserJoi(getParserParamsLikes);
+
+        for (const checkLike of checkLikesList) {
+
+          const checkLikesParams = {
+            client,
+            instProfile,
+            shortCode: checkLike.postRec.shortCode,
+            postMediaId: checkLike.postRec.mediaId,
+          };
+
+          iLikes = 0;
+
+          momentStart = moment();
+
+          while (parserStatus !== 'success' && iLikes < parserRequestIntervalsLikes.length) {
+
+            if (activeParserLikes != null) {
+
+              checkLikesJoiRaw = await sails.helpers.parsers.inst[activeParserLikes].checkLikesJoi(checkLikesParams);
+
+              parserStatus = checkLikesJoiRaw.status;
+
+            } else {
+
+              parserStatus = 'error';
+
+            }
+
+            if (parserStatus !== 'success') {
+
+              if (activeParserLikes != null) {
+
+                /**
+                 * выставляем флаг, что парсер неактивен
+                 */
+
+                const apiStatusUpdateParams = {
+                  platformName: parserPlatformName,
+                  moduleName: parserModuleNameLikes,
+                  parserName: activeParserLikes,
+                  data: {
+                    key: 'active',
+                    value: false,
+                  },
+                  createdBy: moduleName,
+                };
+
+                await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+              }
+
+
+              /**
+               * Проверяем условие отправки информационного сообщения клиенту
+               * и логируем факт факапа парсера с фиксацией текущего интервала
+               */
+
+              const momentNow = moment();
+
+              const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+              for (const likeErrorNotification of notificationsLikes) {
+
+                if (requestDuration > likeErrorNotification.notificationInterval * parserRequestIntervalTime) {
+
+                  if (likeErrorNotification.sendMessageToClient && !likeErrorNotification.clientNotified) {
+
+                    /**
+                     * Информируем клиента при факапе API парсера
+                     */
+
+                    messageDataPath = 'keyboards.main.pending_tasks_parser_error';
+                    messageData = _.get(pushMessage, messageDataPath, null);
+
+                    if (messageData == null) {
+                      await sails.helpers.general.throwErrorJoi({
+                        errorType: sails.config.custom.enums.errorType.ERROR,
+                        location: moduleName,
+                        message: 'No expected messageData',
+                        clientGuid,
+                        accountGuid,
+                        errorName: sails.config.custom.STORAGE_ERROR.name,
+                        payload: {
+                          pushMessage,
+                          messageDataPath,
+                          messageData,
+                        },
+                      });
+                    }
+
+                    await sails.helpers.messageProcessor.sendMessageJoi({
+                      client: input.client,
+                      messageData,
+                    });
+
+                    likeErrorNotification.clientNotified = true;
+
+                  }
+
+                  if (likeErrorNotification.sendMessageToAdmin && !likeErrorNotification.adminNotified) {
+
+                    /**
+                     * Генерим сообщение о критической ошибке
+                     */
+
+                    await LogProcessor.critical({
+                      message: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.message,
+                      clientGuid,
+                      accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      errorName: sails.config.custom.INST_PARSER_CHECK_LIKES_ERROR.name,
+                      location: moduleName,
+                      emergencyLevel: likeErrorNotification.emergencyLevel,
+                      payload: {
+                        notificationInterval: `${likeErrorNotification.notificationInterval} seconds`,
+                        activeParserLikes,
+                      },
+                    });
+
+                    likeErrorNotification.adminNotified = true;
+
+                  }
+
+                }
+
+              }
+
+              await sleep(parserRequestIntervalsLikes[iLikes] * parserRequestIntervalTime);
+
+              activeParserLikes = await sails.helpers.parsers.getParserJoi(getParserParamsLikes);
+
+            }
+
+            iLikes++;
+
+          }
+
+          if (parserStatus !== 'success') {
+
+            /**
+             * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+             */
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+              location: moduleName,
+              message: 'Likes check: Successful response WAS NOT RECEIVED from parser',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {},
             });
 
           }
 
-          pushMessage = pushMessageGetRaw.payload;
+          const likeDone = _.get(checkLikesJoiRaw, 'payload.likeMade', 'none');
 
-          const messageDataPath = 'tasks.likes_done';
+          if (likeDone === 'none') {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong checkLikesJoi response: no payload.likeMade',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                checkLikesParams,
+                checkLikesJoiRaw,
+              },
+            });
+          }
+
+          if (likeDone) {
+
+            checkLike.makeLikePerformed = true;
+            checkLike.postRec.receivedLikes++;
+            checkLike.postRec.allLikesDone = checkLike.postRec.receivedLikes >= checkLike.postRec.requestedLikes;
+
+          }
+
+          /**
+           * Используем DB lock
+           */
+
+          const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
+
+          const sqlGetLockPerformTask = `
+    SELECT GET_LOCK('performTasksLock', ${lockTimeOut}) as getPerformTaskLockResult
+    `;
+
+          const sqlReleaseLockPerformTask = `
+    SELECT RELEASE_LOCK('performTasksLock') as releasePerformTaskLockResult
+    `;
+
+          await sails.getDatastore('clientDb')
+            .leaseConnection(async (db) => {
+
+              try {
+
+                const resGetLock = await sails
+                  .sendNativeQuery(sqlGetLockPerformTask)
+                  .usingConnection(db);
+
+                const getLockRes = _.get(resGetLock, 'rows[0].getPerformTaskLockResult', null);
+
+                if (getLockRes == null) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.CRITICAL,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                    errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                    payload: {
+                      resGetLock,
+                    },
+                  });
+                }
+
+                if (getLockRes === 0) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.CRITICAL,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                    errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                    payload: {
+                      resGetLock,
+                    },
+                  });
+                }
+
+                /**
+                 * Обновляем записи в таблицах Tasks & Posts
+                 */
+
+                await sails.helpers.storage.tasksUpdateJoi({
+                  criteria: {
+                    guid: checkLike.guid,
+                  },
+                  data: {
+                    makeLikePerformed: checkLike.makeLikePerformed,
+                  },
+                });
+
+                await sails.helpers.storage.postsUpdateJoi({
+                  criteria: {
+                    guid: checkLike.postRec.guid,
+                  },
+                  data: {
+                    receivedLikes: checkLike.postRec.receivedLikes,
+                    allLikesDone: checkLike.postRec.allLikesDone,
+                  },
+                });
+
+                /**
+                 * Обновляем запись в таблице Account
+                 */
+
+                await sails.helpers.storage.accountUpdateJoi({
+                  criteria: {guid: currentAccount.guid},
+                  data: {
+                    made_likes_day: likeDone
+                      ? ++currentAccount.made_likes_day
+                      : currentAccount.made_likes_day,
+                    made_likes_total: likeDone
+                      ? ++currentAccount.made_likes_total
+                      : currentAccount.made_likes_total,
+                  },
+                  createdBy: moduleName,
+                });
+
+                const ReleaseLock = await sails
+                  .sendNativeQuery(sqlReleaseLockPerformTask)
+                  .usingConnection(db);
+
+                const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+                if (releaseLockRes == null) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                    clientGuid,
+                    accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                if (releaseLockRes === 0) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                    clientGuid,
+                    accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                return;
+
+              } catch (ee) {
+
+                const ReleaseLock = await sails
+                  .sendNativeQuery(sqlReleaseLockPerformTask)
+                  .usingConnection(db);
+
+                const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+                if (releaseLockRes == null) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                if (releaseLockRes === 0) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                const throwError = true;
+                if (throwError) {
+                  return await sails.helpers.general.catchErrorJoi({
+                    error: ee,
+                    location: moduleName,
+                    throwError: true,
+                  });
+                } else {
+                  await sails.helpers.general.catchErrorJoi({
+                    error: ee,
+                    location: moduleName,
+                    throwError: false,
+                  });
+                  return exits.success({
+                    status: 'ok',
+                    message: `${moduleName} performed`,
+                    payload: {},
+                  });
+                }
+
+              }
+
+            }); // .leaseConnection()
+
+        }
+
+        /**
+         * Проверяем парсером каждое задание из списка для проверки комментариев
+         */
+
+        /**
+         * Получаем имя парсера
+         */
+
+        const getParserParamsComments = {
+          platformName: parserPlatformName,
+          moduleName: parserModuleNameComments,
+        };
+
+        activeParserComments = await sails.helpers.parsers.getParserJoi(getParserParamsComments);
+
+        parserStatus = '';
+
+        for (const checkComment of checkCommentsList) {
+
+          const checkCommentsParams = {
+            client,
+            instProfile,
+            shortCode: checkComment.postRec.shortCode,
+            postMediaId: checkComment.postRec.mediaId,
+          };
+
+          iComments = 0;
+
+          momentStart = moment();
+
+          while (parserStatus !== 'success' && iComments < parserRequestIntervalsComments.length) {
+
+            if (activeParserComments != null) {
+
+              checkCommentsJoiRaw = await sails.helpers.parsers.inst[activeParserComments].checkCommentsJoi(checkCommentsParams);
+
+              parserStatus = checkCommentsJoiRaw.status;
+
+            } else {
+
+              parserStatus = 'error';
+
+            }
+
+
+            if (parserStatus !== 'success') {
+
+              if (activeParserComments != null) {
+
+                /**
+                 * выставляем флаг, что парсер неактивен
+                 */
+
+                const apiStatusUpdateParams = {
+                  platformName: parserPlatformName,
+                  moduleName: parserModuleNameComments,
+                  parserName: activeParserComments,
+                  data: {
+                    key: 'active',
+                    value: false,
+                  },
+                  createdBy: moduleName,
+                };
+
+                await sails.helpers.storage.apiStatusUpdateJoi(apiStatusUpdateParams);
+
+              }
+
+              /**
+               * Проверяем условие отправки информационного сообщения клиенту
+               * и логируем факт факапа парсера с фиксацией текущего интервала
+               */
+
+              const momentNow = moment();
+
+              const requestDuration = moment.duration(momentNow.diff(momentStart)).asMilliseconds();
+
+              for (const commentErrorNotification of notificationsComments) {
+
+                if (requestDuration > commentErrorNotification.notificationInterval * parserRequestIntervalTime) {
+
+                  if (commentErrorNotification.sendMessageToClient && !commentErrorNotification.clientNotified) {
+
+                    /**
+                     * Информируем клиента при факапе API парсера
+                     */
+
+                    messageDataPath = 'keyboards.main.pending_tasks_parser_error';
+                    messageData = _.get(pushMessage, messageDataPath, null);
+
+                    if (messageData == null) {
+                      await sails.helpers.general.throwErrorJoi({
+                        errorType: sails.config.custom.enums.errorType.ERROR,
+                        location: moduleName,
+                        message: 'No expected messageData',
+                        clientGuid,
+                        accountGuid,
+                        errorName: sails.config.custom.STORAGE_ERROR.name,
+                        payload: {
+                          pushMessage,
+                          messageDataPath,
+                          messageData,
+                        },
+                      });
+                    }
+
+                    await sails.helpers.messageProcessor.sendMessageJoi({
+                      client: input.client,
+                      messageData,
+                    });
+
+                    commentErrorNotification.clientNotified = true;
+
+                  }
+
+                  if (commentErrorNotification.sendMessageToAdmin && !commentErrorNotification.adminNotified) {
+
+                    /**
+                     * Генерим сообщение о критической ошибке
+                     */
+
+                    await LogProcessor.critical({
+                      message: sails.config.custom.INST_PARSER_CHECK_COMMENTS_ERROR.message,
+                      clientGuid,
+                      accountGuid,
+                      // requestId: null,
+                      // childRequestId: null,
+                      errorName: sails.config.custom.INST_PARSER_CHECK_COMMENTS_ERROR.name,
+                      location: moduleName,
+                      emergencyLevel: commentErrorNotification.emergencyLevel,
+                      payload: {
+                        notificationInterval: `${commentErrorNotification.notificationInterval} seconds`,
+                        activeParserComments,
+                      },
+                    });
+
+                    commentErrorNotification.adminNotified = true;
+
+                  }
+
+                }
+              }
+
+              await sleep(parserRequestIntervalsComments[iComments] * parserRequestIntervalTime);
+
+              activeParserComments = await sails.helpers.parsers.getParserJoi(getParserParamsComments);
+
+            }
+
+            iComments++;
+
+          }
+
+          if (parserStatus !== 'success') {
+
+            /**
+             * Корректный ответ от парсера так и НЕ БЫЛ ПОЛУЧЕН
+             */
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGHEST,
+              location: moduleName,
+              message: 'Comments check: Successful response WAS NOT RECEIVED from parser',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {},
+            });
+
+
+          }
+
+          const commentDone = _.get(checkCommentsJoiRaw, 'payload.commentMade', 'none');
+          const commentText = _.get(checkCommentsJoiRaw, 'payload.commentText', 'none');
+          const numberOfWords = _.get(checkCommentsJoiRaw, 'payload.numberOfWords', 'none');
+
+          if (
+            commentDone === 'none'
+            || commentText === 'none'
+            || numberOfWords === 'none'
+          ) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'Wrong checkCommentsJoi data in response',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                checkCommentsParams,
+                checkCommentsJoiRaw,
+              },
+            });
+          }
+
+          if (commentDone) {
+
+            checkComment.makeCommentPerformed = true;
+            checkComment.commentText = await MessageProcessor.clearStr(commentText);
+            checkComment.commentNumberOfWords = numberOfWords;
+            checkComment.postRec.receivedComments++;
+            checkComment.postRec.allCommentsDone = checkComment.postRec.receivedComments >= checkComment.postRec.requestedComments;
+
+          }
+
+          /**
+           * Используем DB lock
+           */
+
+          const lockTimeOut = sails.config.custom.config.db.lockTimeOut || 600;
+
+          const sqlGetLockPerformTask = `
+    SELECT GET_LOCK('performTasksLock', ${lockTimeOut}) as getPerformTaskLockResult
+    `;
+
+          const sqlReleaseLockPerformTask = `
+    SELECT RELEASE_LOCK('performTasksLock') as releasePerformTaskLockResult
+    `;
+
+          await sails.getDatastore('clientDb')
+            .leaseConnection(async (db) => {
+
+              try {
+
+                const resGetLock = await sails
+                  .sendNativeQuery(sqlGetLockPerformTask)
+                  .usingConnection(db);
+
+                const getLockRes = _.get(resGetLock, 'rows[0].getPerformTaskLockResult', null);
+
+                if (getLockRes == null) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.CRITICAL,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    message: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.message,
+                    errorName: sails.config.custom.DB_ERROR_GET_LOCK_WRONG_RESPONSE.name,
+                    payload: {
+                      resGetLock,
+                    },
+                  });
+                }
+
+                if (getLockRes === 0) {
+                  await sails.helpers.general.throwErrorJoi({
+                    errorType: sails.config.custom.enums.errorType.CRITICAL,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    message: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.message,
+                    errorName: sails.config.custom.DB_ERROR_GET_LOCK_DECLINE.name,
+                    payload: {
+                      resGetLock,
+                    },
+                  });
+                }
+
+                /**
+                 * Обновляем записи в таблицах Tasks & Posts
+                 */
+
+                await sails.helpers.storage.tasksUpdateJoi({
+                  criteria: {
+                    guid: checkComment.guid,
+                  },
+                  data: {
+                    makeCommentPerformed: checkComment.makeCommentPerformed,
+                    commentText: checkComment.commentText,
+                    commentNumberOfWords: checkComment.commentNumberOfWords,
+                  },
+                });
+
+                await sails.helpers.storage.postsUpdateJoi({
+                  criteria: {
+                    guid: checkComment.postRec.guid,
+                  },
+                  data: {
+                    receivedComments: checkComment.postRec.receivedComments,
+                    allCommentsDone: checkComment.postRec.allCommentsDone,
+                  },
+                });
+
+                /**
+                 * Обновляем запись в таблице Account
+                 */
+
+                await sails.helpers.storage.accountUpdateJoi({
+                  criteria: {guid: currentAccount.guid},
+                  data: {
+                    made_comments_day: commentDone
+                      ? ++currentAccount.made_comments_day
+                      : currentAccount.made_comments_day,
+                    made_comments_total: commentDone
+                      ? ++currentAccount.made_comments_total
+                      : currentAccount.made_comments_total,
+                  },
+                  createdBy: moduleName,
+                });
+
+                const ReleaseLock = await sails
+                  .sendNativeQuery(sqlReleaseLockPerformTask)
+                  .usingConnection(db);
+
+                const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+                if (releaseLockRes == null) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                    clientGuid,
+                    accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                if (releaseLockRes === 0) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                    clientGuid,
+                    accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                return;
+
+              } catch (ee) {
+
+                const ReleaseLock = await sails
+                  .sendNativeQuery(sqlReleaseLockPerformTask)
+                  .usingConnection(db);
+
+                const releaseLockRes = _.get(ReleaseLock, 'rows[0].releasePerformTaskLockResult', null);
+
+                if (releaseLockRes == null) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                if (releaseLockRes === 0) {
+                  await LogProcessor.critical({
+                    message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
+                    // clientGuid,
+                    // accountGuid,
+                    // requestId: null,
+                    // childRequestId: null,
+                    errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
+                    emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+                    location: moduleName,
+                    payload: {
+                      releaseLockRes,
+                    },
+                  });
+                }
+
+                const throwError = true;
+                if (throwError) {
+                  return await sails.helpers.general.catchErrorJoi({
+                    error: ee,
+                    location: moduleName,
+                    throwError: true,
+                  });
+                } else {
+                  await sails.helpers.general.catchErrorJoi({
+                    error: ee,
+                    location: moduleName,
+                    throwError: false,
+                  });
+                  return exits.success({
+                    status: 'ok',
+                    message: `${moduleName} performed`,
+                    payload: {},
+                  });
+                }
+
+              }
+
+            }); // .leaseConnection()
+
+        }
+
+
+
+        /**
+         * Повторно проверяем наличие невыполненных заданий для аккаунта
+         */
+
+
+        pendingTasks = await Tasks.find(pendingTasksGetParams)
+          .tolerate(async (err) => {
+
+            err.details = pendingTasksGetParams;
+
+            await LogProcessor.dbError({
+              error: err,
+              message: 'Tasks.find() error',
+              clientGuid,
+              accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              location: moduleName,
+              payload: pendingTasksGetParams,
+            });
+
+            return null;
+          });
+
+        if (pendingTasks == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'Tasks.find() error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.DB_ERROR_MEDIUM.name,
+            payload: pendingTasksGetParams,
+          });
+        }
+
+        if (pendingTasks.length > 0) {
+
+          /**
+           * Отправляем сообщение, что есть невыполненные задания
+           */
+
+          const beforeHelperParams = pendingTasks;
+
+          const messageDataPath = 'keyboards.main.pending_tasks';
           const messageData = _.get(pushMessage, messageDataPath, null);
 
           if (messageData == null) {
@@ -819,20 +1161,42 @@ module.exports = {
             });
           }
 
-          taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
-            client: input.client,
+          await sails.helpers.messageProcessor.sendMessageJoi({
+            client,
             messageData,
-            additionalTokens: [
-              {
-                token: '$PostLink$',
-                value: postRec.postLink,
+            beforeHelperParams,
+            disableWebPagePreview: true,
+          });
+
+
+        } else {
+
+          /**
+           * Отправляем сообщение, что нет невыполненных заданий
+           */
+
+          messageDataPath = 'keyboards.main.no_pending_tasks';
+          messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
               },
-            ],
-            additionalParams: {
-              chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
-              disable_web_page_preview: true,
-            },
+            });
+          }
+
+          await sails.helpers.messageProcessor.sendMessageJoi({
+            client,
+            messageData,
           });
 
         }
@@ -840,41 +1204,11 @@ module.exports = {
       } else {
 
         /**
-         * Выполняем необходимые действия в случае невыполнения задания
+         * Отправляем сообщение, что нет невыполненных заданий
          */
 
-        /**
-         * Достаём данные PushMessage
-         */
-
-        const pushMessageName = currentAccount.service.push_message_name;
-
-        const pushMessageGetParams = {
-          pushMessageName,
-        };
-
-        const pushMessageGetRaw = await sails.helpers.storage.pushMessageGetJoi(pushMessageGetParams);
-
-        if (pushMessageGetRaw.status !== 'ok') {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'Wrong pushMessageGetJoi response',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.STORAGE_ERROR.name,
-            payload: {
-              pushMessageGetParams,
-              pushMessageGetRaw,
-            },
-          });
-
-        }
-
-        pushMessage = pushMessageGetRaw.payload;
-
-        const messageDataPath = 'tasks.likes_not_done';
-        const messageData = _.get(pushMessage, messageDataPath, null);
+        messageDataPath = 'keyboards.main.no_pending_tasks';
+        messageData = _.get(pushMessage, messageDataPath, null);
 
         if (messageData == null) {
           await sails.helpers.general.throwErrorJoi({
@@ -892,57 +1226,34 @@ module.exports = {
           });
         }
 
-        messageData.message.inline_keyboard[1] = [
-          {
-            "text": "COMMON_MSG_TASK_PERFORM_BTN",
-            "callback_data": "push_msg_tsk_l_" + taskRec.guid
-          }
-        ];
-
-        taskPerformRes = await sails.helpers.messageProcessor.sendMessageJoi({
-          client: input.client,
+        await sails.helpers.messageProcessor.sendMessageJoi({
+          client,
           messageData,
-          additionalTokens: [
-            {
-              token: '$PostLink$',
-              value: postRec.postLink,
-            },
-          ],
-          additionalParams: {
-            chat_id: input.client.chat_id,
-            message_id: taskRec.messageId,
-            disable_web_page_preview: true,
-          },
         });
-
 
       }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       return exits.success({
         status: 'ok',
-        message: 'callbackLikes performed',
-        payload: {
-          res: taskPerformRes,
-        },
+        message: 'callbackPendingTasks performed',
+        payload: {},
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
@@ -962,7 +1273,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

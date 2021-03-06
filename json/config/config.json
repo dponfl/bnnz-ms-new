@@ -2236,6 +2236,8 @@
         "COMMON_MAIN_PENDING_TASKS_MAKE_LIKE": "поставь лайк",
         "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT": "оставь комментарий (не меньше 2 слов)",
         "COMMON_MAIN_PENDING_TASKS_AND": "и",
+        "COMMON_MAIN_PARSER_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram :white_frowning_face:",
+        "COMMON_MAIN_PARSER_ERROR_MSG_02": "Повтори проверку выполнения заданий позже :clock4:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts ***",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts test": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts test ***",
         "COMMON_CB_BTN_01": "Кнопка 1",
