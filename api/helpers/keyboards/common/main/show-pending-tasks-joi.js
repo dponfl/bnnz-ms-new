@@ -103,26 +103,6 @@ module.exports = {
 
 
       /**
-       * Проверяем наличие невыполненных заданий для аккаунта
-       */
-
-      const pendingTasksGetParams = {
-        or: [
-          {
-            accountGuid,
-            makeLike: true,
-            makeLikePerformed: false,
-          },
-          {
-            accountGuid,
-            makeComment: true,
-            makeCommentPerformed: false,
-          }
-        ]
-      }
-
-
-      /**
        * Отправляем сообщение, что начинаем проверку заданий
        */
 
@@ -150,6 +130,72 @@ module.exports = {
         client,
         messageData,
       });
+
+      /**
+       * Проверяем наличие невыполненных заданий для аккаунта
+       */
+
+      /**
+       * Первый уровень проверки - по данным записи аккаунта
+       */
+
+      if (currentAccount.requested_likes_total === currentAccount.made_likes_total
+      && currentAccount.requested_comments_total === currentAccount.made_comments_total) {
+
+        /**
+         * Отправляем сообщение, что нет невыполненных заданий
+         */
+
+        const messageDataPath = 'keyboards.main.no_pending_tasks';
+        const messageData = _.get(pushMessage, messageDataPath, null);
+
+        if (messageData == null) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.ERROR,
+            location: moduleName,
+            message: 'No expected messageData',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.STORAGE_ERROR.name,
+            payload: {
+              pushMessage,
+              messageDataPath,
+              messageData,
+            },
+          });
+        }
+
+        await sails.helpers.messageProcessor.sendMessageJoi({
+          client,
+          messageData,
+        });
+
+        return exits.success({
+          status: 'ok',
+          message: `${moduleName} performed`,
+          payload: {},
+        })
+
+      }
+
+      /**
+       * Второй уровень проверки - по данным таблицы Tasks
+       */
+
+      const pendingTasksGetParams = {
+        or: [
+          {
+            accountGuid,
+            makeLike: true,
+            makeLikePerformed: false,
+          },
+          {
+            accountGuid,
+            makeComment: true,
+            makeCommentPerformed: false,
+          }
+        ]
+      }
 
       pendingTasks = await Tasks.find(pendingTasksGetParams)
         .tolerate(async (err) => {
@@ -219,6 +265,10 @@ module.exports = {
 
 
       } else {
+
+        // TODO: Отправить сообщение об ошибке с инфо о том, что:
+        //  - по данным записи "accounts" все задания выполнены
+        //  - по данным табл. Tasks есть невыполненные задания
 
         /**
          * Отправляем сообщение, что нет невыполненных заданий
