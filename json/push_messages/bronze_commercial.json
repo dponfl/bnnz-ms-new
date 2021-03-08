@@ -1206,6 +1206,129 @@
           ]
         }
       },
+      "pending_tasks_search_post": {
+        "id": "pending_tasks_search_post",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_SEARCH_POST_MSG_01",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "pending_tasks_over_limit_start": {
+        "id": "pending_tasks_over_limit_start",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_START_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_START_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
+      "pending_tasks_over_limit_main": {
+        "id": "pending_tasks_over_limit_main",
+        "description": "***",
+        "actionType": "inline_keyboard",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": "common::main::beforeHelperPendingTasksOverLimitJoi",
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": "common::main::callbackPendingTasksOverLimitJoi",
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ],
+          "inline_keyboard": [
+            [
+              {
+                "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_BTN_01",
+                "callback_data": "push_msg_tsk_pp"
+              }
+            ]
+          ]
+        }
+      },
+      "pending_tasks_over_limit_done": {
+        "id": "pending_tasks_over_limit_done",
+        "description": "***",
+        "actionType": "text",
+        "initial": true,
+        "enabled": true,
+        "show_time": 0,
+        "previous": null,
+        "next": null,
+        "shown": false,
+        "beforeHelper": null,
+        "afterHelper": null,
+        "forcedHelper": null,
+        "callbackHelper": null,
+        "blockModifyHelper": null,
+        "message": {
+          "html": [
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_DONE_MSG_01",
+              "style": "b",
+              "cr": "DCR"
+            },
+            {
+              "text": "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_DONE_MSG_02",
+              "style": "",
+              "cr": ""
+            }
+          ]
+        }
+      },
       "pending_tasks_parser_error": {
         "id": "pending_tasks_parser_error",
         "description": "***",

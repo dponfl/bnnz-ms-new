@@ -174,56 +174,36 @@
       "LIKE_AND_COMMENT": "like_and_comment"
     },
     "comments_ratio": 0.8,
+    "max_pending_tasks_before_post_blocking": {
+      "test_personal_initial": 10,
+      "test_personal":10,
+      "bronze_personal": 10,
+      "silver_personal": 10,
+      "gold_personal": 10,
+      "platinum_personal": 10,
+      "test_commercial_initial": 10,
+      "test_commercial": 10,
+      "bronze_commercial": 2,
+      "silver_commercial": 10,
+      "gold_commercial": 10,
+      "platinum_commercial": 10,
+      "star054": 0,
+      "star108": 0,
+      "star153": 0,
+      "star306": 0,
+      "star504": 0,
+      "star810": 0
+    },
     "comments": {
       "check_period": {
         "unit": "hours",
         "amount": 24
-      },
-      "max_missed_before_post_blocking": {
-        "test_personal_initial": 8,
-        "test_personal": 8,
-        "bronze_personal": 5,
-        "silver_personal": 3,
-        "gold_personal": 3,
-        "platinum_personal": 3,
-        "test_commercial_initial": 8,
-        "test_commercial": 8,
-        "bronze_commercial": 5,
-        "silver_commercial": 3,
-        "gold_commercial": 3,
-        "platinum_commercial": 3,
-        "star054": 5,
-        "star108": 5,
-        "star153": 5,
-        "star306": 5,
-        "star504": 5,
-        "star810": 5
       }
     },
     "likes": {
       "check_period": {
         "unit": "hours",
         "amount": 24
-      },
-      "max_missed_before_post_blocking": {
-        "test_personal_initial": 8,
-        "test_personal": 8,
-        "bronze_personal": 5,
-        "silver_personal": 3,
-        "gold_personal": 3,
-        "platinum_personal": 3,
-        "test_commercial_initial": 8,
-        "test_commercial": 8,
-        "bronze_commercial": 5,
-        "silver_commercial": 3,
-        "gold_commercial": 3,
-        "platinum_commercial": 3,
-        "star054": 5,
-        "star108": 5,
-        "star153": 5,
-        "star306": 5,
-        "star504": 5,
-        "star810": 5
       }
     }
   },
@@ -2231,6 +2211,14 @@
         "COMMON_MAIN_PENDING_TASKS_DONE_MSG_01": "Ты выполнил все полученные задания :thumbsup:",
         "COMMON_MAIN_PENDING_TASKS_SEARCH_MSG_01": "Система проверят выполнение заданий :recycle:",
         "COMMON_MAIN_PENDING_TASKS_SEARCH_MSG_02": "Это может занять некоторое время :hourglass_flowing_sand:",
+        "COMMON_MAIN_PENDING_TASKS_SEARCH_POST_MSG_01": "Обрабатываю твой запрос, это может занять некоторое время :clock2:",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_START_MSG_01": "Ты достиг лимита по невыполненным заданиям :pensive:",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_START_MSG_02": "Для того чтобы продвигать новый пост в BeFame — выполни пропущенные задания :point_down:",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_MSG_01": "Твои невыполненные задания:",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_MSG_02": "$PendingTasks$",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_MAIN_BTN_01": "Проверить выполнение заданий",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_DONE_MSG_01": "Ты выполнил необходимые задания и теперь можешь продвигать новый пост в BeFame :rocket:",
+        "COMMON_MAIN_PENDING_TASKS_OVER_LIMIT_DONE_MSG_02": "Для этого нажми кнопку «Загрузить ссылку на пост» ниже :point_down:",
         "COMMON_MAIN_PENDING_TASKS_MAKE_LIKE": "— Поставь лайк :heart:",
         "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT_01": "— Оставь комментарий :speech_balloon:",
         "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT_02": "(не меньше 2 слов)",

@@ -332,6 +332,76 @@ module.exports = {
           }
 
 
+        } else if (/^push_msg_tsk_pp/i.test(input.query.data)) {
+
+          /**
+           * Проверка невыполненных заданий
+           */
+
+          if (!_.has(pushMessage, 'keyboards.main.pending_tasks')) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config has no keyboards.main.pending_tasks property',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessage,
+              },
+            });
+          }
+
+          if (pushMessage.keyboards.main.pending_tasks.callbackHelper == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages config keyboards.main.pending_tasks has no callbackHelper',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks,
+              },
+            });
+          }
+
+          /**
+           * Находим стартовый блок в групе блоков
+           */
+
+          let initialBlock = pushMessage.keyboards.main.pending_tasks;
+
+          /**
+           * Проверяем, что стартовый блок был успешно найден
+           */
+
+          if (initialBlock != null && initialBlock.id != null) {
+
+            await sails.helpers.pushMessages.proceedPushMessageJoi({
+              client: input.client,
+              query: input.query,
+              messageData: initialBlock,
+            });
+
+          } else {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: 'Push messages (keyboards.main.pending_tasks): block not found',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
+              payload: {
+                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks,
+              },
+            });
+          }
+
+
         } else {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.ERROR,
