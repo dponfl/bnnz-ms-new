@@ -98,7 +98,7 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const client = input.client;
+      client = input.client;
 
       clientGuid = client.guid;
       accountGuid = client.account_use;

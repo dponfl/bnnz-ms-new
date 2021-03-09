@@ -338,12 +338,12 @@ module.exports = {
            * Проверка невыполненных заданий
            */
 
-          if (!_.has(pushMessage, 'keyboards.main.pending_tasks')) {
+          if (!_.has(pushMessage, 'keyboards.main.pending_tasks_over_limit_main')) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
               location: moduleName,
-              message: 'Push messages config has no keyboards.main.pending_tasks property',
+              message: 'Push messages config has no keyboards.main.pending_tasks_over_limit_main property',
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
@@ -353,17 +353,17 @@ module.exports = {
             });
           }
 
-          if (pushMessage.keyboards.main.pending_tasks.callbackHelper == null) {
+          if (pushMessage.keyboards.main.pending_tasks_over_limit_main.callbackHelper == null) {
             await sails.helpers.general.throwErrorJoi({
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
               location: moduleName,
-              message: 'Push messages config keyboards.main.pending_tasks has no callbackHelper',
+              message: 'Push messages config keyboards.main.pending_tasks_over_limit_main has no callbackHelper',
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks,
+                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks_over_limit_main,
               },
             });
           }
@@ -372,7 +372,7 @@ module.exports = {
            * Находим стартовый блок в групе блоков
            */
 
-          let initialBlock = pushMessage.keyboards.main.pending_tasks;
+          let initialBlock = pushMessage.keyboards.main.pending_tasks_over_limit_main;
 
           /**
            * Проверяем, что стартовый блок был успешно найден
@@ -391,12 +391,12 @@ module.exports = {
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
               location: moduleName,
-              message: 'Push messages (keyboards.main.pending_tasks): block not found',
+              message: 'Push messages (keyboards.main.pending_tasks_over_limit_main): block not found',
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.PUSH_MESSAGES_ERROR.name,
               payload: {
-                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks,
+                pushMessagesKeyboardsMainPendingTasks: pushMessage.keyboards.main.pending_tasks_over_limit_main,
               },
             });
           }

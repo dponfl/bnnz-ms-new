@@ -69,8 +69,6 @@ module.exports = {
       clientGuid = client.guid;
       accountGuid = client.account_use;
 
-      let resBlock = input.messageData;
-
       const pendingTasks = input.additionalParams || [];
 
       let postsAndActions = '';
