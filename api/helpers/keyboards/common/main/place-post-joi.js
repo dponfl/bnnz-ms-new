@@ -188,7 +188,7 @@ module.exports = {
           });
         }
 
-        const pendingTaskLimit = sails.config.custom.config.tasks.max_pending_tasks_before_post_blocking[currentAccount.service.name] || null;
+        const pendingTaskLimit = sails.config.custom.config.tasks.max_pending_tasks_before_post_blocking[currentAccount.service.name];
 
         if (pendingTaskLimit == null) {
           await sails.helpers.general.throwErrorJoi({
