@@ -35,6 +35,14 @@ module.exports = {
       type: 'string',
       unique: true,
     },
+
+    /**
+     * Флаг, что клиенту в данный момент нельзя отправлять сообщения
+     * (aka "Do Not Disturb")
+     */
+    dnd: {
+      type: 'boolean',
+    },
     username: {
       type: 'string',
     },

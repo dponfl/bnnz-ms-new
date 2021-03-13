@@ -88,6 +88,12 @@ module.exports = {
       payload: payloadObj,
     });
 
+    // or even more simple
+
+    await LogProcessor.info({
+      message: message,
+    });
+
 
     /**
      * Логирование сообщения (critical)

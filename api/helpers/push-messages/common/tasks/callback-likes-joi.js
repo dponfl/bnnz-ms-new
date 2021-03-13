@@ -77,7 +77,9 @@ module.exports = {
       input = await schema.validateAsync(inputs.params);
 
       clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      accountGuid = input.client.account_use;_
+
+      const queryMessageId = _.get(input.query, 'message.message_id', null);
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
@@ -301,7 +303,7 @@ module.exports = {
         ],
         additionalParams: {
           chat_id: input.client.chat_id,
-          message_id: taskRec.messageId,
+          message_id: taskRec.messageId || queryMessageId,
           disable_web_page_preview: true,
         },
       });
@@ -455,7 +457,7 @@ module.exports = {
                   ],
                   additionalParams: {
                     chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId,
+                    message_id: taskRec.messageId || queryMessageId,
                     disable_web_page_preview: true,
                   },
                 });
@@ -768,7 +770,8 @@ module.exports = {
          * в сообщение, что задание успешно выполнено
          */
 
-        if (taskRec.messageId != null) {
+        if (taskRec.messageId != null
+        || queryMessageId != null) {
 
           /**
            * Достаём данные PushMessage
@@ -830,7 +833,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
+              message_id: taskRec.messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -910,7 +913,7 @@ module.exports = {
           ],
           additionalParams: {
             chat_id: input.client.chat_id,
-            message_id: taskRec.messageId,
+            message_id: taskRec.messageId || queryMessageId,
             disable_web_page_preview: true,
           },
         });

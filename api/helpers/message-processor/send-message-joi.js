@@ -65,6 +65,10 @@ module.exports = {
         disableWebPagePreview: Joi
           .boolean()
           .description('flag to disable web page preview at message'),
+        forced: Joi
+          .boolean()
+          .description('flag to send message ignoring "client.dnd"')
+          .default(false),
     });
 
     let sendMessageResult = null;
@@ -83,17 +87,51 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
-      // TODO: Нужно добавить контроль отправки сообщений только если
-      //  клиент находится в какой-то клавиатуре
-      //  (пример if (_.toString(currentAccount.keyboard) !== '')
-      //  (что-бы не разрывать воронок или цепочек сообщений Chat Blasts)
-      //  В противном случае формировать специальную pending-запись для последующей
-      //  её обработки шедуллером.
-      //  Также нужно добавить параметр "forced", который по умолчанию имеет значение
-      //  false (что-бы не нарушать работу текущей реализации кода) и в этом случае
-      //  действует правило, описанное выше. Если этот параметр имеет значение true,
-      //  то проверка того, где находится клиент не выполняется (для возможности
-      //  отправлять срочные сообщения).
+
+      if (input.client.dnd && !input.forced) {
+
+        /**
+         * Клиенту сейчас нельзя отправлять сообщение
+         * и не выставлен флаг отправки сообщения в любом случае
+         */
+
+        const pendingMessagesCreateParams = {
+          clientGuid,
+          accountGuid,
+          payload: input,
+        };
+
+        const pendingMessageCreateRaw = await sails.helpers.storage.pendingMessagesCreateJoi(pendingMessagesCreateParams);
+
+        if (pendingMessageCreateRaw.status == null
+          || pendingMessageCreateRaw.status !== 'ok'
+          || pendingMessageCreateRaw.payload == null) {
+          await LogProcessor.critical({
+            message: 'Wrong response from pendingMessagesCreateJoi',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.GENERAL_ERROR.name,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+            location: moduleName,
+            payload: {
+              pendingMessagesCreateParams,
+              pendingMessageCreateRaw,
+            },
+          });
+        }
+
+        return exits.success({
+          status: 'ok',
+          message: 'Message was saved in pending messages',
+          payload: {
+            clientGuid,
+            accountGuid,
+          },
+        });
+
+      }
 
 
       messageData = input.messageData;

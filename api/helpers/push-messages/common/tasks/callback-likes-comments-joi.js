@@ -86,6 +86,8 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const queryMessageId = _.get(input.query, 'message.message_id', null);
+
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
       const client = input.client;
@@ -308,7 +310,7 @@ module.exports = {
         ],
         additionalParams: {
           chat_id: input.client.chat_id,
-          message_id: taskRec.messageId,
+          message_id: taskRec.messageId || queryMessageId,
           disable_web_page_preview: true,
         },
       });
@@ -472,7 +474,7 @@ module.exports = {
                   ],
                   additionalParams: {
                     chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId,
+                    message_id: taskRec.messageId || queryMessageId,
                     disable_web_page_preview: true,
                   },
                 });
@@ -706,7 +708,7 @@ module.exports = {
                   ],
                   additionalParams: {
                     chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId,
+                    message_id: taskRec.messageId || queryMessageId,
                     disable_web_page_preview: true,
                   },
                 });
@@ -1036,7 +1038,8 @@ module.exports = {
         }); // .leaseConnection()
 
 
-      if (taskRec.messageId != null) {
+      if (taskRec.messageId != null
+      || queryMessageId != null) {
 
         /**
          * При полностью выполненном задании (лайк + коммент):
@@ -1106,7 +1109,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
+              message_id: taskRec.messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1188,7 +1191,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
+              message_id: taskRec.messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1270,7 +1273,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
+              message_id: taskRec.messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1352,7 +1355,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId,
+              message_id: taskRec.messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
