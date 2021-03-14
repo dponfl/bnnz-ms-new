@@ -148,57 +148,67 @@ module.exports = {
          * отправка PushMessage с текстом нажатой кнопки
          */
 
-        messageDataPath = 'general.inlineKeyboardButtonPressed.textMessageToSend';
-        messageData = _.get(pushMessage, messageDataPath, null);
+        /**
+         * Не отправляем текст нажатой кнопки в случае проверки выполнения заданий
+         */
 
-        if (messageData == null) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'No expected messageData',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.STORAGE_ERROR.name,
-            payload: {
-              pushMessage,
-              messageDataPath,
-              messageData,
-            },
+        if (!/^push_msg_tsk_l_/i.test(query.data)
+        && !/^push_msg_tsk_lc_/i.test(query.data)) {
+
+          messageDataPath = 'general.inlineKeyboardButtonPressed.textMessageToSend';
+          messageData = _.get(pushMessage, messageDataPath, null);
+
+          if (messageData == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected messageData',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.STORAGE_ERROR.name,
+              payload: {
+                pushMessage,
+                messageDataPath,
+                messageData,
+              },
+            });
+          }
+
+          messageData.message.html[0].text = `${messageData.message.html[0].text}${_.random(1, 6)}`;
+
+          const replyMarkupData = _.flattenDeep(query.message.reply_markup.inline_keyboard);
+
+          const keyObj = _.find(replyMarkupData, {callback_data: query.data});
+
+          if (keyObj == null) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.ERROR,
+              location: moduleName,
+              message: 'No expected data at callback query',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.GENERAL_ERROR.name,
+              payload: {
+                queryInlineKeyboard: query.message.reply_markup.inline_keyboard,
+                replyMarkupData,
+                queryData: query.data,
+              },
+            });
+          }
+
+          const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi({
+            client,
+            messageData,
+            additionalTokens: [
+              {
+                token: '$KeyText$',
+                value: keyObj.text,
+              },
+            ],
           });
+
         }
 
-        messageData.message.html[0].text = `${messageData.message.html[0].text}${_.random(1, 6)}`;
-
-        const replyMarkupData = _.flattenDeep(query.message.reply_markup.inline_keyboard);
-
-        const keyObj = _.find(replyMarkupData, {callback_data: query.data});
-
-        if (keyObj == null) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.ERROR,
-            location: moduleName,
-            message: 'No expected data at callback query',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.GENERAL_ERROR.name,
-            payload: {
-              queryInlineKeyboard: query.message.reply_markup.inline_keyboard,
-              replyMarkupData,
-              queryData: query.data,
-            },
-          });
-        }
-
-        const sendMessageRes = await sails.helpers.messageProcessor.sendMessageJoi({
-          client,
-          messageData,
-          additionalTokens: [
-            {
-              token: '$KeyText$',
-              value: keyObj.text,
-            },
-          ],
-        });
 
         /**
          * Call the respective Supervisor helper

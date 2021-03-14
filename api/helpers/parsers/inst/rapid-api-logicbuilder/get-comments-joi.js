@@ -236,9 +236,7 @@ module.exports = {
           status: 'success',
           subStatus: sails.config.custom.HTTP_STATUS_NOT_FOUND.message,
           message: `${moduleName} performed`,
-          payload: {
-            requestRes,
-          },
+          payload: requestRes,
         };
 
       }
