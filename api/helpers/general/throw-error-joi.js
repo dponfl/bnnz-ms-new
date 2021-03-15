@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'general:throw-error-joi';
 
@@ -101,11 +102,31 @@ module.exports = {
         ),
     });
 
+    let clientGuid;
+    let accountGuid;
+
     const input = await schema.validateAsync(inputs.params);
+
+    clientGuid = _.get(input, 'clientGuid', 'none');
+    accountGuid = _.get(input, 'accountGuid', 'none');
 
     const location = input.location;
     const message = input.message;
     const payload = input.payload || {};
+
+    if (uuid.isUUID(clientGuid) && uuid.isUUID(accountGuid)) {
+
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
+
+    }
 
     payload.details = {};
 
@@ -116,15 +137,25 @@ module.exports = {
       payload,
     };
 
-    if (input.clientGuid != null) {
-      errorParams.clientGuid = input.clientGuid;
-      _.assign(payload.details, {clientGuid: input.clientGuid})
+    if (uuid.isUUID(clientGuid)) {
+      _.assign(errorParams, {clientGuid});
+      _.assign(payload.details, {clientGuid})
     }
 
-    if (input.accountGuid != null) {
-      errorParams.accountGuid = input.accountGuid;
-      _.assign(payload.details, {accountGuid: input.accountGuid})
+    if (uuid.isUUID(accountGuid)) {
+      _.assign(errorParams, {accountGuid});
+      _.assign(payload.details, {accountGuid})
     }
+
+    // if (input.clientGuid != null) {
+    //   errorParams.clientGuid = input.clientGuid;
+    //   _.assign(payload.details, {clientGuid: input.clientGuid})
+    // }
+
+    // if (input.accountGuid != null) {
+    //   errorParams.accountGuid = input.accountGuid;
+    //   _.assign(payload.details, {accountGuid: input.accountGuid})
+    // }
 
     if (input.requestId != null) {
       errorParams.requestId = input.requestId;
@@ -139,8 +170,8 @@ module.exports = {
     }
 
     // TODO: Добавить возможность исключать из текстовых логов (оставляя в лога в ДБ)
-    // часть данных передаваемых в omitData
-    // Сначала эту функциональность необходимо добавить в LogProcessor
+    //  часть данных передаваемых в omitData
+    //  Сначала эту функциональность необходимо добавить в LogProcessor
 
 
     switch (input.errorType) {

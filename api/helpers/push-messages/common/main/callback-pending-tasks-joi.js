@@ -108,6 +108,17 @@ module.exports = {
       instProfile = currentAccount.inst_profile;
 
       /**
+       * Устанавливаем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: true,
+      });
+
+
+      /**
        * Достаём данные PushMessage
        */
 
@@ -164,6 +175,7 @@ module.exports = {
       await sails.helpers.messageProcessor.sendMessageJoi({
         client,
         messageData,
+        forced: true,
       });
 
 
@@ -405,6 +417,7 @@ module.exports = {
                     await sails.helpers.messageProcessor.sendMessageJoi({
                       client: input.client,
                       messageData,
+                      forced: true,
                     });
 
                     likeErrorNotification.clientNotified = true;
@@ -521,6 +534,8 @@ module.exports = {
 
                 if (getLockRes == null) {
                   await sails.helpers.general.throwErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     errorType: sails.config.custom.enums.errorType.CRITICAL,
                     emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                     location: moduleName,
@@ -534,6 +549,8 @@ module.exports = {
 
                 if (getLockRes === 0) {
                   await sails.helpers.general.throwErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     errorType: sails.config.custom.enums.errorType.CRITICAL,
                     emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                     location: moduleName,
@@ -636,8 +653,8 @@ module.exports = {
                 if (releaseLockRes == null) {
                   await LogProcessor.critical({
                     message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                    // clientGuid,
-                    // accountGuid,
+                    clientGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -652,8 +669,8 @@ module.exports = {
                 if (releaseLockRes === 0) {
                   await LogProcessor.critical({
                     message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                    // clientGuid,
-                    // accountGuid,
+                    clientGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -668,12 +685,16 @@ module.exports = {
                 const throwError = true;
                 if (throwError) {
                   return await sails.helpers.general.catchErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     error: ee,
                     location: moduleName,
                     throwError: true,
                   });
                 } else {
                   await sails.helpers.general.catchErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     error: ee,
                     location: moduleName,
                     throwError: false,
@@ -800,6 +821,7 @@ module.exports = {
                     await sails.helpers.messageProcessor.sendMessageJoi({
                       client: input.client,
                       messageData,
+                      forced: true,
                     });
 
                     commentErrorNotification.clientNotified = true;
@@ -924,6 +946,8 @@ module.exports = {
 
                 if (getLockRes == null) {
                   await sails.helpers.general.throwErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     errorType: sails.config.custom.enums.errorType.CRITICAL,
                     emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                     location: moduleName,
@@ -937,6 +961,8 @@ module.exports = {
 
                 if (getLockRes === 0) {
                   await sails.helpers.general.throwErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     errorType: sails.config.custom.enums.errorType.CRITICAL,
                     emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                     location: moduleName,
@@ -1041,8 +1067,8 @@ module.exports = {
                 if (releaseLockRes == null) {
                   await LogProcessor.critical({
                     message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                    // clientGuid,
-                    // accountGuid,
+                    clientGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -1057,8 +1083,8 @@ module.exports = {
                 if (releaseLockRes === 0) {
                   await LogProcessor.critical({
                     message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                    // clientGuid,
-                    // accountGuid,
+                    clientGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -1073,12 +1099,16 @@ module.exports = {
                 const throwError = true;
                 if (throwError) {
                   return await sails.helpers.general.catchErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     error: ee,
                     location: moduleName,
                     throwError: true,
                   });
                 } else {
                   await sails.helpers.general.catchErrorJoi({
+                    clientGuid,
+                    accountGuid,
                     error: ee,
                     location: moduleName,
                     throwError: false,
@@ -1166,6 +1196,7 @@ module.exports = {
             messageData,
             beforeHelperParams,
             disableWebPagePreview: true,
+            forced: true,
           });
 
 
@@ -1197,6 +1228,7 @@ module.exports = {
           await sails.helpers.messageProcessor.sendMessageJoi({
             client,
             messageData,
+            forced: true,
           });
 
         }
@@ -1229,22 +1261,20 @@ module.exports = {
         await sails.helpers.messageProcessor.sendMessageJoi({
           client,
           messageData,
+          forced: true,
         });
 
       }
 
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
 
-
-
-
-
-
-
-
-
-
-
-
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
 
 
       return exits.success({
@@ -1257,12 +1287,16 @@ module.exports = {
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,

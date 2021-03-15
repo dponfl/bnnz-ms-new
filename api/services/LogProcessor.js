@@ -90,8 +90,10 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
 
       input.level = 'critical';
 
@@ -170,8 +172,11 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
+
 
       input.level = 'error';
 
@@ -203,8 +208,10 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
 
       input.level = 'warn';
 
@@ -235,8 +242,10 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
 
       input.level = 'debug';
 
@@ -266,8 +275,10 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
 
       input.level = 'info';
 
@@ -297,8 +308,10 @@ module.exports = {
 
     try {
 
-      const inputRaw = schema.validate(params);
-      input = inputRaw.value;
+      // const inputRaw = schema.validate(params);
+      // input = inputRaw.value;
+
+      input = await schema.validateAsync(params);
 
       const err = input.error;
       const location = input.location;

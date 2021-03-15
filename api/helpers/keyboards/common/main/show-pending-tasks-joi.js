@@ -66,6 +66,16 @@ module.exports = {
       clientGuid = client.guid;
       accountGuid = client.account_use;
 
+      /**
+       * Устанавливаем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: true,
+      });
+
       currentAccount = _.find(client.accounts, {guid: client.account_use});
       const currentAccountInd = _.findIndex(client.accounts, (o) => {
         return o.guid === currentAccount.guid;
@@ -129,6 +139,7 @@ module.exports = {
       await sails.helpers.messageProcessor.sendMessageJoi({
         client,
         messageData,
+        forced: true,
       });
 
       /**
@@ -168,6 +179,17 @@ module.exports = {
         await sails.helpers.messageProcessor.sendMessageJoi({
           client,
           messageData,
+          forced: true,
+        });
+
+        /**
+         * Сбрасываем флаг блокировки отправки сообщений
+         */
+
+        await sails.helpers.general.setClientDndJoi({
+          clientGuid,
+          accountGuid,
+          dnd: false,
         });
 
         return exits.success({
@@ -261,6 +283,7 @@ module.exports = {
           messageData,
           beforeHelperParams,
           disableWebPagePreview: true,
+          forced: true,
         });
 
 
@@ -296,9 +319,20 @@ module.exports = {
         await sails.helpers.messageProcessor.sendMessageJoi({
           client,
           messageData,
+          forced: true,
         });
 
       }
+
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
 
       return exits.success({
         status: 'ok',
@@ -310,12 +344,16 @@ module.exports = {
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,

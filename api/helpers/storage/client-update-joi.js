@@ -51,6 +51,9 @@ module.exports = {
         .string()
         .description('source of update')
         .required(),
+      makeClientFieldsRecord: Joi
+        .boolean()
+        .default(true),
     });
 
     let input;
@@ -95,7 +98,7 @@ module.exports = {
           return null;
         });
 
-      if (clientRec != null) {
+      if (clientRec != null && input.makeClientFieldsRecord) {
         await sails.helpers.storage.clientFieldsPut.with({
           clientGuid: clientRec.guid,
           data: input.data,

@@ -255,23 +255,19 @@ module.exports = {
     const throwError = true;
     if (throwError) {
       return await sails.helpers.general.catchErrorJoi({
+        clientGuid,
+        accountGuid,
         error: e,
         location: moduleName,
         throwError: true,
-        errorPayloadAdditional: {
-          clientGuid,
-          accountGuid,
-        },
       });
     } else {
       await sails.helpers.general.catchErrorJoi({
+        clientGuid,
+        accountGuid,
         error: e,
         location: moduleName,
         throwError: false,
-        errorPayloadAdditional: {
-          clientGuid,
-          accountGuid,
-        },
       });
       return exits.success({
         status: 'error',

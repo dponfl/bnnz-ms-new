@@ -70,7 +70,33 @@ module.exports = {
         return o.guid === currentAccount.guid;
       });
 
-      throw new Error(`${moduleName}, error: xxxxxxxxx: \n${JSON.stringify(input.client, null, 3)}`);
+
+
+      /**
+       * Устанавливаем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: true,
+      });
+
+
+
+
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
+
+
+
 
       return exits.success({
         status: 'ok',
@@ -83,23 +109,19 @@ module.exports = {
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
         return exits.success({
           status: 'ok',

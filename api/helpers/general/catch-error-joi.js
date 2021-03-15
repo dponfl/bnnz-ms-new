@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'general:catch-error-joi';
 
@@ -83,7 +84,35 @@ module.exports = {
         .description('error payload additional')
     });
 
+    let clientGuid;
+    let accountGuid;
+
     const input = await schema.validateAsync(inputs.params);
+
+    clientGuid = _.get(input, 'clientGuid', 'none');
+    accountGuid = _.get(input, 'accountGuid', 'none');
+
+    if (clientGuid === 'none') {
+      clientGuid = _.get(input, 'errorPayloadAdditional.clientGuid', 'none');
+    }
+
+    if (accountGuid === 'none') {
+      accountGuid = _.get(input, 'errorPayloadAdditional.accountGuid', 'none');
+    }
+
+    if (uuid.isUUID(clientGuid) && uuid.isUUID(accountGuid)) {
+
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
+
+    }
 
     let errorObj;
     if (input.error.code != null && input.error.code === 'E_INTERNAL_ERROR') {
@@ -134,10 +163,9 @@ module.exports = {
         errorStack,
         errorPayloadAdditional,
       };
-      await LogProcessor.error({
+
+      const logProcessorErrorParams = {
         message: errorMsg,
-        // clientGuid,
-        // accountGuid,
         // requestId: null,
         // childRequestId: null,
         errorName,
@@ -147,7 +175,17 @@ module.exports = {
           errorStack,
           errorPayloadAdditional,
         },
-      });
+      };
+
+      if (uuid.isUUID(clientGuid)) {
+        _.assign(logProcessorErrorParams, {clientGuid})
+      }
+
+      if (uuid.isUUID(accountGuid)) {
+        _.assign(logProcessorErrorParams, {accountGuid})
+      }
+
+      await LogProcessor.error(logProcessorErrorParams);
       if (input.throwError) {
         throw {
           BFErrorDetectedExit: {
