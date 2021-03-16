@@ -73,6 +73,17 @@ module.exports = {
       });
 
       /**
+       * Устанавливаем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: true,
+      });
+
+
+      /**
        * Проверяем достижение порогового уровня невыполненных заданий
        */
 
@@ -135,6 +146,7 @@ module.exports = {
         await sails.helpers.messageProcessor.sendMessageJoi({
           client,
           messageData,
+          forced: true,
         });
 
 
@@ -239,6 +251,7 @@ module.exports = {
           await sails.helpers.messageProcessor.sendMessageJoi({
             client,
             messageData,
+            forced: true,
           });
 
           /**
@@ -272,10 +285,19 @@ module.exports = {
             messageData,
             beforeHelperParams,
             disableWebPagePreview: true,
+            forced: true,
           });
 
 
+          /**
+           * Сбрасываем флаг блокировки отправки сообщений
+           */
 
+          await sails.helpers.general.setClientDndJoi({
+            clientGuid,
+            accountGuid,
+            dnd: false,
+          });
 
 
 
@@ -343,6 +365,16 @@ module.exports = {
       });
 
 
+      /**
+       * Сбрасываем флаг блокировки отправки сообщений
+       */
+
+      await sails.helpers.general.setClientDndJoi({
+        clientGuid,
+        accountGuid,
+        dnd: false,
+      });
+
 
       return exits.success({
         status: 'ok',
@@ -351,35 +383,19 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorMsg = 'General error';
-      //
-      // sails.log.error(`${moduleName}, Error details:
-      // Platform error message: ${errorMsg}
-      // Error name: ${e.name || 'no name'}
-      // Error message: ${e.message || 'no message'}
-      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-      //
-      // throw {err: {
-      //     module: `${moduleName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
@@ -390,7 +406,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }

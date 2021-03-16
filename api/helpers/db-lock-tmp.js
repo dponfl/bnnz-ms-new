@@ -98,6 +98,8 @@ module.exports = {
 
             if (getLockRes == null) {
               await sails.helpers.general.throwErrorJoi({
+                clientGuid,
+                accountGuid,
                 errorType: sails.config.custom.enums.errorType.CRITICAL,
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: moduleName,
@@ -111,6 +113,8 @@ module.exports = {
 
             if (getLockRes === 0) {
               await sails.helpers.general.throwErrorJoi({
+                clientGuid,
+                accountGuid,
                 errorType: sails.config.custom.enums.errorType.CRITICAL,
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: moduleName,
@@ -143,8 +147,8 @@ module.exports = {
             if (releaseLockRes == null) {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                // clientGuid,
-                // accountGuid,
+                clientGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -159,8 +163,8 @@ module.exports = {
             if (releaseLockRes === 0) {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                // clientGuid,
-                // accountGuid,
+                clientGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -185,8 +189,8 @@ module.exports = {
             if (releaseLockRes == null) {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
-                // clientGuid,
-                // accountGuid,
+                clientGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -201,8 +205,8 @@ module.exports = {
             if (releaseLockRes === 0) {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
-                // clientGuid,
-                // accountGuid,
+                clientGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -217,12 +221,16 @@ module.exports = {
             const throwError = true;
             if (throwError) {
               return await sails.helpers.general.catchErrorJoi({
+                clientGuid,
+                accountGuid,
                 error: ee,
                 location: moduleName,
                 throwError: true,
               });
             } else {
               await sails.helpers.general.catchErrorJoi({
+                clientGuid,
+                accountGuid,
                 error: ee,
                 location: moduleName,
                 throwError: false,
@@ -253,27 +261,23 @@ module.exports = {
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
         return exits.success({
           status: 'ok',
-          message: `${moduleName} performed`,
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }
