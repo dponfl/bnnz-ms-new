@@ -365,16 +365,6 @@ module.exports = {
       });
 
 
-      /**
-       * Сбрасываем флаг блокировки отправки сообщений
-       */
-
-      await sails.helpers.general.setClientDndJoi({
-        clientGuid,
-        accountGuid,
-        dnd: false,
-      });
-
 
       return exits.success({
         status: 'ok',
