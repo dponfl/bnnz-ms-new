@@ -33,6 +33,13 @@
         ],
         [
           {
+            "id": "show_pending_tasks",
+            "text": "COMMON_KEYBOARD_PLACE_POST_BTN_03",
+            "action": "common::main::showPendingTasksJoi"
+          }
+        ],
+        [
+          {
             "id": "home_menu",
             "text": "COMMON_KEYBOARD_PLACE_POST_BTN_02",
             "action": "common::main::homeMenuJoi"
