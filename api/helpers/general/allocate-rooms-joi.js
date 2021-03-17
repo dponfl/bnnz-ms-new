@@ -57,6 +57,8 @@ module.exports = {
 
     let input;
 
+    let accountGuid;
+
     let roomRecordWeGet;
     let roomResultArray = [];
     let roomResultIDsArray = [];
@@ -66,24 +68,23 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      accountGuid = input.accountGuid;
+
       const accountRaw = await sails.helpers.storage.accountGetJoi({
-        accountGuids: [input.accountGuid],
+        accountGuids: [accountGuid],
       });
 
       if (accountRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: Unknown accountGuid="${input.accountGuid}"`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'Unknown accountGuid',
-          accountGuid: input.accountGuid,
+          accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
-            accountGuid: input.accountGuid,
+            accountGuid,
           },
         });
-
       }
 
       const account = accountRaw.payload[0] || null;
@@ -93,7 +94,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No accounts found',
-          accountGuid: input.accountGuid,
+          accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             accountRaw,
@@ -106,7 +107,7 @@ module.exports = {
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
           message: 'No service info for account',
-          accountGuid: input.accountGuid,
+          accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
             account,
@@ -133,16 +134,17 @@ module.exports = {
       });
 
     } catch (e) {
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
@@ -161,6 +163,8 @@ module.exports = {
 async function allocateOneRoom(doNotUseRooms, accountRec) {
 
   const methodName = 'allocateOneRoom';
+
+  const accountGuid = accountRec.guid;
 
   /**
    * Возвращает елемент таблицы Room в который может размещаться клиент
@@ -201,6 +205,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
           if (getLockRes == null) {
             await sails.helpers.general.throwErrorJoi({
+              accountGuid,
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
               location: `${moduleName}:${methodName}`,
@@ -214,6 +219,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
 
           if (getLockRes === 0) {
             await sails.helpers.general.throwErrorJoi({
+              accountGuid,
               errorType: sails.config.custom.enums.errorType.CRITICAL,
               emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
               location: `${moduleName}:${methodName}`,
@@ -248,7 +254,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Room.find() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: `${moduleName}:${methodName}`,
@@ -269,7 +275,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   location: `${moduleName}:${methodName}`,
                   message: 'Room.count() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                   payload: {
                     where: {
@@ -303,7 +309,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Room.find() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: `${moduleName}:${methodName}`,
@@ -325,7 +331,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   location: `${moduleName}:${methodName}`,
                   message: 'Room.count() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                   payload: {
                     where: {
@@ -360,7 +366,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Room.find() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: `${moduleName}:${methodName}`,
@@ -382,7 +388,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   location: `${moduleName}:${methodName}`,
                   message: 'Room.count() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                   payload: {
                     where: {
@@ -417,7 +423,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Room.find() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: `${moduleName}:${methodName}`,
@@ -439,7 +445,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   location: `${moduleName}:${methodName}`,
                   message: 'Room.count() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                   payload: {
                     where: {
@@ -460,7 +466,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                 errorType: sails.config.custom.enums.errorType.ERROR,
                 location: `${moduleName}:${methodName}`,
                 message: 'Unknown account category',
-                accountGuid: accountRec.guid,
+                accountGuid,
                 errorName: sails.config.custom.GENERAL_ERROR.name,
                 payload: {
                   accountCategory,
@@ -494,7 +500,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                 error: err,
                 message: 'Room.count() error',
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 location: `${moduleName}:${methodName}`,
@@ -513,7 +519,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
               location: `${moduleName}:${methodName}`,
               message: 'Room.count() error',
               // clientGuid,
-              // accountGuid,
+              accountGuid,
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
               payload: {
                 criteria: 'whole table',
@@ -554,7 +560,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   error: err,
                   message: 'Room.create() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   // requestId: null,
                   // childRequestId: null,
                   location: `${moduleName}:${methodName}`,
@@ -579,7 +585,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                 location: `${moduleName}:${methodName}`,
                 message: 'Room.create() error',
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                 payload: {
                   // room: 1,
@@ -636,7 +642,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Room.create() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: `${moduleName}:${methodName}`,
@@ -660,7 +666,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   location: `${moduleName}:${methodName}`,
                   message: 'Room.create() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                   payload: {
                     // room: totalRooms + 1,
@@ -717,7 +723,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   error: err,
                   message: 'Room.create() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   // requestId: null,
                   // childRequestId: null,
                   location: `${moduleName}:${methodName}`,
@@ -741,7 +747,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                 location: `${moduleName}:${methodName}`,
                 message: 'Room.create() error',
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                 payload: {
                   bronze: accountCategory === 'bronze' ? 1 : 0,
@@ -769,7 +775,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                     error: err,
                     message: 'Account.addToCollection() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: moduleName,
@@ -825,7 +831,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   error: err,
                   message: 'Room.updateOne() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   // requestId: null,
                   // childRequestId: null,
                   location: `${moduleName}:${methodName}`,
@@ -853,7 +859,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                 location: `${moduleName}:${methodName}`,
                 message: 'Room.updateOne() error',
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
                 payload: {
                   criteria: {
@@ -879,7 +885,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
                   error: err,
                   message: 'Account.addToCollection() error',
                   // clientGuid,
-                  // accountGuid,
+                  accountGuid,
                   // requestId: null,
                   // childRequestId: null,
                   location: `${moduleName}:${methodName}`,
@@ -905,7 +911,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             await LogProcessor.critical({
               message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
               // clientGuid,
-              // accountGuid,
+              accountGuid,
               // requestId: null,
               // childRequestId: null,
               errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -921,7 +927,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             await LogProcessor.critical({
               message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
               // clientGuid,
-              // accountGuid,
+              accountGuid,
               // requestId: null,
               // childRequestId: null,
               errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -947,7 +953,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             await LogProcessor.critical({
               message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
               // clientGuid,
-              // accountGuid,
+              accountGuid,
               // requestId: null,
               // childRequestId: null,
               errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -963,7 +969,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
             await LogProcessor.critical({
               message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
               // clientGuid,
-              // accountGuid,
+              accountGuid,
               // requestId: null,
               // childRequestId: null,
               errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -979,12 +985,14 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           const throwError = true;
           if (throwError) {
             return await sails.helpers.general.catchErrorJoi({
+              accountGuid,
               error: eee,
               location: `${moduleName}:${methodName}`,
               throwError: true,
             });
           } else {
             await sails.helpers.general.catchErrorJoi({
+              accountGuid,
               error: eee,
               location: `${moduleName}:${methodName}`,
               throwError: false,
@@ -1006,12 +1014,14 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
     const throwError = true;
     if (throwError) {
       return await sails.helpers.general.catchErrorJoi({
+        accountGuid,
         error: e,
         location: `${moduleName}:${methodName}`,
         throwError: true,
       });
     } else {
       await sails.helpers.general.catchErrorJoi({
+        accountGuid,
         error: e,
         location: `${moduleName}:${methodName}`,
         throwError: false,

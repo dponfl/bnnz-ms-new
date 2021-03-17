@@ -117,6 +117,7 @@ module.exports = {
 
             if (getLockRes == null) {
               await sails.helpers.general.throwErrorJoi({
+                accountGuid,
                 errorType: sails.config.custom.enums.errorType.CRITICAL,
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: `${moduleName}:${methodName}`,
@@ -130,6 +131,7 @@ module.exports = {
 
             if (getLockRes === 0) {
               await sails.helpers.general.throwErrorJoi({
+                accountGuid,
                 errorType: sails.config.custom.enums.errorType.CRITICAL,
                 emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
                 location: `${moduleName}:${methodName}`,
@@ -155,7 +157,7 @@ module.exports = {
                     error: err,
                     message: 'Room.findOne() error',
                     // clientGuid,
-                    // accountGuid,
+                    accountGuid,
                     // requestId: null,
                     // childRequestId: null,
                     location: moduleName,
@@ -182,7 +184,7 @@ module.exports = {
                       error: err,
                       message: 'Account.removeFromCollection() error',
                       // clientGuid,
-                      // accountGuid,
+                      accountGuid,
                       // requestId: null,
                       // childRequestId: null,
                       location: moduleName,
@@ -220,7 +222,7 @@ module.exports = {
                           error: err,
                           message: 'Room.updateOne() error',
                           // clientGuid,
-                          // accountGuid,
+                          accountGuid,
                           // requestId: null,
                           // childRequestId: null,
                           location: moduleName,
@@ -263,7 +265,7 @@ module.exports = {
                           error: err,
                           message: 'Room.updateOne() error',
                           // clientGuid,
-                          // accountGuid,
+                          accountGuid,
                           // requestId: null,
                           // childRequestId: null,
                           location: moduleName,
@@ -307,7 +309,7 @@ module.exports = {
                           error: err,
                           message: 'Room.updateOne() error',
                           // clientGuid,
-                          // accountGuid,
+                          accountGuid,
                           // requestId: null,
                           // childRequestId: null,
                           location: moduleName,
@@ -351,7 +353,7 @@ module.exports = {
                           error: err,
                           message: 'Room.updateOne() error',
                           // clientGuid,
-                          // accountGuid,
+                          accountGuid,
                           // requestId: null,
                           // childRequestId: null,
                           location: moduleName,
@@ -392,7 +394,7 @@ module.exports = {
             });
 
             const rooms = await sails.helpers.general.allocateRoomsJoi({
-              accountGuid: input.account.guid,
+              accountGuid,
             });
 
             const ReleaseLock = await sails
@@ -405,7 +407,7 @@ module.exports = {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -421,7 +423,7 @@ module.exports = {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -447,7 +449,7 @@ module.exports = {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.message,
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_WRONG_RESPONSE.name,
@@ -463,7 +465,7 @@ module.exports = {
               await LogProcessor.critical({
                 message: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.message,
                 // clientGuid,
-                // accountGuid,
+                accountGuid,
                 // requestId: null,
                 // childRequestId: null,
                 errorName: sails.config.custom.DB_ERROR_RELEASE_LOCK_DECLINE.name,
@@ -479,12 +481,14 @@ module.exports = {
             const throwError = true;
             if (throwError) {
               return await sails.helpers.general.catchErrorJoi({
+                accountGuid,
                 error: ee,
                 location: `${moduleName}:${methodName}`,
                 throwError: true,
               });
             } else {
               await sails.helpers.general.catchErrorJoi({
+                accountGuid,
                 error: ee,
                 location: `${moduleName}:${methodName}`,
                 throwError: false,
@@ -507,42 +511,20 @@ module.exports = {
       });
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
-          errorPayloadAdditional: {
-            // clientGuid,
-            accountGuid,
-          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
-          errorPayloadAdditional: {
-            // clientGuid,
-            accountGuid,
-          },
         });
         return exits.success({
           status: 'error',
@@ -550,8 +532,6 @@ module.exports = {
           payload: {},
         });
       }
-
-
     }
   }
 };
