@@ -144,7 +144,256 @@ module.exports = {
             }
 
 
-            _.forEach(input.account.room, async function (elem) {
+            // _.forEach(input.account.room, async function (elem) {
+            //   let room = await Room.findOne({id: elem.id})
+            //     .usingConnection(db)
+            //     .tolerate(async (err) => {
+            //
+            //       err.details = {
+            //         id: elem.id,
+            //       };
+            //
+            //       await LogProcessor.dbError({
+            //         error: err,
+            //         message: 'Room.findOne() error',
+            //         // clientGuid,
+            //         accountGuid,
+            //         // requestId: null,
+            //         // childRequestId: null,
+            //         location: moduleName,
+            //         payload: {
+            //           id: elem.id,
+            //         },
+            //       });
+            //
+            //       return null;
+            //     });
+            //
+            //   if (room) {
+            //     await Account.removeFromCollection(input.account.id, 'room', room.id)
+            //       .usingConnection(db)
+            //       .tolerate(async (err) => {
+            //
+            //         err.details = {
+            //           inputAccountId: input.account.id,
+            //           model: 'room',
+            //           roomId: room.id,
+            //         };
+            //
+            //         await LogProcessor.dbError({
+            //           error: err,
+            //           message: 'Account.removeFromCollection() error',
+            //           // clientGuid,
+            //           accountGuid,
+            //           // requestId: null,
+            //           // childRequestId: null,
+            //           location: moduleName,
+            //           payload: {
+            //             inputAccountId: input.account.id,
+            //             model: 'room',
+            //             roomId: room.id,
+            //           },
+            //         });
+            //
+            //         return true;
+            //       });
+            //
+            //     switch (accountCategory) {
+            //       case 'bronze':
+            //         await Room.updateOne({id: room.id})
+            //           .set({
+            //             bronze: room.bronze - 1,
+            //             accounts_number: room.accounts_number - 1
+            //           })
+            //           .usingConnection(db)
+            //           .tolerate(async (err) => {
+            //
+            //             err.details = {
+            //               criteria: {
+            //                 id: room.id,
+            //               },
+            //               data: {
+            //                 bronze: room.bronze - 1,
+            //                 accounts_number: room.accounts_number - 1
+            //               }
+            //             };
+            //
+            //             await LogProcessor.dbError({
+            //               error: err,
+            //               message: 'Room.updateOne() error',
+            //               // clientGuid,
+            //               accountGuid,
+            //               // requestId: null,
+            //               // childRequestId: null,
+            //               location: moduleName,
+            //               payload: {
+            //                 criteria: {
+            //                   id: room.id,
+            //                 },
+            //                 data: {
+            //                   bronze: room.bronze - 1,
+            //                   accounts_number: room.accounts_number - 1
+            //                 }
+            //               },
+            //             });
+            //
+            //             return true;
+            //           });
+            //
+            //         break;
+            //
+            //       case 'gold':
+            //         await Room.updateOne({id: room.id})
+            //           .set({
+            //             gold: room.gold - 1,
+            //             accounts_number: room.accounts_number - 1
+            //           })
+            //           .usingConnection(db)
+            //           .tolerate(async (err) => {
+            //
+            //             err.details = {
+            //               criteria: {
+            //                 id: room.id,
+            //               },
+            //               data: {
+            //                 gold: room.gold - 1,
+            //                 accounts_number: room.accounts_number - 1
+            //               }
+            //             };
+            //
+            //             await LogProcessor.dbError({
+            //               error: err,
+            //               message: 'Room.updateOne() error',
+            //               // clientGuid,
+            //               accountGuid,
+            //               // requestId: null,
+            //               // childRequestId: null,
+            //               location: moduleName,
+            //               payload: {
+            //                 criteria: {
+            //                   id: room.id,
+            //                 },
+            //                 data: {
+            //                   gold: room.gold - 1,
+            //                   accounts_number: room.accounts_number - 1
+            //                 }
+            //               },
+            //             });
+            //
+            //             return true;
+            //           });
+            //
+            //
+            //         break;
+            //
+            //       case 'platinum':
+            //         await Room.updateOne({id: room.id})
+            //           .set({
+            //             platinum: room.platinum - 1,
+            //             accounts_number: room.accounts_number - 1
+            //           })
+            //           .usingConnection(db)
+            //           .tolerate(async (err) => {
+            //
+            //             err.details = {
+            //               criteria: {
+            //                 id: room.id,
+            //               },
+            //               data: {
+            //                 platinum: room.platinum - 1,
+            //                 accounts_number: room.accounts_number - 1
+            //               }
+            //             };
+            //
+            //             await LogProcessor.dbError({
+            //               error: err,
+            //               message: 'Room.updateOne() error',
+            //               // clientGuid,
+            //               accountGuid,
+            //               // requestId: null,
+            //               // childRequestId: null,
+            //               location: moduleName,
+            //               payload: {
+            //                 criteria: {
+            //                   id: room.id,
+            //                 },
+            //                 data: {
+            //                   platinum: room.platinum - 1,
+            //                   accounts_number: room.accounts_number - 1
+            //                 }
+            //               },
+            //             });
+            //
+            //             return true;
+            //           });
+            //
+            //
+            //         break;
+            //
+            //       case 'star':
+            //         await Room.updateOne({id: room.id})
+            //           .set({
+            //             star: room.star - 1,
+            //             accounts_number: room.accounts_number - 1
+            //           })
+            //           .usingConnection(db)
+            //           .tolerate(async (err) => {
+            //
+            //             err.details = {
+            //               criteria: {
+            //                 id: room.id,
+            //               },
+            //               data: {
+            //                 star: room.star - 1,
+            //                 accounts_number: room.accounts_number - 1
+            //               }
+            //             };
+            //
+            //             await LogProcessor.dbError({
+            //               error: err,
+            //               message: 'Room.updateOne() error',
+            //               // clientGuid,
+            //               accountGuid,
+            //               // requestId: null,
+            //               // childRequestId: null,
+            //               location: moduleName,
+            //               payload: {
+            //                 criteria: {
+            //                   id: room.id,
+            //                 },
+            //                 data: {
+            //                   star: room.star - 1,
+            //                   accounts_number: room.accounts_number - 1
+            //                 }
+            //               },
+            //             });
+            //
+            //             return true;
+            //           });
+            //
+            //
+            //         break;
+            //
+            //       default:
+            //         // throw new Error(`${moduleName}, error: Unknown client category="${accountCategory}"`);
+            //         await sails.helpers.general.throwErrorJoi({
+            //           errorType: sails.config.custom.enums.errorType.ERROR,
+            //           location: moduleName,
+            //           message: 'Unknown client category',
+            //           // clientGuid,
+            //           accountGuid,
+            //           errorName: sails.config.custom.GENERAL_ERROR.name,
+            //           payload: {
+            //             accountCategory,
+            //           },
+            //         });
+            //
+            //     }
+            //
+            //   }
+            // });
+
+            for (const elem of input.account.room) {
               let room = await Room.findOne({id: elem.id})
                 .usingConnection(db)
                 .tolerate(async (err) => {
@@ -391,7 +640,7 @@ module.exports = {
                 }
 
               }
-            });
+            }
 
             const rooms = await sails.helpers.general.allocateRoomsJoi({
               accountGuid,

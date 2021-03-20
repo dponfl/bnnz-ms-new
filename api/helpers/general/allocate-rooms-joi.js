@@ -476,7 +476,18 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
           }
 
 
-          _.forEach(rooms, function (val) {
+          // _.forEach(rooms, function (val) {
+          //   if (!_.find(doNotUseRooms, function (el) {
+          //     return (val.id === el.id);
+          //   })) {
+          //     val.used = false;
+          //   } else {
+          //     val.used = true;
+          //   }
+          //   checkedRooms.push(val);
+          // });
+
+          for (const val of rooms) {
             if (!_.find(doNotUseRooms, function (el) {
               return (val.id === el.id);
             })) {
@@ -485,7 +496,7 @@ async function allocateOneRoom(doNotUseRooms, accountRec) {
               val.used = true;
             }
             checkedRooms.push(val);
-          });
+          }
 
 
           totalRooms = await Room.count()

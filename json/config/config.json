@@ -163,9 +163,17 @@
     }
   },
   "accounts": {
-    "test_initial_period": {
+    "testInitialPeriod": {
       "unit": "days",
       "amount": 5
+    },
+    "testPersonalInitial": {
+      "fromName": "test_personal_initial",
+      "toName": "test_personal"
+    },
+    "testCommercialInitial": {
+      "fromName": "test_commercial_initial",
+      "toName": "test_commercial"
     }
   },
   "tasks": {
@@ -1080,6 +1088,12 @@
         "rule": "*/30 */1 * * * *",
         "location": "pendingMessages",
         "action": "pushPendingMessages",
+        "getRecordsLimit": 1000
+      },
+      {
+        "rule": "*/30 */1 * * * *",
+        "location": "accounts",
+        "action": "testInitialUpdate",
         "getRecordsLimit": 1000
       }
     ]
@@ -2230,6 +2244,10 @@
         "COMMON_MAIN_PENDING_TASKS_PUT_COMMENT_02": "(не меньше 2 слов)",
         "COMMON_MAIN_PARSER_ERROR_MSG_01": "К сожалению произошла ошибка со стороны сервера Instagram, как только он восстановит свою работу мы завершим проверку :heavy_check_mark:",
         "COMMON_MAIN_PARSER_ERROR_MSG_02": "Также ты можешь самостоятельно повторить проверку заданий через какое-то время :clock11:",
+        "$$$$$$$$$$$$$$$$$$$$$_BeFame_Push_Messages_Scheduler": "*** ТОКЕНЫ ДЛЯ BeFame Push Messages Scheduler ***",
+        "COMMON_SCHEDULER_TEST_INITIAL_UPDATE_MSG_01": "Пятидневный доступ к пакету продвижения BeHero для аккаунта «$TestInitialAccount$» подошёл к концу :pensive:",
+        "COMMON_SCHEDULER_TEST_INITIAL_UPDATE_MSG_02": "Твой сервисный уровень автоматически переключен на бесплатный пакет продвижения BeFree :robot_face:",
+        "COMMON_SCHEDULER_TEST_INITIAL_UPDATE_MSG_03": "Следи за квестами, чтобы не упустить возможность выбрать интересующий тебя пакет продвижения с ПЕРСОНАЛЬНОЙ скидкой и БОНУСОМ при оплате :gift:",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts ***",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts test": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts test ***",
         "COMMON_CB_BTN_01": "Кнопка 1",
