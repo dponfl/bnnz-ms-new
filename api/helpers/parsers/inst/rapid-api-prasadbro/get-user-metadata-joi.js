@@ -173,7 +173,6 @@ module.exports = {
           clientGuid,
           accountGuid,
           comments: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
             rawResponse: getUserIdRes,
           },
         };
@@ -479,6 +478,7 @@ module.exports = {
       if (
         userId == null
         || profilePicUrl == null
+        || _.toLower(userName) !== _.toLower(instProfile)
       ) {
 
         status = 'error';
