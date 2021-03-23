@@ -4,7 +4,7 @@
       "checkProfileExists": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -24,7 +24,7 @@
       "checkProfileSubscription": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -44,7 +44,7 @@
       "checkLikes": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -64,7 +64,7 @@
       "checkComments": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -84,7 +84,7 @@
       "getPostMetadata": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },

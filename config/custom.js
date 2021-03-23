@@ -741,6 +741,16 @@ module.exports.custom = {
     message: 'Wrong getUserIdByProfileJoi response status',
   },
 
+  INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS: {
+    name: 'INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS',
+    message: 'Wrong getUserId response substatus',
+  },
+
+  INST_PARSER_WRONG_GET_USER_ID_RESPONSE: {
+    name: 'INST_PARSER_WRONG_GET_USER_ID_RESPONSE',
+    message: 'Wrong getUserId response',
+  },
+
   INST_PARSER_GET_USER_METADATA_ERROR_STATUS: {
     name: 'INST_PARSER_GET_USER_METADATA_ERROR_STATUS',
     message: 'getUserMetadataJoi response has error status',

@@ -365,7 +365,23 @@
           "getComments": "/comments"
         }
       },
+      "rapidApiPrasadbro": {
+        "url": "https://instagram47.p.rapidapi.com",
+        "apiHost": "instagram47.p.rapidapi.com",
+        "apiKey": "645c9977cbmsh588d4360d97fa5ap126824jsn294fc2e3dc68",
+        "paths": {
+          "getUserId": "/get_user_id",
+          "getUserMetadata": "/email_and_details",
+          "getFollowing": "/user_following",
+          "getPostMetadata": "/post_details",
+          "getLikes": "/public_post_likers",
+          "getComments": "/public_post_comments"
+        }
+      },
       "otherProviderXXX": {
+        "url": "XXX",
+        "apiHost": "XXX",
+        "apiKey": "XXX",
         "paths": {
           "getUserId": "XXX",
           "getFollowing": "XXX",
