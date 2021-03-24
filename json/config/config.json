@@ -369,6 +369,7 @@
         "url": "https://instagram47.p.rapidapi.com",
         "apiHost": "instagram47.p.rapidapi.com",
         "apiKey": "645c9977cbmsh588d4360d97fa5ap126824jsn294fc2e3dc68",
+        "requestTimeout": 6000,
         "paths": {
           "getUserId": "/get_user_id",
           "getUserMetadata": "/email_and_details",
