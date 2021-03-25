@@ -63,7 +63,9 @@ module.exports = {
         .description('Instagram user id')
         .required(),
       nextMaxId: Joi
-        .string()
+        .number()
+        .integer()
+        .positive()
         .description('next_max_id parameter'),
     });
 
