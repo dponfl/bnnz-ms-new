@@ -4,16 +4,15 @@ const Joi = require('@hapi/joi');
 const moment = require('moment');
 const sleep = require('util').promisify(setTimeout);
 
-const moduleName = 'parsers:inst:rapid-api-logicbuilder:check-likes-joi';
+const moduleName = 'parsers:inst:rapid-api-socialminer:check-profile-subscription-joi';
 
 
 module.exports = {
 
+  friendlyName: 'parsers:inst:rapid-api-socialminer:check-profile-subscription-joi',
 
-  friendlyName: 'parsers:inst:rapid-api-logicbuilder:check-likes-joi',
 
-
-  description: 'Проверка постановки лайка',
+  description: 'Проверка, что один профиль подписан на другие профили',
 
 
   inputs: {
@@ -29,15 +28,12 @@ module.exports = {
 
 
   exits: {
-
     success: {
       description: 'All done.',
     },
-
     err: {
       description: 'Error',
     }
-
   },
 
 
@@ -48,36 +44,43 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      instProfile: Joi
+      checkProfile: Joi
         .string()
+        .description('Instagram profile to check subscription')
         .required(),
-      shortCode: Joi
+      profileId: Joi
         .string()
-        .description('Instagram post shortcode')
+        .description('Instagram profile ID')
         .required(),
-      postMediaId: Joi
-        .string()
-        .description('Instagram post media id')
+      profilesList: Joi
+        .any()
+        .description('list of Instagram profile to check subscription on')
         .required(),
+      checkRenewIndex: Joi
+        .number()
+        .description('index to define depth on check renew')
+        .integer(),
     });
 
+    let client;
     let clientGuid;
     let accountGuid;
 
-    let shortCode;
+    let result;
+    let notSubscribed = [];
+    let subscribed = [];
+    let allSubscribed = false;
+    const followingProfiles = [];
+    let getFollowingsJoiRes;
+    let checkedProfiles = 0;
 
-    let likeMade = false;
-
-    let hasMore = true;
+    let hasNextPage = true;
     let endCursor = null;
-
-    let totalLikers = 0;
-    let checkedLikers = 0;
 
     const platform = 'Instagram';
     const action = 'parsing';
-    const api = 'rapidApiLogicbuilder';
-    const requestType = 'checkLikes';
+    const api = 'rapidApiSocialminer';
+    const requestType = 'checkProfileSubscription';
     const momentStart = moment();
 
     let status = '';
@@ -86,32 +89,32 @@ module.exports = {
 
       const input = await schema.validateAsync(inputs.params);
 
-      shortCode = input.shortCode;
+      client = input.client;
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const client = input.client;
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiSocialminer.requestTimeout || null;
 
-      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.requestTimeout || null;
+      /**
+       * Проверяем подписку парсером постепенно увеличивая глубину проверки, если
+       * подписка всё ещё не подтверждена
+       */
 
-      while (!likeMade && hasMore) {
 
-        /**
-         * Получаем данные о тех, кто поставил лайк
-         */
+      while (!allSubscribed && hasNextPage) {
 
-        const getLikesParams = {
+        const getFollowingsJoiParams = {
           client,
-          shortCode,
+          userId: input.profileId,
         };
 
         if (endCursor != null) {
-          getLikesParams.endCursor = endCursor;
+          getFollowingsJoiParams.endCursor = endCursor;
         }
 
-        const getLikesJoiRaw = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getLikesJoi(getLikesParams);
+        getFollowingsJoiRes = await sails.helpers.parsers.inst.rapidApiSocialminer.getFollowingsJoi(getFollowingsJoiParams);
 
-        if (getLikesJoiRaw.status !== 'success') {
+        if (getFollowingsJoiRes.status !== 'success') {
 
           status = 'error';
           const momentDone = moment();
@@ -119,16 +122,16 @@ module.exports = {
           const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
           await LogProcessor.error({
-            message: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.message,
+            message: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.message,
             clientGuid,
             accountGuid,
             // requestId: null,
             // childRequestId: null,
-            errorName: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.name,
+            errorName: sails.config.custom.INST_PARSER_WRONG_GET_FOLLOWINGS_STATUS.name,
             location: moduleName,
             payload: {
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              getFollowingsJoiParams: _.omit(getFollowingsJoiParams, 'client'),
+              getFollowingsJoiRes,
             }
           });
 
@@ -142,9 +145,9 @@ module.exports = {
             clientGuid,
             accountGuid,
             comments: {
-              error: 'wrong getLikesJoi response status',
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              error: 'wrong getFollowingsJoi response status',
+              getFollowingsJoiParams: _.omit(getFollowingsJoiParams, 'client'),
+              getFollowingsJoiRes,
             },
           };
 
@@ -154,27 +157,37 @@ module.exports = {
             status: 'error',
             message: `${moduleName} performed with error`,
             payload: {
-              error: 'wrong getLikesJoi response status',
+              error: 'wrong getFollowingsJoi response status',
+              checkRenewIndex: 0,
             },
-            raw: getLikesJoiRaw,
+            raw: getFollowingsJoiRes,
           })
 
         }
 
-        const likeByProfile = _.find(getLikesJoiRaw.payload.collector, {username: input.instProfile});
+        checkedProfiles = checkedProfiles + getFollowingsJoiRes.payload.users.length;
 
-        if (likeByProfile != null) {
-          likeMade = true;
+        // _.forEach(getFollowingsJoiRes.payload.users, (elem) => {
+        //   if (!_.isNil(elem.username)) {
+        //     followingProfiles.push(elem.username)
+        //   }
+        // });
+
+        for (const elem of getFollowingsJoiRes.payload.users) {
+          if (!_.isNil(elem.node.username)) {
+            followingProfiles.push(elem.node.username)
+          }
         }
 
-        totalLikers = getLikesJoiRaw.payload.count;
-        checkedLikers = checkedLikers + getLikesJoiRaw.payload.collector.length;
+        notSubscribed = _.difference(input.profilesList, followingProfiles);
 
-        hasMore = getLikesJoiRaw.payload.has_more || false;
-        endCursor = getLikesJoiRaw.payload.end_cursor || null;
+        allSubscribed = notSubscribed.length === 0;
+
+        hasNextPage = getFollowingsJoiRes.payload.hasNextPage || false;
+        endCursor = getFollowingsJoiRes.payload.endCursor || null;
 
         if (endCursor == null) {
-          hasMore = false;
+          hasNextPage = false;
         }
 
         if (!_.isNil(requestTimeout)) {
@@ -182,6 +195,14 @@ module.exports = {
         }
 
       }
+
+      subscribed = _.difference(input.profilesList, notSubscribed);
+
+      result = {
+        allSubscribed,
+        notSubscribed,
+        subscribed,
+      };
 
       status = 'success';
 
@@ -200,9 +221,8 @@ module.exports = {
         accountGuid,
         comments: {
           input: _.omit(input, 'client'),
-          likeMade,
-          totalLikers,
-          checkedLikers,
+          result,
+          checkedProfiles,
         },
       };
 
@@ -211,10 +231,9 @@ module.exports = {
       return exits.success({
         status: 'success',
         message: `${moduleName} performed`,
-        payload: {
-          likeMade,
-        },
+        payload: result,
       })
+
 
     } catch (e) {
       const throwError = false;

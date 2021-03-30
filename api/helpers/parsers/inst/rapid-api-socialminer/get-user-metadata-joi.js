@@ -58,15 +58,16 @@ module.exports = {
         .any()
         .description('Client record')
         .required(),
-      userId: Joi
+      instProfile: Joi
         .string()
-        .description('Instagram user id')
+        .description('Instagram profile')
         .required(),
     });
 
     let client;
     let clientGuid;
     let accountGuid;
+    let instProfile;
 
     let requestError = null;
 
@@ -78,6 +79,7 @@ module.exports = {
       client = input.client;
       clientGuid = client.guid;
       accountGuid = client.account_use;
+      instProfile = input.instProfile;
 
       const platform = 'Instagram';
       const action = 'parsing';
@@ -85,10 +87,213 @@ module.exports = {
       const requestType = 'getUserMetadata';
       let status = '';
 
+      const momentStart = moment();
+
+      /**
+       * Получаем user id
+       */
+
+      const getUserIdParams = {
+        client,
+        instProfile,
+      }
+
+      const getUserIdRes = await sails.helpers.parsers.inst.rapidApiSocialminer.getUserIdJoi(getUserIdParams);
+
+      if (getUserIdRes.status !== 'success') {
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.name,
+          location: moduleName,
+          payload: {
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          }
+        });
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.message,
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_BY_PROFILE_STATUS.message,
+          },
+          raw: getUserIdRes,
+        })
+
+      }
+
+      const subStatus = _.get(getUserIdRes, 'subStatus', null);
+
+      if (subStatus === sails.config.custom.HTTP_STATUS_NOT_FOUND.message) {
+
+        /**
+         * Instagram profile not found (does not exist)
+         */
+
+        status = 'success';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            rawResponse: getUserIdRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'success',
+          subStatus: sails.config.custom.HTTP_STATUS_NOT_FOUND.message,
+          message: `${moduleName} performed`,
+          payload: getUserIdRes,
+          raw: getUserIdRes,
+        })
+
+      } else if (subStatus !== sails.config.custom.HTTP_STATUS_FOUND.message) {
+
+        /**
+         * Неизвестный subStatus
+         */
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS.name,
+          location: moduleName,
+          payload: {
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          }
+        });
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS.message,
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_SUBSTATUS.message,
+          },
+          raw: getUserIdRes,
+        })
+
+      }
+
+      const userId = _.get(getUserIdRes, 'payload.userId', null);
+
+      if (_.isNil(userId)) {
+
+        status = 'error';
+        const momentDone = moment();
+
+        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+        await LogProcessor.error({
+          message: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_RESPONSE.message,
+          clientGuid,
+          accountGuid,
+          // requestId: null,
+          // childRequestId: null,
+          errorName: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_RESPONSE.name,
+          location: moduleName,
+          payload: {
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          }
+        });
+
+        const performanceCreateParams = {
+          platform,
+          action,
+          api,
+          requestType,
+          requestDuration,
+          status,
+          clientGuid,
+          accountGuid,
+          comments: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_RESPONSE.message,
+            getUserIdParams: _.omit(getUserIdParams, 'client'),
+            getUserIdRes,
+          },
+        };
+
+        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+        return exits.success({
+          status: 'error',
+          message: `${moduleName} performed with error`,
+          payload: {
+            error: sails.config.custom.INST_PARSER_WRONG_GET_USER_ID_RESPONSE.message,
+          },
+          raw: getUserIdRes,
+        })
+      }
+
       const parserUrl = sails.config.custom.config.parsers.inst.rapidApiSocialminer.url;
       const parserAction = sails.config.custom.config.parsers.inst.rapidApiSocialminer.paths.getUserMetadata;
-
-      const momentStart = moment();
 
       const options = {
         uri: parserUrl + parserAction,
@@ -98,7 +303,7 @@ module.exports = {
           "x-rapidapi-key": sails.config.custom.config.parsers.inst.rapidApiSocialminer.apiKey,
         },
         qs: {
-          user_id: input.userId,
+          user_id: userId,
         },
         json: true,
       };
@@ -239,7 +444,10 @@ module.exports = {
         return exits.success(requestError);
       }
 
-      if (_.isNil(requestRes.success)) {
+      if (
+        _.isNil(requestRes.success)
+        || !requestRes.success
+      ) {
 
         status = 'error';
         const momentDone = moment();
@@ -282,52 +490,13 @@ module.exports = {
           subStatus: 'WrongResponseStatus',
           message: `${moduleName} performed with error`,
           payload: {
-            error: 'No "success" key',
+            error: 'wrong response status',
           },
           raw: requestRes,
         })
 
       }
 
-      if (!requestRes.success) {
-
-        /**
-         * Instagram profile not found (does not exist)
-         */
-
-        status = 'success';
-        const momentDone = moment();
-
-        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-        const performanceCreateParams = {
-          platform,
-          action,
-          api,
-          requestType,
-          requestDuration,
-          status,
-          clientGuid,
-          accountGuid,
-          comments: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
-            rawResponse: requestRes,
-          },
-        };
-
-        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        return exits.success({
-          status: 'success',
-          subStatus: sails.config.custom.HTTP_STATUS_NOT_FOUND.message,
-          message: `${moduleName} performed`,
-          payload: requestRes,
-          raw: requestRes,
-        })
-
-      }
-
-      const userId = _.get(requestRes, 'data.pk', null);
       const userName = _.get(requestRes, 'data.username', null);
       const fullName = _.get(requestRes, 'data.full_name', null);
       const isPrivate = _.get(requestRes, 'data.is_private', null);
@@ -337,6 +506,7 @@ module.exports = {
       if (
         userId == null
         || profilePicUrl == null
+        || _.toLower(userName) !== _.toLower(instProfile)
       ) {
 
         status = 'error';
@@ -345,7 +515,7 @@ module.exports = {
         const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
         await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.message + `: No user id or profile pic url`,
+          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.message,
           clientGuid,
           accountGuid,
           // requestId: null,
@@ -380,7 +550,7 @@ module.exports = {
           subStatus: 'WrongResponseData',
           message: `${moduleName} performed with error`,
           payload: {
-            error: 'No user id or profile pic url',
+            error: 'wrong parser response data',
           },
           raw: requestRes,
         })
@@ -452,7 +622,7 @@ module.exports = {
         });
         return exits.success({
           status: 'error',
-          message: `${moduleName} performed`,
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

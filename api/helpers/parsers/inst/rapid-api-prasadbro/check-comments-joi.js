@@ -92,7 +92,7 @@ module.exports = {
       clientGuid = client.guid;
       accountGuid = client.account_use;
 
-      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiPrasadbro.requestTimeout;
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiPrasadbro.requestTimeout || null;
 
       while (!commentMade && hasMore) {
 
@@ -277,7 +277,9 @@ module.exports = {
           hasMore = false;
         }
 
-        await sleep(requestTimeout);
+        if (!_.isNil(requestTimeout)) {
+          await sleep(requestTimeout);
+        }
 
       }
 

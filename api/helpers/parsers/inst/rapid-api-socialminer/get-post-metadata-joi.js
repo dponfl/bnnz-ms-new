@@ -211,7 +211,10 @@ module.exports = {
         return exits.success(requestError);
       }
 
-      if (_.isNil(requestRes.success)) {
+      if (
+        _.isNil(requestRes.success)
+        || !requestRes.success
+      ) {
 
         status = 'error';
         const momentDone = moment();
@@ -255,56 +258,6 @@ module.exports = {
           message: `${moduleName} performed with error`,
           payload: {
             error: 'No "success" key',
-          },
-          raw: requestRes,
-        })
-
-      }
-
-      if (_.isNil(requestRes.data)) {
-
-        status = 'error';
-        const momentDone = moment();
-
-        const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-        await LogProcessor.error({
-          message: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.message + ': No "data" key',
-          clientGuid,
-          accountGuid,
-          // requestId: null,
-          // childRequestId: null,
-          errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_STATUS.name,
-          location: moduleName,
-          payload: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
-            rawResponse: requestRes,
-          },
-        });
-
-        const performanceCreateParams = {
-          platform,
-          action,
-          api,
-          requestType,
-          requestDuration,
-          status,
-          clientGuid,
-          accountGuid,
-          comments: {
-            requestParams: _.set(options, 'headers.x-rapidapi-key', '***'),
-            rawResponse: requestRes,
-          },
-        };
-
-        await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-        return exits.success({
-          status: 'error',
-          subStatus: 'WrongResponseStatus',
-          message: `${moduleName} performed with error`,
-          payload: {
-            error: 'No "data" key',
           },
           raw: requestRes,
         })

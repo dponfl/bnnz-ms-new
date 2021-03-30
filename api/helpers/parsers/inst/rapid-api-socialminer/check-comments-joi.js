@@ -4,16 +4,16 @@ const Joi = require('@hapi/joi');
 const moment = require('moment');
 const sleep = require('util').promisify(setTimeout);
 
-const moduleName = 'parsers:inst:rapid-api-prasadbro:check-likes-joi';
+const moduleName = 'parsers:inst:rapid-api-socialminer:check-comments-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:rapid-api-prasadbro:check-likes-joi',
+  friendlyName: 'parsers:inst:rapid-api-socialminer:check-comments-joi',
 
 
-  description: 'Проверка постановки лайка',
+  description: 'Проверка оставления комментария',
 
 
   inputs: {
@@ -67,15 +67,17 @@ module.exports = {
 
     let shortCode;
 
-    let likeMade = false;
+    let commentMade = false;
+    let commentText = '';
+    let numberOfWords = 0;
 
     let hasMore = true;
     let endCursor = null;
 
     const platform = 'Instagram';
     const action = 'parsing';
-    const api = 'rapidApiPrasadbro';
-    const requestType = 'checkLikes';
+    const api = 'rapidApiSocialminer';
+    const requestType = 'checkComments';
     const momentStart = moment();
 
     let status = '';
@@ -90,26 +92,26 @@ module.exports = {
       clientGuid = client.guid;
       accountGuid = client.account_use;
 
-      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiPrasadbro.requestTimeout || null;
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiSocialminer.requestTimeout || null;
 
-      while (!likeMade && hasMore) {
+      while (!commentMade && hasMore) {
 
         /**
-         * Получаем данные о тех, кто поставил лайк
+         * Получаем данные о комментарии
          */
 
-        const getLikesParams = {
+        const getCommentsParams = {
           client,
           shortCode,
         };
 
         if (endCursor != null) {
-          getLikesParams.endCursor = endCursor;
+          getCommentsParams.endCursor = endCursor;
         }
 
-        const getLikesJoiRaw = await sails.helpers.parsers.inst.rapidApiPrasadbro.getLikesJoi(getLikesParams);
+        const getCommentsJoiRaw = await sails.helpers.parsers.inst.rapidApiSocialminer.getCommentsJoi(getCommentsParams);
 
-        if (getLikesJoiRaw.status !== 'success') {
+        if (getCommentsJoiRaw.status !== 'success') {
 
           status = 'error';
           const momentDone = moment();
@@ -117,16 +119,16 @@ module.exports = {
           const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
           await LogProcessor.error({
-            message: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.message,
+            message: sails.config.custom.INST_PARSER_WRONG_GET_COMMENTS_STATUS.message,
             clientGuid,
             accountGuid,
             // requestId: null,
             // childRequestId: null,
-            errorName: sails.config.custom.INST_PARSER_WRONG_GET_LIKES_STATUS.name,
+            errorName: sails.config.custom.INST_PARSER_WRONG_GET_COMMENTS_STATUS.name,
             location: moduleName,
             payload: {
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
             }
           });
 
@@ -140,9 +142,9 @@ module.exports = {
             clientGuid,
             accountGuid,
             comments: {
-              error: 'wrong getLikesJoi response status',
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              error: 'wrong getCommentsJoi response status',
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
             },
           };
 
@@ -152,14 +154,14 @@ module.exports = {
             status: 'error',
             message: `${moduleName} performed with error`,
             payload: {
-              error: 'wrong getLikesJoi response status',
+              error: 'wrong getCommentsJoi response status',
             },
-            raw: getLikesJoiRaw,
+            raw: getCommentsJoiRaw,
           })
 
         }
 
-        if (!_.has(getLikesJoiRaw.payload, 'body.edge_liked_by.edges')) {
+        if (!_.has(getCommentsJoiRaw.payload, 'data.edges')) {
 
           status = 'error';
           const momentDone = moment();
@@ -167,57 +169,7 @@ module.exports = {
           const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
 
           await LogProcessor.error({
-            message: '"getLikesJoiRaw.payload" has no "body.edge_liked_by.edges"',
-            clientGuid,
-            accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
-            location: moduleName,
-            payload: {
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
-            }
-          });
-
-          const performanceCreateParams = {
-            platform,
-            action,
-            api,
-            requestType,
-            requestDuration,
-            status,
-            clientGuid,
-            accountGuid,
-            comments: {
-              error: '"getLikesJoiRaw.payload" has no "body.edge_liked_by.edges"',
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
-            },
-          };
-
-          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
-
-          return exits.success({
-            status: 'error',
-            message: `${moduleName} performed with error`,
-            payload: {
-              error: '"getLikesJoiRaw.payload" has no "body.edge_liked_by.edges"',
-            },
-            raw: getLikesJoiRaw,
-          })
-
-        }
-
-        if (!_.isArray(getLikesJoiRaw.payload.body.edge_liked_by.edges)) {
-
-          status = 'error';
-          const momentDone = moment();
-
-          const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
-
-          await LogProcessor.error({
-            message: '"body.edge_liked_by.edges" not array',
+            message: '"getCommentsJoiRaw.payload" has no "data.edges"',
             clientGuid,
             accountGuid,
             // requestId: null,
@@ -225,8 +177,8 @@ module.exports = {
             errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
             location: moduleName,
             payload: {
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
             }
           });
 
@@ -240,9 +192,9 @@ module.exports = {
             clientGuid,
             accountGuid,
             comments: {
-              error: '"body.edge_liked_by.edges" not array',
-              getLikesParams: _.omit(getLikesParams, 'client'),
-              getLikesJoiRaw,
+              error: '"getCommentsJoiRaw.payload" has no "data.edges"',
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
             },
           };
 
@@ -252,21 +204,74 @@ module.exports = {
             status: 'error',
             message: `${moduleName} performed with error`,
             payload: {
-              error: '"body.edge_liked_by.edges" not array',
+              error: '"getCommentsJoiRaw.payload" has no "data.edges"',
             },
-            raw: getLikesJoiRaw,
+            raw: getCommentsJoiRaw,
           })
 
         }
 
-        const likeByProfile = _.find(getLikesJoiRaw.payload.body.edge_liked_by.edges, {node: {username: input.instProfile}});
+        if (!_.isArray(getCommentsJoiRaw.payload.data.edges)) {
 
-        if (likeByProfile != null) {
-          likeMade = true;
+          status = 'error';
+          const momentDone = moment();
+
+          const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+          await LogProcessor.error({
+            message: '"data.edges" not array',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
+            location: moduleName,
+            payload: {
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
+            }
+          });
+
+          const performanceCreateParams = {
+            platform,
+            action,
+            api,
+            requestType,
+            requestDuration,
+            status,
+            clientGuid,
+            accountGuid,
+            comments: {
+              error: '"data.edges" not array',
+              getCommentsParams: _.omit(getCommentsParams, 'client'),
+              getCommentsJoiRaw,
+            },
+          };
+
+          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+          return exits.success({
+            status: 'error',
+            message: `${moduleName} performed with error`,
+            payload: {
+              error: '"data.edges" not array',
+            },
+            raw: getCommentsJoiRaw,
+          })
+
         }
 
-        hasMore = getLikesJoiRaw.payload.body.edge_liked_by.page_info.has_next_page || false;
-        endCursor = getLikesJoiRaw.payload.body.edge_liked_by.page_info.end_cursor || null;
+        const commentByProfile = _.find(getCommentsJoiRaw.payload.data.edges, {node: {owner: {username: input.instProfile}}});
+
+        if (commentByProfile != null) {
+          const commentWords = _.words(commentByProfile.node.text, /[a-zA-Zа-яА-Яα-ωΑ-Ω0-9_]+/g);
+          numberOfWords = commentWords.length;
+          commentMade = numberOfWords >= sails.config.custom.config.parsers.inst.minWordsInComment;
+          commentText = commentByProfile.node.text;
+        }
+
+        hasMore = getCommentsJoiRaw.payload.data.page_info.has_next_page || false;
+        endCursor = getCommentsJoiRaw.payload.data.page_info.end_cursor || null;
 
         if (endCursor == null) {
           hasMore = false;
@@ -295,7 +300,9 @@ module.exports = {
         accountGuid,
         comments: {
           input: _.omit(input, 'client'),
-          likeMade,
+          commentMade,
+          commentText,
+          numberOfWords,
         },
       };
 
@@ -305,7 +312,9 @@ module.exports = {
         status: 'success',
         message: `${moduleName} performed`,
         payload: {
-          likeMade,
+          commentMade,
+          commentText,
+          numberOfWords,
         },
       })
 

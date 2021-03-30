@@ -93,6 +93,7 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.requestTimeout || null;
 
       /**
        * Проверяем подписку парсером постепенно увеличивая глубину проверки, если
@@ -223,9 +224,16 @@ module.exports = {
         totalFollowing = getFollowingsJoiRes.payload.count;
         checkedProfiles = checkedProfiles + getFollowingsJoiRes.payload.users.length;
 
-        _.forEach(getFollowingsJoiRes.payload.users, (elem) => {
-          followingProfiles.push(elem.username)
-        });
+        // _.forEach(getFollowingsJoiRes.payload.users, (elem) => {
+        //   followingProfiles.push(elem.username)
+        // });
+
+        for (const elem of getFollowingsJoiRes.payload.users) {
+          if (!_.isNil(elem.username)) {
+            followingProfiles.push(elem.username)
+          }
+        }
+
 
         notSubscribed = _.difference(input.profilesList, followingProfiles);
 
@@ -238,8 +246,9 @@ module.exports = {
           hasMore = false;
         }
 
-        // TODO: Убрать после того, как лимит на 1 запрос в сек будет убран
-        await sleep(1000);
+        if (!_.isNil(requestTimeout)) {
+          await sleep(requestTimeout);
+        }
 
       }
 

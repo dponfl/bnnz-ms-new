@@ -167,11 +167,17 @@ module.exports = {
 
         checkedProfiles = checkedProfiles + getFollowingsJoiRes.payload.users.length;
 
-        _.forEach(getFollowingsJoiRes.payload.users, (elem) => {
+        // _.forEach(getFollowingsJoiRes.payload.users, (elem) => {
+        //   if (!_.isNil(elem.username)) {
+        //     followingProfiles.push(elem.username)
+        //   }
+        // });
+
+        for (const elem of getFollowingsJoiRes.payload.users) {
           if (!_.isNil(elem.username)) {
             followingProfiles.push(elem.username)
           }
-        });
+        }
 
         notSubscribed = _.difference(input.profilesList, followingProfiles);
 

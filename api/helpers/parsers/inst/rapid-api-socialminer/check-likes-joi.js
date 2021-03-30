@@ -4,13 +4,13 @@ const Joi = require('@hapi/joi');
 const moment = require('moment');
 const sleep = require('util').promisify(setTimeout);
 
-const moduleName = 'parsers:inst:rapid-api-logicbuilder:check-likes-joi';
+const moduleName = 'parsers:inst:rapid-api-socialminer:check-likes-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'parsers:inst:rapid-api-logicbuilder:check-likes-joi',
+  friendlyName: 'parsers:inst:rapid-api-socialminer:check-likes-joi',
 
 
   description: 'Проверка постановки лайка',
@@ -61,6 +61,7 @@ module.exports = {
         .required(),
     });
 
+    let client;
     let clientGuid;
     let accountGuid;
 
@@ -71,12 +72,9 @@ module.exports = {
     let hasMore = true;
     let endCursor = null;
 
-    let totalLikers = 0;
-    let checkedLikers = 0;
-
     const platform = 'Instagram';
     const action = 'parsing';
-    const api = 'rapidApiLogicbuilder';
+    const api = 'rapidApiSocialminer';
     const requestType = 'checkLikes';
     const momentStart = moment();
 
@@ -88,11 +86,11 @@ module.exports = {
 
       shortCode = input.shortCode;
 
-      const client = input.client;
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.requestTimeout || null;
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiSocialminer.requestTimeout || null;
 
       while (!likeMade && hasMore) {
 
@@ -109,7 +107,7 @@ module.exports = {
           getLikesParams.endCursor = endCursor;
         }
 
-        const getLikesJoiRaw = await sails.helpers.parsers.inst.rapidApiLogicbuilder.getLikesJoi(getLikesParams);
+        const getLikesJoiRaw = await sails.helpers.parsers.inst.rapidApiSocialminer.getLikesJoi(getLikesParams);
 
         if (getLikesJoiRaw.status !== 'success') {
 
@@ -161,17 +159,114 @@ module.exports = {
 
         }
 
-        const likeByProfile = _.find(getLikesJoiRaw.payload.collector, {username: input.instProfile});
+        if (!_.has(getLikesJoiRaw.payload, 'data.edge_liked_by.edges')) {
+
+          status = 'error';
+          const momentDone = moment();
+
+          const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+          await LogProcessor.error({
+            message: '"getLikesJoiRaw.payload" has no "data.edge_liked_by.edges"',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
+            location: moduleName,
+            payload: {
+              getLikesParams: _.omit(getLikesParams, 'client'),
+              getLikesJoiRaw,
+            }
+          });
+
+          const performanceCreateParams = {
+            platform,
+            action,
+            api,
+            requestType,
+            requestDuration,
+            status,
+            clientGuid,
+            accountGuid,
+            comments: {
+              error: '"getLikesJoiRaw.payload" has no "data.edge_liked_by.edges"',
+              getLikesParams: _.omit(getLikesParams, 'client'),
+              getLikesJoiRaw,
+            },
+          };
+
+          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+          return exits.success({
+            status: 'error',
+            message: `${moduleName} performed with error`,
+            payload: {
+              error: '"getLikesJoiRaw.payload" has no "data.edge_liked_by.edges"',
+            },
+            raw: getLikesJoiRaw,
+          })
+
+        }
+
+        if (!_.isArray(getLikesJoiRaw.payload.data.edge_liked_by.edges)) {
+
+          status = 'error';
+          const momentDone = moment();
+
+          const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+          await LogProcessor.error({
+            message: '"data.edge_liked_by.edges" not array',
+            clientGuid,
+            accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.INST_PARSER_WRONG_RESPONSE_DATA.name,
+            location: moduleName,
+            payload: {
+              getLikesParams: _.omit(getLikesParams, 'client'),
+              getLikesJoiRaw,
+            }
+          });
+
+          const performanceCreateParams = {
+            platform,
+            action,
+            api,
+            requestType,
+            requestDuration,
+            status,
+            clientGuid,
+            accountGuid,
+            comments: {
+              error: '"data.edge_liked_by.edges" not array',
+              getLikesParams: _.omit(getLikesParams, 'client'),
+              getLikesJoiRaw,
+            },
+          };
+
+          await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
+          return exits.success({
+            status: 'error',
+            message: `${moduleName} performed with error`,
+            payload: {
+              error: '"data.edge_liked_by.edges" not array',
+            },
+            raw: getLikesJoiRaw,
+          })
+
+        }
+
+        const likeByProfile = _.find(getLikesJoiRaw.payload.data.edge_liked_by.edges, {node: {username: input.instProfile}});
 
         if (likeByProfile != null) {
           likeMade = true;
         }
 
-        totalLikers = getLikesJoiRaw.payload.count;
-        checkedLikers = checkedLikers + getLikesJoiRaw.payload.collector.length;
-
-        hasMore = getLikesJoiRaw.payload.has_more || false;
-        endCursor = getLikesJoiRaw.payload.end_cursor || null;
+        hasMore = getLikesJoiRaw.payload.data.edge_liked_by.page_info.has_next_page || false;
+        endCursor = getLikesJoiRaw.payload.data.edge_liked_by.page_info.end_cursor || null;
 
         if (endCursor == null) {
           hasMore = false;
@@ -201,8 +296,6 @@ module.exports = {
         comments: {
           input: _.omit(input, 'client'),
           likeMade,
-          totalLikers,
-          checkedLikers,
         },
       };
 

@@ -94,6 +94,8 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      const requestTimeout = sails.config.custom.config.parsers.inst.rapidApiLogicbuilder.requestTimeout || null;
+
       while (!commentMade && hasMore) {
 
         /**
@@ -184,8 +186,9 @@ module.exports = {
           hasMore = false;
         }
 
-        // TODO: Убрать после того, как лимит на 1 запрос в сек будет убран
-        await sleep(1000);
+        if (!_.isNil(requestTimeout)) {
+          await sleep(requestTimeout);
+        }
 
       }
 
