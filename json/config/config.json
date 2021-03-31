@@ -394,6 +394,17 @@
           "getComments": "/getMediaComments"
         }
       },
+      "rapidApiPetrichor": {
+        "url": "https://instagram60.p.rapidapi.com",
+        "apiHost": "instagram60.p.rapidapi.com",
+        "apiKey": "b11adbe44fmsh8c373cfce348dc2p17cd8cjsn2398859cf536",
+        "requestTimeout": 6000,
+        "paths": {
+          "getPostMetadata": "/post/info",
+          "getLikes": "/post/likes",
+          "getComments": "/post/comments"
+        }
+      },
       "otherProviderXXX": {
         "url": "XXX",
         "apiHost": "XXX",

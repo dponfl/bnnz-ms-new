@@ -68,6 +68,12 @@
         },
         {
           "parserName": "rapidApiSocialminer",
+          "enabled": false,
+          "active": true,
+          "updatedAt": "2021-03-23T12:12:00.000Z"
+        },
+        {
+          "parserName": "rapidApiPetrichor",
           "enabled": true,
           "active": true,
           "updatedAt": "2021-03-23T12:12:00.000Z"
@@ -94,6 +100,12 @@
         },
         {
           "parserName": "rapidApiSocialminer",
+          "enabled": false,
+          "active": true,
+          "updatedAt": "2021-03-23T12:12:00.000Z"
+        },
+        {
+          "parserName": "rapidApiPetrichor",
           "enabled": true,
           "active": true,
           "updatedAt": "2021-03-23T12:12:00.000Z"
@@ -120,6 +132,12 @@
         },
         {
           "parserName": "rapidApiSocialminer",
+          "enabled": false,
+          "active": true,
+          "updatedAt": "2021-03-23T12:12:00.000Z"
+        },
+        {
+          "parserName": "rapidApiPetrichor",
           "enabled": true,
           "active": true,
           "updatedAt": "2021-03-23T12:12:00.000Z"
