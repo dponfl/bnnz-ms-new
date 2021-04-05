@@ -8,19 +8,58 @@
  */
 
 module.exports = {
-  datastore: 'performanceDb',
-  tableName: 'telegram-msg-queue',
+  datastore: 'clientDb',
+  tableName: 'msg-queue',
   migrate: 'safe',
 
   attributes: {
-    chat_id: {
+
+    guid: {
       type: 'string',
+      unique: true,
     },
-    message_format: {
+
+    clientGuid: {
       type: 'string',
+      required: true,
     },
-    message_data: {
+
+    accountGuid: {
+      type: 'string',
+      required: true,
+    },
+
+    channel: {
+      type: 'string',
+      required: true,
+    },
+
+    chatId: {
+      type: 'string',
+      required: true,
+    },
+
+    clientId: {
+      type: 'number',
+      required: true,
+    },
+
+    msgType: {
+      type: 'string',
+      required: true,
+    },
+
+    payload: {
       type: 'json',
+      required: true,
+    },
+
+    done: {
+      type: 'boolean',
+    },
+
+    deleted: {
+      type: 'boolean',
     },
 
 

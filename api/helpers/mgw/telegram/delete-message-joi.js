@@ -47,11 +47,13 @@ module.exports = {
             .required(),
     });
 
+    let input;
+
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
-      let deleteMessageRes = await sails.config.custom.telegramBot.deleteMessage(
+      const deleteMessageRes = await sails.config.custom.telegramBot.deleteMessage(
         input.chatId,
         input.messageId,
       );
@@ -64,39 +66,30 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+            messageId: input.messageId,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+            messageId: input.messageId,
+          },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

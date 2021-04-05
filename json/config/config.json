@@ -10,6 +10,12 @@
       "s": 0
     }
   },
+  "messageOrchestrator": {
+    "telegram": {
+      "blockMsgInterval": 1000,
+      "blockMsgSize": 25
+    }
+  },
   "db": {
     "lockTimeOut": 600
   },
