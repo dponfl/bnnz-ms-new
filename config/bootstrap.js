@@ -68,6 +68,12 @@ module.exports.bootstrap = async function() {
   await sails.helpers.general.bootstrapActions();
 
 
+  /**
+   * Активируем процессинг сообщений Telegram
+   */
+
+  await sails.helpers.messageQueueProcessor.telegramProcessor();
+
 
   // await sails.helpers.general.schedule.analyticsHourly();
   // await sails.helpers.general.schedule.analyticsDaily();

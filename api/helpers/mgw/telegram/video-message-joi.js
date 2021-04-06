@@ -40,8 +40,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // sails.log.info('Telegram video message: ', inputs);
-
     const schema = Joi.object({
       chatId: Joi
         .string()
@@ -114,25 +112,7 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: ${sails.config.custom.VIDEO_MESSAGE_SEND_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {
-      //   err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
@@ -152,8 +132,8 @@ module.exports = {
           throwError: false,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

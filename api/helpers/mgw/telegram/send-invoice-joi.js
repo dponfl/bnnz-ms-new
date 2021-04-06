@@ -209,24 +209,7 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
@@ -252,8 +235,8 @@ module.exports = {
           },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

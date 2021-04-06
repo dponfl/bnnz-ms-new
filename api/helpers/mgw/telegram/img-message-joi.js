@@ -63,10 +63,11 @@ module.exports = {
     let messageObj;
     let params;
 
+    let input;
 
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
       messageObj = {
         parse_mode: 'HTML'
@@ -88,7 +89,7 @@ module.exports = {
         messageObj,
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(
+      const sendMessageRes = await sails.config.custom.telegramBot.sendPhoto(
         input.chatId,
         input.imgPath,
         messageObj
@@ -102,25 +103,7 @@ module.exports = {
 
     } catch (e) {
 
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: ${sails.config.custom.IMG_MESSAGE_SEND_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
@@ -140,8 +123,8 @@ module.exports = {
           },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

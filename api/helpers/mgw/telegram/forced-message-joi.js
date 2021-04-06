@@ -54,10 +54,11 @@ module.exports = {
         .description('flag to remove the current keyboard'),
     });
 
+    let input;
 
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
       let optionalParams = {
         parse_mode: 'HTML',
@@ -70,7 +71,7 @@ module.exports = {
         optionalParams.reply_markup.remove_keyboard = true;
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
+      const sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
         optionalParams,
@@ -84,40 +85,28 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: ${sails.config.custom.FORCED_MESSAGE_SEND_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {
-      //   err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

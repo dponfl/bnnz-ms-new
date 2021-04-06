@@ -55,14 +55,15 @@ module.exports = {
         .description('flag to disable web page preview at message'),
     });
 
+    let input;
 
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
       const disable_web_page_preview = input.disableWebPagePreview || false;
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
+      const sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
         {
@@ -82,43 +83,28 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorMsg = `${sails.config.custom.KEYBOARD_MESSAGE_SEND_ERROR}`;
-      //
-      // sails.log.error(`${moduleName}, Error details:
-      // Platform error message: ${errorMsg}
-      // Error name: ${e.name || 'no name'}
-      // Error message: ${e.message || 'no message'}
-      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-      //
-      // throw {err: {
-      //     module: `${moduleName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

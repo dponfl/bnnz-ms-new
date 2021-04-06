@@ -53,9 +53,11 @@ module.exports = {
         .description('flag to remove the current keyboard'),
     });
 
+    let input;
+
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
       const disable_web_page_preview = input.disableWebPagePreview || false;
 
@@ -70,7 +72,7 @@ module.exports = {
         }
       }
 
-      let sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
+      const sendMessageRes = await sails.config.custom.telegramBot.sendMessage(
         input.chatId,
         input.html,
         optionalParams,
@@ -84,39 +86,28 @@ module.exports = {
 
     } catch (e) {
 
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
-      // TODO: В errorPayloadAdditional добавить input.chatId
-
-      const throwError = true;
+      const throwError = false;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            chatId: input.chatId,
+          },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }
