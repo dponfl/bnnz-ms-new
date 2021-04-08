@@ -50,6 +50,11 @@ module.exports = {
         .description('account guid')
         .guid()
         .required(),
+      messageGuid: Joi
+        .string()
+        .description('message guid')
+        .guid()
+        .required(),
       channel: Joi
         .string()
         .description('channel (e.g. "telegram", "ios")')
@@ -69,7 +74,8 @@ module.exports = {
         .required(),
       payload: Joi
         .any()
-        .description('message params'),
+        .description('message content')
+        .required(),
       done: Joi
         .boolean()
         .description('done flag')
@@ -97,7 +103,8 @@ module.exports = {
       messageRec = input;
       messageRec.guid = uuidApiKey.uuid;
 
-      await MsgQueue.create(messageRec)
+      const msgQueueRec = await MsgQueue.create(messageRec)
+        .fetch()
         .tolerate(async (err) => {
 
           err.details = {
@@ -117,13 +124,26 @@ module.exports = {
             },
           });
 
-          return true;
+          return null;
         });
+
+      if (_.isNil(msgQueueRec)) {
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.CRITICAL,
+          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+          location: moduleName,
+          message: 'MsgQueue.create() error',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+          payload: {messageRec},
+        });
+      }
 
       return exits.success({
         status: 'success',
         message: `${moduleName} performed`,
-        payload: messageRec,
+        payload: msgQueueRec,
       })
 
     } catch (e) {

@@ -12,42 +12,59 @@ module.exports = {
   tableName: 'messages',
   migrate: 'safe',
   attributes: {
-    /**
-     * message_id - уникальный идентификатор сообщения внутри мессенджера
-     */
-    message_id: {
-      type: 'number',
-    },
-    message_guid: {
+
+    messageGuid: {
       type: 'string',
       unique: true,
     },
-    callback_query_id: {
+
+    /**
+     * message_id - уникальный идентификатор сообщения внутри мессенджера
+     */
+    messageId: {
       type: 'string',
+      allowNull: true,
     },
+
+    callbackQueryId: {
+      type: 'string',
+      allowNull: true,
+    },
+
     // message: {
     //   type: 'ref',
     //   columnType: 'text CHARACTER SET utf8mb4',
     // },
+
     message: {
       type: 'json',
+      allowNull: true,
     },
-    message_format: {
+
+    messageFormat: {
       type: 'string',
+      allowNull: true,
     },
-    message_buttons: {
-      type: 'json',
-    },
-    messenger: {
+
+    channel: {
       type: 'string',
+      allowNull: true,
     },
-    message_originator: {
+
+    messageOriginator: {
       type: 'string',
+      allowNull: true,
     },
-    client_id: {
+
+    clientId: {
       model: 'client',
     },
-    client_guid: {
+
+    clientGuid: {
+      type: 'string',
+    },
+
+    accountGuid: {
       type: 'string',
     },
 

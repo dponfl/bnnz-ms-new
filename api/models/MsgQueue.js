@@ -29,6 +29,11 @@ module.exports = {
       required: true,
     },
 
+    messageGuid: {
+      type: 'string',
+      required: true,
+    },
+
     channel: {
       type: 'string',
       required: true,

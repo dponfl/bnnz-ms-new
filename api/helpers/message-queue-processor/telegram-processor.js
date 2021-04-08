@@ -190,8 +190,13 @@ async function sendMsg(clientMessages) {
 
   const methodName = 'sendMsg';
 
-  let sendRes;
   let sendResRaw;
+
+  let msgSaveParamsInitial;
+  let msgSaveParamsMain;
+  let msgSaveRec;
+  let messageGuid;
+
 
   for (const msg of clientMessages) {
 
@@ -224,70 +229,44 @@ async function sendMsg(clientMessages) {
             },
           });
 
-          success = false;
+          // success = false;
+          success = true;
 
         } else {
 
-          success = sendResRaw.payload;
+          // success = sendResRaw.payload;
+          success = true;
 
-          const messageId = msg.payload.messageId || 0;
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: messageId,
-            message: msg.payload,
-            message_format: sails.config.custom.enums.messageFormat.DEL,
-            messenger: msg.channel,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: msg.clientId,
-            client_guid: msg.clientGuid,
-          });
-
-        }
-
-        break;
-
-      case 'docMessageJoi':
-
-        sendResRaw = await sails.helpers.mgw.telegram.docMessageJoi(msg.payload);
-
-        if (
-          _.isNil(sendResRaw.status)
-          || sendResRaw.status !== 'ok'
-          || _.isNil(sendResRaw.payload)
-        ) {
-
-          await LogProcessor.critical({
-            message: 'Wrong docMessageJoi reply',
-            clientGuid: msg.clientGuid,
-            accountGuid: msg.accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
-            location: `${moduleName}:${methodName}`,
-            payload: {
-              msgGuid: msg.guid,
-              sendResRaw,
+          msgSaveParamsInitial = {
+            msgSaveParams: {
+              clientGuid: msg.clientGuid,
+              accountGuid: msg.accountGuid,
+              clientId: msg.clientId,
             },
-          });
+            createdBy: `${moduleName}:${methodName}`,
+          };
 
-          success = false;
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
 
-        } else {
+          messageGuid = msgSaveRec.messageGuid || null;
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = msg.payload.messageId || null;
 
-          success = messageId !== 0;
+          msgSaveParamsMain = {
+            msgSaveParams: {
+              messageGuid,
+              clientGuid: msg.clientGuid,
+              accountGuid: msg.accountGuid,
+              messageId,
+              message: msg.payload,
+              messageFormat: sails.config.custom.enums.messageFormat.DEL,
+              channel: msg.channel,
+              messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+            },
+            createdBy: `${moduleName}:${methodName}`,
+          };
 
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: messageId,
-            message: msg.payload,
-            message_format: sails.config.custom.enums.messageFormat.DOC,
-            messenger: msg.channel,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: msg.clientId,
-            client_guid: msg.clientGuid,
-          });
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
         }
 
@@ -333,15 +312,35 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.EDIT_RM,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            msgSaveParamsInitial = {
+              msgSaveParams: {
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                clientId: msg.clientId,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
+
+            messageGuid = msgSaveRec.messageGuid || null;
+
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.EDIT_RM,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -393,21 +392,96 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.EDIT_T,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            msgSaveParamsInitial = {
+              msgSaveParams: {
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                clientId: msg.clientId,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
+
+            messageGuid = msgSaveRec.messageGuid || null;
+
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.EDIT_T,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
             success = false;
 
           }
+
+        }
+
+        break;
+
+      case 'docMessageJoi':
+
+        sendResRaw = await sails.helpers.mgw.telegram.docMessageJoi(msg.payload);
+
+        if (
+          _.isNil(sendResRaw.status)
+          || sendResRaw.status !== 'ok'
+          || _.isNil(sendResRaw.payload)
+        ) {
+
+          await LogProcessor.critical({
+            message: 'Wrong docMessageJoi reply',
+            clientGuid: msg.clientGuid,
+            accountGuid: msg.accountGuid,
+            // requestId: null,
+            // childRequestId: null,
+            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+            location: `${moduleName}:${methodName}`,
+            payload: {
+              msgGuid: msg.guid,
+              sendResRaw,
+            },
+          });
+
+          success = false;
+
+        } else {
+
+          const messageId = _.get(sendResRaw.payload, 'message_id', null);
+
+          success = messageId != null;
+
+          messageGuid = msg.messageGuid;
+
+          msgSaveParamsMain = {
+            msgSaveParams: {
+              messageGuid,
+              clientGuid: msg.clientGuid,
+              accountGuid: msg.accountGuid,
+              messageId,
+              message: msg.payload,
+              messageFormat: sails.config.custom.enums.messageFormat.DOC,
+              channel: msg.channel,
+              messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+            },
+            createdBy: `${moduleName}:${methodName}`,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
         }
 
@@ -452,15 +526,63 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.FORCED,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            /**
+             * Выставить флаг "forced_reply_expected"
+             * который означает, что клиенту было отправлено ForcedMessage
+             * и мы ожидаем получить ответ в виде ответа на ForcedMessage
+             * а не простым сообщением
+             */
+
+            const clientUpdateParams = {
+              criteria: {
+                id: msg.clientId,
+              },
+              data: {
+                forced_reply_expected: true,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+              makeClientFieldsRecord: false,
+            };
+
+            const updateClientRecRaw = await sails.helpers.storage.clientUpdateJoi(clientUpdateParams);
+
+            if (
+              _.isNil(updateClientRecRaw.status)
+              || updateClientRecRaw.status !== 'ok'
+            ) {
+              await LogProcessor.critical({
+                message: 'Wrong status from clientUpdateJoi',
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+                location: moduleName,
+                payload: {
+                  clientUpdateParams,
+                  updateClientRecRaw,
+                },
+              });
+            }
+
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.FORCED,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -511,15 +633,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.IMG,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.IMG,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -570,15 +700,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.CALLBACK,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.CALLBACK,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -629,15 +767,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.KEYBOARD,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.KEYBOARD,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -688,15 +834,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.KEYBOARD_REMOVE,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.KEYBOARD_REMOVE,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -747,15 +901,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.SEND_INVOICE,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.SEND_INVOICE,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -806,15 +968,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.SIMPLE,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.SIMPLE,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -865,15 +1035,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.STICKER,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.STICKER,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
@@ -924,15 +1102,23 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: messageId,
-              message: msg.payload,
-              message_format: sails.config.custom.enums.messageFormat.VIDEO,
-              messenger: msg.channel,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: msg.clientId,
-              client_guid: msg.clientGuid,
-            });
+            messageGuid = msg.messageGuid;
+
+            msgSaveParamsMain = {
+              msgSaveParams: {
+                messageGuid,
+                clientGuid: msg.clientGuid,
+                accountGuid: msg.accountGuid,
+                messageId,
+                message: msg.payload,
+                messageFormat: sails.config.custom.enums.messageFormat.VIDEO,
+                channel: msg.channel,
+                messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+              },
+              createdBy: `${moduleName}:${methodName}`,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
 
           } else {
 
