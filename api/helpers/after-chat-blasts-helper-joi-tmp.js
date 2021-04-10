@@ -71,7 +71,7 @@ module.exports = {
 
       if (block) {
 
-        if (block.message_id == null) {
+        if (block.messageGuid == null) {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,

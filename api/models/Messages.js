@@ -38,7 +38,6 @@ module.exports = {
 
     message: {
       type: 'json',
-      allowNull: true,
     },
 
     messageFormat: {

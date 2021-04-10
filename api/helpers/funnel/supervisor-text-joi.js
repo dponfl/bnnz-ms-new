@@ -55,6 +55,10 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageId;
+
 
     try {
 
@@ -86,75 +90,40 @@ module.exports = {
          * Save the received forced message
          */
 
-        await sails.helpers.storage.messageSaveJoi({
-          message_id: input.msg.message_id || 0,
-          message: input.msg.text,
-          message_format: sails.config.custom.enums.messageFormat.FORCED,
-          messenger: input.client.messenger,
-          message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
-          client_id: input.client.id,
-          client_guid: input.client.guid
-        });
+        messageId = input.msg.message_id;
+
+        msgSaveParams = {
+          msgSaveParams: {
+            action: sails.config.custom.enums.messageSaveActions.CREATE,
+            clientGuid,
+            accountGuid,
+            messageId,
+            message: {text: input.msg.text},
+            messageFormat: sails.config.custom.enums.messageFormat.FORCED,
+            channel: input.client.messenger,
+            messageOriginator: sails.config.custom.enums.messageOriginator.CLIENT,
+          },
+          createdBy: `${moduleName}:${methodName}`,
+        };
+
+        msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+        // await sails.helpers.storage.messageSaveJoi({
+        //   message_id: input.msg.message_id || 0,
+        //   message: input.msg.text,
+        //   message_format: sails.config.custom.enums.messageFormat.FORCED,
+        //   messenger: input.client.messenger,
+        //   message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
+        //   client_id: input.client.id,
+        //   client_guid: input.client.guid
+        // });
+
+        const {messageGuid} = await sails.helpers.general.getMessageGuidOrId({messageId: input.msg.reply_to_message.message_id});
 
         let forcedReplyBlock = _.find(input.client.funnels[input.client.current_funnel],
-          {message_id: input.msg.reply_to_message.message_id});
+          {messageGuid});
 
-        if (!_.isNil(forcedReplyBlock)) {
-
-          let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 3);
-          let forcedHelperCategory = splitForcedHelperRes[0];
-          let forcedHelperBlock = splitForcedHelperRes[1];
-          let forcedHelperName = splitForcedHelperRes[2];
-
-          if (forcedHelperCategory && forcedHelperBlock && forcedHelperName) {
-
-            /**
-             * We managed to parse the specified forcedHelper and can perform it
-             */
-
-            await sails.helpers.funnel[forcedHelperCategory][forcedHelperBlock][forcedHelperName]({
-              client: input.client,
-              block: forcedReplyBlock,
-              msg: input.msg,
-            });
-
-            /**
-             * Update content of funnels field of client record
-             */
-
-            await sails.helpers.storage.clientUpdateJoi({
-              criteria: {guid: input.client.guid},
-              data: {funnels: input.client.funnels},
-              createdBy: moduleName,
-            });
-
-          } else {
-
-            /**
-             * Throw error: we could not parse the specified forcedHelper
-             */
-
-            // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR}`);
-
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-              location: moduleName,
-              message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                forcedHelper: forcedReplyBlock.forcedHelper,
-              },
-            });
-
-          }
-
-        } else {
-
-          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDREPLY_BLOCK_FIND_ERROR}`);
-
+        if (_.isNil(forcedReplyBlock)) {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -165,7 +134,56 @@ module.exports = {
             errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
               currentFunnel: input.client.funnels[input.client.current_funnel],
-              messageId: input.msg.reply_to_message.message_id,
+              messageGuid,
+            },
+          });
+        }
+
+        let splitForcedHelperRes = _.split(forcedReplyBlock.forcedHelper, sails.config.custom.JUNCTION, 3);
+        let forcedHelperCategory = splitForcedHelperRes[0];
+        let forcedHelperBlock = splitForcedHelperRes[1];
+        let forcedHelperName = splitForcedHelperRes[2];
+
+        if (forcedHelperCategory && forcedHelperBlock && forcedHelperName) {
+
+          /**
+           * We managed to parse the specified forcedHelper and can perform it
+           */
+
+          await sails.helpers.funnel[forcedHelperCategory][forcedHelperBlock][forcedHelperName]({
+            client: input.client,
+            block: forcedReplyBlock,
+            msg: input.msg,
+          });
+
+          /**
+           * Update content of funnels field of client record
+           */
+
+          await sails.helpers.storage.clientUpdateJoi({
+            criteria: {guid: input.client.guid},
+            data: {funnels: input.client.funnels},
+            createdBy: moduleName,
+          });
+
+        } else {
+
+          /**
+           * Throw error: we could not parse the specified forcedHelper
+           */
+
+          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: sails.config.custom.SUPERVISORTEXTHELPER_FORCEDHELPER_PARSE_ERROR,
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              forcedHelper: forcedReplyBlock.forcedHelper,
             },
           });
 
@@ -191,15 +209,33 @@ module.exports = {
          * Save the received simple message
          */
 
-        await sails.helpers.storage.messageSaveJoi({
-          message_id: input.msg.message_id || 0,
-          message: input.msg.text,
-          message_format: sails.config.custom.enums.messageFormat.SIMPLE,
-          messenger: input.client.messenger,
-          message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
-          client_id: input.client.id,
-          client_guid: input.client.guid
-        });
+        messageId = input.msg.message_id;
+
+        msgSaveParams = {
+          msgSaveParams: {
+            action: sails.config.custom.enums.messageSaveActions.CREATE,
+            clientGuid,
+            accountGuid,
+            messageId,
+            message: {text: input.msg.text},
+            messageFormat: sails.config.custom.enums.messageFormat.SIMPLE,
+            channel: input.client.messenger,
+            messageOriginator: sails.config.custom.enums.messageOriginator.CLIENT,
+          },
+          createdBy: moduleName,
+        };
+
+        msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+        // await sails.helpers.storage.messageSaveJoi({
+        //   message_id: input.msg.message_id || 0,
+        //   message: input.msg.text,
+        //   message_format: sails.config.custom.enums.messageFormat.SIMPLE,
+        //   messenger: input.client.messenger,
+        //   message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
+        //   client_id: input.client.id,
+        //   client_guid: input.client.guid
+        // });
 
       }
 

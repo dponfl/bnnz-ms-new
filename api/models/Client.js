@@ -74,7 +74,7 @@ module.exports = {
     },
     messages: {
       collection: 'messages',
-      via: 'client_id',
+      via: 'clientId',
     },
     lang: {
       type: 'string',

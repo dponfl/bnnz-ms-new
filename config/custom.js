@@ -206,7 +206,8 @@ module.exports.custom = {
 
     messageFormat: {
       SIMPLE: 'simpleMessage',
-      CALLBACK: 'inlineKeyboardMessage',
+      INLINEKEYBOARD: 'inlineKeyboardMessage',
+      CALLBACK: 'callbackMessage',
       KEYBOARD: 'keyboardMessage',
       KEYBOARD_REMOVE: 'keyboardRemoveMessage',
       FORCED: 'forcedMessage',
@@ -214,16 +215,17 @@ module.exports.custom = {
       VIDEO: 'videoMessage',
       STICKER: 'stickerMessage',
       DOC: 'docMessage',
-      IMGCALLBACK: 'imgInlineKeyboardMessage',
+      IMGINLINEKEYBOARD: 'imgInlineKeyboardMessage',
+      VIDEOINLINEKEYBOARD: 'videoInlineKeyboardMessage',
       SEND_INVOICE: 'sendInvoiceMessage',
       DEL: 'delMessage',
       EDIT_RM: 'editReplyMarkupMessage',
       EDIT_T: 'editTextMessage',
       POSTBROADCAST: 'postBroadcastMessage',
       PUSHSIMPLE: 'pushSimpleMessage',
-      PUSHCALLBACK: 'pushInlineKeyboardMessage',
-      PUSHIMGCALLBACK: 'pushImgInlineKeyboardMessage',
-      PUSHVIDEOCALLBACK: 'pushVideoInlineKeyboardMessage',
+      PUSHINLINEKEYBOARD: 'pushInlineKeyboardMessage',
+      PUSHIMGINLINEKEYBOARD: 'pushImgInlineKeyboardMessage',
+      PUSHVIDEOINLINEKEYBOARD: 'pushVideoInlineKeyboardMessage',
       PUSHFORCED: 'pushForcedMessage',
       PUSHIMG: 'pushImgMessage',
       PUSHVIDEO: 'pushVideoMessage',
@@ -233,6 +235,11 @@ module.exports.custom = {
     messageOriginator: {
       CLIENT: 'client',
       BOT: 'bot',
+    },
+
+    messageSaveActions: {
+      CREATE: 'create',
+      UPDATE: 'update',
     },
 
     emergencyLevels: {

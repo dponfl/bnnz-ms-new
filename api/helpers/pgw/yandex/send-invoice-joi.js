@@ -73,6 +73,12 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
+
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let msgQueueCreateParams;
 
 
 
@@ -82,6 +88,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
 
       const messenger = input.client.messenger;
@@ -190,86 +197,105 @@ module.exports = {
 
       }
 
-      const sendInvoiceRaw = await sails.helpers.mgw[messenger]['sendInvoiceJoi']({
-        chatId,
-        title: input.title,
-        description: input.description,
-        startParameter: input.startParameter,
-        currency: input.currency,
-        prices,
-        options,
-        invoiceAmount,
-        clientId,
-        clientGuid,
-        accountGuid,
-        paymentGroupGuid: paymentGroupRecRaw.payload.guid,
-      });
+      // const sendInvoiceRaw = await sails.helpers.mgw[messenger]['sendInvoiceJoi']({
+      //   chatId,
+      //   title: input.title,
+      //   description: input.description,
+      //   startParameter: input.startParameter,
+      //   currency: input.currency,
+      //   prices,
+      //   options,
+      //   invoiceAmount,
+      //   clientId,
+      //   clientGuid,
+      //   accountGuid,
+      //   paymentGroupGuid: paymentGroupRecRaw.payload.guid,
+      // });
 
-      if (sendInvoiceRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: messenger sendInvoiceJoi error response:
-        // ${JSON.stringify(sendInvoiceRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'sendInvoiceJoi error response',
+      msgSaveParams = {
+        msgSaveParams: {
           clientGuid,
           accountGuid,
-          errorName: sails.config.custom.PGW_ERROR.name,
-          payload: {
-            sendInvoiceRaw,
-          },
-        });
+          clientId,
+        },
+        createdBy: moduleName,
+      };
 
-      }
+      msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+      messageGuid = msgSaveRec.messageGuid;
+
+      msgQueueCreateParams = {
+        clientGuid,
+        accountGuid,
+        messageGuid,
+        channel: input.client.messenger,
+        chatId: input.client.chat_id,
+        clientId,
+        msgType: 'sendInvoiceJoi',
+        payload: {
+          chatId,
+          title: input.title,
+          description: input.description,
+          startParameter: input.startParameter,
+          currency: input.currency,
+          prices,
+          options,
+          invoiceAmount,
+          clientId,
+          clientGuid,
+          accountGuid,
+          paymentGroupGuid: paymentGroupRecRaw.payload.guid,
+        },
+      };
+
+      await sails.helpers.storage.msgQueueCreateWrapper({
+        msgQueueCreateParams,
+        createdBy: moduleName,
+      });
+
+
+      // if (sendInvoiceRaw.status !== 'ok') {
+      //   await sails.helpers.general.throwErrorJoi({
+      //     errorType: sails.config.custom.enums.errorType.ERROR,
+      //     location: moduleName,
+      //     message: 'sendInvoiceJoi error response',
+      //     clientGuid,
+      //     accountGuid,
+      //     errorName: sails.config.custom.PGW_ERROR.name,
+      //     payload: {
+      //       sendInvoiceRaw,
+      //     },
+      //   });
+      // }
 
       return exits.success({
         status: 'ok',
         message: 'Successful Yandex sendInvoice',
-        payload: sendInvoiceRaw.payload,
+        payload: msgSaveRec,
       });
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
-          errorPayloadAdditional: {
-            clientGuid,
-            accountGuid,
-          },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

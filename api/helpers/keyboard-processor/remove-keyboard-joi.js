@@ -57,6 +57,12 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
+
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let msgQueueCreateParams;
 
 
     try {
@@ -65,6 +71,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
 
       const html = await KeyboardProcessor.parseMessageStyle({
@@ -73,59 +80,74 @@ module.exports = {
         additionalTokens: input.additionalTokens,
       });
 
-      const res = await sails.helpers.mgw.telegram.keyboardRemoveJoi({
+      // const res = await sails.helpers.mgw.telegram.keyboardRemoveJoi({
+      //   chatId: input.client.chat_id,
+      //   html,
+      // });
+
+      msgSaveParams = {
+        msgSaveParams: {
+          clientGuid,
+          accountGuid,
+          clientId,
+        },
+        createdBy: moduleName,
+      };
+
+      msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+      messageGuid = msgSaveRec.messageGuid;
+
+      msgQueueCreateParams = {
+        clientGuid,
+        accountGuid,
+        messageGuid,
+        channel: input.client.messenger,
         chatId: input.client.chat_id,
-        html,
+        clientId,
+        msgType: 'keyboardRemoveJoi',
+        payload: {
+          chatId: input.client.chat_id,
+          html,
+        },
+      };
+
+      await sails.helpers.storage.msgQueueCreateWrapper({
+        msgQueueCreateParams,
+        createdBy: moduleName,
       });
 
 
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
-        payload: res,
+        payload: msgSaveRec,
       })
 
     } catch (e) {
-
-      // const errorMsg = 'General error';
-      //
-      // sails.log.error(`${moduleName}, Error details:
-      // Platform error message: ${errorMsg}
-      // Error name: ${e.name || 'no name'}
-      // Error message: ${e.message || 'no message'}
-      // Error stack: ${JSON.stringify(e.stack || {}, null, 3)}`);
-      //
-      // throw {err: {
-      //     module: `${moduleName}`,
-      //     message: errorMsg,
-      //     payload: {
-      //       error_name: e.name || 'no name',
-      //       error_message: e.message || 'no message',
-      //       error_stack: e.stack || {},
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }
-
     }
 
   }

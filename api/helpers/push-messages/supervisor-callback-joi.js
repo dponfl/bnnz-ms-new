@@ -68,7 +68,7 @@ module.exports = {
         message_id: input.query.message.message_id || 0,
         callback_query_id: input.query.id || '',
         message: input.query.data,
-        message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,
+        message_format: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
         messenger: input.client.messenger,
         message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
         client_id: input.client.id,

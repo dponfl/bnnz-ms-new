@@ -86,27 +86,23 @@ module.exports = {
         });
       }
 
-      if (!_.isNil(msgSaveParams.messageGuid)) {
-
-        msgSaveParams = _.omit(msgSaveParams, ['clientId', 'clientGuid', 'accountGuid']);
-
-      }
-
       const msgSaveRaw = await sails.helpers.storage.messageSaveJoi(msgSaveParams);
 
       if (
         _.isNil(msgSaveRaw.status)
         || msgSaveRaw.status !== 'success'
+        || _.isNil(msgSaveRaw.payload)
       ) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
           location: moduleName,
-          message: 'Wrong messageSaveJoi response status',
+          message: 'Wrong messageSaveJoi response',
           clientGuid,
           accountGuid,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           payload: {
+            msgSaveParams,
             msgSaveRaw,
             createdBy,
           },

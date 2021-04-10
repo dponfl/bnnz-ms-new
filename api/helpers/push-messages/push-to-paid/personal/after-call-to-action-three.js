@@ -53,6 +53,12 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
+
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let msgQueueCreateParams;
 
     try {
 
@@ -60,6 +66,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
       const chatBlastPerformanceRec = input.additionalParams.chatBlastPerformanceRec;
 
@@ -90,15 +97,53 @@ module.exports = {
          * Удяляем inline-keyboard предшествующего блока
          */
 
-        const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
-          replyMarkup: {
-            inline_keyboard: [],
+        // const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+        //   replyMarkup: {
+        //     inline_keyboard: [],
+        //   },
+        //   optionalParams: {
+        //     chat_id: input.client.chat_id,
+        //     message_id: block.message_id,
+        //   },
+        // });
+
+        msgSaveParams = {
+          msgSaveParams: {
+            clientGuid,
+            accountGuid,
+            clientId,
           },
-          optionalParams: {
-            chat_id: input.client.chat_id,
-            message_id: block.message_id,
+          createdBy: moduleName,
+        };
+
+        msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+        messageGuid = msgSaveRec.messageGuid;
+
+        msgQueueCreateParams = {
+          clientGuid,
+          accountGuid,
+          messageGuid,
+          channel: input.client.messenger,
+          chatId: input.client.chat_id,
+          clientId,
+          msgType: 'editMessageReplyMarkupJoi',
+          payload: {
+            replyMarkup: {
+              inline_keyboard: [],
+            },
+            optionalParams: {
+              chat_id: input.client.chat_id,
+              message_id: block.message_id,
+            },
           },
+        };
+
+        await sails.helpers.storage.msgQueueCreateWrapper({
+          msgQueueCreateParams,
+          createdBy: moduleName,
         });
+
 
       } else {
 

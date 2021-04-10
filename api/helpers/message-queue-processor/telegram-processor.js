@@ -192,8 +192,7 @@ async function sendMsg(clientMessages) {
 
   let sendResRaw;
 
-  let msgSaveParamsInitial;
-  let msgSaveParamsMain;
+  let msgSaveParams;
   let msgSaveRec;
   let messageGuid;
 
@@ -237,26 +236,14 @@ async function sendMsg(clientMessages) {
           // success = sendResRaw.payload;
           success = true;
 
-          msgSaveParamsInitial = {
+          const messageId = msg.payload.messageId;
+
+          msgSaveParams = {
             msgSaveParams: {
+              action: sails.config.custom.enums.messageSaveActions.CREATE,
               clientGuid: msg.clientGuid,
               accountGuid: msg.accountGuid,
               clientId: msg.clientId,
-            },
-            createdBy: `${moduleName}:${methodName}`,
-          };
-
-          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
-
-          messageGuid = msgSaveRec.messageGuid || null;
-
-          const messageId = msg.payload.messageId || null;
-
-          msgSaveParamsMain = {
-            msgSaveParams: {
-              messageGuid,
-              clientGuid: msg.clientGuid,
-              accountGuid: msg.accountGuid,
               messageId,
               message: msg.payload,
               messageFormat: sails.config.custom.enums.messageFormat.DEL,
@@ -266,7 +253,7 @@ async function sendMsg(clientMessages) {
             createdBy: `${moduleName}:${methodName}`,
           };
 
-          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
         }
 
@@ -312,23 +299,9 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            msgSaveParamsInitial = {
+            msgSaveParams = {
               msgSaveParams: {
-                clientGuid: msg.clientGuid,
-                accountGuid: msg.accountGuid,
-                clientId: msg.clientId,
-              },
-              createdBy: `${moduleName}:${methodName}`,
-            };
-
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
-
-            messageGuid = msgSaveRec.messageGuid || null;
-
-
-            msgSaveParamsMain = {
-              msgSaveParams: {
-                messageGuid,
+                action: sails.config.custom.enums.messageSaveActions.CREATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
                 messageId,
@@ -340,7 +313,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -392,23 +365,9 @@ async function sendMsg(clientMessages) {
 
             success = true;
 
-            msgSaveParamsInitial = {
+            msgSaveParams = {
               msgSaveParams: {
-                clientGuid: msg.clientGuid,
-                accountGuid: msg.accountGuid,
-                clientId: msg.clientId,
-              },
-              createdBy: `${moduleName}:${methodName}`,
-            };
-
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsInitial);
-
-            messageGuid = msgSaveRec.messageGuid || null;
-
-
-            msgSaveParamsMain = {
-              msgSaveParams: {
-                messageGuid,
+                action: sails.config.custom.enums.messageSaveActions.CREATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
                 messageId,
@@ -420,7 +379,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -467,8 +426,9 @@ async function sendMsg(clientMessages) {
 
           messageGuid = msg.messageGuid;
 
-          msgSaveParamsMain = {
+          msgSaveParams = {
             msgSaveParams: {
+              action: sails.config.custom.enums.messageSaveActions.UPDATE,
               messageGuid,
               clientGuid: msg.clientGuid,
               accountGuid: msg.accountGuid,
@@ -481,7 +441,7 @@ async function sendMsg(clientMessages) {
             createdBy: `${moduleName}:${methodName}`,
           };
 
-          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
         }
 
@@ -568,8 +528,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -582,7 +543,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -635,8 +596,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -649,7 +611,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -702,21 +664,22 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
                 messageId,
                 message: msg.payload,
-                messageFormat: sails.config.custom.enums.messageFormat.CALLBACK,
+                messageFormat: sails.config.custom.enums.messageFormat.INLINEKEYBOARD,
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -769,8 +732,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -783,7 +747,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -836,8 +800,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -850,7 +815,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -903,8 +868,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -917,7 +883,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -970,8 +936,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -984,7 +951,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -1037,8 +1004,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -1051,7 +1019,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 
@@ -1104,8 +1072,9 @@ async function sendMsg(clientMessages) {
 
             messageGuid = msg.messageGuid;
 
-            msgSaveParamsMain = {
+            msgSaveParams = {
               msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 messageGuid,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
@@ -1118,7 +1087,7 @@ async function sendMsg(clientMessages) {
               createdBy: `${moduleName}:${methodName}`,
             };
 
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParamsMain);
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
           } else {
 

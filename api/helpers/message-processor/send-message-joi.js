@@ -78,6 +78,12 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
+
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let msgQueueCreateParams;
 
 
     try {
@@ -86,6 +92,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
 
       if (input.client.dnd && !input.forced) {
@@ -256,27 +263,60 @@ module.exports = {
 
           let {text: htmlSimple} = await activateBeforeHelper(input.client, messageData, htmlSimpleRaw, input.beforeHelperParams || null);
 
-          const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
+          // const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   html: htmlSimple,
+          //   disableWebPagePreview,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            html: htmlSimple,
-            disableWebPagePreview,
+            clientId,
+            msgType: 'simpleMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              html: htmlSimple,
+              disableWebPagePreview,
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
 
-          sendMessageResult = simpleRes;
+          sendMessageResult = msgSaveRec;
 
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: simpleRes.payload.message_id || 0,
-            message: htmlSimple,
-            message_format: sails.config.custom.enums.messageFormat.PUSHSIMPLE,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
-          });
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: simpleRes.payload.message_id || 0,
+          //   message: htmlSimple,
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHSIMPLE,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -294,30 +334,64 @@ module.exports = {
 
           const imgPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.img}` : input.messageData.message.img;
 
-          const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
+          // const imgRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   imgPath,
+          //   html: htmlImg,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            imgPath,
-            html: htmlImg,
-          });
-
-          sendMessageResult = imgRes;
-
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: imgRes.payload.message_id || 0,
-            message: JSON.stringify({
-              img: imgPath,
+            clientId,
+            msgType: 'imgMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              imgPath,
               html: htmlImg,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.PUSHIMG,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
+
+          sendMessageResult = msgSaveRec;
+
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: imgRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     img: imgPath,
+          //     html: htmlImg,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHIMG,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -335,30 +409,64 @@ module.exports = {
 
           const videoPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.video}` : input.messageData.message.video;
 
-          const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
+          // const videoRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   videoPath,
+          //   html: htmlVideo,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            videoPath,
-            html: htmlVideo,
-          });
-
-          sendMessageResult = videoRes;
-
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: videoRes.payload.message_id || 0,
-            message: JSON.stringify({
-              video: videoPath,
+            clientId,
+            msgType: 'videoMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              videoPath,
               html: htmlVideo,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.PUSHVIDEO,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
+
+          sendMessageResult = msgSaveRec;
+
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: videoRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     video: videoPath,
+          //     html: htmlVideo,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHVIDEO,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -370,28 +478,61 @@ module.exports = {
 
           const stickerPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.sticker}` : input.messageData.message.sticker;
 
-          const stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
+          // const stickerRes = await sails.helpers.mgw[input.client.messenger]['stickerMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   stickerPath,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            stickerPath,
+            clientId,
+            msgType: 'stickerMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              stickerPath,
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
 
-          sendMessageResult = stickerRes;
 
-          /**
-           * Save the sent message
-           */
+          sendMessageResult = msgSaveRec;
 
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: stickerRes.payload.message_id || 0,
-            message: JSON.stringify({
-              sticker: stickerPath,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.PUSHVIDEO,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
-          });
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: stickerRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     sticker: stickerPath,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHVIDEO,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -409,30 +550,64 @@ module.exports = {
 
           const docPath = (input.messageData.message.mediaLibrary) ? `${sails.config.custom.mediaUrl}/${useLang}/${input.messageData.message.doc}` : input.messageData.message.doc;
 
-          let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
+          // let docRes = await sails.helpers.mgw[input.client.messenger]['docMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   docPath,
+          //   html: htmlDoc,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            docPath,
-            html: htmlDoc,
-          });
-
-          sendMessageResult = docRes;
-
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: docRes.payload.message_id || 0,
-            message: JSON.stringify({
-              doc: docPath,
+            clientId,
+            msgType: 'docMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              docPath,
               html: htmlDoc,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.DOC,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
+
+          sendMessageResult = msgSaveRec;
+
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: docRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     doc: docPath,
+          //     html: htmlDoc,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.DOC,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -448,12 +623,45 @@ module.exports = {
             additionalTokens,
           });
 
-          const forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
+          // const forcedRes = await sails.helpers.mgw[input.client.messenger]['forcedMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   html: htmlForced,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            html: htmlForced,
+            clientId,
+            msgType: 'forcedMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              html: htmlForced,
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
 
-          sendMessageResult = forcedRes;
+
+          sendMessageResult = msgSaveRec;
 
           // TODO: Выставить флаг "forced_reply_expected"
           //  который означает, что клиенту было отправлено ForcedMessage
@@ -471,19 +679,19 @@ module.exports = {
           });
 
 
-          /**
-           * Save the sent message
-           */
-
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: forcedRes.payload.message_id || 0,
-            message: htmlForced,
-            message_format: sails.config.custom.enums.messageFormat.PUSHFORCED,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid
-          });
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: forcedRes.payload.message_id || 0,
+          //   message: htmlForced,
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHFORCED,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid
+          // });
 
           break;
 
@@ -507,29 +715,64 @@ module.exports = {
             additionalTokens,
           });
 
-          const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
+          // const inlineRes = await sails.helpers.mgw[input.client.messenger]['inlineKeyboardMessageJoi']({
+          //   chatId: input.client.chat_id,
+          //   html: htmlInline,
+          //   inlineKeyboard,
+          //   disableWebPagePreview,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
             chatId: input.client.chat_id,
-            html: htmlInline,
-            inlineKeyboard,
-            disableWebPagePreview,
+            clientId,
+            msgType: 'inlineKeyboardMessageJoi',
+            payload: {
+              chatId: input.client.chat_id,
+              html: htmlInline,
+              inlineKeyboard,
+              disableWebPagePreview,
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
 
-          sendMessageResult = inlineRes;
 
-          /**
-           * Save the sent message
-           */
+          sendMessageResult = msgSaveRec;
 
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: inlineRes.payload.message_id || 0,
-            message: htmlInline,
-            message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid,
-            message_buttons: inlineKeyboard,
-          });
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: inlineRes.payload.message_id || 0,
+          //   message: htmlInline,
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid,
+          //   message_buttons: inlineKeyboard,
+          // });
 
           break;
 
@@ -560,27 +803,57 @@ module.exports = {
             inlineKeyboard: imgInlineKeyboard,
           };
 
-          const imgInlineRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi'](imgMessageJoiParams);
+          // const imgInlineRes = await sails.helpers.mgw[input.client.messenger]['imgMessageJoi'](imgMessageJoiParams);
 
-          sendMessageResult = imgInlineRes;
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
 
-          /**
-           * Save the sent message
-           */
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: imgInlineRes.payload.message_id || 0,
-            message: JSON.stringify({
-              img: imgInlineKeyboardPath,
-              html: htmlImgInline,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.PUSHIMGCALLBACK,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid,
-            message_buttons: imgInlineKeyboard,
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
+            chatId: input.client.chat_id,
+            clientId,
+            msgType: 'imgMessageJoi',
+            payload: imgMessageJoiParams,
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
+
+          sendMessageResult = msgSaveRec;
+
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: imgInlineRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     img: imgInlineKeyboardPath,
+          //     html: htmlImgInline,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHIMGINLINEKEYBOARD,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid,
+          //   message_buttons: imgInlineKeyboard,
+          // });
 
           break;
 
@@ -611,27 +884,57 @@ module.exports = {
             inlineKeyboard: videoInlineKeyboard,
           };
 
-          const videoInlineRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi'](videoMessageJoiParams);
+          // const videoInlineRes = await sails.helpers.mgw[input.client.messenger]['videoMessageJoi'](videoMessageJoiParams);
 
-          sendMessageResult = videoInlineRes;
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
 
-          /**
-           * Save the sent message
-           */
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
-          await sails.helpers.storage.messageSaveJoi({
-            message_id: videoInlineRes.payload.message_id || 0,
-            message: JSON.stringify({
-              video: videoInlineKeyboardPath,
-              html: htmlVideoInline,
-            }),
-            message_format: sails.config.custom.enums.messageFormat.PUSHVIDEOCALLBACK,
-            messenger: input.client.messenger,
-            message_originator: sails.config.custom.enums.messageOriginator.BOT,
-            client_id: input.client.id,
-            client_guid: input.client.guid,
-            message_buttons: videoInlineKeyboard,
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
+            chatId: input.client.chat_id,
+            clientId,
+            msgType: 'videoMessageJoi',
+            payload: videoMessageJoiParams,
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
+
+          sendMessageResult = msgSaveRec;
+
+          // /**
+          //  * Save the sent message
+          //  */
+          //
+          // await sails.helpers.storage.messageSaveJoi({
+          //   message_id: videoInlineRes.payload.message_id || 0,
+          //   message: JSON.stringify({
+          //     video: videoInlineKeyboardPath,
+          //     html: htmlVideoInline,
+          //   }),
+          //   message_format: sails.config.custom.enums.messageFormat.PUSHVIDEOINLINEKEYBOARD,
+          //   messenger: input.client.messenger,
+          //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+          //   client_id: input.client.id,
+          //   client_guid: input.client.guid,
+          //   message_buttons: videoInlineKeyboard,
+          // });
 
           break;
 
@@ -648,10 +951,43 @@ module.exports = {
           });
 
 
-          const editMessageTextRes = await sails.helpers.mgw[input.client.messenger]['editMessageTextJoi']({
-            html: htmlEditMessageText,
-            optionalParams: input.additionalParams,
+          // const editMessageTextRes = await sails.helpers.mgw[input.client.messenger]['editMessageTextJoi']({
+          //   html: htmlEditMessageText,
+          //   optionalParams: input.additionalParams,
+          // });
+
+          msgSaveParams = {
+            msgSaveParams: {
+              clientGuid,
+              accountGuid,
+              clientId,
+            },
+            createdBy: moduleName,
+          };
+
+          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+          messageGuid = msgSaveRec.messageGuid;
+
+          msgQueueCreateParams = {
+            clientGuid,
+            accountGuid,
+            messageGuid,
+            channel: input.client.messenger,
+            chatId: input.client.chat_id,
+            clientId,
+            msgType: 'editMessageTextJoi',
+            payload: {
+              html: htmlEditMessageText,
+              optionalParams: input.additionalParams,
+            },
+          };
+
+          await sails.helpers.storage.msgQueueCreateWrapper({
+            msgQueueCreateParams,
+            createdBy: moduleName,
           });
+
 
           if (
             _.isArray(input.messageData.message.inline_keyboard)
@@ -664,49 +1000,68 @@ module.exports = {
               additionalTokens,
             });
 
-            const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
-              replyMarkup: {
-                inline_keyboard: editMessageInlineKeyboard
+            // const editMessageReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+            //   replyMarkup: {
+            //     inline_keyboard: editMessageInlineKeyboard
+            //   },
+            //   optionalParams: input.additionalParams,
+            // });
+
+            msgSaveParams = {
+              msgSaveParams: {
+                clientGuid,
+                accountGuid,
+                clientId,
               },
-              optionalParams: input.additionalParams,
+              createdBy: moduleName,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+            messageGuid = msgSaveRec.messageGuid;
+
+            msgQueueCreateParams = {
+              clientGuid,
+              accountGuid,
+              messageGuid,
+              channel: input.client.messenger,
+              chatId: input.client.chat_id,
+              clientId,
+              msgType: 'editMessageReplyMarkupJoi',
+              payload: {
+                replyMarkup: {
+                  inline_keyboard: editMessageInlineKeyboard
+                },
+                optionalParams: input.additionalParams,
+              },
+            };
+
+            await sails.helpers.storage.msgQueueCreateWrapper({
+              msgQueueCreateParams,
+              createdBy: moduleName,
             });
 
-            /**
-             * Save the sent message with message buttons
-             */
 
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: editMessageTextRes.payload.message_id || 0,
-              message: htmlEditMessageText,
-              message_buttons: editMessageInlineKeyboard,
-              message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,
-              messenger: input.client.messenger,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: input.client.id,
-              client_guid: input.client.guid,
-            });
+            // /**
+            //  * Save the sent message with message buttons
+            //  */
+            //
+            // await sails.helpers.storage.messageSaveJoi({
+            //   message_id: editMessageTextRes.payload.message_id || 0,
+            //   message: htmlEditMessageText,
+            //   message_buttons: editMessageInlineKeyboard,
+            //   message_format: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
+            //   messenger: input.client.messenger,
+            //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
+            //   client_id: input.client.id,
+            //   client_guid: input.client.guid,
+            // });
 
-
-          } else {
-
-            /**
-             * Save the sent message without message buttons
-             */
-
-            await sails.helpers.storage.messageSaveJoi({
-              message_id: editMessageTextRes.payload.message_id || 0,
-              message: htmlEditMessageText,
-              message_format: sails.config.custom.enums.messageFormat.PUSHCALLBACK,
-              messenger: input.client.messenger,
-              message_originator: sails.config.custom.enums.messageOriginator.BOT,
-              client_id: input.client.id,
-              client_guid: input.client.guid,
-            });
 
           }
 
 
-          sendMessageResult = editMessageTextRes;
+          sendMessageResult = msgSaveRec;
 
           break;
 
@@ -726,14 +1081,49 @@ module.exports = {
               additionalTokens,
             });
 
-            const editMessageMarkupReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
-              replyMarkup: {
-                inline_keyboard: editMessageMarkupInlineKeyboard
+            // const editMessageMarkupReplyMarkupRes = await sails.helpers.mgw[input.client.messenger]['editMessageReplyMarkupJoi']({
+            //   replyMarkup: {
+            //     inline_keyboard: editMessageMarkupInlineKeyboard
+            //   },
+            //   optionalParams: input.additionalParams,
+            // });
+
+            msgSaveParams = {
+              msgSaveParams: {
+                clientGuid,
+                accountGuid,
+                clientId,
               },
-              optionalParams: input.additionalParams,
+              createdBy: moduleName,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+            messageGuid = msgSaveRec.messageGuid;
+
+            msgQueueCreateParams = {
+              clientGuid,
+              accountGuid,
+              messageGuid,
+              channel: input.client.messenger,
+              chatId: input.client.chat_id,
+              clientId,
+              msgType: 'editMessageReplyMarkupJoi',
+              payload: {
+                replyMarkup: {
+                  inline_keyboard: editMessageMarkupInlineKeyboard
+                },
+                optionalParams: input.additionalParams,
+              },
+            };
+
+            await sails.helpers.storage.msgQueueCreateWrapper({
+              msgQueueCreateParams,
+              createdBy: moduleName,
             });
 
-            sendMessageResult = editMessageMarkupReplyMarkupRes;
+
+            sendMessageResult = msgSaveRec;
 
           }
 

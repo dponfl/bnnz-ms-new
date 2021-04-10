@@ -405,7 +405,7 @@ module.exports = {
             //     html: htmlImgInlineKeyboard,
             //   }),
             //   message_buttons: imgMessageJoiParams.inlineKeyboard,
-            //   message_format: sails.config.custom.enums.messageFormat.IMGCALLBACK,
+            //   message_format: sails.config.custom.enums.messageFormat.IMGINLINEKEYBOARD,
             //   messenger: input.client.messenger,
             //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
             //   client_id: input.client.id,
@@ -873,7 +873,7 @@ module.exports = {
             // await sails.helpers.storage.messageSaveJoi({
             //   message_id: inlineRes.payload.message_id || 0,
             //   message: htmlInline,
-            //   message_format: sails.config.custom.enums.messageFormat.CALLBACK,
+            //   message_format: sails.config.custom.enums.messageFormat.INLINEKEYBOARD,
             //   messenger: input.client.messenger,
             //   message_originator: sails.config.custom.enums.messageOriginator.BOT,
             //   client_id: input.client.id,

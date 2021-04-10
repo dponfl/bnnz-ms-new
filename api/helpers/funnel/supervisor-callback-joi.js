@@ -56,6 +56,11 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let messageId;
+
 
     try {
 
@@ -68,16 +73,33 @@ module.exports = {
        * Save the received callback query message
        */
 
-      await sails.helpers.storage.messageSaveJoi({
-        message_id: input.query.message.message_id || 0,
-        callback_query_id: input.query.id || 0,
-        message: input.query.data,
-        message_format: sails.config.custom.enums.messageFormat.CALLBACK,
-        messenger: input.client.messenger,
-        message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
-        client_id: input.client.id,
-        client_guid: input.client.guid
-      });
+      msgSaveParams = {
+        msgSaveParams: {
+          action: sails.config.custom.enums.messageSaveActions.CREATE,
+          clientGuid,
+          accountGuid,
+          messageId: input.query.message.message_id,
+          callbackQueryId: input.query.id,
+          message: input.query.data,
+          messageFormat: sails.config.custom.enums.messageFormat.CALLBACK,
+          channel: input.client.messenger,
+          messageOriginator: sails.config.custom.enums.messageOriginator.CLIENT,
+        },
+        createdBy: moduleName,
+      };
+
+      msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+      // await sails.helpers.storage.messageSaveJoi({
+      //   message_id: input.query.message.message_id || 0,
+      //   callback_query_id: input.query.id || 0,
+      //   message: input.query.data,
+      //   message_format: sails.config.custom.enums.messageFormat.CALLBACK,
+      //   messenger: input.client.messenger,
+      //   message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
+      //   client_id: input.client.id,
+      //   client_guid: input.client.guid
+      // });
 
       /**
        * Get message_id from the callback query
@@ -89,120 +111,12 @@ module.exports = {
          * Find block and get callback helper
          */
 
+        const {messageGuid} = await sails.helpers.general.getMessageGuidOrIdJoi({messageId: input.query.message.message_id});
+
         let block = _.find(input.client.funnels[input.client.current_funnel],
-          {message_id: input.query.message.message_id});
+          {messageGuid});
 
-        if (!_.isNil(block)) {
-
-          /**
-           * We need to perform callbackHelper
-           */
-
-          let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 3);
-          let callbackHelperCategory = splitCallbackHelperRes[0];
-          let callbackHelperBlock = splitCallbackHelperRes[1];
-          let callbackHelperName = splitCallbackHelperRes[2];
-
-          if (callbackHelperCategory && callbackHelperBlock && callbackHelperName) {
-
-            /**
-             * We managed to parse the specified callbackHelper and can perform it
-             */
-
-            await sails.helpers.funnel[callbackHelperCategory][callbackHelperBlock][callbackHelperName]({
-              client: input.client,
-              block,
-              query: input.query,
-            });
-
-            /**
-             * We need to start processing funnel again because if callback enabled some new
-             * block it should be shown
-             */
-
-            /**
-             * Try to find the initial block of the current funnel
-             */
-
-            let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
-              {initial: true});
-
-            /**
-             * Check that the initial block was found
-             */
-
-            if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
-
-              await sails.helpers.funnel.proceedNextBlockJoi({
-                client: input.client,
-                funnelName: input.client.current_funnel,
-                blockId: initialBlock.id,
-                additionalTokens: input.additionalTokens,
-                msg: input.query.message,
-                createdBy: moduleName,
-              });
-
-            } else {
-
-              /**
-               * Throw error -> initial block was not found
-               */
-
-              // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR}`);
-
-              await sails.helpers.general.throwErrorJoi({
-                errorType: sails.config.custom.enums.errorType.CRITICAL,
-                emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-                location: moduleName,
-                message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
-                clientGuid,
-                accountGuid,
-                errorName: sails.config.custom.FUNNELS_ERROR.name,
-                payload: {
-                  currentFunnel: input.client.funnels[input.client.current_funnel],
-                },
-              });
-
-            }
-
-            /**
-             * Update content of funnels field of client record
-             */
-
-            await sails.helpers.storage.clientUpdateJoi({
-              criteria: {guid: input.client.guid},
-              data: {funnels: input.client.funnels},
-              createdBy: moduleName,
-            });
-
-          } else {
-            /**
-             * Throw error: we could not parse the specified callbackHelper
-             */
-
-            // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR}`);
-
-            await sails.helpers.general.throwErrorJoi({
-              errorType: sails.config.custom.enums.errorType.CRITICAL,
-              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
-              location: moduleName,
-              message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
-              clientGuid,
-              accountGuid,
-              errorName: sails.config.custom.FUNNELS_ERROR.name,
-              payload: {
-                blockCallbackHelper: block.callbackHelper,
-              },
-            });
-
-          }
-
-        } else {
-          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_BLOCK_FIND_ERROR}
-          // message_id: ${input.query.message.message_id}
-          // current_funnel: ${input.client.current_funnel}
-          // funnels: ${JSON.stringify(input.client.funnels, null, 3)}`);
-
+        if (_.isNil(block)) {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -212,13 +126,116 @@ module.exports = {
             accountGuid,
             errorName: sails.config.custom.FUNNELS_ERROR.name,
             payload: {
-              messageId: input.query.message.message_id,
+              messageGuid,
               currentFunnelName: input.client.current_funnel,
               currentFunnel: input.client.funnels[input.client.current_funnel],
             },
           });
+        }
+
+        /**
+         * We need to perform callbackHelper
+         */
+
+        let splitCallbackHelperRes = _.split(block.callbackHelper, sails.config.custom.JUNCTION, 3);
+        let callbackHelperCategory = splitCallbackHelperRes[0];
+        let callbackHelperBlock = splitCallbackHelperRes[1];
+        let callbackHelperName = splitCallbackHelperRes[2];
+
+        if (callbackHelperCategory && callbackHelperBlock && callbackHelperName) {
+
+          /**
+           * We managed to parse the specified callbackHelper and can perform it
+           */
+
+          await sails.helpers.funnel[callbackHelperCategory][callbackHelperBlock][callbackHelperName]({
+            client: input.client,
+            block,
+            query: input.query,
+          });
+
+          /**
+           * We need to start processing funnel again because if callback enabled some new
+           * block it should be shown
+           */
+
+          /**
+           * Try to find the initial block of the current funnel
+           */
+
+          let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+            {initial: true});
+
+          /**
+           * Check that the initial block was found
+           */
+
+          if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
+
+            await sails.helpers.funnel.proceedNextBlockJoi({
+              client: input.client,
+              funnelName: input.client.current_funnel,
+              blockId: initialBlock.id,
+              additionalTokens: input.additionalTokens,
+              msg: input.query.message,
+              createdBy: moduleName,
+            });
+
+          } else {
+
+            /**
+             * Throw error -> initial block was not found
+             */
+
+            // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR}`);
+
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+              location: moduleName,
+              message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_INITIAL_BLOCK_FIND_ERROR,
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.FUNNELS_ERROR.name,
+              payload: {
+                currentFunnel: input.client.funnels[input.client.current_funnel],
+              },
+            });
+
+          }
+
+          /**
+           * Update content of funnels field of client record
+           */
+
+          await sails.helpers.storage.clientUpdateJoi({
+            criteria: {guid: input.client.guid},
+            data: {funnels: input.client.funnels},
+            createdBy: moduleName,
+          });
+
+        } else {
+          /**
+           * Throw error: we could not parse the specified callbackHelper
+           */
+
+          // throw new Error(`${moduleName}, error: ${sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR}`);
+
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
+            location: moduleName,
+            message: sails.config.custom.SUPERVISOR_CALLBACK_HELPER_PARSE_ERROR,
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.FUNNELS_ERROR.name,
+            payload: {
+              blockCallbackHelper: block.callbackHelper,
+            },
+          });
 
         }
+
 
       }
 

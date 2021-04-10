@@ -46,7 +46,7 @@ module.exports = {
         .description('message guid to find and update existing record')
         .guid(),
       message: Joi
-        .string(),
+        .any(),
       callbackQueryId: Joi
         .string()
         .max(255),
@@ -58,7 +58,7 @@ module.exports = {
         .max(255)
         .valid(
           sails.config.custom.enums.messageFormat.SIMPLE,
-          sails.config.custom.enums.messageFormat.CALLBACK,
+          sails.config.custom.enums.messageFormat.INLINEKEYBOARD,
           sails.config.custom.enums.messageFormat.KEYBOARD,
           sails.config.custom.enums.messageFormat.KEYBOARD_REMOVE,
           sails.config.custom.enums.messageFormat.FORCED,
@@ -66,16 +66,16 @@ module.exports = {
           sails.config.custom.enums.messageFormat.VIDEO,
           sails.config.custom.enums.messageFormat.STICKER,
           sails.config.custom.enums.messageFormat.DOC,
-          sails.config.custom.enums.messageFormat.IMGCALLBACK,
+          sails.config.custom.enums.messageFormat.IMGINLINEKEYBOARD,
           sails.config.custom.enums.messageFormat.SEND_INVOICE,
           sails.config.custom.enums.messageFormat.DEL,
           sails.config.custom.enums.messageFormat.EDIT_RM,
           sails.config.custom.enums.messageFormat.EDIT_T,
           sails.config.custom.enums.messageFormat.POSTBROADCAST,
           sails.config.custom.enums.messageFormat.PUSHSIMPLE,
-          sails.config.custom.enums.messageFormat.PUSHCALLBACK,
-          sails.config.custom.enums.messageFormat.PUSHIMGCALLBACK,
-          sails.config.custom.enums.messageFormat.PUSHVIDEOCALLBACK,
+          sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
+          sails.config.custom.enums.messageFormat.PUSHIMGINLINEKEYBOARD,
+          sails.config.custom.enums.messageFormat.PUSHVIDEOINLINEKEYBOARD,
           sails.config.custom.enums.messageFormat.PUSHFORCED,
           sails.config.custom.enums.messageFormat.PUSHIMG,
           sails.config.custom.enums.messageFormat.PUSHVIDEO,
@@ -94,8 +94,7 @@ module.exports = {
         ),
       clientId: Joi
         .number()
-        .integer()
-        .required(),
+        .integer(),
       clientGuid: Joi
         .string()
         .guid()
@@ -104,16 +103,23 @@ module.exports = {
         .string()
         .guid()
         .required(),
-    })
-      .xor('messageGuid', 'clientId')
-      .xor('messageGuid', 'clientGuid')
-      .xor('messageGuid', 'accountGuid')
-      .with('clientId', 'clientGuid', 'accountGuid');
+      action: Joi
+        .string()
+        .valid(
+          sails.config.custom.enums.messageSaveActions.CREATE,
+          sails.config.custom.enums.messageSaveActions.UPDATE,
+        )
+        .required(),
+    });
 
     let clientGuid;
     let accountGuid;
 
     let messageRec;
+
+    let messageRecParams = {};
+
+    let messageGuid;
 
     try {
 
@@ -122,156 +128,193 @@ module.exports = {
       clientGuid = input.clientGuid;
       accountGuid = input.accountGuid;
 
-      if (_.isNil(input.messageGuid)) {
+      switch (input.action) {
+        case sails.config.custom.enums.messageSaveActions.CREATE:
 
-        /**
-         * Создаём первоначальную запись для фиксации messageGuid
-         */
+          /**
+           * При создании новой записи в input как мин должны присутствовать:
+           * - clientId
+           * - clientGuid
+           * - accountGuid
+           */
 
-        const {guid: messageGuid} = await sails.helpers.general.getGuid();
+          if (_.isNil(input.clientId)) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
+              location: moduleName,
+              message: 'Missing "clientId" on record create',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {input},
+            });
+          }
 
-        const messageRecParams = {
-          messageGuid,
-          clientId: input.clientId,
-          clientGuid,
-          accountGuid,
-        };
+          /**
+           * Создаём первоначальную запись
+           */
 
-        messageRec = await Messages.create(messageRecParams)
-          .fetch()
-          .tolerate(async (err) => {
+          messageGuid = await sails.helpers.general.getGuid().guid;
 
-            err.details = {
-              messageRecParams,
-            };
+          _.assign(
+            messageRecParams,
+            _.omit(input, ['messageGuid', 'action']),
+            messageGuid,
+          );
 
-            await LogProcessor.dbError({
-              error: err,
+          messageRec = await Messages.create(messageRecParams)
+            .fetch()
+            .tolerate(async (err) => {
+
+              err.details = {
+                messageRecParams,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Messages.create() error',
+                clientGuid,
+                accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  messageRecParams,
+                },
+              });
+
+              return null;
+            });
+
+          if (_.isNil(messageRec)) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
               message: 'Messages.create() error',
               clientGuid,
               accountGuid,
-              // requestId: null,
-              // childRequestId: null,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {messageRecParams},
+            });
+          }
+
+          break;
+
+        case sails.config.custom.enums.messageSaveActions.UPDATE:
+
+          if (_.isNil(input.messageGuid)) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.MEDIUM,
               location: moduleName,
+              message: 'Missing "messageGuid" on record update',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {input},
+            });
+          }
+
+          /**
+           * Параметр:
+           *  - clientId
+           *  - clientGuid
+           *  - accountGuid
+           * были сохранены при создании записи поэтому удаляем эти
+           * данные из вх параметров для избеания ошибок перезаписи
+           */
+
+          messageRecParams = _.omit(input, ['clientId', 'clientGuid', 'accountGuid', 'action']);
+
+          /**
+           * Редактируем данные записи по messageGuid
+           */
+
+          messageGuid = input.messageGuid;
+
+          messageRec = await Messages.findOne({messageGuid})
+            .tolerate(async (err) => {
+
+              err.details = {
+                messageGuid,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Messages.findOne() error',
+                clientGuid,
+                accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  messageGuid,
+                },
+              });
+
+              return null;
+            });
+
+          if (_.isNil(messageRec)) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'No message record by "messageGuid"',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              payload: {messageGuid},
+            });
+          }
+
+          messageRec = await Messages.updateOne({messageGuid})
+            .set(messageRecParams)
+            .tolerate(async (err) => {
+
+              err.details = {
+                messageGuid,
+                messageRecParams,
+              };
+
+              await LogProcessor.dbError({
+                error: err,
+                message: 'Messages.updateOne() error',
+                clientGuid,
+                accountGuid,
+                // requestId: null,
+                // childRequestId: null,
+                location: moduleName,
+                payload: {
+                  messageGuid,
+                  messageRecParams,
+                },
+              });
+
+              return null;
+            });
+
+          if (_.isNil(messageRec)) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'No record data returned from Messages.updateOne()',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
               payload: {
+                messageGuid,
                 messageRecParams,
               },
             });
+          }
 
-            return null;
-          });
-
-        if (_.isNil(messageRec)) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Messages.create() error',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {messageRecParams},
-          });
-        }
-
-      } else {
-
-        /**
-         * Редактируем данные записи по messageGuid
-         */
-
-        const messageGuid = input.messageGuid;
-
-        messageRec = await Messages.findOne({messageGuid})
-          .tolerate(async (err) => {
-
-            err.details = {
-              messageGuid,
-            };
-
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Messages.findOne() error',
-              clientGuid,
-              accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                messageGuid,
-              },
-            });
-
-            return null;
-          });
-
-        if (_.isNil(messageRec)) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Messages.findOne() error',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {messageGuid},
-          });
-        }
-
-        const messageRecParams = {
-          callbackQueryId: input.callbackQueryId || null,
-          message: input.message || null,
-          messageId: input.messageId || null,
-          messageFormat: input.messageFormat || null,
-          channel: input.channel || null,
-          messageOriginator: input.messageOriginator || null,
-        };
-
-        messageRec = await Messages.updateOne({messageGuid})
-          .set(messageRecParams)
-          .tolerate(async (err) => {
-
-            err.details = {
-              messageGuid,
-              messageRecParams,
-            };
-
-            await LogProcessor.dbError({
-              error: err,
-              message: 'Messages.updateOne() error',
-              clientGuid,
-              accountGuid,
-              // requestId: null,
-              // childRequestId: null,
-              location: moduleName,
-              payload: {
-                messageGuid,
-                messageRecParams,
-              },
-            });
-
-            return null;
-          });
-
-        if (_.isNil(messageRec)) {
-          await sails.helpers.general.throwErrorJoi({
-            errorType: sails.config.custom.enums.errorType.CRITICAL,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            message: 'Messages.updateOne() error',
-            clientGuid,
-            accountGuid,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            payload: {
-              messageGuid,
-              messageRecParams,
-            },
-          });
-        }
-
+          break;
 
       }
-
 
       return exits.success({
         status: 'ok',
