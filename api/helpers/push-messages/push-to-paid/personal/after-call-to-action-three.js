@@ -78,12 +78,12 @@ module.exports = {
 
       if (block) {
 
-        if (block.message_id == null) {
+        if (_.isNil(block.messageGuid)) {
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
             emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
             location: moduleName,
-            message: 'Block has no message_id',
+            message: 'Block has no messageGuid',
             clientGuid,
             accountGuid,
             errorName: sails.config.custom.CHAT_BLASTS_ERROR_NO_ELEMENT.name,
@@ -106,6 +106,8 @@ module.exports = {
         //     message_id: block.message_id,
         //   },
         // });
+
+        const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: block.messageGuid});
 
         msgSaveParams = {
           msgSaveParams: {
@@ -134,7 +136,7 @@ module.exports = {
             },
             optionalParams: {
               chat_id: input.client.chat_id,
-              message_id: block.message_id,
+              message_id: messageId,
             },
           },
         };

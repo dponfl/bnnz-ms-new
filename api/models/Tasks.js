@@ -28,9 +28,9 @@ module.exports = {
       type: 'string',
     },
     /**
-     * messageId - уникальный идентификатор сообщения внутри мессенджера
+     * messageGuid - уникальный идентификатор сообщения
      */
-    messageId: {
+    messageGuid: {
       type: 'string',
       allowNull: true,
     },

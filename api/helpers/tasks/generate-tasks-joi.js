@@ -249,7 +249,7 @@ module.exports = {
 
       await sails.getDatastore('clientDb')
         .leaseConnection(async (db) => {
-          
+
           try {
 
             const resGetLock = await sails
@@ -482,7 +482,7 @@ module.exports = {
                   guid: taskRecRaw.payload.guid,
                 },
                 data: {
-                  messageId: msgRes.payload.message_id || null,
+                  messageGuid: msgRes.payload.messageGuid,
                 }
               });
 
@@ -553,7 +553,7 @@ module.exports = {
             }
 
             return;
-            
+
           } catch (ee) {
 
             const ReleaseLock = await sails
@@ -615,10 +615,10 @@ module.exports = {
             }
 
           }
-          
+
         }); // .leaseConnection()
-      
-      
+
+
 
       return exits.success({
         status: 'ok',

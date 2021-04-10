@@ -51,7 +51,9 @@ module.exports = {
         .max(50)
         .valid(sails.config.custom.enums.messenger.TELEGRAM)
         .required(),
-      messageId: Joi.string(),
+      messageGuid: Joi
+        .string()
+        .guid(),
       makeLike: Joi.boolean(),
       makeComment: Joi.boolean(),
       makeLikePerformed: Joi.boolean(),
@@ -71,7 +73,7 @@ module.exports = {
         clientGuid: input.clientGuid,
         accountGuid: input.accountGuid,
         messenger: input.messenger,
-        messageId: input.messageId || null,
+        messageGuid: input.messageGuid || null,
         makeLike: input.makeLike || false,
         makeComment: input.makeComment || false,
         makeLikePerformed: input.makeLikePerformed || false,

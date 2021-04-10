@@ -50,6 +50,10 @@ module.exports = {
 
     let pushMessage;
 
+    let msgSaveParams;
+    let msgSaveRec;
+    let messageGuid;
+    let messageId;
 
     try {
 
@@ -64,16 +68,35 @@ module.exports = {
        * Save the received callback query message
        */
 
-      await sails.helpers.storage.messageSaveJoi({
-        message_id: input.query.message.message_id || 0,
-        callback_query_id: input.query.id || '',
-        message: input.query.data,
-        message_format: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
-        messenger: input.client.messenger,
-        message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
-        client_id: input.client.id,
-        client_guid: input.client.guid
-      });
+      // await sails.helpers.storage.messageSaveJoi({
+      //   message_id: input.query.message.message_id || 0,
+      //   callback_query_id: input.query.id || '',
+      //   message: input.query.data,
+      //   message_format: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
+      //   messenger: input.client.messenger,
+      //   message_originator: sails.config.custom.enums.messageOriginator.CLIENT,
+      //   client_id: input.client.id,
+      //   client_guid: input.client.guid
+      // });
+
+      messageId = input.query.message.message_id;
+
+      msgSaveParams = {
+        msgSaveParams: {
+          action: sails.config.custom.enums.messageSaveActions.CREATE,
+          clientGuid,
+          accountGuid,
+          messageId,
+          message: {data: input.query.data},
+          messageFormat: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,
+          channel: input.client.messenger,
+          messageOriginator: sails.config.custom.enums.messageOriginator.CLIENT,
+        },
+        createdBy: moduleName,
+      };
+
+      msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
 
 
       /**

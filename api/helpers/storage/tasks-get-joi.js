@@ -56,10 +56,10 @@ module.exports = {
         .string()
         .guid()
         .description('post guid'),
-      messageId: Joi
+      messageGuid: Joi
         .string()
-        .max(36)
-        .description('messageId'),
+        .guid()
+        .description('messageGuid'),
       makeLike: Joi
         .boolean()
         .description('makeLike'),
@@ -80,7 +80,7 @@ module.exports = {
       'clientGuid',
       'accountGuid',
       'postGuid',
-      'messageId',
+      'messageGuid',
       'makeLike',
       'makeComment',
       'makeLikePerformed',

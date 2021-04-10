@@ -1164,7 +1164,11 @@ module.exports = {
 
       }
 
-      return exits.success(sendMessageResult);
+      return exits.success({
+        status: 'ok',
+        message: `${moduleName} performed`,
+        payload: sendMessageResult,
+      });
 
     } catch (e) {
       const throwError = true;

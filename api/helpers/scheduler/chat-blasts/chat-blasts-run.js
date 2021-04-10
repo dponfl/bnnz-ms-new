@@ -476,7 +476,7 @@ async function processChatBlastElement(client, rec, currentElem) {
     return;
   }
 
-  currentElem.message_id = msgRes.payload.message_id || 0;
+  currentElem.messageGuid = msgRes.payload.messageGuid;
 
   currentElem.shown = true;
 

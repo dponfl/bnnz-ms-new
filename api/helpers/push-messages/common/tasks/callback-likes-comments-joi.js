@@ -179,6 +179,8 @@ module.exports = {
 
       const taskRec = taskRecRaw.payload[0];
 
+      const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: taskRec.messageGuid});
+
       const account = _.find(input.client.accounts, {guid: taskRec.accountGuid});
 
       if (account == null) {
@@ -310,7 +312,7 @@ module.exports = {
         ],
         additionalParams: {
           chat_id: input.client.chat_id,
-          message_id: taskRec.messageId || queryMessageId,
+          message_id: messageId || queryMessageId,
           disable_web_page_preview: true,
         },
       });
@@ -474,7 +476,7 @@ module.exports = {
                   ],
                   additionalParams: {
                     chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId || queryMessageId,
+                    message_id: messageId || queryMessageId,
                     disable_web_page_preview: true,
                   },
                 });
@@ -708,7 +710,7 @@ module.exports = {
                   ],
                   additionalParams: {
                     chat_id: input.client.chat_id,
-                    message_id: taskRec.messageId || queryMessageId,
+                    message_id: messageId || queryMessageId,
                     disable_web_page_preview: true,
                   },
                 });
@@ -1109,7 +1111,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId || queryMessageId,
+              message_id: messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1191,7 +1193,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId || queryMessageId,
+              message_id: messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1273,7 +1275,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId || queryMessageId,
+              message_id: messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1355,7 +1357,7 @@ module.exports = {
             ],
             additionalParams: {
               chat_id: input.client.chat_id,
-              message_id: taskRec.messageId || queryMessageId,
+              message_id: messageId || queryMessageId,
               disable_web_page_preview: true,
             },
           });
@@ -1373,31 +1375,19 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError: false,

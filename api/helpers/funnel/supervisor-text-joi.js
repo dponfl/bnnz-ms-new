@@ -103,7 +103,7 @@ module.exports = {
             channel: input.client.messenger,
             messageOriginator: sails.config.custom.enums.messageOriginator.CLIENT,
           },
-          createdBy: `${moduleName}:${methodName}`,
+          createdBy: moduleName,
         };
 
         msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
