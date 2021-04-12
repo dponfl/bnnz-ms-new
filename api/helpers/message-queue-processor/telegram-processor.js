@@ -250,10 +250,11 @@ async function sendMsg(clientMessages) {
 
           msgSaveParams = {
             msgSaveParams: {
-              action: sails.config.custom.enums.messageSaveActions.CREATE,
+              action: sails.config.custom.enums.messageSaveActions.UPDATE,
               clientGuid: msg.clientGuid,
               accountGuid: msg.accountGuid,
               clientId: msg.clientId,
+              messageGuid: msg.messageGuid,
               messageId,
               message: msg.payload,
               messageFormat: sails.config.custom.enums.messageFormat.DEL,
@@ -311,10 +312,11 @@ async function sendMsg(clientMessages) {
 
             msgSaveParams = {
               msgSaveParams: {
-                action: sails.config.custom.enums.messageSaveActions.CREATE,
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
                 clientId: msg.clientId,
+                messageGuid: msg.messageGuid,
                 messageId,
                 message: msg.payload,
                 messageFormat: sails.config.custom.enums.messageFormat.EDIT_RM,
@@ -378,10 +380,11 @@ async function sendMsg(clientMessages) {
 
             msgSaveParams = {
               msgSaveParams: {
-                action: sails.config.custom.enums.messageSaveActions.CREATE,
+                action: sails.config.custom.enums.messageSaveActions.UPDATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
                 clientId: msg.clientId,
+                messageGuid: msg.messageGuid,
                 messageId,
                 message: msg.payload,
                 messageFormat: sails.config.custom.enums.messageFormat.EDIT_T,

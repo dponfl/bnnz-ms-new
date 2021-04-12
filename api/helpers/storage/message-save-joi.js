@@ -59,6 +59,7 @@ module.exports = {
         .valid(
           sails.config.custom.enums.messageFormat.SIMPLE,
           sails.config.custom.enums.messageFormat.INLINEKEYBOARD,
+          sails.config.custom.enums.messageFormat.CALLBACK,
           sails.config.custom.enums.messageFormat.KEYBOARD,
           sails.config.custom.enums.messageFormat.KEYBOARD_REMOVE,
           sails.config.custom.enums.messageFormat.FORCED,
@@ -67,6 +68,7 @@ module.exports = {
           sails.config.custom.enums.messageFormat.STICKER,
           sails.config.custom.enums.messageFormat.DOC,
           sails.config.custom.enums.messageFormat.IMGINLINEKEYBOARD,
+          sails.config.custom.enums.messageFormat.VIDEOINLINEKEYBOARD,
           sails.config.custom.enums.messageFormat.SEND_INVOICE,
           sails.config.custom.enums.messageFormat.DEL,
           sails.config.custom.enums.messageFormat.EDIT_RM,
@@ -126,11 +128,9 @@ module.exports = {
 
     let createdBy;
 
-    let input;
-
     try {
 
-      input = await schema.validateAsync(inputs.params);
+      const input = await schema.validateAsync(inputs.params);
 
       clientGuid = input.clientGuid;
       accountGuid = input.accountGuid;
@@ -360,7 +360,7 @@ module.exports = {
           throwError: true,
           errorPayloadAdditional: {
             createdBy,
-            input,
+            inputs,
           },
         });
       } else {
@@ -372,7 +372,7 @@ module.exports = {
           throwError: false,
           errorPayloadAdditional: {
             createdBy,
-            input,
+            inputs,
           },
         });
         return exits.success({

@@ -107,7 +107,7 @@ module.exports = {
         //   },
         // });
 
-        const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: block.messageGuid});
+        const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: _.toString(block.messageGuid)});
 
         msgSaveParams = {
           msgSaveParams: {

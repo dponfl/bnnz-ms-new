@@ -1109,6 +1109,14 @@ module.exports = {
               createdBy: moduleName,
             };
 
+            const messageId = _.get(input.additionalParams, 'message_id', null);
+
+            if (!_.isNil(messageId)) {
+
+              msgSaveParams.msgSaveParams.messageId = _.toString(messageId);
+
+            }
+
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
 
             messageGuid = msgSaveRec.messageGuid;

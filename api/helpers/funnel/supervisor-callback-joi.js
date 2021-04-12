@@ -114,7 +114,7 @@ module.exports = {
          * Find block and get callback helper
          */
 
-        const {messageGuid} = await sails.helpers.general.getMessageGuidOrIdJoi({messageId: input.query.message.message_id});
+        const {messageGuid} = await sails.helpers.general.getMessageGuidOrIdJoi({messageId: _.toString(input.query.message.message_id)});
 
         let block = _.find(input.client.funnels[input.client.current_funnel],
           {messageGuid});

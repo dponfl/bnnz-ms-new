@@ -172,7 +172,7 @@ module.exports = {
 
       const taskRec = taskRecRaw.payload[0];
 
-      const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: taskRec.messageGuid});
+      const {messageId} = await sails.helpers.general.getMessageGuidOrIdJoi({messageGuid: _.toString(taskRec.messageGuid)});
 
       const account = _.find(input.client.accounts, {guid: taskRec.accountGuid});
 
