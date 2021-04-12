@@ -110,6 +110,9 @@ module.exports = {
           sails.config.custom.enums.messageSaveActions.UPDATE,
         )
         .required(),
+      createdBy: Joi
+        .string()
+        .description('source of update'),
     });
 
     let clientGuid;
@@ -121,12 +124,16 @@ module.exports = {
 
     let messageGuid;
 
+    let createdBy;
+
     try {
 
       const input = await schema.validateAsync(inputs.params);
 
       clientGuid = input.clientGuid;
       accountGuid = input.accountGuid;
+
+      createdBy = input.createdBy;
 
       switch (input.action) {
         case sails.config.custom.enums.messageSaveActions.CREATE:
@@ -147,7 +154,10 @@ module.exports = {
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-              payload: {input},
+              payload: {
+                input,
+                createdBy,
+              },
             });
           }
 
@@ -155,12 +165,13 @@ module.exports = {
            * Создаём первоначальную запись
            */
 
-          messageGuid = await sails.helpers.general.getGuid().guid;
+          const getGuidRes = await sails.helpers.general.getGuid();
+          messageGuid = getGuidRes.guid;
 
           _.assign(
             messageRecParams,
             _.omit(input, ['messageGuid', 'action']),
-            messageGuid,
+            {messageGuid},
           );
 
           messageRec = await Messages.create(messageRecParams)
@@ -181,6 +192,7 @@ module.exports = {
                 location: moduleName,
                 payload: {
                   messageRecParams,
+                  createdBy,
                 },
               });
 
@@ -196,7 +208,10 @@ module.exports = {
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-              payload: {messageRecParams},
+              payload: {
+                messageRecParams,
+                createdBy,
+              },
             });
           }
 
@@ -213,7 +228,10 @@ module.exports = {
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-              payload: {input},
+              payload: {
+                input,
+                createdBy,
+              },
             });
           }
 
@@ -251,6 +269,7 @@ module.exports = {
                 location: moduleName,
                 payload: {
                   messageGuid,
+                  createdBy,
                 },
               });
 
@@ -266,7 +285,10 @@ module.exports = {
               clientGuid,
               accountGuid,
               errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-              payload: {messageGuid},
+              payload: {
+                messageGuid,
+                createdBy,
+              },
             });
           }
 
@@ -290,6 +312,7 @@ module.exports = {
                 payload: {
                   messageGuid,
                   messageRecParams,
+                  createdBy,
                 },
               });
 
@@ -308,6 +331,7 @@ module.exports = {
               payload: {
                 messageGuid,
                 messageRecParams,
+                createdBy,
               },
             });
           }
@@ -317,7 +341,7 @@ module.exports = {
       }
 
       return exits.success({
-        status: 'ok',
+        status: 'success',
         message: 'Message record created',
         payload: messageRec,
       })
@@ -332,6 +356,9 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: true,
+          errorPayloadAdditional: {
+            createdBy,
+          },
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
@@ -340,6 +367,9 @@ module.exports = {
           error: e,
           location: moduleName,
           throwError: false,
+          errorPayloadAdditional: {
+            createdBy,
+          },
         });
         return exits.success({
           status: 'error',

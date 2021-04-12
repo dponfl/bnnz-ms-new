@@ -16,13 +16,6 @@ module.exports = {
 
   inputs: {
 
-    params: {
-      friendlyName: 'input params',
-      description: 'input params',
-      type: 'ref',
-      required: true,
-    },
-
   },
 
 

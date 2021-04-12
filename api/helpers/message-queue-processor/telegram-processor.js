@@ -26,150 +26,160 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    let messages = {};
-    let blockMsgInterval;
-    let blockMsgSize;
+    // TODO: Помесить этот код внутрь setTimeout
 
-    try {
+    setTimeout(async () => {
 
-      blockMsgInterval = sails.config.custom.config.messageOrchestrator.telegram.blockMsgInterval || 1000;
+      let messages = {};
+      let blockMsgInterval;
+      let blockMsgSize;
 
-      blockMsgSize = sails.config.custom.config.messageOrchestrator.telegram.blockMsgSize || 25;
+      try {
 
-      const msgQueueGetParams = {
-        criteria: {
-          channel: sails.config.custom.enums.messenger.TELEGRAM,
-          done: false,
-          deleted: false,
-        },
-        limit: blockMsgSize,
-      }
-
-      while (true) {
-
-        // TODO: delete logs ofter QA
         await LogProcessor.info({
-          message: `Next MsgQueue records loop on ${moment().format()}`,
+          message: `Started ${moduleName}`,
         });
 
+        blockMsgInterval = sails.config.custom.config.messageOrchestrator.telegram.blockMsgInterval || 1000;
 
-        const momentStart = moment();
+        blockMsgSize = sails.config.custom.config.messageOrchestrator.telegram.blockMsgSize || 25;
 
-        const messagesRaw = await sails.helpers.storage.msgQueueGetJoi(msgQueueGetParams);
-
-        if (
-          _.isNil(messagesRaw.status)
-          || messagesRaw.status !== 'success'
-        ) {
-          await LogProcessor.critical({
-            message: 'Wrong status from msgQueueGetJoi',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            payload: {
-              msgQueueGetParams,
-              messagesRaw,
-            },
-          });
+        const msgQueueGetParams = {
+          criteria: {
+            channel: sails.config.custom.enums.messenger.TELEGRAM,
+            done: false,
+            deleted: false,
+          },
+          limit: blockMsgSize,
         }
 
-        if (
-          _.isNil(messagesRaw.payload)
-          || !_.isArray(messagesRaw.payload)
-        ) {
-          await LogProcessor.critical({
-            message: 'Wrong payload from msgQueueGetJoi',
-            // clientGuid,
-            // accountGuid,
-            // requestId: null,
-            // childRequestId: null,
-            errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
-            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-            location: moduleName,
-            payload: {messagesRaw},
-          });
-        }
+        while (true) {
 
-        // TODO: delete logs ofter QA
-        await LogProcessor.info({
-          message: `Found ${messagesRaw.payload.length} messages in queue`,
-        });
+          // TODO: delete logs ofter QA
+          // await LogProcessor.info({
+          //   message: `Next MsgQueue records loop on ${moment().format()}`,
+          // });
 
-        /**
-         * Формируем все сообщения в структуру, сгруппировонную по clientGuid
-         */
 
-        for (const msg of messagesRaw.payload) {
+          const momentStart = moment();
 
-          if (_.isNil(messages[msg.clientGuid])) {
-            messages[msg.clientGuid] = [];
+          messages = {};
+
+          const messagesRaw = await sails.helpers.storage.msgQueueGetJoi(msgQueueGetParams);
+
+          if (
+            _.isNil(messagesRaw.status)
+            || messagesRaw.status !== 'success'
+          ) {
+            await LogProcessor.critical({
+              message: 'Wrong status from msgQueueGetJoi',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              payload: {
+                msgQueueGetParams,
+                messagesRaw,
+              },
+            });
           }
 
-          messages[msg.clientGuid].push(msg);
+          if (
+            _.isNil(messagesRaw.payload)
+            || !_.isArray(messagesRaw.payload)
+          ) {
+            await LogProcessor.critical({
+              message: 'Wrong payload from msgQueueGetJoi',
+              // clientGuid,
+              // accountGuid,
+              // requestId: null,
+              // childRequestId: null,
+              errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              payload: {messagesRaw},
+            });
+          }
+
+          // TODO: delete logs ofter QA
+          if (messagesRaw.payload.length > 0) {
+            await LogProcessor.info({
+              message: `Found ${messagesRaw.payload.length} messages in message queue`,
+            });
+          }
+
+          /**
+           * Формируем все сообщения в структуру, сгруппировонную по clientGuid
+           */
+
+          for (const msg of messagesRaw.payload) {
+
+            if (_.isNil(messages[msg.clientGuid])) {
+              messages[msg.clientGuid] = [];
+            }
+
+            messages[msg.clientGuid].push(msg);
+
+          }
+
+          /**
+           * Обрабатываем сообщения последовательно по каждому клиенту
+           * чтобы избежать коллизии, если при нескольких сообщениях в очереди
+           * для одного клиента, какое-то сообщение не отправляется, то нельзя
+           * пытаться отправлять ему следующее сообщение (иначе порядок/последовательность
+           * сообщений будет нарушен
+           */
+
+          for (const clientGuid in messages) {
+            await sendMsg(messages[clientGuid]);
+          }
+
+          const currentMoment = moment();
+
+          const usedTime = moment.duration(currentMoment.diff(momentStart)).asMilliseconds();
+
+          const leftTime = blockMsgInterval - usedTime;
+
+          // TODO: delete logs ofter QA
+          // await LogProcessor.info({
+          //   message: `leftTime: ${leftTime}`,
+          // });
+
+          if (leftTime > 0) {
+            sleep(leftTime);
+          }
 
         }
 
-        /**
-         * Обрабатываем сообщения последовательно по каждому клиенту
-         * чтобы избежать коллизии, если при нескольких сообщениях в очереди
-         * для одного клиента, какое-то сообщение не отправляется, то нельзя
-         * пытаться отправлять ему следующее сообщение (иначе порядок/последовательность
-         * сообщений будет нарушен
-         */
 
-        // for (const clientGuid in messages) {
-        //   await sendMsg(messages[clientGuid]);
-        // }
+      } catch (e) {
 
-        _.forEach(messages, async (msgs) => {
-          await sendMsg(msgs);
-        });
-
-        const currentMoment = moment();
-
-        const usedTime = moment.duration(currentMoment.diff(momentStart)).asMilliseconds();
-
-        const leftTime = blockMsgInterval - usedTime;
-
-        // TODO: delete logs ofter QA
-        await LogProcessor.info({
-          message: `leftTime: ${leftTime}`,
-        });
-
-        if (leftTime > 0) {
-          sleep(leftTime);
+        const throwError = false;
+        if (throwError) {
+          return await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: true,
+          });
+        } else {
+          await sails.helpers.general.catchErrorJoi({
+            error: e,
+            location: moduleName,
+            throwError: false,
+          });
+          return exits.success({
+            status: 'ok',
+            message: `${moduleName} not performed`,
+            payload: {},
+          });
         }
 
       }
 
-
-    } catch (e) {
-
-      const throwError = false;
-      if (throwError) {
-        return await sails.helpers.general.catchErrorJoi({
-          error: e,
-          location: moduleName,
-          throwError: true,
-        });
-      } else {
-        await sails.helpers.general.catchErrorJoi({
-          error: e,
-          location: moduleName,
-          throwError: false,
-        });
-        return exits.success({
-          status: 'ok',
-          message: `${moduleName} not performed`,
-          payload: {},
-        });
-      }
-
-    }
+    }, 3000);
 
     /**
      * The below return needed for normal functioning of config/bootstrap.js
@@ -236,7 +246,7 @@ async function sendMsg(clientMessages) {
           // success = sendResRaw.payload;
           success = true;
 
-          const messageId = msg.payload.messageId;
+          const messageId = _.toString(msg.payload.messageId);
 
           msgSaveParams = {
             msgSaveParams: {
@@ -288,11 +298,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             || chatId !== 0
             || sendResRaw.payload === true
           ) {
@@ -354,11 +364,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             || chatId !== 0
             || sendResRaw.payload === true
           ) {
@@ -420,9 +430,9 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', null);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
 
-          success = messageId != null;
+          success = messageId !== '0';
 
           messageGuid = msg.messageGuid;
 
@@ -476,11 +486,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -584,11 +594,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -652,11 +662,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -720,11 +730,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -788,11 +798,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -856,11 +866,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -924,11 +934,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -992,11 +1002,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 
@@ -1060,11 +1070,11 @@ async function sendMsg(clientMessages) {
 
         } else {
 
-          const messageId = _.get(sendResRaw.payload, 'message_id', 0);
+          const messageId = _.toString(_.get(sendResRaw.payload, 'message_id', 0));
           const chatId = _.get(sendResRaw.payload, 'chat.id', 0);
 
           if (
-            messageId !== 0
+            messageId !== '0'
             && chatId !== 0
           ) {
 

@@ -90,7 +90,7 @@ module.exports = {
          * Save the received forced message
          */
 
-        messageId = input.msg.message_id;
+        messageId = _.toString(input.msg.message_id);
 
         msgSaveParams = {
           msgSaveParams: {
@@ -209,7 +209,7 @@ module.exports = {
          * Save the received simple message
          */
 
-        messageId = input.msg.message_id;
+        messageId = _.toString(input.msg.message_id);
 
         msgSaveParams = {
           msgSaveParams: {

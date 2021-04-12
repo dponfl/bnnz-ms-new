@@ -79,7 +79,7 @@ module.exports = {
       //   client_guid: input.client.guid
       // });
 
-      messageId = input.query.message.message_id;
+      messageId = _.toString(input.query.message.message_id);
 
       msgSaveParams = {
         msgSaveParams: {

@@ -260,6 +260,9 @@ module.exports = {
         error: e,
         location: moduleName,
         throwError: true,
+        errorPayloadAdditional: {
+          XXX
+        },
       });
     } else {
       await sails.helpers.general.catchErrorJoi({
@@ -268,6 +271,9 @@ module.exports = {
         error: e,
         location: moduleName,
         throwError: false,
+        errorPayloadAdditional: {
+          XXX
+        },
       });
       return exits.success({
         status: 'error',

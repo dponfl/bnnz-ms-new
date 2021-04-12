@@ -64,6 +64,7 @@ module.exports = {
         .description('chat id')
         .required(),
       clientId: Joi
+        .number()
         .integer()
         .positive()
         .description('client id')

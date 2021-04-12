@@ -78,7 +78,7 @@ module.exports = {
           action: sails.config.custom.enums.messageSaveActions.CREATE,
           clientGuid,
           accountGuid,
-          messageId: input.query.message.message_id,
+          messageId: _.toString(input.query.message.message_id),
           callbackQueryId: input.query.id,
           message: input.query.data,
           messageFormat: sails.config.custom.enums.messageFormat.CALLBACK,

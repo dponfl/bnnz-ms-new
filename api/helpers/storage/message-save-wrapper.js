@@ -65,7 +65,8 @@ module.exports = {
       accountGuid = _.get(input.msgSaveParams, 'accountGuid', null);
 
       msgSaveParams = input.msgSaveParams;
-      createdBy = input.createdBy;
+      createdBy = `${moduleName} => ${input.createdBy}`;
+      _.assign(msgSaveParams, {createdBy});
 
       if (
         _.isNil(clientGuid)

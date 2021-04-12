@@ -214,6 +214,7 @@ module.exports = {
 
       msgSaveParams = {
         msgSaveParams: {
+          action: sails.config.custom.enums.messageSaveActions.CREATE,
           clientGuid,
           accountGuid,
           clientId,
