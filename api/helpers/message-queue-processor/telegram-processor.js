@@ -260,7 +260,7 @@ async function sendMsg(clientMessages) {
               channel: msg.channel,
               messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
             },
-            createdBy: `${moduleName}:${methodName}`,
+            createdBy: `${moduleName} => ${methodName}`,
           };
 
           msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -314,13 +314,14 @@ async function sendMsg(clientMessages) {
                 action: sails.config.custom.enums.messageSaveActions.CREATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
+                clientId: msg.clientId,
                 messageId,
                 message: msg.payload,
                 messageFormat: sails.config.custom.enums.messageFormat.EDIT_RM,
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -380,13 +381,14 @@ async function sendMsg(clientMessages) {
                 action: sails.config.custom.enums.messageSaveActions.CREATE,
                 clientGuid: msg.clientGuid,
                 accountGuid: msg.accountGuid,
+                clientId: msg.clientId,
                 messageId,
                 message: msg.payload,
                 messageFormat: sails.config.custom.enums.messageFormat.EDIT_T,
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -448,7 +450,7 @@ async function sendMsg(clientMessages) {
               channel: msg.channel,
               messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
             },
-            createdBy: `${moduleName}:${methodName}`,
+            createdBy: `${moduleName} => ${methodName}`,
           };
 
           msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -510,7 +512,7 @@ async function sendMsg(clientMessages) {
               data: {
                 forced_reply_expected: true,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
               makeClientFieldsRecord: false,
             };
 
@@ -550,7 +552,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -618,7 +620,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -686,7 +688,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -754,7 +756,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -822,7 +824,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -890,7 +892,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -958,7 +960,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -1026,7 +1028,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -1094,7 +1096,7 @@ async function sendMsg(clientMessages) {
                 channel: msg.channel,
                 messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
               },
-              createdBy: `${moduleName}:${methodName}`,
+              createdBy: `${moduleName} => ${methodName}`,
             };
 
             msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
@@ -1121,7 +1123,7 @@ async function sendMsg(clientMessages) {
           // childRequestId: null,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: `${moduleName}:${methodName}`,
+          location: `${moduleName} => ${methodName}`,
           payload: {msg},
         });
 
@@ -1157,7 +1159,7 @@ async function sendMsg(clientMessages) {
           // childRequestId: null,
           errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
+          location: `${moduleName} => ${methodName}`,
           payload: {
             msgQueueUpdateParams,
             msgQueueUpdateRaw,

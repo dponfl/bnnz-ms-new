@@ -55,6 +55,7 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
 
     let msgSaveParams;
     let msgSaveRec;
@@ -68,6 +69,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
       /**
        * Save the received callback query message
@@ -78,6 +80,7 @@ module.exports = {
           action: sails.config.custom.enums.messageSaveActions.CREATE,
           clientGuid,
           accountGuid,
+          clientId,
           messageId: _.toString(input.query.message.message_id),
           callbackQueryId: input.query.id,
           message: input.query.data,

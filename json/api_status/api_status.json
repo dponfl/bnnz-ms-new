@@ -4,7 +4,7 @@
       "checkProfileExists": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": false,
+          "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -16,7 +16,7 @@
         },
         {
           "parserName": "rapidApiSocialminer",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-23T12:12:00.000Z"
         },
@@ -30,7 +30,7 @@
       "checkProfileSubscription": [
         {
           "parserName": "rapidApiLogicbuilder",
-          "enabled": false,
+          "enabled": true,
           "active": true,
           "updatedAt": "2020-10-26T20:36:49.669Z"
         },
@@ -42,7 +42,7 @@
         },
         {
           "parserName": "rapidApiSocialminer",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-23T12:12:00.000Z"
         },
@@ -62,19 +62,19 @@
         },
         {
           "parserName": "rapidApiPrasadbro",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiSocialminer",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiPetrichor",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
@@ -94,19 +94,19 @@
         },
         {
           "parserName": "rapidApiPrasadbro",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiSocialminer",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiPetrichor",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
@@ -126,19 +126,19 @@
         },
         {
           "parserName": "rapidApiPrasadbro",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiSocialminer",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },
         {
           "parserName": "rapidApiPetrichor",
-          "enabled": true,
+          "enabled": false,
           "active": true,
           "updatedAt": "2021-03-31T12:12:00.000Z"
         },

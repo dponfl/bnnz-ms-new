@@ -126,9 +126,11 @@ module.exports = {
 
     let createdBy;
 
+    let input;
+
     try {
 
-      const input = await schema.validateAsync(inputs.params);
+      input = await schema.validateAsync(inputs.params);
 
       clientGuid = input.clientGuid;
       accountGuid = input.accountGuid;
@@ -358,6 +360,7 @@ module.exports = {
           throwError: true,
           errorPayloadAdditional: {
             createdBy,
+            input,
           },
         });
       } else {
@@ -369,6 +372,7 @@ module.exports = {
           throwError: false,
           errorPayloadAdditional: {
             createdBy,
+            input,
           },
         });
         return exits.success({

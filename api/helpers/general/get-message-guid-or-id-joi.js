@@ -50,7 +50,7 @@ module.exports = {
         .any()
         .description('additional criteria to search record'),
     })
-      .xor(['messageGuid', 'messageId']);
+      .xor('messageGuid', 'messageId');
 
     let input;
 

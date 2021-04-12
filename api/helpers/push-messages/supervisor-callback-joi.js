@@ -47,6 +47,7 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
 
     let pushMessage;
 
@@ -61,6 +62,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
       const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
 
@@ -86,6 +88,7 @@ module.exports = {
           action: sails.config.custom.enums.messageSaveActions.CREATE,
           clientGuid,
           accountGuid,
+          clientId,
           messageId,
           message: {data: input.query.data},
           messageFormat: sails.config.custom.enums.messageFormat.PUSHINLINEKEYBOARD,

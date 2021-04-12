@@ -54,6 +54,7 @@ module.exports = {
 
     let clientGuid;
     let accountGuid;
+    let clientId;
 
     let msgSaveParams;
     let msgSaveRec;
@@ -66,6 +67,7 @@ module.exports = {
 
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
+      clientId = input.client.id;
 
 
       /**
@@ -97,6 +99,7 @@ module.exports = {
             action: sails.config.custom.enums.messageSaveActions.CREATE,
             clientGuid,
             accountGuid,
+            clientId,
             messageId,
             message: {text: input.msg.text},
             messageFormat: sails.config.custom.enums.messageFormat.FORCED,
@@ -118,7 +121,7 @@ module.exports = {
         //   client_guid: input.client.guid
         // });
 
-        const {messageGuid} = await sails.helpers.general.getMessageGuidOrId({messageId: input.msg.reply_to_message.message_id});
+        const {messageGuid} = await sails.helpers.general.getMessageGuidOrIdJoi({messageId: _.toString(input.msg.reply_to_message.message_id)});
 
         let forcedReplyBlock = _.find(input.client.funnels[input.client.current_funnel],
           {messageGuid});
@@ -216,6 +219,7 @@ module.exports = {
             action: sails.config.custom.enums.messageSaveActions.CREATE,
             clientGuid,
             accountGuid,
+            clientId,
             messageId,
             message: {text: input.msg.text},
             messageFormat: sails.config.custom.enums.messageFormat.SIMPLE,
