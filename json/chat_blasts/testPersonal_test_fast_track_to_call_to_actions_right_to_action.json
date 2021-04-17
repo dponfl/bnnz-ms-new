@@ -1225,7 +1225,7 @@
         "next": "a03",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionTwo",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionTwo",
         "afterHelper": "pushToPaid::personal::afterCallToActionTwo",
         "additionalTokensHelper": "pushToPaid::personal::additionalTokensCallToActionTwo",
         "message": {
@@ -1377,7 +1377,7 @@
         "next": "a04",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionThree",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionThree",
         "afterHelper": "pushToPaid::personal::afterCallToActionThree",
         "additionalTokensHelper": null,
         "message": {
@@ -1424,7 +1424,7 @@
         "next": "final",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionFour",
-        "blockModifyHelper": null,
+        "blockModifyHelper": "pushToPaid::personal::blockModifyCallToActionFour",
         "afterHelper": "pushToPaid::personal::afterCallToActionFour",
         "additionalTokensHelper": null,
         "message": {
