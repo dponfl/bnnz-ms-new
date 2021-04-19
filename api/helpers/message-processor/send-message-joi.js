@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const sleep = require('util').promisify(setTimeout);
 
 // const parseMessageStyle = require('../../services/ParseMessageStyle').parseMessageStyle;
 // const mapDeep = require('../../services/MapDeep').mapDeep;
@@ -69,6 +70,10 @@ module.exports = {
           .boolean()
           .description('flag to send message ignoring "client.dnd"')
           .default(false),
+        skipMsgQueue: Joi
+          .boolean()
+          .description('flag to send message w/o using message queue')
+          .default(false),
     });
 
     let sendMessageResult = null;
@@ -93,6 +98,8 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
       clientId = input.client.id;
+
+      const skipMsgQueue = input.skipMsgQueue || true;
 
 
       if (input.client.dnd && !input.forced) {
@@ -263,45 +270,121 @@ module.exports = {
 
           let {text: htmlSimple} = await activateBeforeHelper(input.client, messageData, htmlSimpleRaw, input.beforeHelperParams || null);
 
-          // const simpleRes = await sails.helpers.mgw[input.client.messenger]['simpleMessageJoi']({
-          //   chatId: input.client.chat_id,
-          //   html: htmlSimple,
-          //   disableWebPagePreview,
-          // });
+          if (skipMsgQueue) {
 
-          msgSaveParams = {
-            msgSaveParams: {
-              action: sails.config.custom.enums.messageSaveActions.CREATE,
-              clientGuid,
-              accountGuid,
-              clientId,
-            },
-            createdBy: moduleName,
-          };
-
-          msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
-
-          messageGuid = msgSaveRec.messageGuid;
-
-          msgQueueCreateParams = {
-            clientGuid,
-            accountGuid,
-            messageGuid,
-            channel: input.client.messenger,
-            chatId: input.client.chat_id,
-            clientId,
-            msgType: 'simpleMessageJoi',
-            payload: {
+            const msgParams = {
               chatId: input.client.chat_id,
               html: htmlSimple,
               disableWebPagePreview,
-            },
-          };
+            }
 
-          await sails.helpers.storage.msgQueueCreateWrapper({
-            msgQueueCreateParams,
-            createdBy: moduleName,
-          });
+            const skipMsgQueueActionRes =  await skipMsgQueueAction(input.client, messageData.actionType, msgParams);
+
+            if (
+              !_.isNil(skipMsgQueueActionRes.status)
+              && skipMsgQueueActionRes.status === 'success'
+              && !_.isNil(skipMsgQueueActionRes.payload)
+              && !_.isNil(skipMsgQueueActionRes.messageFormat)
+              && !_.isNil(skipMsgQueueActionRes.messageId)
+            ) {
+
+              msgSaveParams = {
+                msgSaveParams: {
+                  action: sails.config.custom.enums.messageSaveActions.CREATE,
+                  clientGuid,
+                  accountGuid,
+                  clientId: input.client.id,
+                  messageId: skipMsgQueueActionRes.messageId,
+                  message: msgParams,
+                  messageFormat: skipMsgQueueActionRes.messageFormat,
+                  channel: input.client.messenger,
+                  messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+                },
+                createdBy: moduleName,
+              };
+
+              msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+            } else {
+
+              /**
+               * Сообщение так и не было отправлено => ставим его в очередь
+               */
+
+              msgSaveParams = {
+                msgSaveParams: {
+                  action: sails.config.custom.enums.messageSaveActions.CREATE,
+                  clientGuid,
+                  accountGuid,
+                  clientId,
+                },
+                createdBy: moduleName,
+              };
+
+              msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+              messageGuid = msgSaveRec.messageGuid;
+
+              msgQueueCreateParams = {
+                clientGuid,
+                accountGuid,
+                messageGuid,
+                channel: input.client.messenger,
+                chatId: input.client.chat_id,
+                clientId,
+                msgType: 'simpleMessageJoi',
+                payload: {
+                  chatId: input.client.chat_id,
+                  html: htmlSimple,
+                  disableWebPagePreview,
+                },
+              };
+
+              await sails.helpers.storage.msgQueueCreateWrapper({
+                msgQueueCreateParams,
+                createdBy: moduleName,
+              });
+
+            }
+
+
+          } else {
+
+            msgSaveParams = {
+              msgSaveParams: {
+                action: sails.config.custom.enums.messageSaveActions.CREATE,
+                clientGuid,
+                accountGuid,
+                clientId,
+              },
+              createdBy: moduleName,
+            };
+
+            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+            messageGuid = msgSaveRec.messageGuid;
+
+            msgQueueCreateParams = {
+              clientGuid,
+              accountGuid,
+              messageGuid,
+              channel: input.client.messenger,
+              chatId: input.client.chat_id,
+              clientId,
+              msgType: 'simpleMessageJoi',
+              payload: {
+                chatId: input.client.chat_id,
+                html: htmlSimple,
+                disableWebPagePreview,
+              },
+            };
+
+            await sails.helpers.storage.msgQueueCreateWrapper({
+              msgQueueCreateParams,
+              createdBy: moduleName,
+            });
+
+          }
 
           sendMessageResult = msgSaveRec;
 
@@ -1099,49 +1182,139 @@ module.exports = {
             //   optionalParams: input.additionalParams,
             // });
 
-            msgSaveParams = {
-              msgSaveParams: {
-                action: sails.config.custom.enums.messageSaveActions.CREATE,
-                clientGuid,
-                accountGuid,
-                clientId,
-              },
-              createdBy: moduleName,
-            };
+            if (skipMsgQueue) {
 
-            const messageId = _.get(input.additionalParams, 'message_id', null);
-
-            if (!_.isNil(messageId)) {
-
-              msgSaveParams.msgSaveParams.messageId = _.toString(messageId);
-
-            }
-
-            msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
-
-            messageGuid = msgSaveRec.messageGuid;
-
-            msgQueueCreateParams = {
-              clientGuid,
-              accountGuid,
-              messageGuid,
-              channel: input.client.messenger,
-              chatId: input.client.chat_id,
-              clientId,
-              msgType: 'editMessageReplyMarkupJoi',
-              payload: {
+              const msgParams = {
                 replyMarkup: {
                   inline_keyboard: editMessageMarkupInlineKeyboard
                 },
                 optionalParams: input.additionalParams,
-              },
-            };
+              }
 
-            await sails.helpers.storage.msgQueueCreateWrapper({
-              msgQueueCreateParams,
-              createdBy: moduleName,
-            });
+              const skipMsgQueueActionRes =  await skipMsgQueueAction(input.client, messageData.actionType, msgParams);
 
+              if (
+                !_.isNil(skipMsgQueueActionRes.status)
+                && skipMsgQueueActionRes.status === 'success'
+                && !_.isNil(skipMsgQueueActionRes.payload)
+                && !_.isNil(skipMsgQueueActionRes.messageFormat)
+                && !_.isNil(skipMsgQueueActionRes.messageId)
+              ) {
+
+                msgSaveParams = {
+                  msgSaveParams: {
+                    action: sails.config.custom.enums.messageSaveActions.CREATE,
+                    clientGuid,
+                    accountGuid,
+                    clientId: input.client.id,
+                    messageId: skipMsgQueueActionRes.messageId,
+                    message: msgParams,
+                    messageFormat: skipMsgQueueActionRes.messageFormat,
+                    channel: input.client.messenger,
+                    messageOriginator: sails.config.custom.enums.messageOriginator.BOT,
+                  },
+                  createdBy: moduleName,
+                };
+
+                msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+              } else {
+
+                /**
+                 * Сообщение так и не было отправлено => ставим его в очередь
+                 */
+
+                msgSaveParams = {
+                  msgSaveParams: {
+                    action: sails.config.custom.enums.messageSaveActions.CREATE,
+                    clientGuid,
+                    accountGuid,
+                    clientId,
+                  },
+                  createdBy: moduleName,
+                };
+
+                const messageId = _.get(input.additionalParams, 'message_id', null);
+
+                if (!_.isNil(messageId)) {
+
+                  msgSaveParams.msgSaveParams.messageId = _.toString(messageId);
+
+                }
+
+                msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+                messageGuid = msgSaveRec.messageGuid;
+
+                msgQueueCreateParams = {
+                  clientGuid,
+                  accountGuid,
+                  messageGuid,
+                  channel: input.client.messenger,
+                  chatId: input.client.chat_id,
+                  clientId,
+                  msgType: 'editMessageReplyMarkupJoi',
+                  payload: {
+                    replyMarkup: {
+                      inline_keyboard: editMessageMarkupInlineKeyboard
+                    },
+                    optionalParams: input.additionalParams,
+                  },
+                };
+
+                await sails.helpers.storage.msgQueueCreateWrapper({
+                  msgQueueCreateParams,
+                  createdBy: moduleName,
+                });
+
+              }
+
+            } else {
+
+              msgSaveParams = {
+                msgSaveParams: {
+                  action: sails.config.custom.enums.messageSaveActions.CREATE,
+                  clientGuid,
+                  accountGuid,
+                  clientId,
+                },
+                createdBy: moduleName,
+              };
+
+              const messageId = _.get(input.additionalParams, 'message_id', null);
+
+              if (!_.isNil(messageId)) {
+
+                msgSaveParams.msgSaveParams.messageId = _.toString(messageId);
+
+              }
+
+              msgSaveRec = await sails.helpers.storage.messageSaveWrapper(msgSaveParams);
+
+              messageGuid = msgSaveRec.messageGuid;
+
+              msgQueueCreateParams = {
+                clientGuid,
+                accountGuid,
+                messageGuid,
+                channel: input.client.messenger,
+                chatId: input.client.chat_id,
+                clientId,
+                msgType: 'editMessageReplyMarkupJoi',
+                payload: {
+                  replyMarkup: {
+                    inline_keyboard: editMessageMarkupInlineKeyboard
+                  },
+                  optionalParams: input.additionalParams,
+                },
+              };
+
+              await sails.helpers.storage.msgQueueCreateWrapper({
+                msgQueueCreateParams,
+                createdBy: moduleName,
+              });
+
+            }
 
             sendMessageResult = msgSaveRec;
 
@@ -1285,5 +1458,132 @@ async function activateBeforeHelper(client, block, htmlMsg, params) {
   }
 
   return messageContent;
+
+}
+
+async function skipMsgQueueAction(client, msgType, msgParams) {
+
+  const methodName = 'skipMsgQueueAction';
+
+  let res;
+  let messageFormat;
+  let messageId;
+  let chatId;
+
+  let intervals;
+  let done = false;
+  let performed = false;
+  let intervalIndex = 0;
+
+  try {
+
+    intervals = sails.config.custom.config.messageOrchestrator.telegram.skipMsgQueueDelays || [100, 300, 500];
+
+    while (!done) {
+
+      switch (msgType) {
+
+        case 'text':
+
+          res = await sails.helpers.mgw[client.messenger]['simpleMessageJoi'](msgParams);
+          messageFormat = sails.config.custom.enums.messageFormat.SIMPLE;
+
+          break;
+
+        case 'edit_message_markup':
+
+          res = await sails.helpers.mgw[client.messenger]['editMessageReplyMarkupJoi'](msgParams);
+          messageFormat = sails.config.custom.enums.messageFormat.EDIT_RM;
+
+          break;
+
+      }
+
+      if (
+        !_.isNil(res.status)
+        && res.status === 'ok'
+        && !_.isNil(res.payload)
+      ) {
+
+        messageId = _.toString(_.get(res.payload, 'message_id', 0));
+        chatId = _.get(res.payload, 'chat.id', 0);
+
+        if (
+          messageId !== '0'
+          || chatId !== 0
+          || res.payload === true
+        ) {
+
+          performed = true;
+          done = true;
+
+        }
+
+      } else if (
+        !_.isNil(res.status)
+        && res.status === 'error'
+        && !_.isNil(res.payload.error.code)
+        && res.payload.error.code === 'ETELEGRAM'
+        && !_.isNil(res.payload.error.response.statusCode)
+        && res.payload.error.response.statusCode === 429
+      ) {
+
+        /**
+         * Получена ошибка Телеграм об отправке сообщений сверх
+         * лимита в еденицу времени
+         * Пытаемся повторно отправить сообщение с задержкой
+         */
+
+
+        if (intervalIndex < intervals.length) {
+
+          await sleep(intervals[intervalIndex]);
+          intervalIndex++;
+
+        } else {
+
+          done = true;
+
+        }
+
+      } else {
+
+        /**
+         * Другая ошибка нежели кол-во сообщений сверх лимита - выходим
+         */
+
+        done = true;
+
+      }
+
+    }
+
+    if (performed) {
+
+      return {
+        status: 'success',
+        payload: res,
+        messageFormat,
+        messageId,
+      }
+
+    } else {
+
+      return {
+        status: 'notPerformed',
+      }
+
+    }
+
+  } catch (e) {
+
+    return {
+      status: 'error',
+      payload: {
+        error: e,
+      }
+    }
+
+  }
 
 }

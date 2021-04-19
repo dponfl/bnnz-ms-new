@@ -13,7 +13,8 @@
   "messageOrchestrator": {
     "telegram": {
       "blockMsgInterval": 1000,
-      "blockMsgSize": 25
+      "blockMsgSize": 20,
+      "skipMsgQueueDelays": [100, 300, 500]
     }
   },
   "db": {

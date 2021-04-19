@@ -142,6 +142,7 @@ module.exports = {
             message_id: query.message.message_id,
             disable_web_page_preview: true,
           },
+          skipMsgQueue: true,
         });
 
         /**
@@ -205,6 +206,7 @@ module.exports = {
                 value: keyObj.text,
               },
             ],
+            skipMsgQueue: true,
           });
 
         }

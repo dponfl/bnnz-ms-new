@@ -149,7 +149,7 @@ module.exports = {
           // });
 
           if (leftTime > 0) {
-            sleep(leftTime);
+            await sleep(leftTime);
           }
 
         }

@@ -90,7 +90,9 @@ module.exports = {
         return exits.success({
           status: 'error',
           message: `${moduleName} not performed`,
-          payload: {},
+          payload: {
+            error: e,
+          },
         });
       }
 

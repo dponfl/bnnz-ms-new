@@ -140,6 +140,7 @@ module.exports = {
         client,
         messageData,
         forced: true,
+        skipMsgQueue: true,
       });
 
       /**
