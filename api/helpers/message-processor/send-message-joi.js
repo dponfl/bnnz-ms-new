@@ -99,7 +99,7 @@ module.exports = {
       accountGuid = input.client.account_use;
       clientId = input.client.id;
 
-      const skipMsgQueue = input.skipMsgQueue || true;
+      const skipMsgQueue = input.skipMsgQueue;
 
 
       if (input.client.dnd && !input.forced) {
