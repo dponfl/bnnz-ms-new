@@ -410,11 +410,6 @@ module.exports = {
           input.block.next = 'optin::more_info_01';
 
           break;
-        case 'get_terms':
-
-          input.block.next = 'optin::show_terms';
-
-          break;
         default:
           await sails.helpers.general.throwErrorJoi({
             errorType: sails.config.custom.enums.errorType.CRITICAL,
