@@ -101,8 +101,41 @@ module.exports.custom = {
       COMMISSION_WITHDRAWAL: 'commission_withdrawal',
     },
 
+    paymentPeriod: {
+      CURRENT: 'current',
+      NEXT: 'next',
+    },
+
     paymentProvider: {
-      DEFAULT: 'ref commission provider default',
+      ROBOKASSA: 'robokassa',
+    },
+
+    paymentProviderApi: {
+      PROD: {
+        ROBOKASSA: {
+          baseUrl: process.env.PAYMENT_MS_URL,
+          name: 'robokassa',
+          actions: {
+            payment: 'payment',
+          }
+        }
+      },
+      UAT: {
+      },
+      DEV: {
+        ROBOKASSA: {
+          baseUrl: process.env.PAYMENT_MS_URL,
+          name: 'robokassa',
+          actions: {
+            payment: 'payment',
+          }
+        }
+      },
+    },
+
+    interMsRequests: {
+      hashingAlgorithm: 'md5',
+      password: process.env.INTER_MS_PW || '',
     },
 
     analytics: {
@@ -701,6 +734,33 @@ module.exports.custom = {
     name: 'HTTP_STATUS_NOT_FOUND',
     message: '404-NotFound',
   },
+
+  /**
+   * ----------------------------
+   * Http rquests errors
+   * ----------------------------
+   */
+
+  HTTP_REQUEST_WRONG_RESPONSE_STATUS: {
+    name: 'ERR_HTTP_REQUEST_WRONG_RESPONSE_STATUS',
+    message: 'Wrong response status',
+  },
+
+  HTTP_REQUEST_ERROR: {
+    name: 'HTTP_REQUEST_ERROR',
+    message: 'The request failed due to technical reasons',
+  },
+
+  HTTP_REQUEST_STATUS_CODE_ERROR: {
+    name: 'HTTP_REQUEST_STATUS_CODE_ERROR',
+    message: 'The server responded with a status codes other than 2xx',
+  },
+
+  HTTP_REQUEST_WRONG_RESPONSE_DATA: {
+    name: 'HTTP_REQUEST_WRONG_RESPONSE_DATA',
+    message: 'Wrong response data',
+  },
+
 
 
   /**

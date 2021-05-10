@@ -24,7 +24,12 @@
     "telegram": {
       "provider": "TRANZZO",
       "env": "TEST"
-    }
+    },
+    "pool": {
+      "PROD": ["robokassa"],
+      "UAT": [],
+      "DEV": ["robokassa"]
+      }
   },
   "ref": {
     "refLinkBase": "https://befame.ru?p=",

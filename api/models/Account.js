@@ -61,6 +61,30 @@ module.exports = {
     },
 
     /**
+     * Наименование сервиса, за который клиент собирается заплатить
+     */
+    serviceNameToPay: {
+      type: 'string',
+      allowNull: true,
+    },
+
+    /**
+     * GUID активной GT (платёж по которой не завершен)
+     */
+    activeGtGuid: {
+      type: 'string',
+      allowNull: true,
+    },
+
+    /**
+     * Ссылка для осуществления платежа
+     */
+    paymentLink: {
+      type: 'string',
+      allowNull: true,
+    },
+
+    /**
      * Сумма у оплате при выставлении инвойса в мин единицах (копейки, центы и т.п.)
      */
     payment_amount: {
