@@ -509,6 +509,29 @@ module.exports = {
 
       const url = requestRes.url;
 
+      status = 'success';
+
+      const momentDone = moment();
+
+      const requestDuration = moment.duration(momentDone.diff(momentStart)).asMilliseconds();
+
+      const performanceCreateParams = {
+        platform,
+        action,
+        api,
+        requestType,
+        requestDuration,
+        status,
+        clientGuid,
+        accountGuid,
+        comments: {
+          requestParams: options,
+          rawResponse: requestRes,
+        },
+      };
+
+      await sails.helpers.storage.performanceCreateJoi(performanceCreateParams);
+
 
       /**
        * Обновляем данные записи в "account"
