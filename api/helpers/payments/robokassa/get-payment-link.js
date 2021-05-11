@@ -49,12 +49,12 @@ module.exports = {
       paymentProviderName: Joi
         .string()
         .description('payment provider name')
-        .valid(['robokassa'])
+        .valid('robokassa')
         .required(),
       paymentProviderEnv: Joi
         .string()
         .description('payment provider environment')
-        .valid(['PROD', 'UAT', 'DEV'])
+        .valid('PROD', 'UAT', 'DEV')
         .required(),
       amount: Joi
         .number()
@@ -71,6 +71,10 @@ module.exports = {
       paymentPeriod: Joi
         .string()
         .description('payment period (e.g. "current" or "next")')
+        .valid(
+          sails.config.custom.enums.paymentPeriod.CURRENT,
+          sails.config.custom.enums.paymentPeriod.NEXT,
+        )
         .required(),
       paymentInterval: Joi
         .number()
@@ -81,7 +85,7 @@ module.exports = {
       serviceName: Joi
         .string()
         .description('name of service to be paid')
-        .valid([
+        .valid(
           sails.config.custom.enums.serviceNames.bronzePersonal,
           sails.config.custom.enums.serviceNames.silverPersonal,
           sails.config.custom.enums.serviceNames.goldPersonal,
@@ -90,7 +94,7 @@ module.exports = {
           sails.config.custom.enums.serviceNames.silverCommercial,
           sails.config.custom.enums.serviceNames.goldCommercial,
           sails.config.custom.enums.serviceNames.platinumCommercial,
-        ])
+        )
         .required(),
       funnelBlockName: Joi
         .string()
@@ -150,7 +154,7 @@ module.exports = {
         accountGuids: [accountGuid],
       }
 
-      const accountRaw = sails.helpers.storage.accountGetJoi(accountGetParams);
+      const accountRaw = await sails.helpers.storage.accountGetJoi(accountGetParams);
 
       if (
         _.isNil(accountRaw)
@@ -274,9 +278,9 @@ module.exports = {
 
       const momentStart = moment();
 
-      const baseUrl = sails.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['baseUrl'];
-      const apiName = sails.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['name']
-      const apiAction = sails.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['actions']['payment'];
+      const baseUrl = sails.config.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['baseUrl'];
+      const apiName = sails.config.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['name']
+      const apiAction = sails.config.custom.enums.paymentProviderApi[paymentProviderEnv][paymentProviderName]['actions']['payment'];
 
       const hashData = {
         amount,

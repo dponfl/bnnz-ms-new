@@ -1483,6 +1483,14 @@
           }
         }
       },
+      "payments": {
+        "ROBOKASSA": {
+          "title": "Robokassa"
+        },
+        "YANDEX": {
+          "title": "Ю.Касса"
+        }
+      },
       "token": {
         "$$$$$$$$$$$$$$$$$$$$$_COMMON": "*** ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ ВОРОНОК, КЛАВИАТУР И ПУШ-НОТИФИКАЦИЙ ***",
         "$$$$$$$$$$$$$$$$$$$$$_COMMON_General": "ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ КЕЙСОВ",
@@ -1507,9 +1515,8 @@
         "COMMON_CONFIRM_PROFILE_BTN_NO": ":x: НЕТ",
         "COMMON_NEXT_TRY": "Хорошо, давай попробуем снова :relieved:",
         "COMMON_MAKE_PAYMENT_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе и теперь можно перейти к оплате пакета :credit_card:",
-        "COMMON_MAKE_PAYMENT_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "COMMON_MAKE_PAYMENT_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
         "COMMON_MAKE_PAYMENT_BTN_02": "Подробнее о пакете «$ServiceLevelTitle$»",
-        "COMMON_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
         "COMMON_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения «$ServiceLevelTitle$»",
         "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения «$ServiceLevelTitle$» на $paymentPeriod$",
         "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "«$ServiceLevelTitle$» ($paymentPeriod$)",

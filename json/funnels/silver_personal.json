@@ -265,7 +265,7 @@
       "previous": "optin::confirm_profile",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "common::optin::beforeMakePaymentJoi",
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentJoi",
@@ -289,7 +289,7 @@
           [
             {
               "text": "COMMON_MAKE_PAYMENT_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ],
           [

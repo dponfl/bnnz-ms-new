@@ -56,13 +56,13 @@ module.exports = {
 
       const values = [];
 
-      values.push(sails.config.custom.interMsRequests.password);
+      values.push(sails.config.custom.enums.interMsRequests.password);
 
       for (const key in data) {
         values.push(`${key}=${data[key]}`);
       }
 
-      const hash = crypto.createHash(sails.config.custom.interMsRequests.hashingAlgorithm);
+      const hash = crypto.createHash(sails.config.custom.enums.interMsRequests.hashingAlgorithm);
 
       hash.update(values.join(':'));
 

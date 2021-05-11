@@ -75,7 +75,7 @@ module.exports = {
       paymentPeriod: Joi
         .string()
         .description('payment period (e.g. "current" or "next")')
-        .default(sails.config.custom.config.enums.paymentPeriod.CURRENT),
+        .default(sails.config.custom.enums.paymentPeriod.CURRENT),
       paymentInterval: Joi
         .number()
         .integer()
