@@ -84,9 +84,15 @@ module.exports.custom = {
     },
 
     paymentGroupStatus: {
-      PENDING: 'pending',
       PROCESSING: 'processing',
       SUCCESS: 'success',
+      FAILED: 'failed',
+      DECLINED: 'declined',
+
+      /**
+       * Unused types
+       */
+      PENDING: 'pending',
       ERROR: 'error',
       REJECTED: 'rejected',
     },

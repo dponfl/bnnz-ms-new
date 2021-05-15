@@ -125,10 +125,6 @@ module.exports = {
       allowNull: true,
     },
 
-    next_service: {
-      model: 'service',
-    },
-
     /**
      * наименование следующего уровня сервиса, который выбрал клиент
      */

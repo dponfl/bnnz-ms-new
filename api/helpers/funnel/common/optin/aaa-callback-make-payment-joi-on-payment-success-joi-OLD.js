@@ -78,11 +78,63 @@ module.exports = {
       });
 
       /**
-       * Устанавливаем значение для следующего блока в 'optin::payment_successful'
+       * Обновляем поля записи текущего аккаунта
        */
 
-      input.block.done = true;
-      input.block.shown = true;
+      const priceConfig = sails.config.custom.config.price;
+
+      input.client.accounts[currentAccountInd].payment_made = true;
+      input.client.accounts[currentAccountInd].subscription_from = moment()
+        .format();
+      input.client.accounts[currentAccountInd].subscription_until = moment()
+        .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+        .format();
+
+      const reallocateRoomsToAccountJoiParams = {
+        account: currentAccount,
+      };
+
+      const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
+
+      if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
+        // throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
+        // reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
+        // reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
+
+        await sails.helpers.general.throwErrorJoi({
+          errorType: sails.config.custom.enums.errorType.ERROR,
+          location: moduleName,
+          message: 'Wrong reallocateRoomsToAccountJoi response',
+          clientGuid,
+          accountGuid,
+          errorName: sails.config.custom.FUNNELS_ERROR.name,
+          payload: {
+            reallocateRoomsToAccountJoiParams,
+            reallocateRoomsToAccountJoiRaw,
+          },
+        });
+
+      }
+
+
+      // await sails.helpers.storage.accountUpdateJoi({
+      //   criteria: {
+      //     guid: input.client.account_use,
+      //   },
+      //   data: {
+      //     payment_made: true,
+      //     subscription_from: moment()
+      //       .format(),
+      //     subscription_until: moment()
+      //       .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
+      //       .format(),
+      //   },
+      //   createdBy: moduleName,
+      // });
+
+      /**
+       * Устанавливаем значение для следующего блока в 'optin::payment_successful'
+       */
 
       input.block.next = 'optin::payment_successful';
 
@@ -134,6 +186,8 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
+        // throw new Error(`${moduleName}, error: initial block was not found`);
+
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -158,25 +212,42 @@ module.exports = {
       })
 
     } catch (e) {
+
+      // const errorLocation = moduleName;
+      // const errorMsg = `${moduleName}: General error`;
+      //
+      // sails.log.error(errorLocation + ', error: ' + errorMsg);
+      // sails.log.error(errorLocation + ', error details: ', e);
+      //
+      // throw {err: {
+      //     module: errorLocation,
+      //     message: errorMsg,
+      //     payload: {
+      //       error: e,
+      //     },
+      //   }
+      // };
+
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError,
+          throwError: true,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError,
+          throwError: false,
         });
         return exits.success({
-          status: 'error',
-          message: `${moduleName} not performed`,
+          status: 'ok',
+          message: `${moduleName} performed`,
           payload: {},
         });
       }
+
     }
 
   }

@@ -139,6 +139,8 @@ module.exports = {
 
         const paymentInterval = priceConfigGeneral.payment_periods.period_01.value;
 
+        const paymentIntervalUnit = priceConfigGeneral.payment_periods.period_01.period;
+
         const serviceName = currentServiceName;
 
         const funnelBlockName = `optin::${input.block.id}`;
@@ -154,6 +156,7 @@ module.exports = {
           description,
           paymentPeriod,
           paymentInterval,
+          paymentIntervalUnit,
           serviceName,
           funnelBlockName,
           createdBy,

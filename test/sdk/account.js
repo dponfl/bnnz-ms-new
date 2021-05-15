@@ -31,16 +31,11 @@ module.exports = {
     const funcName = 'test:sdk:account:updateAccountDB';
     try {
 
-      const accountRec = _.omit(data, ['service', 'room', 'next_service']);
+      const accountRec = _.omit(data, ['service', 'room']);
       const serviceData = _.get(data, 'service');
-      const nextServiceData = _.get(data, 'next_service');
 
       if (serviceData) {
         accountRec.service = serviceData.id;
-      }
-
-      if (nextServiceData) {
-        accountRec.next_service = nextServiceData.id;
       }
 
       await Account.update(criteria).set(accountRec);
@@ -59,16 +54,11 @@ module.exports = {
 
       accountRec = await generateAccount(account, payment_plan);
       const serviceData = _.get(accountRec, 'service');
-      const nextServiceData = _.get(accountRec, 'next_service');
 
-      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt', 'service', 'room', 'next_service']);
+      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt', 'service', 'room']);
 
       if (serviceData) {
         accountRec.service = serviceData.id;
-      }
-
-      if (nextServiceData) {
-        accountRec.next_service = nextServiceData.id;
       }
 
       await Account.create(accountRec).fetch();

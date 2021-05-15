@@ -72,6 +72,10 @@ module.exports = {
         .string()
         .description('transaction type')
         .required(),
+      serviceName: Joi
+        .string()
+        .description('service name')
+        .required(),
       paymentPeriod: Joi
         .string()
         .description('payment period (e.g. "current" or "next")')
@@ -82,6 +86,11 @@ module.exports = {
         .positive()
         .description('payment interval (e.g. number of months')
         .default(1),
+      paymentIntervalUnit: Joi
+        .string()
+        .description('payment interval unit, e.g. "month"')
+        .default('month')
+        .required(),
       status: Joi
         .string()
         .description('status')
@@ -118,8 +127,10 @@ module.exports = {
         .create({
         guid,
         type: input.type,
+        serviceName: input.serviceName,
         paymentPeriod: input.paymentPeriod,
         paymentInterval: input.paymentInterval,
+        paymentIntervalUnit: input.paymentIntervalUnit,
         status: input.status,
         payment_provider: input.paymentProvider,
         messenger: input.messenger,

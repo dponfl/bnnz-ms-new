@@ -82,6 +82,10 @@ module.exports = {
         .positive()
         .description('payment interval (e.g. number of months')
         .required(),
+      paymentIntervalUnit: Joi
+        .string()
+        .description('payment interval unit, e.g. "month"')
+        .required(),
       serviceName: Joi
         .string()
         .description('name of service to be paid')
@@ -123,6 +127,7 @@ module.exports = {
     let description;
     let paymentPeriod;
     let paymentInterval;
+    let paymentIntervalUnit;
     let serviceName;
     let funnelBlockName;
 
@@ -147,6 +152,7 @@ module.exports = {
       description = input.description;
       paymentPeriod = input.paymentPeriod;
       paymentInterval = input.paymentInterval;
+      paymentIntervalUnit = input.paymentIntervalUnit;
       serviceName = input.serviceName;
       funnelBlockName = input.funnelBlockName;
 
@@ -217,11 +223,54 @@ module.exports = {
           status: 'success',
           message: `${moduleName} performed`,
           payload: {
-            serviceNameToPay: currentAccount.serviceNameToPay,
-            activeGtGuid: currentAccount.activeGtGuid,
-            paymentLink: currentAccount.paymentLink,
+            url: currentAccount.paymentLink,
           },
         })
+
+      }
+
+      /**
+       * Если есть неоплаченная PG,
+       * но клиент всё же хочет оплатить другую категорию сервиса,
+       * то необходимо обновить запись неоплаченной PG
+       */
+
+      if (
+        !_.isNil(currentAccount.serviceNameToPay)
+        && !_.isNil(currentAccount.activeGtGuid)
+        && !_.isNil(currentAccount.paymentLink)
+        && currentAccount.serviceNameToPay !== serviceName
+      ) {
+
+        const paymentGroupUpdateParams = {
+          criteria: {
+            guid: currentAccount.activeGtGuid
+          },
+          data: {
+            status: sails.config.custom.enums.paymentGroupStatus.DECLINED,
+          },
+          createdBy: moduleName,
+        }
+
+        const paymentGroupUpdateRaw = await sails.helpers.storage.paymentGroupUpdateJoi(paymentGroupUpdateParams);
+
+        if (
+          paymentGroupUpdateRaw.status !== 'ok'
+        ) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+            location: moduleName,
+            message: 'Payment group record update error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.GENERAL_ERROR.name,
+            payload: {
+              paymentGroupUpdateParams,
+              paymentGroupUpdateRaw,
+            },
+          });
+        }
 
       }
 
@@ -233,8 +282,12 @@ module.exports = {
         clientId,
         clientGuid,
         accountGuid,
+        serviceName,
         amount,
         currency,
+        paymentPeriod,
+        paymentInterval,
+        paymentIntervalUnit,
         type: sails.config.custom.enums.paymentGroupType.DEPOSIT,
         status: sails.config.custom.enums.paymentGroupStatus.PROCESSING,
         paymentProvider,

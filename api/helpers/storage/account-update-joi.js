@@ -58,16 +58,11 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      const accountRec = _.omit(input.data, ['service', 'room', 'next_service']);
+      const accountRec = _.omit(input.data, ['service', 'room']);
       const serviceData = _.get(input.data, 'service', null);
-      const nextServiceData = _.get(input.data, 'next_service', null);
 
       if (serviceData != null) {
         accountRec.service = serviceData.id;
-      }
-
-      if (nextServiceData != null) {
-        accountRec.next_service = nextServiceData.id;
       }
 
       const accountRecord = await Account.findOne({
