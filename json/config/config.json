@@ -1760,7 +1760,7 @@
         "BEHERO_MORE_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
         "BEHERO_MORE_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
         "BEHERO_MORE_INFO_03_04": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо $PriceList$)",
-        "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
         "BEHERO_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (аудит аккаунта, хэштеги и геотеги) будут готовы в течении 1-7 рабочих дней :calendar:",
         "BEHERO_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "BEHERO_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",

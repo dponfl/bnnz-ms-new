@@ -415,8 +415,8 @@
       "previous": "optin::more_info_02",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": null,
+      "beforeHelper": "common::optin::beforeMakePaymentThirdJoi",
+      "afterHelper": "common::optin::afterMakePaymentThirdJoi",
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentThirdJoi",
       "blockModifyHelper": null,
@@ -449,7 +449,7 @@
           [
             {
               "text": "BEHERO_MORE_INFO_03_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ]
         ]

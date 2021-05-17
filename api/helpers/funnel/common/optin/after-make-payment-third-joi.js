@@ -1,18 +1,17 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
-const moment = require('moment');
 
-const moduleName = 'funnel:common:optin:callback-make-payment-third-joi';
+const moduleName = 'api:helpers:funnel:common:optin:after-make-payment-third-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:common:optin:callback-make-payment-third-joi',
+  friendlyName: 'api:helpers:funnel:common:optin:after-make-payment-third-joi',
 
 
-  description: 'funnel:common:optin:callback-make-payment-third-joi',
+  description: 'api:helpers:funnel:common:optin:after-make-payment-third-joi',
 
 
   inputs: {
@@ -48,16 +47,16 @@ module.exports = {
         .any()
         .description('Current funnel block')
         .required(),
-      query: Joi
+      msg: Joi
         .any()
-        .description('Callback query received')
-        .required(),
+        .description('Message received'),
     });
 
     let input;
 
     let clientGuid;
     let accountGuid;
+
 
     try {
 
@@ -66,6 +65,16 @@ module.exports = {
       clientGuid = input.client.guid;
       accountGuid = input.client.account_use;
 
+      await sails.helpers.funnel.afterHelperGenericJoi({
+        client: input.client,
+        block: input.block,
+        msg: input.msg,
+        next: false,
+        previous: true,
+        switchFunnel: false,
+        createdBy: moduleName,
+      });
+
       return exits.success({
         status: 'ok',
         message: `${moduleName} performed`,
@@ -73,6 +82,7 @@ module.exports = {
       })
 
     } catch (e) {
+
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({

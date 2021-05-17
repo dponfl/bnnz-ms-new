@@ -1,7 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
-const moment = require('moment');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'funnel:common:optin:callback-make-payment-third-on-payment-success-joi';
 
@@ -56,6 +56,9 @@ module.exports = {
 
     let input;
 
+    let client;
+    let account;
+
     let clientGuid;
     let accountGuid;
 
@@ -68,69 +71,38 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
 
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
 
-      /**
-       * Обновляем поля записи текущего аккаунта
-       */
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
 
-      const priceConfig = sails.config.custom.config.price;
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
 
-      input.client.accounts[currentAccountInd].payment_made = true;
-      input.client.accounts[currentAccountInd].subscription_from = moment()
-        .format();
-      input.client.accounts[currentAccountInd].subscription_until = moment()
-        .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
-        .format();
-
-      const reallocateRoomsToAccountJoiParams = {
-        account: currentAccount,
-      };
-
-      const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
-
-      if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
-        // reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
-        // reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'Wrong reallocateRoomsToAccountJoi response',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR.name,
-          payload: {
-            reallocateRoomsToAccountJoiParams,
-            reallocateRoomsToAccountJoiRaw,
-          },
-        });
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
 
       }
 
+      /**
+       * Устанавливаем флаги, что блок выполнен
+       */
 
-      // await sails.helpers.storage.accountUpdateJoi({
-      //   criteria: {
-      //     guid: input.client.account_use,
-      //   },
-      //   data: {
-      //     payment_made: true,
-      //     subscription_from: moment()
-      //       .format(),
-      //     subscription_until: moment()
-      //       .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
-      //       .format(),
-      //   },
-      //   createdBy: moduleName,
-      // });
+      input.block.done = true;
+      input.block.shown = true;
+
 
       /**
        * Устанавливаем значение для следующего блока в 'optin::payment_successful'
@@ -147,7 +119,7 @@ module.exports = {
       updateId = splitRes[1];
 
 
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
         getBlock.previous = 'optin::more_info_03';
@@ -155,8 +127,8 @@ module.exports = {
       }
 
       await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: {funnels: input.client.funnels},
+        criteria: {guid: client.guid},
+        data: {funnels: client.funnels},
         createdBy: moduleName,
       });
 
@@ -164,7 +136,7 @@ module.exports = {
        * Try to find the initial block of the current funnel
        */
 
-      let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+      let initialBlock = _.find(client.funnels[client.current_funnel],
         {initial: true});
 
       /**
@@ -174,8 +146,8 @@ module.exports = {
       if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
         await sails.helpers.funnel.proceedNextBlockJoi({
-          client: input.client,
-          funnelName: input.client.current_funnel,
+          client,
+          funnelName: client.current_funnel,
           blockId: initialBlock.id,
           createdBy: moduleName,
         });
@@ -197,8 +169,8 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
-            currentFunnelName: input.client.current_funnel,
-            currentFunnel: input.client.funnels[input.client.current_funnel],
+            currentFunnelName: client.current_funnel,
+            currentFunnel: client.funnels[client.current_funnel],
           },
         });
 

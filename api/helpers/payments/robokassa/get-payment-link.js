@@ -216,6 +216,82 @@ module.exports = {
       ) {
 
         /**
+         * Получаем данные соответствующей PG
+         */
+
+        const paymentGroupGetParams = {
+          criteria: {
+            guid: currentAccount.activeGtGuid
+          },
+        }
+
+        const paymentGroupGetRaw = await sails.helpers.storage.paymentGroupGetJoi(paymentGroupGetParams);
+
+        if (
+          paymentGroupGetRaw.status !== 'ok'
+          || _.isNil(paymentGroupGetRaw.payload)
+          || !_.isArray(paymentGroupGetRaw.payload)
+          || paymentGroupGetRaw.payload.length !== 1
+        ) {
+          await sails.helpers.general.throwErrorJoi({
+            errorType: sails.config.custom.enums.errorType.CRITICAL,
+            emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+            location: moduleName,
+            message: 'Payment group record get error',
+            clientGuid,
+            accountGuid,
+            errorName: sails.config.custom.GENERAL_ERROR.name,
+            payload: {
+              paymentGroupGetParams,
+              paymentGroupGetRaw,
+            },
+          });
+        }
+
+        const paymentGroupRec = paymentGroupGetRaw.payload[0];
+
+        if (paymentGroupRec.funnel_block !== funnelBlockName) {
+
+          /**
+           * Тот-же платёжный линк запрошен из другого блока воронки
+           * поэтому необходимо обновить значение поля "funnel_block"
+           * для последующего корректного вызова хелперов
+           */
+
+          const paymentGroupUpdateParams = {
+            criteria: {
+              guid: currentAccount.activeGtGuid
+            },
+            data: {
+              funnel_block: funnelBlockName,
+            },
+            createdBy: moduleName,
+          }
+
+          const paymentGroupUpdateRaw = await sails.helpers.storage.paymentGroupUpdateJoi(paymentGroupUpdateParams);
+
+          if (
+            paymentGroupUpdateRaw.status !== 'ok'
+          ) {
+            await sails.helpers.general.throwErrorJoi({
+              errorType: sails.config.custom.enums.errorType.CRITICAL,
+              emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+              location: moduleName,
+              message: 'Payment group record update error',
+              clientGuid,
+              accountGuid,
+              errorName: sails.config.custom.GENERAL_ERROR.name,
+              payload: {
+                paymentGroupUpdateParams,
+                paymentGroupUpdateRaw,
+              },
+            });
+          }
+
+        }
+
+
+        /**
          * Запись "account" содержит валидные данные для использования
          */
 
