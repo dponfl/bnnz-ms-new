@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'funnel:common:optin:callback-make-payment-again-on-payment-error-joi';
 
@@ -55,6 +56,9 @@ module.exports = {
 
     let input;
 
+    let client;
+    let account;
+
     let clientGuid;
     let accountGuid;
 
@@ -63,8 +67,30 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
+
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
+
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
+
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
+
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
+
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
+
+      }
 
 
       /**
@@ -75,8 +101,8 @@ module.exports = {
       input.block.shown = false;
 
       await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
+        criteria: {guid: client.guid},
+        data: client,
         createdBy: moduleName,
       });
 
@@ -84,7 +110,7 @@ module.exports = {
        * Try to find the initial block of the current funnel
        */
 
-      let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+      let initialBlock = _.find(client.funnels[client.current_funnel],
         {initial: true});
 
       /**
@@ -94,8 +120,8 @@ module.exports = {
       if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
         await sails.helpers.funnel.proceedNextBlockJoi({
-          client: input.client,
-          funnelName: input.client.current_funnel,
+          client: client,
+          funnelName: client.current_funnel,
           blockId: initialBlock.id,
           createdBy: moduleName,
         });
@@ -106,8 +132,6 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        // throw new Error(`${moduleName}, error: initial block was not found`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -117,8 +141,8 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
-            currentFunnelName: input.client.current_funnel,
-            currentFunnel: input.client.funnels[input.client.current_funnel],
+            currentFunnelName: client.current_funnel,
+            currentFunnel: client.funnels[client.current_funnel],
           },
         });
 
@@ -131,38 +155,26 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

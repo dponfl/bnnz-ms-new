@@ -1,7 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
-const moment = require('moment');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'funnel:common:optin:callback-make-payment-on-payment-success-joi';
 
@@ -56,6 +56,9 @@ module.exports = {
 
     let input;
 
+    let client;
+    let account;
+
     let clientGuid;
     let accountGuid;
 
@@ -68,21 +71,41 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
 
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
+
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
+
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
+
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
+
+      }
 
       /**
-       * Устанавливаем значение для следующего блока в 'optin::payment_successful'
+       * Устанавливаем флаги, что блок выполнен
        */
 
       input.block.done = true;
       input.block.shown = true;
+
+      /**
+       * Устанавливаем значение для следующего блока в 'optin::payment_successful'
+       */
 
       input.block.next = 'optin::payment_successful';
 
@@ -95,7 +118,7 @@ module.exports = {
       updateId = splitRes[1];
 
 
-      getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
+      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
         getBlock.previous = 'optin::make_payment';
@@ -103,8 +126,8 @@ module.exports = {
       }
 
       await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
+        criteria: {guid: client.guid},
+        data: client,
         createdBy: moduleName,
       });
 
@@ -112,7 +135,7 @@ module.exports = {
        * Try to find the initial block of the current funnel
        */
 
-      let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+      let initialBlock = _.find(client.funnels[client.current_funnel],
         {initial: true});
 
       /**
@@ -122,8 +145,8 @@ module.exports = {
       if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
         await sails.helpers.funnel.proceedNextBlockJoi({
-          client: input.client,
-          funnelName: input.client.current_funnel,
+          client,
+          funnelName: client.current_funnel,
           blockId: initialBlock.id,
           createdBy: moduleName,
         });
@@ -143,8 +166,8 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
-            currentFunnelName: input.client.current_funnel,
-            currentFunnel: input.client.funnels[input.client.current_funnel],
+            currentFunnelName: client.current_funnel,
+            currentFunnel: client.funnels[client.current_funnel],
           },
         });
 
@@ -161,12 +184,16 @@ module.exports = {
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
           throwError,

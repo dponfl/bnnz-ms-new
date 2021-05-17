@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const moment = require('moment');
 
-const moduleName = 'module:helper';
+const moduleName = 'api:helpers:payments:on-payment-success';
 
 
 module.exports = {
 
 
-  friendlyName: 'module:helper',
+  friendlyName: 'api:helpers:payments:on-payment-success',
 
 
-  description: 'module:helper',
+  description: 'api:helpers:payments:on-payment-success',
 
 
   inputs: {
@@ -126,7 +126,7 @@ module.exports = {
        *      - paymentLink = null
        *
        *
-       *  - вызов "...onSuccess" callback-хелпера блок воронки, в котором была инициирована оплата
+       *  - вызов "...onPaymentSuccessJoi" callback-хелпера блок воронки, в котором была инициирована оплата
        */
 
 
@@ -374,10 +374,10 @@ module.exports = {
 
       /**
        * Используя наименование сервиса, воронки, блока и коллбэк-хелпера - формируем обращение
-       * к хелперу, который долже обрабатывать результат успешного платежа
+       * к хелперу, который должен обрабатывать результат успешного платежа
        */
 
-      const blockNameParseRes = _.split(paymentGroup.funnel_block, sails.config.custom.JUNCTION, 2);
+      const blockNameParseRes = _.split(funnelBlock, sails.config.custom.JUNCTION, 2);
       const blockGroup = blockNameParseRes[0];
       const blockId = blockNameParseRes[1];
 
@@ -393,7 +393,7 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
-            block: paymentGroup.funnel_block,
+            block: funnelBlock,
             blockGroup,
             blockId,
           },

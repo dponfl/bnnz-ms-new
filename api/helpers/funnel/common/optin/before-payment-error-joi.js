@@ -2,16 +2,16 @@
 
 const Joi = require('@hapi/joi');
 
-const moduleName = 'api:helpers:funnel:common:optin:before-make-payment-joi';
+const moduleName = 'api:helpers:funnel:common:optin:before-payment-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'api:helpers:funnel:common:optin:before-make-payment-joi',
+  friendlyName: 'api:helpers:funnel:common:optin:before-payment-error-joi',
 
 
-  description: 'api:helpers:funnel:common:optin:before-make-payment-joi',
+  description: 'api:helpers:funnel:common:optin:before-payment-error-joi',
 
 
   inputs: {

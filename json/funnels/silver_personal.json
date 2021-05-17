@@ -492,7 +492,7 @@
       "previous": null,
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "common::optin::beforePaymentErrorJoi",
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentAgainJoi",
@@ -516,7 +516,7 @@
           [
             {
               "text": "COMMON_PAYMENT_ERROR_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ],
           [
