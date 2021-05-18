@@ -13,13 +13,17 @@ module.exports = async function success(req, res) {
 
   try {
 
+    const allParams = req.allParams();
+
     // TODO: Delete after QA
     await LogProcessor.info({
       message: 'Payment success action',
       location: moduleName,
+      payload: {
+        allParams,
+      },
     });
 
-    const allParams = req.allParams();
 
     /**
      * Проверка наличия необходимых параметров в запросе

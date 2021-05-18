@@ -78,6 +78,16 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
+      // TODO: Delete after QA
+      await LogProcessor.info({
+        message: 'onPaymentSuccess helper',
+        location: moduleName,
+        payload: {
+          input,
+        },
+      });
+
+
       clientGuid = input.clientGuid;
       accountGuid = input.accountGuid;
 
