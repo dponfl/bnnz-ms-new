@@ -53,7 +53,27 @@ module.exports = {
         sails.log.info('Analytics events schedule configuration loaded successfully');
       }
 
-      _.forEach(sails.config.custom.config.analytics.events_schedule, (val) => {
+      // _.forEach(sails.config.custom.config.analytics.events_schedule, (val) => {
+      //
+      //   if (val.schedule.hourly) {
+      //     hourlyEvents.push(val.event);
+      //   }
+      //
+      //   if (val.schedule.daily) {
+      //     dailyEvents.push(val.event);
+      //   }
+      //
+      //   if (val.schedule.weekly) {
+      //     weeklyEvents.push(val.event);
+      //   }
+      //
+      //   if (val.schedule.monthly) {
+      //     monthlyEvents.push(val.event);
+      //   }
+      //
+      // });
+
+      for (const val of sails.config.custom.config.analytics.events_schedule) {
 
         if (val.schedule.hourly) {
           hourlyEvents.push(val.event);
@@ -71,7 +91,7 @@ module.exports = {
           monthlyEvents.push(val.event);
         }
 
-      });
+      }
 
       sails.config.custom.config.analyticSchedule = {
         hourly: hourlyEvents,
