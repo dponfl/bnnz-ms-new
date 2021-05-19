@@ -552,7 +552,7 @@
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBeheroMakePaymentJoi",
     "afterHelper": null,
     "forcedHelper": null,
-    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBeheroMakePaymentJoi",
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackGeneralMakePaymentJoi",
     "blockModifyHelper": null,
     "shown": false,
     "done": false,
@@ -582,8 +582,8 @@
       "inline_keyboard": [
         [
           {
-            "text": "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_BTN_01",
-            "callback_data": "make_payment"
+            "text": "CB_Q01_F_01_COMMON_MAKE_PAYMENT_BTN_01",
+            "url": "$PaymentLink$"
           }
         ],
         [
