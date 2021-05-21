@@ -913,7 +913,7 @@
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBestarMakePaymentJoi",
     "afterHelper": null,
     "forcedHelper": null,
-    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBestarMakePaymentJoi",
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackCommonMakePaymentJoi",
     "blockModifyHelper": null,
     "shown": false,
     "done": false,
