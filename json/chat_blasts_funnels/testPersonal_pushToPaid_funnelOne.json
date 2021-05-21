@@ -943,8 +943,8 @@
       "inline_keyboard": [
         [
           {
-            "text": "CB_Q01_F_01_BESTAR_MAKE_PAYMENT_BTN_01",
-            "callback_data": "make_payment"
+            "text": "CB_Q01_F_01_COMMON_MAKE_PAYMENT_BTN_01",
+            "url": "$PaymentLink$"
           }
         ],
         [
