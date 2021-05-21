@@ -216,7 +216,7 @@
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBelikeMakePaymentJoi",
     "afterHelper": null,
     "forcedHelper": null,
-    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBelikeMakePaymentJoi",
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackCommonMakePaymentJoi",
     "blockModifyHelper": null,
     "shown": false,
     "done": false,
@@ -246,8 +246,8 @@
       "inline_keyboard": [
         [
           {
-            "text": "CB_Q01_F_01_BELIKE_MAKE_PAYMENT_BTN_01",
-            "callback_data": "make_payment"
+            "text": "CB_Q01_F_01_COMMON_MAKE_PAYMENT_BTN_01",
+            "url": "$PaymentLink$"
           }
         ],
         [
@@ -546,13 +546,13 @@
     "show_time": 2000,
     "removeKeyboard": false,
     "disableWebPagePreview": false,
-    "previous": null,
+    "previous": "chatBlasts.testPersonal.pushToPaid.funnelOne::behero_info_03",
     "next": null,
     "switchToFunnel": null,
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBeheroMakePaymentJoi",
     "afterHelper": null,
     "forcedHelper": null,
-    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackGeneralMakePaymentJoi",
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackCommonMakePaymentJoi",
     "blockModifyHelper": null,
     "shown": false,
     "done": false,
@@ -907,7 +907,7 @@
     "show_time": 2000,
     "removeKeyboard": false,
     "disableWebPagePreview": false,
-    "previous": null,
+    "previous": "chatBlasts.testPersonal.pushToPaid.funnelOne::bestar_info_03",
     "next": null,
     "switchToFunnel": null,
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBestarMakePaymentJoi",
@@ -1293,7 +1293,7 @@
     "show_time": 2000,
     "removeKeyboard": false,
     "disableWebPagePreview": false,
-    "previous": null,
+    "previous": "chatBlasts.testPersonal.pushToPaid.funnelOne::belegend_info_03",
     "next": null,
     "switchToFunnel": null,
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBelegendMakePaymentJoi",
