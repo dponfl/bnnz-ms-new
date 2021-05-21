@@ -70,6 +70,13 @@ module.exports.custom = {
       generic: 'generic',
     },
 
+    chatBlastsFunnelsBlockNameByServiceName: {
+      bronze_personal: 'belike',
+      silver_personal: 'behero',
+      gold_personal: 'bestar',
+      platinum_personal: 'belegend',
+    },
+
     paymentStatus: {
       INVOICE: 'invoice',
       INVOICE_ERROR: 'invoice_error',
