@@ -109,7 +109,7 @@ module.exports = {
 
       input.block.next = 'optin::payment_successful';
 
-      const blockName = sails.custom.enums.chatBlastsFunnelsBlockNameByServiceName[input.paymentGroup.serviceName];
+      const blockName = sails.config.custom.enums.chatBlastsFunnelsBlockNameByServiceName[input.paymentGroup.serviceName];
 
       if (_.isNil(blockName)) {
         await sails.helpers.general.throwErrorJoi({
