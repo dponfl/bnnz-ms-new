@@ -556,7 +556,7 @@ async function proceedCurrentPayment(
     });
   }
 
-  account.service = getServiceRes.payload.id;
+  account.service = getServiceRes.payload;
 
   /**
    * Прописываем аккаунт в комнаты
@@ -592,7 +592,7 @@ async function proceedCurrentPayment(
       guid: account.guid,
     },
     data: {
-      service: account.service,
+      service: account.service.id,
       payment_made: account.payment_made,
       payment_amount: account.payment_amount,
       payment_currency: account.payment_currency,
