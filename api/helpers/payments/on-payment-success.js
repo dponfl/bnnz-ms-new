@@ -118,6 +118,7 @@ module.exports = {
        *      - payment_made
        *      - payment_amount
        *      - payment_currency
+       *      - service
        *      - subscription_from
        *      - subscription_until
        *      - serviceNameToPay = null
@@ -346,6 +347,7 @@ module.exports = {
           await proceedCurrentPayment(
             client,
             account,
+            serviceName,
             paymentGroup.amount,
             paymentGroup.currency,
             paymentInterval,
@@ -513,6 +515,7 @@ module.exports = {
 async function proceedCurrentPayment(
   client,
   account,
+  serviceName,
   amount,
   currency,
   paymentInterval,
@@ -531,6 +534,29 @@ async function proceedCurrentPayment(
   account.serviceNameToPay = null;
   account.activeGtGuid = null;
   account.paymentLink = null;
+
+  const getServiceRes = await sails.helpers.storage.getService.with({serviceName});
+
+  if (_.isNil(getServiceRes.status)
+    || getServiceRes.status !== 'ok'
+    || _.isNil(getServiceRes.payload)
+  ) {
+    await sails.helpers.general.throwErrorJoi({
+      errorType: sails.config.custom.enums.errorType.CRITICAL,
+      emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
+      location: moduleName,
+      message: 'Unexpected getService response',
+      clientGuid: client.guid,
+      accountGuid: account.guid,
+      errorName: sails.config.custom.STORAGE_ERROR.name,
+      payload: {
+        serviceName,
+        getServiceRes,
+      },
+    });
+  }
+
+  account.service = getServiceRes.payload.id;
 
   /**
    * Прописываем аккаунт в комнаты
@@ -566,6 +592,7 @@ async function proceedCurrentPayment(
       guid: account.guid,
     },
     data: {
+      service: account.service,
       payment_made: account.payment_made,
       payment_amount: account.payment_amount,
       payment_currency: account.payment_currency,
