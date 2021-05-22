@@ -62,10 +62,6 @@ module.exports = {
     let clientGuid;
     let accountGuid;
 
-    let splitRes;
-    let updateFunnel;
-    let updateId;
-    let getBlock;
 
     try {
 

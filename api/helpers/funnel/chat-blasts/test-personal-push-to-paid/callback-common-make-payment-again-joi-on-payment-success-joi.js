@@ -104,7 +104,7 @@ module.exports = {
       input.block.shown = true;
 
       /**
-       * Устанавливаем значение для следующего блока в 'xxx::payment_error'
+       * Устанавливаем значение для следующего блока в 'xxx_payment_success'
        */
 
       const blockName = sails.config.custom.enums.chatBlastsFunnelsBlockNameByServiceName[input.paymentGroup.serviceName];
@@ -125,10 +125,10 @@ module.exports = {
         });
       }
 
-      input.block.next = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_error`;
+      input.block.next = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_success`;
 
       /**
-       * Устанавливае у следующего блока значение для предшествующего блока в 'xxx_make_payment'
+       * Устанавливае у следующего блока значение для предшествующего блока в 'xxx_payment_error'
        */
 
       splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
@@ -139,7 +139,7 @@ module.exports = {
       getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
 
       if (getBlock) {
-        getBlock.previous = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_make_payment`;
+        getBlock.previous = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_error`;
         getBlock.enabled = true;
       }
 
