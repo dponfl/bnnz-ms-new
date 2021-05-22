@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const uuid = require('uuid-apikey');
 
-const moduleName = 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi';
+const moduleName = 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-success-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi',
+  friendlyName: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-success-joi',
 
 
-  description: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi',
+  description: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-success-joi',
 
 
   inputs: {
@@ -104,7 +104,7 @@ module.exports = {
       input.block.shown = true;
 
       /**
-       * Устанавливаем значение для следующего блока в 'xxx::payment_success'
+       * Устанавливаем значение для следующего блока в 'xxx::payment_error'
        */
 
       const blockName = sails.config.custom.enums.chatBlastsFunnelsBlockNameByServiceName[input.paymentGroup.serviceName];
@@ -125,7 +125,7 @@ module.exports = {
         });
       }
 
-      input.block.next = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_success`;
+      input.block.next = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_error`;
 
       /**
        * Устанавливае у следующего блока значение для предшествующего блока в 'xxx_make_payment'

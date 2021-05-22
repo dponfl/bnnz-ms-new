@@ -3,16 +3,16 @@
 const Joi = require('@hapi/joi');
 const uuid = require('uuid-apikey');
 
-const moduleName = 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi';
+const moduleName = 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi',
+  friendlyName: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi',
 
 
-  description: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-joi-on-payment-success-joi',
+  description: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi',
 
 
   inputs: {
@@ -97,51 +97,11 @@ module.exports = {
       }
 
       /**
-       * Устанавливаем флаги, что блок выполнен
+       * Устанавливаем значение для текущего блока
        */
 
-      input.block.done = true;
-      input.block.shown = true;
-
-      /**
-       * Устанавливаем значение для следующего блока в 'xxx::payment_success'
-       */
-
-      const blockName = sails.config.custom.enums.chatBlastsFunnelsBlockNameByServiceName[input.paymentGroup.serviceName];
-
-      if (_.isNil(blockName)) {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.CRITICAL,
-          emergencyLevel: sails.config.custom.enums.emergencyLevels.HIGH,
-          location: moduleName,
-          message: 'Block name not found by service name',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.GENERAL_ERROR.name,
-          payload: {
-            serviceName: input.paymentGroup.serviceName,
-            chatBlastsFunnelsBlockNameByServiceName: sails.custom.enums.chatBlastsFunnelsBlockNameByServiceName,
-          },
-        });
-      }
-
-      input.block.next = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_payment_success`;
-
-      /**
-       * Устанавливае у следующего блока значение для предшествующего блока в 'xxx_make_payment'
-       */
-
-      splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-      updateFunnel = splitRes[0];
-      updateId = splitRes[1];
-
-
-      getBlock = _.find(client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.previous = `chatBlasts.testPersonal.pushToPaid.funnelOne::${blockName}_make_payment`;
-        getBlock.enabled = true;
-      }
+      input.block.done = false;
+      input.block.shown = false;
 
       await sails.helpers.storage.clientUpdateJoi({
         criteria: {guid: client.guid},

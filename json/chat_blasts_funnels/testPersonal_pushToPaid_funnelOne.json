@@ -636,10 +636,10 @@
     "previous": null,
     "next": null,
     "switchToFunnel": null,
-    "beforeHelper": null,
+    "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBeheroPaymentErrorJoi",
     "afterHelper": null,
     "forcedHelper": null,
-    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackBeheroMakePaymentAgainJoi",
+    "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackCommonMakePaymentAgainJoi",
     "blockModifyHelper": null,
     "shown": false,
     "done": false,
@@ -659,14 +659,14 @@
       "inline_keyboard": [
         [
           {
-            "text": "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_BTN_01",
-            "callback_data": "make_payment"
+            "text": "CB_Q01_F_01_COMMON_PAYMENT_ERROR_BTN_01",
+            "url": "$PaymentLink$"
           }
         ],
         [
           {
-            "text": "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_BTN_02",
-            "callback_data": "contact_support"
+            "text": "CB_Q01_F_01_COMMON_PAYMENT_ERROR_BTN_02",
+            "url": "https://t.me/BeFameSupportBot"
           }
         ]
       ]
