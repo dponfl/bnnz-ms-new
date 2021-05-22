@@ -550,7 +550,7 @@
     "next": null,
     "switchToFunnel": null,
     "beforeHelper": "chatBlasts::testPersonalPushToPaid::beforeBeheroMakePaymentJoi",
-    "afterHelper": null,
+    "afterHelper": "chatBlasts::testPersonalPushToPaid::afterCommonMakePaymentJoi",
     "forcedHelper": null,
     "callbackHelper": "chatBlasts::testPersonalPushToPaid::callbackCommonMakePaymentJoi",
     "blockModifyHelper": null,
