@@ -20,6 +20,87 @@
   "db": {
     "lockTimeOut": 600
   },
+  "serviceDesk": {
+    "pyrus": {
+      "name": "Pyrus",
+      "baseUrl": "https://api.pyrus.com/v4",
+      "accessToken": "gAAAAIoW2XwAds-jIwQS_8Z_gK9Dsqsen9wjtiitJtjEqlgWAAnKj1OHzdqgnRNgaw9CkJhhv3rhULbFF6Gutn8raBOaB6Leds3-J59CPsHQsRLMqOrcPn9ziD2-W5841JmB5hA21Lh0-DDmtpr5eAU9I27YEUlTaJiLhOYp-Bb_oSXuJAEAAIAAAACXLeqvlUMv9ef3UUK_DgFrNgmIAwSoREry_3KCJNG_BsiI8rPiNkuomSCHbU95fYDNF2aUZJ8xkxSIBkqCgR025Hj8F9TQCfezidcRduPtnnQVe5vdBOe1mnmOmFQh0TsiPIgPlkSdBqBf6vOBTGaHGG8morWEWyJdSdn8Glhackh_NOzmth1e_my3fvEy2MjlUE1ZSfKHsqFGcmRmds3W2g79LwDcXxXVF0A24FKNUIE9JbP4KTGXcLcq6DK8JwAFUS1E3YrbPTq704Ys6dnoCZdODbSVV-uWHieiCzq4VxDZ19MEywHUlSfOVcz-vd7oiH6V6-FjQ2-eNWMYM231BXM1k4NS3nuGZk8Ek3RkcyRCgzwhmpoBb89wHZWn8jg",
+      "actions": {
+        "auth": "auth",
+        "tasks": "tasks"
+      },
+      "forms": {
+        "multiple_choice": {
+          "priority": {
+            "highest": 1,
+            "high": 2,
+            "medium": 3,
+            "low": 4
+          }
+        },
+        "error": {
+          "formId": 925276,
+          "microService": {
+            "id": 10
+          },
+          "errorName": {
+            "id": 6
+          },
+          "message": {
+            "id": 5
+          },
+          "clientGuid": {
+            "id": 1
+          },
+          "accountGuid": {
+            "id": 2
+          },
+          "requestId": {
+            "id": 3
+          },
+          "childRequestId": {
+            "id": 4
+          },
+          "location": {
+            "id": 7
+          }
+        },
+        "critical": {
+          "formId": 925277,
+          "microService": {
+            "id": 1
+          },
+          "emergencyLevel": {
+            "id": 2
+          },
+          "errorName": {
+            "id": 3
+          },
+          "message": {
+            "id": 4
+          },
+          "clientGuid": {
+            "id": 5
+          },
+          "accountGuid": {
+            "id": 6
+          },
+          "requestId": {
+            "id": 7
+          },
+          "childRequestId": {
+            "id": 8
+          },
+          "location": {
+            "id": 9
+          },
+          "priority": {
+            "id": 14
+          }
+        }
+      }
+    }
+  },
   "payments": {
     "telegram": {
       "provider": "TRANZZO",

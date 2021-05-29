@@ -133,4 +133,5 @@ lib-cov
 /cluster-ecosystem.config PROD.js
 /fork-ecosystem.config PROD.js
 /fork-ecosystem.config UAT.js
+/fork-ecosystem.config DEV.js
 /json/config/config.json

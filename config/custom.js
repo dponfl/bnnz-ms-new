@@ -33,6 +33,8 @@ module.exports.custom = {
 
   usePaymentSystem: process.env.USE_PAYMENT_SYSTEM.toLowerCase().trim() === 'true',
 
+  useHelpDeskLogger: process.env.USE_HELPDESK.toLowerCase().trim() === 'true',
+
   postRegExp: process.env.POST_REGEXP || '\^\(http\|https\):\\/\\/www\\.instagram\\.com\\/p\\/(\\S+)',
 
   tokens: {},
@@ -265,7 +267,9 @@ module.exports.custom = {
       NOW: "now",
       ABSOLUTE: "absolute",
       RELATIVE: "relative"
-    }
+    },
+
+    microServiceName: 'Core',
 
   },
 

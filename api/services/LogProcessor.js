@@ -71,6 +71,10 @@ const schema = Joi.object({
   error: Joi
     .any()
     .description('Error instance'),
+  useHelpDeskLogger: Joi
+    .boolean()
+    .description('flag to use HelpDesk to create task')
+    .default(true),
 });
 
 
@@ -148,7 +152,43 @@ module.exports = {
         logger.criticalLow(input.message, _.omit(input, 'message'));
       }
 
-      await sails.helpers.storage.errorCreateJoi(input);
+      await sails.helpers.storage.errorCreateJoi(_.omit(input, 'useHelpDeskLogger'));
+
+      const createCriticalTaskParams = {
+        microService: sails.config.custom.enums.microServiceName,
+        message: input.message,
+      }
+
+      if (!_.isNil(input.emergencyLevel)) {
+        createCriticalTaskParams.emergencyLevel = input.emergencyLevel;
+      }
+
+      if (!_.isNil(input.errorName)) {
+        createCriticalTaskParams.errorName = input.errorName;
+      }
+
+      if (!_.isNil(input.clientGuid)) {
+        createCriticalTaskParams.clientGuid = input.clientGuid;
+      }
+
+      if (!_.isNil(input.accountGuid)) {
+        createCriticalTaskParams.accountGuid = input.accountGuid;
+      }
+
+      if (!_.isNil(input.requestId)) {
+        createCriticalTaskParams.requestId = input.requestId;
+      }
+
+      if (!_.isNil(input.childRequestId)) {
+        createCriticalTaskParams.childRequestId = input.childRequestId;
+      }
+
+      if (!_.isNil(input.location)) {
+        createCriticalTaskParams.location = input.location;
+      }
+
+      await sails.helpers.helpDesk.pyrus.createCriticalTask(createCriticalTaskParams);
+
 
     } catch (e) {
 
@@ -183,7 +223,38 @@ module.exports = {
       sails.log.error(input.message, _.omit(input, 'message'));
       logger.error(input.message, _.omit(input, 'message'));
 
-      await sails.helpers.storage.errorCreateJoi(input);
+      await sails.helpers.storage.errorCreateJoi(_.omit(input, 'useHelpDeskLogger'));
+
+      const createErrorTaskParams = {
+        microService: sails.config.custom.enums.microServiceName,
+        message: input.message,
+      }
+
+      if (!_.isNil(input.errorName)) {
+        createErrorTaskParams.errorName = input.errorName;
+      }
+
+      if (!_.isNil(input.clientGuid)) {
+        createErrorTaskParams.clientGuid = input.clientGuid;
+      }
+
+      if (!_.isNil(input.accountGuid)) {
+        createErrorTaskParams.accountGuid = input.accountGuid;
+      }
+
+      if (!_.isNil(input.requestId)) {
+        createErrorTaskParams.requestId = input.requestId;
+      }
+
+      if (!_.isNil(input.childRequestId)) {
+        createErrorTaskParams.childRequestId = input.childRequestId;
+      }
+
+      if (!_.isNil(input.location)) {
+        createErrorTaskParams.location = input.location;
+      }
+
+      await sails.helpers.helpDesk.pyrus.createErrorTask(createErrorTaskParams);
 
     } catch (e) {
 
