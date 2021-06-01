@@ -385,7 +385,11 @@ module.exports = {
   * > https://sailsjs.com/config/*#?sailsconfigssl                          *
   *                                                                         *
   **************************************************************************/
-  // ssl: undefined,
+  ssl: {
+    ca: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame_ca.crt')),
+    key: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame.key')),
+    cert: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame.crt'))
+  },
 
 
 
