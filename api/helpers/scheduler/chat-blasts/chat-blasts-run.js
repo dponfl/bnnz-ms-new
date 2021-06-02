@@ -113,7 +113,7 @@ module.exports = {
               done: false,
               callback: false,
               actionTime: {
-                '<=': moment().format()
+                '<=': moment().utc().format()
               },
             };
 
