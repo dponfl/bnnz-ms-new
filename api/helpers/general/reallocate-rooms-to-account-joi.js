@@ -53,7 +53,7 @@ module.exports = {
         .description('account record')
         .required(),
       previousServiceName: Joi
-        .string()
+        .any()
         .description('previous service level name')
         .default(null),
     });

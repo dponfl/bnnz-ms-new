@@ -524,6 +524,8 @@ async function proceedCurrentPayment(
 
   const methodName = 'proceedCurrentPayment';
 
+  let previousServiceName = null;
+
   account.payment_made = true;
   account.payment_amount = amount;
   account.payment_currency = currency;
@@ -556,6 +558,10 @@ async function proceedCurrentPayment(
     });
   }
 
+  if (!_.isNil(account.service.name)) {
+    previousServiceName = account.service.name;
+  }
+
   account.service = getServiceRes.payload;
 
   /**
@@ -564,6 +570,7 @@ async function proceedCurrentPayment(
 
   const reallocateRoomsToAccountJoiParams = {
     account,
+    previousServiceName,
   };
 
   const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
