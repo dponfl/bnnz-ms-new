@@ -6,10 +6,8 @@
         "id": "intro",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "rules",
         "shown": false,
         "callbackHelper": null,
@@ -70,10 +68,8 @@
         "id": "rules",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_01_01",
         "shown": false,
         "callbackHelper": null,
@@ -198,10 +194,8 @@
         "id": "task_01_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_02_01",
         "shown": false,
         "callbackHelper": null,
@@ -227,10 +221,8 @@
         "id": "task_02_01",
         "description": "***",
         "actionType": "img",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_02_02",
         "shown": false,
         "callbackHelper": null,
@@ -397,10 +389,8 @@
         "id": "task_02_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_03_01",
         "shown": false,
         "callbackHelper": null,
@@ -426,10 +416,8 @@
         "id": "task_03_01",
         "description": "***",
         "actionType": "img",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_03_02",
         "shown": false,
         "callbackHelper": null,
@@ -537,10 +525,8 @@
         "id": "task_03_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_01",
         "shown": false,
         "callbackHelper": null,
@@ -566,10 +552,8 @@
         "id": "task_04_01",
         "description": "***",
         "actionType": "img",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_02",
         "shown": false,
         "callbackHelper": null,
@@ -719,10 +703,8 @@
         "id": "task_04_03",
         "description": "***",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_04_done",
         "shown": false,
         "callbackHelper": null,
@@ -785,10 +767,8 @@
         "id": "task_04_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_05_01",
         "shown": false,
         "callbackHelper": null,
@@ -814,10 +794,8 @@
         "id": "task_05_01",
         "description": "***",
         "actionType": "img",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "task_05_02",
         "shown": false,
         "callbackHelper": null,
@@ -968,10 +946,8 @@
         "id": "task_05_done",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "summary",
         "shown": false,
         "callbackHelper": null,
@@ -1002,10 +978,8 @@
         "id": "summary",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "success_story_01",
         "shown": false,
         "callbackHelper": null,
@@ -1218,10 +1192,8 @@
         "id": "a02",
         "description": "call_to_action_02",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "a03",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionTwo",
@@ -1370,10 +1342,8 @@
         "id": "a03",
         "description": "call_to_action_03",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "a04",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionThree",
@@ -1417,10 +1387,8 @@
         "id": "a04",
         "description": "call_to_action_04",
         "actionType": "inline_keyboard",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": "final",
         "shown": false,
         "callbackHelper": "pushToPaid::personal::callbackCallToActionFour",
@@ -1459,10 +1427,8 @@
         "id": "final",
         "description": "***",
         "actionType": "text",
-        "timeType": "relative",
-        "showTime": {
-          "minutes": 1
-        },
+        "timeType": "now",
+        "showTime": null,
         "next": null,
         "shown": false,
         "callbackHelper": null,
