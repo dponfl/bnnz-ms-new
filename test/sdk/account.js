@@ -105,8 +105,8 @@ async function generateAccount(account = null, payment_plan = null) {
       ref_key: uuidApiKey.apiKey,
       is_ref: true,
       subscription_active: true,
-      subscription_from: moment().format(),
-      subscription_until: moment().add(1, 'months').format(),
+      subscription_from: moment().utc().format(),
+      subscription_until: moment().add(1, 'months').utc().format(),
       service: await serviceSdk.generateService(payment_plan || 'gold_personal'),
       payment_plan: payment_plan || 'gold_personal',
       payment_made: true,
@@ -128,8 +128,8 @@ async function generateAccount(account = null, payment_plan = null) {
       subscription_made: true,
       service_subscription_finalized: true,
       client: casual.integer(1, 1000),
-      createdAt: moment().format(),
-      updatedAt: moment().add(1, 'minutes').format(),
+      createdAt: moment().utc().format(),
+      updatedAt: moment().add(1, 'minutes').utc().format(),
     };
 
     if (account != null) {

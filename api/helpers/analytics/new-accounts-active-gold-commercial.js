@@ -37,7 +37,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`******************** ${moduleName} at ${moment().format()} ********************`);
+    sails.log.info(`******************** ${moduleName} at ${moment().utc().format()} ********************`);
 
     let elapsedTimeStart;
     let elapsedTimeEnd;
@@ -95,8 +95,8 @@ module.exports = {
         numAccounts = await Account.count({
           where: {
             createdAt: {
-              '>=': moment(inputs.start).format(),
-              '<=': moment(inputs.end).format()
+              '>=': moment(inputs.start).utc().format(),
+              '<=': moment(inputs.end).utc().format()
             },
             deleted: false,
             banned: false,
