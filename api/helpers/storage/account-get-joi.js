@@ -93,7 +93,7 @@ module.exports = {
 
       let account = await Account.find({where: searchConditions})
         .populate('service')
-        .populate('next_service')
+        // .populate('next_service')
         .populate('room')
         .tolerate(async (err) => {
 

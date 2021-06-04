@@ -272,7 +272,7 @@ async function processAccounts(params) {
             where: testInitialAccountsParams,
           })
             .populate('service')
-            .populate('next_service')
+            // .populate('next_service')
             .populate('room')
             .limit(limit)
             .tolerate(async (err) => {
@@ -405,7 +405,7 @@ async function processAccounts(params) {
               },
             })
               .populate('service')
-              .populate('next_service')
+              // .populate('next_service')
               .populate('room')
               .limit(limit)
               .tolerate(async (err) => {

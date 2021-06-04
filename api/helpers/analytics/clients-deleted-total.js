@@ -37,7 +37,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`******************** ${moduleName} at ${moment().format()} ********************`);
+    sails.log.info(`******************** ${moduleName} at ${moment().utc().format()} ********************`);
 
     let elapsedTimeStart;
     let elapsedTimeEnd;
@@ -83,8 +83,8 @@ module.exports = {
 
       elapsedTime = moment.duration(elapsedTimeEnd.diff(elapsedTimeStart)).asSeconds();
 
-      // sails.log.info(`Start: ${moment(inputs.start).format()}`);
-      // sails.log.info(`End: ${moment(inputs.end).format()}`);
+      // sails.log.info(`Start: ${moment(inputs.start).utc().format()}`);
+      // sails.log.info(`End: ${moment(inputs.end).utc().format()}`);
       // sails.log.info(`numClients: ${numClients}`);
       // sails.log.info(`elapsedTime: ${elapsedTime}`);
 

@@ -105,7 +105,12 @@
     "telegram": {
       "provider": "TRANZZO",
       "env": "TEST"
-    }
+    },
+    "pool": {
+      "PROD": ["robokassa"],
+      "UAT": [],
+      "DEV": ["robokassa"]
+      }
   },
   "ref": {
     "refLinkBase": "https://befame.ru?p=",
@@ -1559,6 +1564,14 @@
           }
         }
       },
+      "payments": {
+        "ROBOKASSA": {
+          "title": "Robokassa"
+        },
+        "YANDEX": {
+          "title": "Ю.Касса"
+        }
+      },
       "token": {
         "$$$$$$$$$$$$$$$$$$$$$_COMMON": "*** ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ ВОРОНОК, КЛАВИАТУР И ПУШ-НОТИФИКАЦИЙ ***",
         "$$$$$$$$$$$$$$$$$$$$$_COMMON_General": "ОБЩИЕ ТОКЕНЫ ДЛЯ РАЗЛИЧНЫХ КЕЙСОВ",
@@ -1583,9 +1596,8 @@
         "COMMON_CONFIRM_PROFILE_BTN_NO": ":x: НЕТ",
         "COMMON_NEXT_TRY": "Хорошо, давай попробуем снова :relieved:",
         "COMMON_MAKE_PAYMENT_01": "Твой профиль в Instagram успешно зарегистрирован в нашей системе и теперь можно перейти к оплате пакета :credit_card:",
-        "COMMON_MAKE_PAYMENT_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "COMMON_MAKE_PAYMENT_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
         "COMMON_MAKE_PAYMENT_BTN_02": "Подробнее о пакете «$ServiceLevelTitle$»",
-        "COMMON_MAKE_PAYMENT_BTN_03": "Условия предоставления услуг",
         "COMMON_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения «$ServiceLevelTitle$»",
         "COMMON_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения «$ServiceLevelTitle$» на $paymentPeriod$",
         "COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "«$ServiceLevelTitle$» ($paymentPeriod$)",
@@ -1597,7 +1609,7 @@
         "COMMON_MAKE_PAYMENT_02_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
         "COMMON_PAYMENT_ERROR_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "COMMON_PAYMENT_ERROR_02": "Если деньги списались, при этом вы видите данное сообщение — напишите в техподдержку :pencil2:",
-        "COMMON_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ",
+        "COMMON_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
         "COMMON_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "COMMON_JOIN_REF_01": "Предлагаем присоединиться к  реферальной программе BeFame :thumbsup:",
         "COMMON_JOIN_REF_02": "Участвуй и получи:",
@@ -1829,7 +1841,7 @@
         "BEHERO_MORE_INFO_03_02": "— :hash: Создание персональных хэштегов и геотегов",
         "BEHERO_MORE_INFO_03_03": "— :mag: Аудит аккаунта с советами по продвижению и конкретными механиками внедрений (раз в месяц)",
         "BEHERO_MORE_INFO_03_04": "Стоимость пакета: $PriceCurrent$ :white_check_mark: (вместо $PriceList$)",
-        "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
+        "BEHERO_MORE_INFO_03_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
         "BEHERO_OPTIN_COMPLETED": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (аудит аккаунта, хэштеги и геотеги) будут готовы в течении 1-7 рабочих дней :calendar:",
         "BEHERO_OPTIN_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "BEHERO_OPTIN_COMPLETED_BTN_02": "Тех.поддержка :gear:",
@@ -2570,6 +2582,9 @@
         "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_TITLE": "Пакет продвижения «$ServiceTitle$»",
         "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_DESCRIPTION": "Подписка на пакет продвижения «$ServiceTitle$» на $paymentPeriod$",
         "CB_Q01_F_01_COMMON_MAKE_PAYMENT_PMT_ITEM1_DESCRIPTION": "«$ServiceTitle$» ($paymentPeriod$)",
+        "CB_Q01_F_01_COMMON_MAKE_PAYMENT_BTN_01": ":white_check_mark: ПЕРЕЙТИ К ОПЛАТЕ «$PaymentProviderName$»",
+        "CB_Q01_F_01_COMMON_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ «$PaymentProviderName$» :credit_card:",
+        "CB_Q01_F_01_COMMON_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "$$$$$$$$$$$$$$$$$$$$$_BeFame_Chat_Blasts_Funnels Q01 testPersonal.pushToPaid.funnelOne - Common part": "*** ТОКЕНЫ ДЛЯ BeFame Chat Blasts Funnels Q01 testPersonal.pushToPaid.funnelOne - Common part ***",
         "CB_Q01_F_01_START_MSG_01": "Подбери подходящий для тебя пакет продвижения с действующей ДОПОЛНИТЕЛЬНОЙ скидкой 300 ₽",
         "CB_Q01_F_01_START_MSG_02": "Используй кнопки ниже и получи в подарок «Чек-лист ТОП-7 фишек по оформлению профиля в Instagram» :gift:",
@@ -2601,8 +2616,6 @@
         "CB_Q01_F_01_BELIKE_PAYMENT_SUCCESSFUL_MSG_01": "Пакет продвижения $ServiceName$ успешно оплачен :boom:",
         "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_MSG_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_MSG_02": "Если деньги списались, при этом вы видите данное сообщение —напишите в техподдержку :pencil2:",
-        "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "CB_Q01_F_01_BELIKE_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_MSG_01": "Дополнительные опции (выделяющийся аватар и создание мультиссылки) будут готовы в течении 1-7 рабочих дней :calendar:",
         "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "CB_Q01_F_01_BELIKE_SUBS_COMPLETED_BTN_02": "Тех.поддержка :gear:",
@@ -2628,13 +2641,10 @@
         "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_02": "Старая цена: $ListPrice$ :x:",
         "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_03": "НОВАЯ ЦЕНА — $PushToPaidPrice$ :white_check_mark:",
         "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_MSG_04": "Твоя персональная скидка = $PushToPaidDiscount$",
-        "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_BTN_01": ":white_check_mark: ПЕРЕЙТИ К ОПЛАТЕ",
         "CB_Q01_F_01_BEHERO_MAKE_PAYMENT_BTN_02": "Посмотреть другие пакеты  продвижения",
         "CB_Q01_F_01_BEHERO_PAYMENT_SUCCESSFUL_MSG_01": "Пакет продвижения $ServiceName$ успешно оплачен :boom:",
         "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_MSG_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_MSG_02": "Если деньги списались, при этом вы видите данное сообщение —напишите в техподдержку :pencil2:",
-        "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "CB_Q01_F_01_BEHERO_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "CB_Q01_F_01_BEHERO_SUBS_COMPLETED_MSG_01": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (аудит аккаунта, хэштеги и геотеги) будут готовы в течении 1-7 рабочих дней :calendar:",
         "CB_Q01_F_01_BEHERO_SUBS_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "CB_Q01_F_01_BEHERO_SUBS_COMPLETED_BTN_02": "Тех.поддержка :gear:",
@@ -2670,8 +2680,6 @@
         "CB_Q01_F_01_BESTAR_PAYMENT_SUCCESSFUL_MSG_01": "Пакет продвижения $ServiceName$ успешно оплачен :boom:",
         "CB_Q01_F_01_BESTAR_PAYMENT_ERROR_MSG_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "CB_Q01_F_01_BESTAR_PAYMENT_ERROR_MSG_02": "Если деньги списались, при этом вы видите данное сообщение —напишите в техподдержку :pencil2:",
-        "CB_Q01_F_01_BESTAR_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "CB_Q01_F_01_BESTAR_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "CB_Q01_F_01_BESTAR_SUBS_COMPLETED_MSG_01": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т. д.), а также персональная поддержка (аудит аккаунта, хэштеги, геотеги, таргетированная реклама и т. д.) будут готовы в течении 1-9 рабочих дней :calendar:",
         "CB_Q01_F_01_BESTAR_SUBS_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "CB_Q01_F_01_BESTAR_SUBS_COMPLETED_BTN_02": "Тех.поддержка :gear:",
@@ -2712,8 +2720,6 @@
         "CB_Q01_F_01_BELEGEND_PAYMENT_SUCCESSFUL_MSG_01": "Пакет продвижения $ServiceName$ успешно оплачен :boom:",
         "CB_Q01_F_01_BELEGEND_PAYMENT_ERROR_MSG_01": "В процессе оплаты, произошла ошибка — попробуйте снова :repeat:",
         "CB_Q01_F_01_BELEGEND_PAYMENT_ERROR_MSG_02": "Если деньги списались, при этом вы видите данное сообщение —напишите в техподдержку :pencil2:",
-        "CB_Q01_F_01_BELEGEND_PAYMENT_ERROR_BTN_01": "ПЕРЕЙТИ В ПЛАТЁЖНУЮ СИСТЕМУ :credit_card:",
-        "CB_Q01_F_01_BELEGEND_PAYMENT_ERROR_BTN_02": "СООБЩИТЬ ОБ ОШИБКЕ ПЛАТЕЖА",
         "CB_Q01_F_01_BELEGEND_SUBS_COMPLETED_MSG_01": "Дополнительные опции (выделяющийся аватар, создание мультиссылки и т.д.), а также персональная поддержка (профессиональная фотосессия, аудит аккаунта, хэштеги, геотеги, таргетированная реклама и т. д.) будут готовы в течении 1-10 рабочих дней :calendar:",
         "CB_Q01_F_01_BELEGEND_SUBS_COMPLETED_BTN_01": "Твои пресеты :sunrise:",
         "CB_Q01_F_01_BELEGEND_SUBS_COMPLETED_BTN_02": "Тех.поддержка :gear:",

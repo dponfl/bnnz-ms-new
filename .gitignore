@@ -135,3 +135,5 @@ lib-cov
 /fork-ecosystem.config UAT.js
 /fork-ecosystem.config DEV.js
 /json/config/config.json
+
+ecosystem.config.js

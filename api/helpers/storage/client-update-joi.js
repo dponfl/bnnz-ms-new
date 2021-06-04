@@ -110,7 +110,8 @@ module.exports = {
         .tolerate(async (err) => {
 
           err.details = {
-            criteria: _.omit(input.data, 'accounts'),
+            criteria: input.criteria,
+            data: _.omit(input.data, 'accounts'),
           };
 
           await LogProcessor.dbError({
@@ -122,7 +123,8 @@ module.exports = {
             // childRequestId: null,
             location: moduleName,
             payload: {
-              criteria: _.omit(input.data, 'accounts'),
+              criteria: input.criteria,
+              data: _.omit(input.data, 'accounts'),
             },
           });
 
@@ -135,7 +137,8 @@ module.exports = {
             // accountGuid,
             errorName: sails.config.custom.DB_ERROR_CRITICAL.name,
             payload: {
-              criteria: _.omit(input.data, 'accounts'),
+              criteria: input.criteria,
+              data: _.omit(input.data, 'accounts'),
             },
           });
 
@@ -152,38 +155,22 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

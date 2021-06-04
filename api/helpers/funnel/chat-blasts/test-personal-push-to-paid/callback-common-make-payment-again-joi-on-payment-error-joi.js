@@ -1,17 +1,18 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
-const moduleName = 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-error-joi';
+const moduleName = 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi';
 
 
 module.exports = {
 
 
-  friendlyName: 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-error-joi',
+  friendlyName: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi',
 
 
-  description: 'funnel:chat-blasts:test-personal-push-to-paid:callback-behero-make-payment-joi-on-payment-error-joi',
+  description: 'api:helpers:funnel:chat-blasts:test-personal-push-to-paid:callback-common-make-payment-again-joi-on-payment-error-joi',
 
 
   inputs: {
@@ -48,12 +49,15 @@ module.exports = {
         .description('funnel block initiated the payment process')
         .required(),
       paymentGroup: Joi
-        .any()
+        .object()
         .description('paymentGroup record')
         .required(),
     });
 
     let input;
+
+    let client;
+    let account;
 
     let clientGuid;
     let accountGuid;
@@ -63,35 +67,41 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
 
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      /**
-       * Устанавливаем значение для следующего блока
-       */
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
 
-      input.block.next = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_payment_error';
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
 
-      /**
-       * Устанавливаем у следующего блока значение для предшествующего блока
-       */
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
 
-      const splitRes = _.split(input.block.next, sails.config.custom.JUNCTION, 2);
-      const updateFunnel = splitRes[0];
-      const updateId = splitRes[1];
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
 
-
-      const getBlock = _.find(input.client.funnels[updateFunnel], {id: updateId});
-
-      if (getBlock) {
-        getBlock.previous = 'chatBlasts.testPersonal.pushToPaid.funnelOne::behero_make_payment';
-        getBlock.enabled = true;
       }
 
+      /**
+       * Устанавливаем значение для текущего блока
+       */
+
+      input.block.done = false;
+      input.block.shown = false;
+
       await sails.helpers.storage.clientUpdateJoi({
-        criteria: {guid: input.client.guid},
-        data: input.client,
+        criteria: {guid: client.guid},
+        data: client,
         createdBy: moduleName,
       });
 
@@ -99,7 +109,7 @@ module.exports = {
        * Try to find the initial block of the current funnel
        */
 
-      let initialBlock = _.find(input.client.funnels[input.client.current_funnel],
+      let initialBlock = _.find(client.funnels[client.current_funnel],
         {initial: true});
 
       /**
@@ -109,8 +119,8 @@ module.exports = {
       if (!_.isNil(initialBlock) && !_.isNil(initialBlock.id)) {
 
         await sails.helpers.funnel.proceedNextBlockJoi({
-          client: input.client,
-          funnelName: input.client.current_funnel,
+          client,
+          funnelName: client.current_funnel,
           blockId: initialBlock.id,
           createdBy: moduleName,
         });
@@ -130,12 +140,13 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.FUNNELS_ERROR.name,
           payload: {
-            currentFunnelName: input.client.current_funnel,
-            currentFunnel: input.client.funnels[input.client.current_funnel],
+            currentFunnelName: client.current_funnel,
+            currentFunnel: client.funnels[client.current_funnel],
           },
         });
 
       }
+
 
       return exits.success({
         status: 'ok',
@@ -144,27 +155,29 @@ module.exports = {
       })
 
     } catch (e) {
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
-          status: 'ok',
+          status: 'error',
           message: `${moduleName} not performed`,
           payload: {},
         });
       }
-
     }
 
   }

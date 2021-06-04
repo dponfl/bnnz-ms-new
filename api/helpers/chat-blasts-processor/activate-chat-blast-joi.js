@@ -156,15 +156,15 @@ module.exports = {
 
       switch (actionElem.timeType) {
         case sails.config.custom.enums.chatBlastsTimeTypes.ABSOLUTE:
-          actionTime = moment(actionElem.showTime).format();
+          actionTime = moment(actionElem.showTime).utc().format();
           break;
 
         case sails.config.custom.enums.chatBlastsTimeTypes.RELATIVE:
-          actionTime = moment().add(actionElem.showTime).format();
+          actionTime = moment().add(actionElem.showTime).utc().format();
           break;
 
         case sails.config.custom.enums.chatBlastsTimeTypes.NOW:
-          actionTime = moment().format();
+          actionTime = moment().utc().format();
           break;
 
         default:

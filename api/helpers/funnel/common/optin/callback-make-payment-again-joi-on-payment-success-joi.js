@@ -1,7 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
-const moment = require('moment');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'funnel:common:optin:callback-make-payment-again-on-payment-success-joi';
 
@@ -56,6 +56,9 @@ module.exports = {
 
     let input;
 
+    let client;
+    let account;
+
     let clientGuid;
     let accountGuid;
 
@@ -72,49 +75,38 @@ module.exports = {
       accountGuid = input.client.account_use;
 
 
-      const currentAccount = _.find(input.client.accounts, {guid: input.client.account_use});
-      const currentAccountInd = _.findIndex(input.client.accounts, (o) => {
-        return o.guid === currentAccount.guid;
-      });
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
 
-      /**
-       * Обновляем поля записи текущего аккаунта
-       */
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
 
-      const priceConfig = sails.config.custom.config.price;
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
 
-      input.client.accounts[currentAccountInd].payment_made = true;
-      input.client.accounts[currentAccountInd].subscription_from = moment()
-        .format();
-      input.client.accounts[currentAccountInd].subscription_until = moment()
-        .add(priceConfig.payment_periods.period_01.value, priceConfig.payment_periods.period_01.period)
-        .format();
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
 
-      const reallocateRoomsToAccountJoiParams = {
-        account: currentAccount,
-      };
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
 
-      const reallocateRoomsToAccountJoiRaw = await sails.helpers.general.reallocateRoomsToAccountJoi(reallocateRoomsToAccountJoiParams);
-
-      if (reallocateRoomsToAccountJoiRaw.status !== 'ok') {
-        // throw new Error(`${moduleName}, error: wrong reallocateRoomsToAccountJoi response:
-        // reallocateRoomsToAccountJoiParams: ${JSON.stringify(reallocateRoomsToAccountJoiParams, null, 3)}
-        // reallocateRoomsToAccountJoiRaw: ${JSON.stringify(reallocateRoomsToAccountJoiRaw, null, 3)}`);
-
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'Wrong reallocateRoomsToAccountJoi response',
-          clientGuid,
-          accountGuid,
-          errorName: sails.config.custom.FUNNELS_ERROR.name,
-          payload: {
-            reallocateRoomsToAccountJoiParams,
-            reallocateRoomsToAccountJoiRaw,
-          },
-        });
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
 
       }
+
+      /**
+       * Устанавливаем флаги, что блок выполнен
+       */
+
+      input.block.done = true;
+      input.block.shown = true;
+
 
       /**
        * Устанавливаем значение для следующего блока в 'optin::payment_successful'
@@ -170,8 +162,6 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        // throw new Error(`${moduleName}, error: initial block was not found`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -196,38 +186,26 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

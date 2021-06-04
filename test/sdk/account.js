@@ -31,16 +31,11 @@ module.exports = {
     const funcName = 'test:sdk:account:updateAccountDB';
     try {
 
-      const accountRec = _.omit(data, ['service', 'room', 'next_service']);
+      const accountRec = _.omit(data, ['service', 'room']);
       const serviceData = _.get(data, 'service');
-      const nextServiceData = _.get(data, 'next_service');
 
       if (serviceData) {
         accountRec.service = serviceData.id;
-      }
-
-      if (nextServiceData) {
-        accountRec.next_service = nextServiceData.id;
       }
 
       await Account.update(criteria).set(accountRec);
@@ -59,16 +54,11 @@ module.exports = {
 
       accountRec = await generateAccount(account, payment_plan);
       const serviceData = _.get(accountRec, 'service');
-      const nextServiceData = _.get(accountRec, 'next_service');
 
-      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt', 'service', 'room', 'next_service']);
+      accountRec = _.omit(accountRec, ['id', 'createdAt', 'updatedAt', 'service', 'room']);
 
       if (serviceData) {
         accountRec.service = serviceData.id;
-      }
-
-      if (nextServiceData) {
-        accountRec.next_service = nextServiceData.id;
       }
 
       await Account.create(accountRec).fetch();
@@ -115,8 +105,8 @@ async function generateAccount(account = null, payment_plan = null) {
       ref_key: uuidApiKey.apiKey,
       is_ref: true,
       subscription_active: true,
-      subscription_from: moment().format(),
-      subscription_until: moment().add(1, 'months').format(),
+      subscription_from: moment().utc().format(),
+      subscription_until: moment().add(1, 'months').utc().format(),
       service: await serviceSdk.generateService(payment_plan || 'gold_personal'),
       payment_plan: payment_plan || 'gold_personal',
       payment_made: true,
@@ -138,8 +128,8 @@ async function generateAccount(account = null, payment_plan = null) {
       subscription_made: true,
       service_subscription_finalized: true,
       client: casual.integer(1, 1000),
-      createdAt: moment().format(),
-      updatedAt: moment().add(1, 'minutes').format(),
+      createdAt: moment().utc().format(),
+      updatedAt: moment().add(1, 'minutes').utc().format(),
     };
 
     if (account != null) {

@@ -141,10 +141,10 @@ module.exports = {
 
       input.client.accounts[currentAccountInd].payment_made = true;
       input.client.accounts[currentAccountInd].subscription_from = moment()
-        .format();
+        .utc().format();
       input.client.accounts[currentAccountInd].subscription_until = moment()
         .add(priceConfigGeneral.payment_periods.period_01.value, priceConfigGeneral.payment_periods.period_01.period)
-        .format();
+        .utc().format();
 
       input.client.accounts[currentAccountInd].payment_amount = currentAmount;
       input.client.accounts[currentAccountInd].payment_currency = currentCurrency;

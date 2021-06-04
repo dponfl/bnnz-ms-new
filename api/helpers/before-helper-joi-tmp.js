@@ -97,7 +97,7 @@ module.exports = {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
@@ -107,15 +107,15 @@ module.exports = {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
           errorPayloadAdditional: {
             clientGuid,
             accountGuid,
           },
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

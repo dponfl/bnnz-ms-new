@@ -37,7 +37,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    sails.log.info(`******************** ${moduleName} at ${moment().format()} ********************`);
+    sails.log.info(`******************** ${moduleName} at ${moment().utc().format()} ********************`);
 
     let elapsedTimeStart;
     let elapsedTimeEnd;

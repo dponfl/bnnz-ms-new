@@ -113,7 +113,7 @@ module.exports = {
           accountGuid,
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
@@ -121,7 +121,7 @@ module.exports = {
           accountGuid,
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
           status: 'error',

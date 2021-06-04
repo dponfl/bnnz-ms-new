@@ -30,7 +30,7 @@ module.exports = {
 
     try {
 
-      sails.log.warn(`********** ${moduleName} is running: ` + moment().format() + ' **********');
+      sails.log.warn(`********** ${moduleName} is running: ` + moment().utc().format() + ' **********');
 
       moment.updateLocale("en", {
         week: {
@@ -42,8 +42,8 @@ module.exports = {
        * Формируем временные границы, частоту события, период рассчёта
        */
 
-      const eventsStart = moment().subtract(1, 'days').startOf('day').format();
-      const eventsEnd = moment().startOf('day').subtract(1, 'seconds').format();
+      const eventsStart = moment().subtract(1, 'days').startOf('day').utc().format();
+      const eventsEnd = moment().startOf('day').subtract(1, 'seconds').utc().format();
       const eventFrequency = sails.config.custom.enums.analytics.frequency.DAILY;
       const eventPeriod = moment().subtract(1, 'days').startOf('day').format('YYYY-MM-DD');
 

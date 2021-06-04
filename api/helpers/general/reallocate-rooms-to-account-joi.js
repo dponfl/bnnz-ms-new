@@ -49,17 +49,18 @@ module.exports = {
 
     const schema = Joi.object({
       account: Joi
-        .any()
+        .object()
         .description('account record')
         .required(),
       previousServiceName: Joi
-        .string()
+        .any()
         .description('previous service level name')
         .default(null),
     });
 
     let input;
 
+    let account;
     let accountGuid;
 
     let resultRooms;
@@ -70,12 +71,14 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      accountGuid = input.account.guid;
+      account = input.account;
+
+      accountGuid = account.guid;
 
       if (input.previousServiceName != null) {
         useServiceName= input.previousServiceName;
       } else {
-        useServiceName = input.account.service.name;
+        useServiceName = account.service.name;
       }
 
       const accountCategory = sails.config.custom.config.rooms.category_by_service[useServiceName];
@@ -89,7 +92,7 @@ module.exports = {
           accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
-            accountServiceName: input.account.service.name,
+            accountServiceName: account.service.name,
           },
         });
       }
@@ -144,7 +147,7 @@ module.exports = {
             }
 
 
-            // _.forEach(input.account.room, async function (elem) {
+            // _.forEach(account.room, async function (elem) {
             //   let room = await Room.findOne({id: elem.id})
             //     .usingConnection(db)
             //     .tolerate(async (err) => {
@@ -170,12 +173,12 @@ module.exports = {
             //     });
             //
             //   if (room) {
-            //     await Account.removeFromCollection(input.account.id, 'room', room.id)
+            //     await Account.removeFromCollection(account.id, 'room', room.id)
             //       .usingConnection(db)
             //       .tolerate(async (err) => {
             //
             //         err.details = {
-            //           inputAccountId: input.account.id,
+            //           inputAccountId: account.id,
             //           model: 'room',
             //           roomId: room.id,
             //         };
@@ -189,7 +192,7 @@ module.exports = {
             //           // childRequestId: null,
             //           location: moduleName,
             //           payload: {
-            //             inputAccountId: input.account.id,
+            //             inputAccountId: account.id,
             //             model: 'room',
             //             roomId: room.id,
             //           },
@@ -393,7 +396,7 @@ module.exports = {
             //   }
             // });
 
-            for (const elem of input.account.room) {
+            for (const elem of account.room) {
               let room = await Room.findOne({id: elem.id})
                 .usingConnection(db)
                 .tolerate(async (err) => {
@@ -419,12 +422,12 @@ module.exports = {
                 });
 
               if (room) {
-                await Account.removeFromCollection(input.account.id, 'room', room.id)
+                await Account.removeFromCollection(account.id, 'room', room.id)
                   .usingConnection(db)
                   .tolerate(async (err) => {
 
                     err.details = {
-                      inputAccountId: input.account.id,
+                      inputAccountId: account.id,
                       model: 'room',
                       roomId: room.id,
                     };
@@ -438,7 +441,7 @@ module.exports = {
                       // childRequestId: null,
                       location: moduleName,
                       payload: {
-                        inputAccountId: input.account.id,
+                        inputAccountId: account.id,
                         model: 'room',
                         roomId: room.id,
                       },
@@ -643,7 +646,7 @@ module.exports = {
             }
 
             const rooms = await sails.helpers.general.allocateRoomsJoi({
-              accountGuid,
+              account,
             });
 
             const ReleaseLock = await sails

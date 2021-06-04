@@ -274,9 +274,13 @@ module.exports = {
     //   'https://staging.example.com',
     // ],
 
-    onlyAllowOrigins: [
-      process.env.HOST || '',
-    ],
+    beforeConnect: function(handshake, proceed) {
+
+      // Send back `true` to allow the socket to connect.
+      // (Or send back `false` to reject the attempt.)
+      return proceed(undefined, true);
+
+    },
 
 
     /***************************************************************************
@@ -360,7 +364,7 @@ module.exports = {
   * this, just try deploying without setting it and see if it works.)       *
   *                                                                         *
   ***************************************************************************/
-  // port: 80,
+  port: process.env.PORT || 80,
 
 
 
@@ -381,7 +385,11 @@ module.exports = {
   * > https://sailsjs.com/config/*#?sailsconfigssl                          *
   *                                                                         *
   **************************************************************************/
-  // ssl: undefined,
+  ssl: {
+    ca: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame_ca.crt')),
+    key: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame.key')),
+    cert: require('fs').readFileSync(require('path').resolve(__dirname,'../ssl/befame.crt'))
+  },
 
 
 

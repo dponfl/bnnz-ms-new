@@ -358,7 +358,7 @@ describe.skip('Test sendPhoto with inline keyboard', function () {
 
     client.accounts = await Account.find({client: client.id})
       .populate('service')
-      .populate('next_service')
+      // .populate('next_service')
       .populate('room');
 
   });
@@ -4290,7 +4290,7 @@ describe.skip('Test pushMessages', function () {
 
     client.accounts = await Account.find({client: client.id})
       .populate('service')
-      .populate('next_service')
+      // .populate('next_service')
       .populate('room');
 
   });

@@ -113,7 +113,7 @@ module.exports = {
               done: false,
               callback: false,
               actionTime: {
-                '<=': moment().format()
+                '<=': moment().utc().format()
               },
             };
 
@@ -545,15 +545,15 @@ async function processChatBlastElement(client, rec, currentElem) {
 
     switch (nextElem.timeType) {
       case sails.config.custom.enums.chatBlastsTimeTypes.ABSOLUTE:
-        rec.actionTime = moment(nextElem.showTime).format();
+        rec.actionTime = moment(nextElem.showTime).utc().format();
         break;
 
       case sails.config.custom.enums.chatBlastsTimeTypes.RELATIVE:
-        rec.actionTime = moment().add(nextElem.showTime).format();
+        rec.actionTime = moment().add(nextElem.showTime).utc().format();
         break;
 
       case sails.config.custom.enums.chatBlastsTimeTypes.NOW:
-        rec.actionTime = moment().format();
+        rec.actionTime = moment().utc().format();
         performNextElementNow = true;
         break;
 

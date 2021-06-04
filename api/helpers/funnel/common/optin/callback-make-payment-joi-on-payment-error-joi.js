@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require('@hapi/joi');
+const uuid = require('uuid-apikey');
 
 const moduleName = 'funnel:common:optin:callback-make-payment-on-payment-error-joi';
 
@@ -55,6 +56,9 @@ module.exports = {
 
     let input;
 
+    let client;
+    let account;
+
     let clientGuid;
     let accountGuid;
 
@@ -63,8 +67,37 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      clientGuid = input.client.guid;
-      accountGuid = input.client.account_use;
+      client = input.client;
+      account = _.find(client.accounts, {guid: client.account_use});
+
+      clientGuid = client.guid;
+      accountGuid = client.account_use;
+
+      if (
+        !_.isNil(input.block.messageGuid)
+        && uuid.isUUID(input.block.messageGuid)
+      ) {
+
+        /**
+         * Удаляем кнопки inline keyboard сообщения
+         */
+
+        const deleteInlineKeyboardButtonsParams = {
+          client,
+          account,
+          messageGuid: input.block.messageGuid,
+        }
+
+        await sails.helpers.messageProcessor.deleteInlineKeyboardButtons(deleteInlineKeyboardButtonsParams);
+
+      }
+
+      /**
+       * Устанавливаем флаги, что блок выполнен
+       */
+
+      input.block.done = true;
+      input.block.shown = true;
 
 
       /**
@@ -87,6 +120,8 @@ module.exports = {
       if (getBlock) {
         getBlock.previous = 'optin::make_payment';
         getBlock.enabled = true;
+        getBlock.done = false;
+        getBlock.shown = false;
       }
 
       await sails.helpers.storage.clientUpdateJoi({
@@ -121,8 +156,6 @@ module.exports = {
          * Throw error -> initial block was not found
          */
 
-        // throw new Error(`${moduleName}, error: initial block was not found`);
-
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.CRITICAL,
           emergencyLevel: sails.config.custom.enums.emergencyLevels.LOW,
@@ -146,38 +179,26 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}: General error`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
+          clientGuid,
+          accountGuid,
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
-          status: 'ok',
-          message: `${moduleName} performed`,
+          status: 'error',
+          message: `${moduleName} not performed`,
           payload: {},
         });
       }

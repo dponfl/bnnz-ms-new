@@ -265,7 +265,7 @@
       "previous": "optin::confirm_profile",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "common::optin::beforeMakePaymentJoi",
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentJoi",
@@ -289,48 +289,13 @@
           [
             {
               "text": "COMMON_MAKE_PAYMENT_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ],
           [
             {
               "text": "COMMON_MAKE_PAYMENT_BTN_02",
               "callback_data": "more_info"
-            }
-          ]
-        ]
-      }
-    },
-    {
-      "id": "make_payment_02",
-      "description": "",
-      "actionType": "inline_keyboard",
-      "initial": false,
-      "enabled": false,
-      "show_time": 0,
-      "previous": "optin::make_payment",
-      "next": null,
-      "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": null,
-      "forcedHelper": null,
-      "callbackHelper": "common::optin::callbackMakePaymentSecondJoi",
-      "blockModifyHelper": null,
-      "shown": false,
-      "done": false,
-      "message": {
-        "html": [
-          {
-            "text": "COMMON_MAKE_PAYMENT_02",
-            "style": "",
-            "cr": ""
-          }
-        ],
-        "inline_keyboard": [
-          [
-            {
-              "text": "COMMON_MAKE_PAYMENT_02_BTN_01",
-              "callback_data": "make_payment"
             }
           ]
         ]
@@ -470,8 +435,8 @@
       "previous": "optin::more_info_02",
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
-      "afterHelper": null,
+      "beforeHelper": "common::optin::beforeMakePaymentThirdJoi",
+      "afterHelper": "common::optin::afterMakePaymentThirdJoi",
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentThirdJoi",
       "blockModifyHelper": null,
@@ -509,7 +474,7 @@
           [
             {
               "text": "BECREATOR_MORE_INFO_03_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ]
         ]
@@ -552,7 +517,7 @@
       "previous": null,
       "next": null,
       "switchToFunnel": null,
-      "beforeHelper": null,
+      "beforeHelper": "common::optin::beforePaymentErrorJoi",
       "afterHelper": null,
       "forcedHelper": null,
       "callbackHelper": "common::optin::callbackMakePaymentAgainJoi",
@@ -576,7 +541,7 @@
           [
             {
               "text": "COMMON_PAYMENT_ERROR_BTN_01",
-              "callback_data": "make_payment"
+              "url": "$PaymentLink$"
             }
           ],
           [

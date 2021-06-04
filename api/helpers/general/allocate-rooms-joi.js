@@ -48,15 +48,15 @@ module.exports = {
      */
 
     const schema = Joi.object({
-      accountGuid: Joi
-        .string()
-        .description('account guid')
-        .guid()
+      account: Joi
+        .object()
+        .description('account object')
         .required(),
     });
 
     let input;
 
+    let account;
     let accountGuid;
 
     let roomRecordWeGet;
@@ -68,45 +68,27 @@ module.exports = {
 
       input = await schema.validateAsync(inputs.params);
 
-      accountGuid = input.accountGuid;
+      account = input.account;
+      accountGuid = account.guid;
 
-      const accountRaw = await sails.helpers.storage.accountGetJoi({
-        accountGuids: [accountGuid],
-      });
-
-      if (accountRaw.status !== 'ok') {
+      if (_.isNil(account)) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
-          message: 'Unknown accountGuid',
+          message: 'No account data',
           accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {
-            accountGuid,
+            account,
           },
         });
       }
 
-      const account = accountRaw.payload[0] || null;
-
-      if (account == null) {
+      if (_.isNil(account.service)) {
         await sails.helpers.general.throwErrorJoi({
           errorType: sails.config.custom.enums.errorType.ERROR,
           location: moduleName,
-          message: 'No accounts found',
-          accountGuid,
-          errorName: sails.config.custom.GENERAL_ERROR.name,
-          payload: {
-            accountRaw,
-          },
-        });
-      }
-
-      if (account.service == null) {
-        await sails.helpers.general.throwErrorJoi({
-          errorType: sails.config.custom.enums.errorType.ERROR,
-          location: moduleName,
-          message: 'No service info for account',
+          message: 'No service data at account object',
           accountGuid,
           errorName: sails.config.custom.GENERAL_ERROR.name,
           payload: {

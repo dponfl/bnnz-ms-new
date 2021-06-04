@@ -72,6 +72,25 @@ module.exports = {
         .string()
         .description('transaction type')
         .required(),
+      serviceName: Joi
+        .string()
+        .description('service name')
+        .required(),
+      paymentPeriod: Joi
+        .string()
+        .description('payment period (e.g. "current" or "next")')
+        .default(sails.config.custom.enums.paymentPeriod.CURRENT),
+      paymentInterval: Joi
+        .number()
+        .integer()
+        .positive()
+        .description('payment interval (e.g. number of months')
+        .default(1),
+      paymentIntervalUnit: Joi
+        .string()
+        .description('payment interval unit, e.g. "month"')
+        .default('month')
+        .required(),
       status: Joi
         .string()
         .description('status')
@@ -108,6 +127,10 @@ module.exports = {
         .create({
         guid,
         type: input.type,
+        serviceName: input.serviceName,
+        paymentPeriod: input.paymentPeriod,
+        paymentInterval: input.paymentInterval,
+        paymentIntervalUnit: input.paymentIntervalUnit,
         status: input.status,
         payment_provider: input.paymentProvider,
         messenger: input.messenger,
@@ -128,34 +151,18 @@ module.exports = {
       })
 
     } catch (e) {
-
-      // const errorLocation = moduleName;
-      // const errorMsg = `${moduleName}, error: ${sails.config.custom.PAYMENTGROUP_CREATE_ERROR}`;
-      //
-      // sails.log.error(errorLocation + ', error: ' + errorMsg);
-      // sails.log.error(errorLocation + ', error details: ', e);
-      //
-      // throw {err: {
-      //     module: errorLocation,
-      //     message: errorMsg,
-      //     payload: {
-      //       error: e,
-      //     },
-      //   }
-      // };
-
       const throwError = true;
       if (throwError) {
         return await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: true,
+          throwError,
         });
       } else {
         await sails.helpers.general.catchErrorJoi({
           error: e,
           location: moduleName,
-          throwError: false,
+          throwError,
         });
         return exits.success({
           status: 'ok',
@@ -163,7 +170,6 @@ module.exports = {
           payload: {},
         });
       }
-
     }
 
   }
